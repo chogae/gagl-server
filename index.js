@@ -4,6 +4,14 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 app.use(express.json());
+const path = require("path");
+// 🟡 이 코드 추가 (정적 파일 경로 설정)
+app.use(express.static(path.join(__dirname)));
+
+// 🟡 이 코드 추가 (gagl.html 요청 시 해당 파일 반환)
+app.get("/gagl.html", (req, res) => {
+    res.sendFile(path.join(__dirname, "gagl.html"));
+});
 
 app.post("/attack", (req, res) => {
     const 유저 = req.body.유저데이터;
@@ -293,7 +301,7 @@ function 획득금화발굴(유저) {
 
         const 확률 = 현재 >= 10 ? 1 : 현재 * 0.1;
         if (Math.random() < 확률) {
-            배율 += 스킬들[i].배율;
+            금화배율 += 스킬들[i].배율;
         } else break;
     }
 
