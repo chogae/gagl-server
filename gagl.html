@@ -2,20 +2,21 @@
 <html lang="ko">
 
 <head>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
-
     <meta charset="UTF-8">
     <title>gagl</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
-    <!-- ✅ Supabase SDK 불러오기 -->
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
-        const supabase = supabase.createClient(
-            "https://piafesfywtvpachbfoxr.supabase.co",
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpYWZlc2Z5d3R2cGFjaGJmb3hyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3ODQwMTgsImV4cCI6MjA2MDM2MDAxOH0.1aDNwRZXac48nD9HDicXvDYk4wfcY1MC487_qf3hF5c"
-        );
+        let supabase;
+        document.addEventListener("DOMContentLoaded", () => {
+            supabase = window.supabase.createClient(
+                "https://piaefsyfwtvpachbfoxr.supabase.co",
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpYWZlc2Z5d3R2cGFjaGJmb3hyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3ODQwMTgsImV4cCI6MjA2MDM2MDAxOH0.1aDNwRZXac48nD9HDicXvDYk4wfcY1MC487_qf3hF5c"
+            );
+        });
     </script>
-
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
