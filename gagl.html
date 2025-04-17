@@ -11,12 +11,13 @@
     <script>
         let supabase;
         document.addEventListener("DOMContentLoaded", () => {
-            supabase = window.supabase.createClient(
+            supabase = supabase.createClient(
                 "https://piaefsyfwtvpachbfoxr.supabase.co",
                 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpYWZlc2Z5d3R2cGFjaGJmb3hyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3ODQwMTgsImV4cCI6MjA2MDM2MDAxOH0.1aDNwRZXac48nD9HDicXvDYk4wfcY1MC487_qf3hF5c"
             );
         });
     </script>
+
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
