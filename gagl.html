@@ -6,15 +6,17 @@
     <title>gagl</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script>
-        let supabase;
+        const supabase = createClient(
+            "https://piaefsyfwtvpachbfoxr.supabase.co",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpYWZlc2Z5d3R2cGFjaGJmb3hyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3ODQwMTgsImV4cCI6MjA2MDM2MDAxOH0.1aDNwRZXac48nD9HDicXvDYk4wfcY1MC487_qf3hF5c"
+        );
+
+        // 여기서부터 supabase 사용 가능
         document.addEventListener("DOMContentLoaded", () => {
-            supabase = supabase.createClient(
-                "https://piaefsyfwtvpachbfoxr.supabase.co",
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpYWZlc2Z5d3R2cGFjaGJmb3hyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3ODQwMTgsImV4cCI6MjA2MDM2MDAxOH0.1aDNwRZXac48nD9HDicXvDYk4wfcY1MC487_qf3hF5c"
-            );
+            console.log("supabase 연결됨");
         });
     </script>
 
@@ -503,7 +505,7 @@
 
 
 
-    <div id="인증화면" class="세로정렬">
+    <div id="인증화면" class="사백픽셀테두리 세로정렬">
         <input id="이메일입력" type="text" placeholder="이메일 주소 입력" />
         <input id="비번입력" type="password" placeholder="비밀번호 입력" />
         <button onclick="회원가입()">회원가입</button>
@@ -1132,22 +1134,6 @@
             화면잠금();
         }
 
-        function 드랍로그추가(아이디, 장비) {
-            const 박스 = document.getElementById("드랍로그박스");
-            const 줄 = document.createElement("div");
-
-            줄.innerText = 장비.로그
-                ? 장비.로그
-                : `[${아이디}] ${장비.이름} (공격력 +${장비.공격력}) 드랍!`;
-            줄.style.color = 색상맵[장비.등급] || "white";
-
-            박스.appendChild(줄);
-
-            // 20개 초과 시 맨 위 제거
-            while (박스.childNodes.length > 20) {
-                박스.removeChild(박스.firstChild);
-            }
-        }
 
         function 로그인화면보여주기() {
             document.getElementById("전투스킬설정버튼").style.display = "none";
@@ -1308,15 +1294,6 @@
             document.getElementById("획득로그").innerText = "";
         }
 
-        function 자동사냥중지() {
-            자동사냥중 = false;
-            clearInterval(자동사냥타이머);
-            자동사냥타이머 = null;
-
-            const 버튼 = document.getElementById("자동사냥버튼");
-            버튼.innerText = "⏱ 자동사냥";
-            버튼.style.color = "white";
-        }
 
 
         function 전당화면보여주기() {
@@ -1691,104 +1668,6 @@ ${설명} <span style="color: #3b82f6;">발동확률(${발동확률}%)</span>
         // 예: 1→1, 2→2, 3→4, 4→7, 5→11, ...
 
 
-        document.getElementById("보유숙련도").addEventListener("click", () => {
-            if (!confirm("모든 스킬 포인트를 회수하시겠습니까?")) return;
-
-            let 총환급 = 0;
-            let 전체투자 = Object.values(유저데이터.스킬).reduce((a, b) => a + b, 0);
-            let 투자순번 = 전체투자;
-
-            for (const 키 in 유저데이터.스킬) {
-                const 레벨 = 유저데이터.스킬[키];
-                for (let i = 0; i < 레벨; i++) {
-                    총환급 += 숙련도소모(투자순번);
-                    투자순번--;
-                }
-                유저데이터.스킬[키] = 0;
-            }
-
-            유저데이터.숙련도 += 총환급;
-
-            화면잠금();
-        });
-
-
-        function 아이디설정() {
-            const 입력아이디 = document.getElementById("아이디입력").value.trim();
-            if (!입력아이디) return 메시지표시(로그인창, "", "아이디를 입력해주세요.", "white");
-
-            // 1️⃣ 아이디 중복 여부 확인
-            화면잠금();
-        }
-
-        document.getElementById("타이틀을아이디로").addEventListener("click", () => {
-            const el = document.getElementById("타이틀을아이디로");
-
-            if (el.querySelector("input")) return;
-
-            const 현재아이디 = 유저데이터.아이디 || "";
-            const input = document.createElement("input");
-            input.type = "text";
-            input.value = 현재아이디;
-            input.maxLength = 8;
-            input.style.width = "120px";
-            input.style.fontSize = "inherit";
-
-            el.innerHTML = "";
-            el.appendChild(input);
-            input.focus();
-
-            input.addEventListener("keydown", async (e) => {
-                if (e.key === "Enter") {
-                    const 새아이디 = input.value.trim();
-                    if (!새아이디) return 메시지표시(el, "", "아이디를 입력해주세요.", "white");
-
-                    화면잠금();
-                    const 이미존재 = snapshot.exists() && 새아이디 !== 현재아이디;
-                    if (이미존재) {
-                        화면해제();
-                        메시지표시(el, "", "이미 존재하는 아이디입니다.", "white");
-                        input.focus();
-                        return;
-                    }
-
-                    const 새이메일 = `${새아이디}@gagl.com`;
-                    const 비번 = prompt("현재 비밀번호를 입력하세요");
-                    if (!비번) {
-                        화면해제();
-                        el.innerText = 현재아이디;
-                        return;
-                    }
-
-                    const user = auth.currentUser;
-                    const credential = firebase.auth.EmailAuthProvider.credential(user.email, 비번);
-
-                    user.reauthenticateWithCredential(credential)
-                        .then(() => user.updateEmail(새이메일))
-                        .then(() => {
-                            유저데이터.아이디 = 새아이디;
-                        })
-                        .then(() => {
-                            el.innerText = 새아이디;
-                            document.getElementById("유저아이디").innerText = 새아이디;
-                            화면해제();
-                        })
-                        .catch((err) => {
-                            화면해제();
-                            메시지표시(el, "", "변경 실패: " + err.message, "red");
-                            el.innerText = 현재아이디;
-                        });
-                }
-
-                if (e.key === "Escape") el.innerText = 현재아이디;
-            });
-
-            input.addEventListener("blur", () => {
-                el.innerText = 현재아이디;
-            });
-        });
-
-
         const 악마리스트 = [
             "디나르", "에리곤", "도레알", "크로셀", "루페스", "벨", "시에르", "세레우스", "버알베리스", "발라크",
             "로노베", "자간", "안드라멜리우스", "니베로스", "에이몬", "라에스", "아라타바", "바티바스", "아몬", "안드로말리우스",
@@ -1886,46 +1765,6 @@ ${설명} <span style="color: #3b82f6;">발동확률(${발동확률}%)</span>
             return Object.values(유저데이터.스킬 || {}).reduce((a, b) => a + b, 0);
         }
 
-        document.getElementById("탈퇴").addEventListener("click", function () {
-            if (!uid) return alert("로그인이 되어 있지 않습니다.");
-
-            if (confirm("정말 탈퇴하시겠습니까? 모든 데이터가 삭제됩니다.")) {
-                화면잠금(); // ✅ 탈퇴 중 화면 차단
-
-                const 이메일 = auth.currentUser.email;
-                const 탈퇴키 = 이메일.replace(/\./g, "_");
-
-            }
-        });
-
-        function 버닝스킬보정() {
-            const 버닝스킬들 = [
-                { 이름: "인페르노 버닝", 배율: 1.6 },
-                { 이름: "플레임 버닝", 배율: 2.2 },
-                { 이름: "블레이징 버닝", 배율: 2.8 },
-                { 이름: "헬파이어 버닝", 배율: 3.4 },
-                { 이름: "피닉스 버닝", 배율: 4.0 },
-            ];
-            const 버닝레벨 = 유저데이터.스킬?.["버닝"] || 0;
-            const 현재HP = 유저데이터.남은체력;
-            const 최대HP = 유저데이터.최대체력;
-            if (현재HP > 최대HP * 0.5) return 1;
-
-            let 누적배율 = 0;
-
-            for (let i = 0; i < 버닝스킬들.length; i++) {
-                const 시작 = i * 10;
-                const 현재레벨 = Math.max(0, Math.min(버닝레벨 - 시작, 10));
-                if (현재레벨 <= 0) break;
-
-                const 확률 = 현재레벨 >= 10 ? 1 : 현재레벨 * 0.1;
-                if (Math.random() < 확률) {
-                    누적배율 += (버닝스킬들[i].배율 - 1);
-                } else break;
-            }
-
-            return 1 + 누적배율;
-        }
 
         async function 공격하기() {
             if (!유저데이터 || !현재악마) return;
@@ -2037,14 +1876,6 @@ ${설명} <span style="color: #3b82f6;">발동확률(${발동확률}%)</span>
             setTimeout(() => el.remove(), 2000);
         }
 
-        function 보상획득(층) {
-            const 경험치 = Math.floor(층 * 1);
-            const 골드 = Math.floor(Math.random() * 100) + 층 * 100;
-            const 숙련도 = Math.floor(층 * 1); // 예: 층당 1 증가
-
-            return { 경험치, 골드, 숙련도 };
-        }
-
 
         window.addEventListener("DOMContentLoaded", function () {
             document.getElementById("공격버튼").addEventListener("click", 공격하기);
@@ -2064,113 +1895,7 @@ ${설명} <span style="color: #3b82f6;">발동확률(${발동확률}%)</span>
 
 
 
-        function 죽음메시지보여주기(text) {
-            const 대상 = document.querySelector(".몬스터테두리");
-            if (!대상) return;
 
-            const rect = 대상.getBoundingClientRect();
-
-            const el = document.createElement("div");
-            el.innerText = text;
-            el.style.position = "absolute";
-            el.style.left = `${rect.left + Math.random() * rect.width}px`;
-            el.style.top = `${rect.top + Math.random() * rect.height}px`;
-            el.style.color = "#b0b0b0";
-            el.style.background = "rgba(0, 0, 0, 0.8)";
-            el.style.padding = "10px 20px";
-            el.style.border = "2px solid #2e2e2e";
-            el.style.borderRadius = "12px";
-            el.style.fontWeight = "bold";
-            el.style.fontSize = "14px";
-            el.style.pointerEvents = "none";
-            el.style.zIndex = "9999";
-            el.style.whiteSpace = "nowrap";
-            el.style.animation = "fadeOut 2s ease-in-out forwards";
-            el.style.boxShadow = "0 0 20px rgba(234, 0, 255, 0.6)";
-
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 2000);
-        }
-
-        function 자동사냥토글() {
-            const 버튼 = document.getElementById("자동사냥버튼");
-
-            if (!자동사냥중) {
-                자동사냥중 = true;
-                버튼.innerText = "🛑 자동중지";
-                버튼.style.color = "red";
-
-                const 반복 = () => {
-                    if (!자동사냥중 || 유저데이터.남은체력 <= 0) return;
-
-                    const 기본딜레이 = 1000;
-                    const 딜레이보정 = 퀵니스딜레이보정();
-                    const 실제딜레이 = Math.max(500, 기본딜레이 - 딜레이보정);
-
-                    if (실제딜레이 !== 1000) {
-                        메시지표시(자동사냥버튼, `${퀵니스아이콘}`, "", 색상맵["남"]);
-                    }
-
-                    공격하기();
-                    자동사냥타이머 = setTimeout(반복, 실제딜레이);
-                };
-
-                setTimeout(반복, 1000);
-            } else {
-                자동사냥중지();
-            }
-        }
-
-        function 퀵니스딜레이보정() {
-            const 퀵니스스킬들 = [
-                { 이름: "터보 퀵니스", 감소: 20 },
-                { 이름: "하이퍼 퀵니스", 감소: 40 },
-                { 이름: "플래시 퀵니스", 감소: 60 },
-                { 이름: "스위프트 퀵니스", 감소: 80 },
-                { 이름: "제트 퀵니스", 감소: 100 },
-            ];
-            const 퀵니스레벨 = 유저데이터.스킬?.["퀵니스"] || 0;
-
-            let 누적감소 = 0;
-            for (let i = 0; i < 퀵니스스킬들.length; i++) {
-                const 시작 = i * 10;
-                const 현재스킬레벨 = Math.max(0, Math.min(퀵니스레벨 - 시작, 10));
-                if (현재스킬레벨 <= 0) break;
-
-                const 확률 = 현재스킬레벨 >= 10 ? 1 : 현재스킬레벨 * 0.1;
-                if (Math.random() < 확률) {
-                    누적감소 += 퀵니스스킬들[i].감소;
-                } else {
-                    break;
-                }
-            }
-            return 누적감소;
-        }
-
-        function 발굴스킬보정() {
-            const 발굴스킬들 = [
-                { 이름: "루비 발굴", 증가: 0.2 },
-                { 이름: "사파이어 발굴", 증가: 0.4 },
-                { 이름: "에메랄드 발굴", 증가: 0.6 },
-                { 이름: "다이아몬드 발굴", 증가: 0.8 },
-                { 이름: "토파즈 발굴", 증가: 1.0 },
-            ];
-            const 발굴레벨 = 유저데이터.스킬?.["발굴"] || 0;
-
-            let 누적배율 = 0;
-            for (let i = 0; i < 발굴스킬들.length; i++) {
-                const 시작 = i * 10;
-                const 현재레벨 = Math.max(0, Math.min(발굴레벨 - 시작, 10));
-                if (현재레벨 <= 0) break;
-
-                const 확률 = 현재레벨 >= 10 ? 1 : 현재레벨 * 0.1;
-                if (Math.random() < 확률) {
-                    누적배율 += 발굴스킬들[i].증가;
-                } else break;
-            }
-
-            return 1 + 누적배율;
-        }
 
 
         document.getElementById("자동사냥버튼").addEventListener("click", 자동사냥토글);
@@ -2190,15 +1915,6 @@ ${설명} <span style="color: #3b82f6;">발동확률(${발동확률}%)</span>
             전투화면보여주기(유저데이터);
         });
 
-        document.addEventListener("click", (e) => {
-            if (
-                자동사냥중 &&
-                !e.target.closest("#자동사냥버튼") &&
-                !e.target.closest("#채팅입력")
-            ) {
-                자동사냥중지();
-            }
-        });
 
 
 
