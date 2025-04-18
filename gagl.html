@@ -15,14 +15,38 @@
         );
 
         document.addEventListener("DOMContentLoaded", async () => {
-            console.log("✅ Supabase 연결됨");
+            메시지표시(document.body, "📡", "Supabase 연결됨", "#00c851");
 
-            const { data, error } = await supabase.from("users").select("*").limit(10);
+            const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
 
-            if (error) {
-                console.error("❌ user 테이블 쿼리 실패:", error.message);
+            if (인증오류) {
+                메시지표시(document.body, "❌", "유저 인증 확인 실패", "#ef4444");
+                return;
+            }
+
+            if (user && user.id) {
+                try {
+                    const { data: 유저정보, error } = await supabase
+                        .from("users")
+                        .select("*")
+                        .eq("유저UID", user.id)
+                        .single();
+
+                    if (error || !유저정보) {
+                        메시지표시(document.body, "⚠️", "유저 정보 없음", "#ef4444");
+                        return;
+                    }
+
+                    // ✅ 병합 생략하고 그대로 사용
+                    유저데이터 = 유저정보;
+
+                    메시지표시(document.body, "✅", "자동 로그인 완료", "#00c851");
+                    전투화면보여주기(유저데이터);
+                } catch (e) {
+                    메시지표시(document.body, "❌", "자동 로그인 오류: " + e.message, "#ef4444");
+                }
             } else {
-                console.log("📦 user 테이블 데이터:", data);
+                메시지표시(document.body, "🔒", "로그인된 유저 없음", "#aaa");
             }
         });
 
@@ -695,7 +719,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // 업데이트
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-        document.getElementById("버전표시").innerText = "v1";
+        document.getElementById("버전표시").innerText = "v2";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -749,7 +773,7 @@
             console.log("입력된 아이디:", 아이디);
             const 비번 = document.getElementById("비번입력").value.trim();
             const 랜덤 = Date.now();
-            const 이메일형식 = `${아이디}+${랜덤}@gagl.com`;
+            const 이메일형식 = `${아이디}@gagl.com`;
             const 기기ID = localStorage.getItem("기기ID") || crypto.randomUUID();
 
             localStorage.setItem("기기ID", 기기ID);
