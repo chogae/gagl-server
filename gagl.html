@@ -698,7 +698,8 @@
         // 최초 접속 시 기기ID를 localStorage에 저장
         let 기기ID = localStorage.getItem("기기ID");
         // 업데이트
-        document.getElementById("버전표시").innerText = "v3";
+        // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
+        document.getElementById("버전표시").innerText = "v4";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -934,15 +935,14 @@
                     return;
                 }
 
-                // ✅ 유저 테이블 삭제
-                await supabase.from("users").delete().eq("uid", user.id);
+                // ✅ 유저 테이블 삭제 (컬럼명 주의)
+                await supabase.from("users").delete().eq("유저UID", user.id);
 
-                // ✅ access token 가져오기
+                // ✅ access token으로 인증 삭제
                 const 세션 = await supabase.auth.getSession();
                 const accessToken = 세션.data.session.access_token;
 
-                // ✅ auth에서 자기 자신 삭제
-                await fetch("https://piafesfywtvpachbfoxr.supabase.co/auth/v1/user", {
+                const 응답 = await fetch("https://piafesfywtvpachbfoxr.supabase.co/auth/v1/user", {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
@@ -950,9 +950,13 @@
                     }
                 });
 
+                if (!응답.ok) {
+                    console.warn("auth 삭제 실패", await 응답.text());
+                }
+
                 메시지표시(document.body, "✅", "탈퇴가 완료되었습니다.", "#00c851");
 
-                // 로그아웃 처리
+                // ✅ 로그아웃 및 초기화
                 await supabase.auth.signOut();
                 localStorage.removeItem("기기ID");
                 location.reload();
