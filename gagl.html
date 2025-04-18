@@ -699,7 +699,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // 업데이트
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-        document.getElementById("버전표시").innerText = "v10";
+        document.getElementById("버전표시").innerText = "v11";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -837,8 +837,6 @@
                     강림몬스터: null,
                     버전업: 0
                 });
-                console.log("유저정보 확인:", 유저정보);
-                메시지표시(document.body, "ℹ️", JSON.stringify(유저정보, null, 2), "#00c851");
 
                 const { data: 유저정보 } = await supabase
                     .from("users")
@@ -847,6 +845,8 @@
                     .single();
 
                 유저데이터 = 유저정보;
+                console.log("유저정보 확인:", 유저정보);
+                메시지표시(document.body, "ℹ️", JSON.stringify(유저정보, null, 2), "#00c851");
 
                 if (!유저정보 || !유저정보.유저아이디) {
                     메시지표시(document.body, "❌", "유저 아이디 미설정", "#ef4444");
