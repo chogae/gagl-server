@@ -481,9 +481,6 @@
                     <div class="버튼" id="탈퇴" onclick="회원탈퇴()">
                         탈퇴
                     </div>
-                    <div class="버튼" id="로그아웃">
-                        로그아웃
-                    </div>
                 </div>
             </div>
         </div>
@@ -514,8 +511,8 @@
 
 
     <div id="인증화면" class="사백픽셀테두리 세로정렬">
-        <input id="이메일입력" type="text" placeholder="이메일 주소 입력" />
-        <input id="비번입력" type="password" placeholder="비밀번호 입력" />
+        <input id="이메일입력" type="text" placeholder="이메일 주소 입력" autocomplete="off" />
+        <input id="비번입력" type="password" placeholder="비밀번호 입력" autocomplete="off" />
         <button onclick="회원가입()">회원가입</button>
         <button onclick="로그인()">로그인</button>
     </div>
@@ -591,7 +588,6 @@
                     <div>
                         <div class="버튼" id="공격버튼">⚔️ 공격하기</div>
                     </div>
-                    <div class="버튼" id="자동사냥버튼">⏱ 자동사냥</div>
                 </div>
 
 
@@ -699,7 +695,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // 업데이트
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-        document.getElementById("버전표시").innerText = "v15";
+        document.getElementById("버전표시").innerText = "v1";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -893,7 +889,6 @@
             }
 
             try {
-                // 로그인 시도
                 const { error: 로그인오류 } = await supabase.auth.signInWithPassword({
                     email: 이메일형식,
                     password: 비번
@@ -901,20 +896,17 @@
 
                 if (로그인오류) {
                     메시지표시(document.body, "❌", "로그인 실패: " + 로그인오류.message, "#ef4444");
+                    화면해제();
                     return;
                 }
 
-                // 유저 정보 불러오기
-                const {
-                    data: { user }
-                } = await supabase.auth.getUser();
-
-                if (!user) {
-                    메시지표시(document.body, "❌", "유저 정보를 불러오지 못했습니다.", "#ef4444");
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user || !user.id) {
+                    메시지표시(document.body, "❌", "유저 인증 정보 없음", "#ef4444");
+                    화면해제();
                     return;
                 }
 
-                // DB에서 유저 상세 정보 가져오기
                 const { data: 유저정보, error } = await supabase
                     .from("users")
                     .select("*")
@@ -922,13 +914,11 @@
                     .single();
 
                 if (error || !유저정보) {
-                    메시지표시(document.body, "⚠️", "유저 정보가 존재하지 않습니다.", "#ef4444");
+                    메시지표시(document.body, "⚠️", "유저 정보가 존재하지 않습니다", "#ef4444");
+                    화면해제();
                     return;
                 }
 
-                메시지표시(document.body, "✅", "로그인 성공!", "#00c851");
-
-                // ✅ 유저데이터 전역에 담고 전투화면 등 표시
                 유저데이터 = {
                     ...유저정보,
                     스킬: 유저정보.스킬 || {},
@@ -939,6 +929,7 @@
                     강림몬스터: 유저정보.강림몬스터 || null
                 };
 
+                메시지표시(document.body, "✅", "로그인 성공!", "#00c851");
                 전투화면보여주기(유저데이터);
 
             } catch (e) {
@@ -982,7 +973,6 @@
 
                 메시지표시(document.body, "✅", "탈퇴가 완료되었습니다.", "#00c851");
 
-                // ✅ 로그아웃 및 초기화
                 await supabase.auth.signOut();
                 localStorage.removeItem("기기ID");
                 location.reload();
@@ -1012,6 +1002,10 @@
             document.getElementById("총골드").innerText = (유저.골드 || 0).toLocaleString();
             document.getElementById("총숙련도").innerText = (유저.숙련도 || 0).toLocaleString();
 
+            document.getElementById("획득경험치").innerText = "0";
+            document.getElementById("획득골드").innerText = "0";
+            document.getElementById("획득숙련도").innerText = "0";
+
             // 기본값 설정 (없을 수도 있음)
             if (!유저.현재층) 유저.현재층 = 1;
             if (!유저.현재악마번호) 유저.현재악마번호 = Math.floor(Math.random() * 72) + 1;
@@ -1023,6 +1017,62 @@
         }
 
 
+        document.getElementById("타이틀을아이디로").addEventListener("click", () => {
+            if (!유저데이터 || !유저데이터.유저UID) return;
+
+            const 영역 = document.getElementById("타이틀을아이디로");
+            영역.innerHTML = `<input type="text" id="아이디변경입력" placeholder="8자이내로입력하세요" maxlength="8" autocomplete="off" style="background:black; color:white; border:none; border-bottom:1px solid gray; outline:none; width:100px;">`;
+
+            const 입력 = document.getElementById("아이디변경입력");
+            입력.focus();
+            입력.value = "";
+
+            입력.addEventListener("keydown", async (e) => {
+                if (e.key !== "Enter") return;
+
+                const 새아이디 = 입력.value.trim();
+
+                화면잠금();
+
+                try {
+                    // 중복 검사
+                    const { data: 중복 } = await supabase
+                        .from("users")
+                        .select("유저UID")
+                        .eq("유저아이디", 새아이디)
+                        .neq("유저UID", 유저데이터.유저UID);
+
+                    if ((중복 ?? []).length > 0) {
+                        메시지표시(document.body, "⚠️", "이미 존재하는 아이디입니다", "#ef4444");
+                        입력.value = "";
+                        입력.focus();
+                        return;
+                    }
+
+                    const { error } = await supabase
+                        .from("users")
+                        .update({ 유저아이디: 새아이디 })
+                        .eq("유저UID", 유저데이터.유저UID);
+
+                    if (error) {
+                        메시지표시(document.body, "❌", "아이디 변경 실패: " + error.message, "#ef4444");
+                        입력.value = "";
+                        입력.focus();
+                        return;
+                    }
+
+                    유저데이터.유저아이디 = 새아이디;
+                    document.getElementById("타이틀을아이디로").innerText = 새아이디;
+                    document.getElementById("유저아이디").innerText = 새아이디;
+                    메시지표시(document.body, "✅", "아이디 변경 완료!", "#00c851");
+
+                } catch (e) {
+                    메시지표시(document.body, "❌", "오류 발생: " + e.message, "#ef4444");
+                } finally {
+                    화면해제();
+                }
+            }, { once: true });
+        });
 
 
 
