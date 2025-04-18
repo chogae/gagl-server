@@ -698,7 +698,7 @@
         // 최초 접속 시 기기ID를 localStorage에 저장
         let 기기ID = localStorage.getItem("기기ID");
         // 업데이트
-        document.getElementById("버전표시").innerText = "v2";
+        document.getElementById("버전표시").innerText = "v3";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -751,7 +751,8 @@
 
             const 아이디 = document.getElementById("이메일입력").value.trim();
             const 비번 = document.getElementById("비번입력").value.trim();
-            const 이메일형식 = `${아이디}@gagl.com`;
+            const 랜덤 = Date.now();  // ← 중복 방지용 태그
+            const 이메일형식 = `${아이디}+${랜덤}@gagl.com`;
             const 기기ID = localStorage.getItem("기기ID") || crypto.randomUUID();
 
             localStorage.setItem("기기ID", 기기ID);
