@@ -17,7 +17,7 @@
         document.addEventListener("DOMContentLoaded", async () => {
             console.log("✅ Supabase 연결됨");
 
-            const { data, error } = await supabase.from("user").select("*").limit(10);
+            const { data, error } = await supabase.from("users").select("*").limit(10);
 
             if (error) {
                 console.error("❌ user 테이블 쿼리 실패:", error.message);
@@ -976,7 +976,7 @@
             document.getElementById("에너지박스").style.display = "block";
 
             // 유저 정보 표시
-            document.getElementById("유저아이디").innerText = 유저.아이디 || "알 수 없음";
+            document.getElementById("유저아이디").innerText = 유저.유저아이디 || "알 수 없음";
             document.getElementById("유저공격력").innerText = `공격력 ${유저.공격력 || 10}`;
             document.getElementById("유저체력").innerText = `체력 ${유저.남은체력 || 10}`;
 
