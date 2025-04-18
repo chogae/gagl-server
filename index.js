@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+
+
 const { createClient } = require("@supabase/supabase-js"); // 🟡 Supabase Admin용
 
 const app = express();
@@ -39,6 +41,7 @@ app.post("/attack", (req, res) => {
     if (전투.결과 === "패배") {
         return res.json({
             결과: "패배",
+            몬스터,
             유저남은체력: 전투.유저남은체력,
             유저데이터: { ...유저, 남은체력: 유저.최대체력, 현재악마번호: Math.floor(Math.random() * 72) + 1, 강림몬스터: null }
         });
@@ -66,6 +69,23 @@ app.post("/attack", (req, res) => {
         회복: 드레인,
         유저데이터: 새유저
     });
+});
+
+app.post("/delete-user", async (req, res) => {
+    const { 유저UID } = req.body;
+
+    if (!유저UID) {
+        return res.status(400).json({ 오류: "UID 누락됨" });
+    }
+
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(유저UID);
+
+    if (error) {
+        console.error("Auth 삭제 실패:", error.message);
+        return res.status(500).json({ 오류: "Auth 삭제 실패" });
+    }
+
+    return res.json({ 메시지: "탈퇴 처리 완료" });
 });
 
 app.listen(3000, () => {
@@ -356,7 +376,7 @@ function 현재악마불러오기(층) {
     // 일반 몬스터 전체 생성
     const 일반목록 = 일반몬스터이름.map((이름, i) => ({
         이름,
-        체력: 100 + (층 - 1) * 72 * 2 + i * 2,
+        체력: 50 + (층 - 1) * 72 * 2 + i * 2,
         방어력: Math.floor(((층 - 1) * 72 + i) / 10),
         타입: "일반"
     }));
