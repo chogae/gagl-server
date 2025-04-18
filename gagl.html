@@ -754,8 +754,7 @@
             localStorage.setItem("기기ID", 기기ID);
 
             try {
-                // 중복 가입 체크
-                const { data: 기존 } = await supabase
+                const { data: 중복체크 } = await supabase
                     .from("users")
                     .select("기기ID")
                     .eq("기기ID", 기기ID);
@@ -812,7 +811,7 @@
                     장비목록: [],
                     킬카운트: 0,
                     강림몬스터: null,
-                    버전업:0
+                    버전업: 0
                 });
 
                 메시지표시(document.body, "✅", "회원가입 및 로그인 성공!", "#00c851");
