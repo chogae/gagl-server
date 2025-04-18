@@ -698,6 +698,8 @@
         // 최초 접속 시 기기ID를 localStorage에 저장
         let 기기ID = localStorage.getItem("기기ID");
 
+        document.getElementById("버전표시").innerText = "v1";
+
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
             localStorage.setItem("기기ID", 기기ID);
@@ -759,7 +761,7 @@
                     .select("기기ID")
                     .eq("기기ID", 기기ID);
 
-                if (기존.length > 0) {
+                if ((중복체크 ?? []).length > 0) {
                     메시지표시(document.body, "⚠️", "이미 이 기기에서 가입한 계정이 있어요!", "#ef4444");
                     return;
                 }
