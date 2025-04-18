@@ -695,7 +695,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // 업데이트
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-        document.getElementById("버전표시").innerText = "v1";
+        document.getElementById("버전표시").innerText = "v2";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1021,21 +1021,38 @@
             if (!유저데이터 || !유저데이터.유저UID) return;
 
             const 영역 = document.getElementById("타이틀을아이디로");
-            영역.innerHTML = `<input type="text" id="아이디변경입력" placeholder="8자이내로입력하세요" maxlength="8" autocomplete="off" style="background:black; color:white; border:none; border-bottom:1px solid gray; outline:none; width:100px;">`;
+            const 기존아이디 = 유저데이터.유저아이디;
+
+            영역.innerHTML = `
+        <input type="text" id="아이디변경입력" placeholder="새 아이디 입력" 
+               maxlength="12" autocomplete="off"
+               style="background:white; color:black; border:none; border-bottom:1px solid gray; 
+                      outline:none; width:100px; font-weight:bold;">
+    `;
 
             const 입력 = document.getElementById("아이디변경입력");
             입력.focus();
-            입력.value = "";
 
-            입력.addEventListener("keydown", async (e) => {
+            // 외부 클릭 시 원복
+            const 외부클릭처리 = (e) => {
+                if (e.target !== 입력) {
+                    영역.innerText = 기존아이디;
+                    document.removeEventListener("click", 외부클릭처리);
+                }
+            };
+            setTimeout(() => {
+                document.addEventListener("click", 외부클릭처리);
+            }, 0);
+
+            입력.addEventListener("keyup", async (e) => {
                 if (e.key !== "Enter") return;
 
                 const 새아이디 = 입력.value.trim();
+                if (!새아이디) return;
 
                 화면잠금();
 
                 try {
-                    // 중복 검사
                     const { data: 중복 } = await supabase
                         .from("users")
                         .select("유저UID")
@@ -1062,7 +1079,7 @@
                     }
 
                     유저데이터.유저아이디 = 새아이디;
-                    document.getElementById("타이틀을아이디로").innerText = 새아이디;
+                    영역.innerText = 새아이디;
                     document.getElementById("유저아이디").innerText = 새아이디;
                     메시지표시(document.body, "✅", "아이디 변경 완료!", "#00c851");
 
@@ -1070,10 +1087,10 @@
                     메시지표시(document.body, "❌", "오류 발생: " + e.message, "#ef4444");
                 } finally {
                     화면해제();
+                    document.removeEventListener("click", 외부클릭처리);
                 }
             }, { once: true });
         });
-
 
 
 
