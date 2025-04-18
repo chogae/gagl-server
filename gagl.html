@@ -14,42 +14,6 @@
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpYWZlc2Z5d3R2cGFjaGJmb3hyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3ODQwMTgsImV4cCI6MjA2MDM2MDAxOH0.1aDNwRZXac48nD9HDicXvDYk4wfcY1MC487_qf3hF5c"
         );
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            메시지표시(document.body, "📡", "Supabase 연결됨", "#00c851");
-
-            const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
-
-            if (인증오류) {
-                메시지표시(document.body, "❌", "유저 인증 확인 실패", "#ef4444");
-                return;
-            }
-
-            if (user && user.id) {
-                try {
-                    const { data: 유저정보, error } = await supabase
-                        .from("users")
-                        .select("*")
-                        .eq("유저UID", user.id)
-                        .single();
-
-                    if (error || !유저정보) {
-                        메시지표시(document.body, "⚠️", "유저 정보 없음", "#ef4444");
-                        return;
-                    }
-
-                    // ✅ 병합 생략하고 그대로 사용
-                    유저데이터 = 유저정보;
-
-                    메시지표시(document.body, "✅", "자동 로그인 완료", "#00c851");
-                    전투화면보여주기(유저데이터);
-                } catch (e) {
-                    메시지표시(document.body, "❌", "자동 로그인 오류: " + e.message, "#ef4444");
-                }
-            } else {
-                메시지표시(document.body, "🔒", "로그인된 유저 없음", "#aaa");
-            }
-        });
-
     </script>
 
     <style>
@@ -891,6 +855,7 @@
                 유저데이터 = 유저정보;
                 메시지표시(document.body, "✅", "회원가입 및 로그인 성공!", "#00c851");
                 전투화면보여주기(유저데이터);
+                supabase.auth.getUser().then(console.log)
 
             } catch (e) {
                 메시지표시(document.body, "❌", "오류 발생: " + e.message, "#ef4444");
@@ -1120,6 +1085,42 @@
         });
 
 
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            메시지표시(document.body, "📡", "Supabase 연결됨", "#00c851");
+
+            const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
+
+            if (인증오류) {
+                메시지표시(document.body, "❌", "유저 인증 확인 실패", "#ef4444");
+                return;
+            }
+
+            if (user && user.id) {
+                try {
+                    const { data: 유저정보, error } = await supabase
+                        .from("users")
+                        .select("*")
+                        .eq("유저UID", user.id)
+                        .single();
+
+                    if (error || !유저정보) {
+                        메시지표시(document.body, "⚠️", "유저 정보 없음", "#ef4444");
+                        return;
+                    }
+
+                    // ✅ 병합 생략하고 그대로 사용
+                    유저데이터 = 유저정보;
+
+                    메시지표시(document.body, "✅", "자동 로그인 완료", "#00c851");
+                    전투화면보여주기(유저데이터);
+                } catch (e) {
+                    메시지표시(document.body, "❌", "자동 로그인 오류: " + e.message, "#ef4444");
+                }
+            } else {
+                메시지표시(document.body, "🔒", "로그인된 유저 없음", "#aaa");
+            }
+        });
 
 
 
