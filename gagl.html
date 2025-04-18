@@ -683,7 +683,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // 업데이트
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-        document.getElementById("버전표시").innerText = "v2";
+        document.getElementById("버전표시").innerText = "v1";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -944,6 +944,12 @@
 
                 // ✅ 유저 테이블 삭제 (컬럼명 주의)
                 await supabase.from("users").delete().eq("유저UID", user.id);
+
+                await fetch("/delete-user", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 유저UID: user.id })
+                });
 
                 // ✅ access token으로 인증 삭제
                 const 세션 = await supabase.auth.getSession();

@@ -1,17 +1,25 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
+const { createClient } = require("@supabase/supabase-js"); // 🟡 Supabase Admin용
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-const path = require("path");
-// 🟡 이 코드 추가 (정적 파일 경로 설정)
+
+// 🟡 정적 파일 경로 설정
 app.use(express.static(path.join(__dirname)));
 
-// 🟡 이 코드 추가 (gagl.html 요청 시 해당 파일 반환)
+// 🟡 gagl.html 요청 시 해당 파일 반환
 app.get("/gagl.html", (req, res) => {
     res.sendFile(path.join(__dirname, "gagl.html"));
 });
+
+// ✅ Supabase Admin client 설정 (회원탈퇴용, 절대 클라이언트에 노출금지)
+const supabaseAdmin = createClient(
+    "https://piafesfywtvpachbfoxr.supabase.co", // 프로젝트 URL
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpYWZlc2Z5d3R2cGFjaGJmb3hyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDc4NDAxOCwiZXhwIjoyMDYwMzYwMDE4fQ.inGkUGNirltn3arVtb3rPvLpzoxK28OCDOx04rAH0EE"           // 서비스 롤 키
+);
 
 app.post("/attack", (req, res) => {
     const 유저 = req.body.유저데이터;
