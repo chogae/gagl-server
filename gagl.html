@@ -699,7 +699,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // 업데이트
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-        document.getElementById("버전표시").innerText = "v8";
+        document.getElementById("버전표시").innerText = "v9";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -750,6 +750,7 @@
             화면잠금();
 
             const 아이디 = document.getElementById("이메일입력").value.trim();
+            console.log("입력된 아이디:", 아이디); // ✅ 여기에 넣으세요
             const 비번 = document.getElementById("비번입력").value.trim();
             const 랜덤 = Date.now();
             const 이메일형식 = `${아이디}+${랜덤}@gagl.com`;
