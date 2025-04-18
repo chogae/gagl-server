@@ -699,7 +699,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // 업데이트
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-        document.getElementById("버전표시").innerText = "v11";
+        document.getElementById("버전표시").innerText = "v12";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -750,7 +750,7 @@
             화면잠금();
 
             const 아이디 = document.getElementById("이메일입력").value.trim();
-            console.log("입력된 아이디:", 아이디); // ✅ 여기에 넣으세요
+            console.log("입력된 아이디:", 아이디);
             const 비번 = document.getElementById("비번입력").value.trim();
             const 랜덤 = Date.now();
             const 이메일형식 = `${아이디}+${랜덤}@gagl.com`;
@@ -783,7 +783,7 @@
                     return;
                 }
 
-                const { data, error } = await supabase.auth.signUp({
+                const { data: 가입데이터, error } = await supabase.auth.signUp({
                     email: 이메일형식,
                     password: 비번,
                 });
@@ -815,44 +815,43 @@
                     return;
                 }
 
-                await supabase.from("users").insert({
-                    유저UID: user.id,
-                    로그인이메일: 이메일형식,
-                    유저아이디: 아이디,
-                    생성시각: Date.now(),
-                    레벨: 1,
-                    공격력: 10,
-                    경험치: 0,
-                    골드: 0,
-                    최대체력: 10,
-                    남은체력: 10,
-                    숙련도: 0,
-                    현재층: 1,
-                    현재악마번호: Math.floor(Math.random() * 72) + 1,
-                    스킬: {},
-                    조우기록: { 일반: 0, 레어: 0, 신화: 0, 고대: 0, 태초: 0, 공허: 0 },
-                    합성기록: {},
-                    장비목록: [],
-                    킬카운트: 0,
-                    강림몬스터: null,
-                    버전업: 0
-                });
-
-                const { data: 유저정보 } = await supabase
+                // ✅ Supabase에 유저정보 저장 + 바로 결과 반환받기
+                const { data: 삽입결과, error: 삽입에러 } = await supabase
                     .from("users")
-                    .select("*")
-                    .eq("유저UID", user.id)
+                    .insert({
+                        유저UID: user.id,
+                        로그인이메일: 이메일형식,
+                        유저아이디: 아이디,
+                        생성시각: Date.now(),
+                        레벨: 1,
+                        공격력: 10,
+                        경험치: 0,
+                        골드: 0,
+                        최대체력: 10,
+                        남은체력: 10,
+                        숙련도: 0,
+                        현재층: 1,
+                        현재악마번호: Math.floor(Math.random() * 72) + 1,
+                        스킬: {},
+                        조우기록: { 일반: 0, 레어: 0, 신화: 0, 고대: 0, 태초: 0, 공허: 0 },
+                        합성기록: {},
+                        장비목록: [],
+                        킬카운트: 0,
+                        강림몬스터: null,
+                        버전업: 0
+                    }, { returning: "representation" })
+                    .select()
                     .single();
 
-                유저데이터 = 유저정보;
-                console.log("유저정보 확인:", 유저정보);
-                메시지표시(document.body, "ℹ️", JSON.stringify(유저정보, null, 2), "#00c851");
-
-                if (!유저정보 || !유저정보.유저아이디) {
-                    메시지표시(document.body, "❌", "유저 아이디 미설정", "#ef4444");
+                if (삽입에러 || !삽입결과 || !삽입결과.유저아이디) {
+                    메시지표시(document.body, "❌", "유저 정보 저장 실패", "#ef4444");
                     화면해제();
                     return;
                 }
+
+                유저데이터 = 삽입결과;
+                console.log("유저데이터 확인:", 유저데이터);
+                메시지표시(document.body, "ℹ️", JSON.stringify(유저데이터, null, 2), "#00c851");
 
                 메시지표시(document.body, "✅", "회원가입 및 로그인 성공!", "#00c851");
                 전투화면보여주기(유저데이터);
