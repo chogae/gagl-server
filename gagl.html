@@ -683,7 +683,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // 업데이트
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-        document.getElementById("버전표시").innerText = "v1";
+        document.getElementById("버전표시").innerText = "v2";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -987,6 +987,8 @@
             document.getElementById("유저공격력").innerText = `공격력 ${유저.공격력 || 10}`;
             document.getElementById("유저체력").innerText = `체력 ${유저.남은체력 || 10}`;
 
+            document.getElementById("몬스터테두리안표시").style.display = "none";
+
             document.getElementById("레벨").innerText = `레벨 ${유저.레벨 || 1}`;
             document.getElementById("총경험치").innerText = 유저.경험치?.toLocaleString() || "0";
             document.getElementById("총골드").innerText = (유저.골드 || 0).toLocaleString();
@@ -998,14 +1000,74 @@
 
             // 기본값 설정 (없을 수도 있음)
             if (!유저.현재층) 유저.현재층 = 1;
-            if (!유저.현재악마번호) 유저.현재악마번호 = Math.floor(Math.random() * 72) + 1;
 
             document.getElementById("현재층").innerText = `${유저.현재층}층`;
-
-            // 이후 악마 불러오기 등은 따로 분리
-            // 현재악마불러오기(유저.현재층, 유저.현재악마번호);
         }
 
+        document.getElementById("공격버튼").addEventListener("click", async () => {
+            if (!유저데이터) return;
+
+            화면잠금();
+
+            try {
+                const 응답 = await fetch("/attack", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 유저데이터 })
+                });
+
+                const 결과 = await 응답.json();
+
+                if (결과.결과 === "패배") {
+                    // 메시지표시(전투화면, "💀", "전투에 패배했습니다", "#ef4444");
+                    const 몬스터 = 결과.몬스터;
+                    유저데이터 = 결과.유저데이터;
+
+                    document.getElementById("몬스터테두리안표시").style.display = "block";
+                    document.getElementById("악마이름").innerText = 몬스터.이름;
+                    document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
+                    document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
+
+                    document.getElementById("획득경험치").innerText = "0";
+                    document.getElementById("획득골드").innerText = "0";
+                    document.getElementById("획득숙련도").innerText = "0";
+                    document.getElementById("레벨업표시").innerText = "";
+
+                    document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}`;
+                    document.getElementById("승리패배로그").innerText = "패배";
+                } else {
+                    const { 유저데이터: 새유저, 몬스터, 보상, 레벨업, 회복 } = 결과;
+                    유저데이터 = 새유저;
+
+                    // 몬스터 표시
+                    document.getElementById("몬스터테두리안표시").style.display = "block";
+                    document.getElementById("악마이름").innerText = 몬스터.이름;
+                    document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
+                    document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
+
+                    // 보상 표시
+                    document.getElementById("총경험치").innerText = 새유저.경험치.toLocaleString();
+                    document.getElementById("총골드").innerText = 새유저.골드.toLocaleString();
+                    document.getElementById("총숙련도").innerText = 새유저.숙련도.toLocaleString();
+                    document.getElementById("획득경험치").innerText = `+${보상.경험치}`;
+                    document.getElementById("획득골드").innerText = `+${보상.골드}`;
+                    document.getElementById("획득숙련도").innerText = `+${보상.숙련도}`;
+                    document.getElementById("레벨").innerText = `레벨 ${새유저.레벨}`;
+                    document.getElementById("유저공격력").innerText = `공격력 ${새유저.공격력}`;
+                    document.getElementById("유저체력").innerText = `체력 ${새유저.남은체력}`;
+
+                    if (레벨업.증가한레벨 > 0) {
+                        document.getElementById("레벨업표시").innerText = `레벨업!`;
+                    }
+
+                    document.getElementById("승리패배로그").innerText = "승리";
+                }
+            } catch (e) {
+                메시지표시(document.body, "❌", "전투 중 오류: " + e.message, "#ef4444");
+            } finally {
+                화면해제();
+            }
+        });
 
         document.getElementById("타이틀을아이디로").addEventListener("click", () => {
             if (!유저데이터 || !유저데이터.유저UID) return;
