@@ -695,7 +695,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // 업데이트
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-        document.getElementById("버전표시").innerText = "v2";
+        document.getElementById("버전표시").innerText = "v1";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1024,9 +1024,9 @@
             const 기존아이디 = 유저데이터.유저아이디;
 
             영역.innerHTML = `
-        <input type="text" id="아이디변경입력" placeholder="새 아이디 입력" 
-               maxlength="12" autocomplete="off"
-               style="background:white; color:black; border:none; border-bottom:1px solid gray; 
+        <input type="text" id="아이디변경입력" placeholder="새 아이디 입력"
+               maxlength="20" autocomplete="off"
+               style="background:white; color:black; border:none; border-bottom:1px solid gray;
                       outline:none; width:100px; font-weight:bold;">
     `;
 
@@ -1044,11 +1044,14 @@
                 document.addEventListener("click", 외부클릭처리);
             }, 0);
 
-            입력.addEventListener("keyup", async (e) => {
+            입력.addEventListener("keydown", async (e) => {
                 if (e.key !== "Enter") return;
 
                 const 새아이디 = 입력.value.trim();
-                if (!새아이디) return;
+                if (!새아이디) {
+                    메시지표시(document.body, "⚠️", "아이디를 입력해주세요", "#ef4444");
+                    return;
+                }
 
                 화면잠금();
 
