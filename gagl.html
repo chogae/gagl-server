@@ -697,8 +697,8 @@
     <script>
         // 최초 접속 시 기기ID를 localStorage에 저장
         let 기기ID = localStorage.getItem("기기ID");
-
-        document.getElementById("버전표시").innerText = "v1";
+        // 업데이트
+        document.getElementById("버전표시").innerText = "v2";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -748,12 +748,28 @@
         async function 회원가입() {
             화면잠금();
 
+
             const 아이디 = document.getElementById("이메일입력").value.trim();
             const 비번 = document.getElementById("비번입력").value.trim();
             const 이메일형식 = `${아이디}@gagl.com`;
             const 기기ID = localStorage.getItem("기기ID") || crypto.randomUUID();
 
             localStorage.setItem("기기ID", 기기ID);
+
+            // ✅ 아이디 유효성 검사 (영문, 숫자, 밑줄 3~12자)
+            const 아이디패턴 = /^[a-zA-Z0-9_]{3,12}$/;
+            if (!아이디패턴.test(아이디)) {
+                메시지표시(document.body, "❌", "아이디는 영문/숫자/밑줄 포함 3~12자로 입력하세요", "#ef4444");
+                화면해제();
+                return;
+            }
+
+            // ✅ 비밀번호 유효성 검사 (6자 이상)
+            if (비번.length < 6) {
+                메시지표시(document.body, "❌", "비밀번호는 6자 이상 입력하세요", "#ef4444");
+                화면해제();
+                return;
+            }
 
             try {
                 const { data: 중복체크 } = await supabase
