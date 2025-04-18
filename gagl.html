@@ -699,7 +699,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // 업데이트
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-        document.getElementById("버전표시").innerText = "v14";
+        document.getElementById("버전표시").innerText = "v15";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -819,7 +819,6 @@
                     유저UID: user.id,
                     로그인이메일: 이메일형식,
                     유저아이디: 아이디,
-                    생성시각: Date.now(),
                     레벨: 1,
                     공격력: 10,
                     경험치: 0,
@@ -1030,6 +1029,27 @@
 
 
 
+        setInterval(async () => {
+            try {
+                const { data, error } = await supabase
+                    .from("점검")
+                    .select("상태")
+                    .limit(1)
+                    .single();
+
+                if (error) {
+                    console.warn("점검 상태 확인 실패:", error.message);
+                    return;
+                }
+
+                if (data.상태 === true) {
+                    console.log("🔁 점검 상태 true → 페이지 새로고침");
+                    location.reload();
+                }
+            } catch (e) {
+                console.error("점검 확인 중 오류:", e.message);
+            }
+        }, 60000); // 30초마다 체크
 
     </script>
 </body>
