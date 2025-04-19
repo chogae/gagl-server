@@ -227,31 +227,6 @@
             overflow-y: hidden;
         } */
 
-        #죽음메시지 {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            width: 400px;
-            position: fixed;
-            top: 33%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: #b0b0b0;
-            padding: 15px;
-            border: 3px solid #2e2e2e;
-            border-radius: 12px;
-            /* font-size: 20px; */
-            /* font-weight: bold; */
-            z-index: 9999;
-            box-shadow: 0 0 20px #2e2e2e;
-            animation: fadeOut 2s ease-in-out forwards;
-            user-select: none;
-            pointer-events: none;
-        }
-
         /* 자동으로 사라지게 하는 페이드 아웃 */
         @keyframes fadeOut {
             0% {
@@ -670,7 +645,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v2";
+        document.getElementById("버전표시").innerText = "v1";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -999,6 +974,7 @@
 
         function 전투화면보여주기(유저) {
             document.getElementById("전투").innerText = "전투";
+            document.getElementById("등급외테두리").style.border = "#2e2e2e";
 
             document.getElementById("인증화면").style.display = "none";
             document.getElementById("타이틀을아이디로").innerText = 유저.유저아이디 || "알 수 없음";
@@ -1032,6 +1008,83 @@
 
             document.getElementById("현재층").innerText = `${유저.현재층}층`;
         }
+
+        document.getElementById("공격버튼").addEventListener("click", async () => {
+            if (!유저데이터) return;
+
+            화면잠금();
+
+            try {
+                const 응답 = await fetch("/attack", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 유저데이터 })
+                });
+
+                const 결과 = await 응답.json();
+
+                if (결과.결과 === "패배") {
+                    const 몬스터 = 결과.몬스터;
+                    유저데이터 = 결과.유저데이터;
+
+                    document.getElementById("몬스터테두리안표시").style.display = "block";
+                    document.getElementById("악마이름").innerText = 몬스터.이름;
+                    document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
+                    document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
+
+                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#2e2e2e"}`;
+
+                    document.getElementById("획득경험치").innerText = "0";
+                    document.getElementById("획득골드").innerText = "0";
+                    document.getElementById("획득숙련도").innerText = "0";
+                    document.getElementById("레벨업표시").innerText = "";
+                    document.getElementById("획득로그").innerText = "";
+
+                    document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}`;
+                    document.getElementById("승리패배로그").innerText = "패배";
+                    document.getElementById("승리패배로그").style.color = "#ef4444";
+                } else {
+                    const { 유저데이터: 새유저, 몬스터, 보상, 레벨업, 회복 } = 결과;
+                    유저데이터 = 새유저;
+
+                    document.getElementById("몬스터테두리안표시").style.display = "block";
+                    document.getElementById("악마이름").innerText = 몬스터.이름;
+                    document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
+                    document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
+
+                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#2e2e2e"}`;
+
+                    document.getElementById("총경험치").innerText = 새유저.경험치.toLocaleString();
+                    document.getElementById("총골드").innerText = 새유저.골드.toLocaleString();
+                    document.getElementById("총숙련도").innerText = 새유저.숙련도.toLocaleString();
+                    document.getElementById("획득경험치").innerText = `+${보상.경험치}`;
+                    document.getElementById("획득골드").innerText = `+${보상.골드}`;
+                    document.getElementById("획득숙련도").innerText = `+${보상.숙련도}`;
+                    document.getElementById("레벨").innerText = `레벨 ${새유저.레벨}`;
+                    document.getElementById("유저공격력").innerText = `공격력 ${새유저.공격력}`;
+                    document.getElementById("유저체력").innerText = `체력 ${새유저.남은체력}`;
+                    document.getElementById("획득로그").innerText =
+                        `${보상.경험치} EXP, ${보상.골드} Gold, ${보상.숙련도} 숙련도 획득`;
+
+                    if (레벨업.증가한레벨 > 0) {
+                        document.getElementById("레벨업표시").innerText = `레벨 ${새유저.레벨} 달성!`;
+                        document.getElementById("레벨업표시").style.color = "#3f84ec";
+                    }
+
+                    if (결과.드랍장비) {
+                        const 장비 = 결과.드랍장비;
+                        메시지표시(메시지표시박스, "", `[${장비.등급}] ${장비.이름} +${장비.공격력} 드랍!`, 색상맵[장비.등급]);
+                    }
+
+                    document.getElementById("승리패배로그").innerText = "승리";
+                    document.getElementById("승리패배로그").style.color = "#00c851";
+                }
+            } catch (e) {
+                메시지표시(메시지표시박스, "❌", "전투 중 오류: " + e.message, "#ef4444");
+            } finally {
+                화면해제();
+            }
+        });
 
         document.getElementById("장비").addEventListener("click", () => {
             if (!유저데이터) return;
@@ -1180,7 +1233,7 @@
         });
 
         function 숙련도소모계산(투자순번) {
-            return Math.floor(10 * Math.pow(1.02, 투자순번));
+            return 투자순번;
         }
 
         function 스킬정보불러오기() {
@@ -1274,18 +1327,22 @@
                 const 이름 = 설정.단계[현재단계];
                 const 설명 = 설정.설명[현재단계];
                 const 아이콘 = 설정.아이콘();
+                const 발동확률 = 단계레벨 * 10;
+                const 설명표시 = `<div style="font-size: 12px; color: #888; margin-top: 2px;">
+    ${설명} <span style="color: #3b82f6;">발동확률(${발동확률}%)</span>
+</div>`;
 
                 const 줄 = document.createElement("div");
                 줄.className = "양쪽정렬 기본테두리";
                 줄.innerHTML = `
-            <div>${아이콘} ${이름} +${단계레벨}</div>
-            <div class="가로정렬">
-                <div class="버튼">+</div>
-                <div class="버튼">-</div>
-                <div class="버튼">M</div>
-                <div class="버튼">R</div>
-            </div>
-        `;
+  <div>${아이콘} ${이름} +${단계레벨}${설명표시}</div>
+  <div class="가로정렬">
+    <div class="버튼">+</div>
+    <div class="버튼">-</div>
+    <div class="버튼">M</div>
+    <div class="버튼">R</div>
+  </div>
+`;
                 컨테이너.appendChild(줄);
 
                 줄.querySelectorAll(".버튼").forEach(버튼 => {
@@ -1296,31 +1353,50 @@
                         if (버튼.innerText === "+") {
                             const 비용 = 숙련도소모계산(총투자 + 1);
                             if (유저데이터.숙련도 < 비용) return 메시지표시(스킬화면, "", "숙련도 부족", "#ef4444");
-                            if (전체레벨 >= 단계수 * 단계당레벨) return;
+                            if (전체레벨 >= 단계수 * 단계당레벨) return 메시지표시(스킬화면, "⚠️", "최종단계입니다", "#ccc");
+
                             유저데이터.숙련도 -= 비용;
                             유저데이터.스킬[키] = 전체레벨 + 1;
+                            메시지표시(스킬화면, "✅", `${설정.단계[현재단계]} +${단계레벨 + 1} 강화됨`, "#00c851");
+
                         } else if (버튼.innerText === "-") {
-                            if (전체레벨 <= 0) return;
+                            if (전체레벨 <= 0) return 메시지표시(스킬화면, "❌", "회수할 스킬이 없습니다", "#ef4444");
+
                             const 환급 = 숙련도소모계산(총투자);
                             유저데이터.숙련도 += 환급;
                             유저데이터.스킬[키] = 전체레벨 - 1;
+                            메시지표시(스킬화면, "↩️", `${설정.단계[현재단계]} 1레벨 회수`, "#3b82f6");
+
                         } else if (버튼.innerText === "M") {
+                            let 성공횟수 = 0;
                             while (전체레벨 < 단계수 * 단계당레벨) {
                                 const 비용 = 숙련도소모계산(총투자 + 1);
                                 if (유저데이터.숙련도 < 비용) break;
+
                                 유저데이터.숙련도 -= 비용;
                                 전체레벨++;
                                 유저데이터.스킬[키] = 전체레벨;
+                                성공횟수++;
                             }
+                            if (성공횟수 > 0) {
+                                메시지표시(스킬화면, "🚀", `${설정.단계[Math.floor(전체레벨 / 단계당레벨)]} +${전체레벨 % 단계당레벨}까지 투자`, "#00c851");
+                            } else {
+                                메시지표시(스킬화면, "❌", "숙련도 부족 또는 최종단계", "#ef4444");
+                            }
+
                         } else if (버튼.innerText === "R") {
+                            if (전체레벨 <= 0) return 메시지표시(스킬화면, "❌", "회수할 스킬이 없습니다", "#ef4444");
+
                             let 환급 = 0;
                             let 투자순번 = 총투자;
                             for (let i = 0; i < 전체레벨; i++) {
                                 환급 += 숙련도소모계산(투자순번);
                                 투자순번--;
                             }
+
                             유저데이터.숙련도 += 환급;
                             유저데이터.스킬[키] = 0;
+                            메시지표시(스킬화면, "🔄", `${설정.단계[현재단계]} 전체 회수 (${전체레벨}레벨)`, "#3b82f6");
                         }
 
                         화면잠금();
@@ -1340,82 +1416,6 @@
             }
         }
 
-        document.getElementById("공격버튼").addEventListener("click", async () => {
-            if (!유저데이터) return;
-
-            화면잠금();
-
-            try {
-                const 응답 = await fetch("/attack", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 유저데이터 })
-                });
-
-                const 결과 = await 응답.json();
-
-                if (결과.결과 === "패배") {
-                    const 몬스터 = 결과.몬스터;
-                    유저데이터 = 결과.유저데이터;
-
-                    document.getElementById("몬스터테두리안표시").style.display = "block";
-                    document.getElementById("악마이름").innerText = 몬스터.이름;
-                    document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
-                    document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
-
-                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#2e2e2e"}`;
-
-                    document.getElementById("획득경험치").innerText = "0";
-                    document.getElementById("획득골드").innerText = "0";
-                    document.getElementById("획득숙련도").innerText = "0";
-                    document.getElementById("레벨업표시").innerText = "";
-                    document.getElementById("획득로그").innerText = "";
-
-                    document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}`;
-                    document.getElementById("승리패배로그").innerText = "패배";
-                    document.getElementById("승리패배로그").style.color = "#ef4444";
-                } else {
-                    const { 유저데이터: 새유저, 몬스터, 보상, 레벨업, 회복 } = 결과;
-                    유저데이터 = 새유저;
-
-                    document.getElementById("몬스터테두리안표시").style.display = "block";
-                    document.getElementById("악마이름").innerText = 몬스터.이름;
-                    document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
-                    document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
-
-                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#2e2e2e"}`;
-
-                    document.getElementById("총경험치").innerText = 새유저.경험치.toLocaleString();
-                    document.getElementById("총골드").innerText = 새유저.골드.toLocaleString();
-                    document.getElementById("총숙련도").innerText = 새유저.숙련도.toLocaleString();
-                    document.getElementById("획득경험치").innerText = `+${보상.경험치}`;
-                    document.getElementById("획득골드").innerText = `+${보상.골드}`;
-                    document.getElementById("획득숙련도").innerText = `+${보상.숙련도}`;
-                    document.getElementById("레벨").innerText = `레벨 ${새유저.레벨}`;
-                    document.getElementById("유저공격력").innerText = `공격력 ${새유저.공격력}`;
-                    document.getElementById("유저체력").innerText = `체력 ${새유저.남은체력}`;
-                    document.getElementById("획득로그").innerText =
-                        `${보상.경험치} EXP, ${보상.골드} Gold, ${보상.숙련도} 숙련도 획득`;
-
-                    if (레벨업.증가한레벨 > 0) {
-                        document.getElementById("레벨업표시").innerText = `레벨 ${새유저.레벨} 달성!`;
-                        document.getElementById("레벨업표시").style.color = "#3f84ec";
-                    }
-
-                    if (결과.드랍장비) {
-                        const 장비 = 결과.드랍장비;
-                        메시지표시(메시지표시박스, "", `[${장비.등급}] ${장비.이름} +${장비.공격력} 드랍!`, 색상맵[장비.등급]);
-                    }
-
-                    document.getElementById("승리패배로그").innerText = "승리";
-                    document.getElementById("승리패배로그").style.color = "#00c851";
-                }
-            } catch (e) {
-                메시지표시(메시지표시박스, "❌", "전투 중 오류: " + e.message, "#ef4444");
-            } finally {
-                화면해제();
-            }
-        });
 
         document.addEventListener("DOMContentLoaded", async () => {
             메시지표시(메시지표시박스, "📡", "Supabase 연결됨", "#00c851");
