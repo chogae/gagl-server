@@ -645,7 +645,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v2";
+        document.getElementById("버전표시").innerText = "v1";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1422,6 +1422,43 @@
                 });
             }
         }
+
+        document.getElementById("보유숙련도").addEventListener("click", async () => {
+            const 스킬들 = 유저데이터.스킬 || {};
+            let 총투자 = Object.values(스킬들).reduce((a, b) => a + b, 0);
+
+            if (총투자 === 0) {
+                메시지표시(스킬화면, "ℹ️", "회수할 스킬이 없습니다.", "#888");
+                return;
+            }
+
+            let 환급 = 0;
+            let 투자순번 = 총투자;
+
+            for (let i = 0; i < 총투자; i++) {
+                환급 += 투자순번;
+                투자순번--;
+            }
+
+            유저데이터.숙련도 += 환급;
+            유저데이터.스킬 = {}; // 전체 초기화
+
+            메시지표시(스킬화면, "🔁", `모든 스킬 초기화, 숙련도 +${환급}`, "#3b82f6");
+
+            화면잠금();
+            await fetch("/update-skill", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    유저UID: 유저데이터.유저UID,
+                    스킬: 유저데이터.스킬,
+                    숙련도: 유저데이터.숙련도
+                })
+            });
+            화면해제();
+
+            스킬화면보여주기();
+        });
 
         document.addEventListener("DOMContentLoaded", async () => {
             메시지표시(메시지표시박스, "📡", "Supabase 연결됨", "#00c851");
