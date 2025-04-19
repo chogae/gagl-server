@@ -377,21 +377,6 @@
             }
         }
 
-        #미니장비창 {
-            position: fixed;
-            top: 57px;
-            left: 300px;
-            z-index: 99999;
-            background: black;
-            color: white;
-            display: none;
-            max-height: 600px;
-            overflow-y: auto;
-            /* border: 2px solid #3b82f6; */
-            padding: 12px;
-            border-radius: 8px;
-        }
-
         /* css추가 */
     </style>
 </head>
@@ -627,7 +612,7 @@
     position: fixed;
     top: 57px;
     left: 300px;
-    z-index: 9999;
+    z-index: 99999;
     background: black;
     color: white;
     display: none;
@@ -657,7 +642,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v261";
+        document.getElementById("버전표시").innerText = "v262";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1573,7 +1558,9 @@
             <div>${유저.유저아이디} (lv.${유저.레벨 || 1}) - 공격력 ${유저.공격력} / ${유저.현재층}층</div>
         `;
 
-                줄.addEventListener("click", () => {
+                줄.addEventListener("click", (e) => {
+                    e.stopPropagation(); // ✅ document로 이벤트 퍼지는 것 차단
+
                     console.log("✅ 유저 클릭됨:", 유저);
                     const 창 = document.getElementById("미니장비창");
                     창.style.display = "block";
@@ -1587,7 +1574,21 @@
                         return;
                     }
 
-                    장비들.sort((a, b) => b.공격력 - a.공격력);
+                    // ✅ 등급 순 정렬
+                    const 등급순서 = {
+                        "레어": 1,
+                        "신화": 2,
+                        "고대": 3,
+                        "태초": 4,
+                        "공허": 5
+                    };
+
+                    장비들.sort((a, b) => {
+                        const 순서A = 등급순서[a.등급] ?? 99;
+                        const 순서B = 등급순서[b.등급] ?? 99;
+                        return 순서A - 순서B;
+                    });
+
                     for (const 장비 of 장비들) {
                         const 키 = `${장비.이름}|${장비.등급}`;
                         const 합성수 = 기록[키] ?? 0;
@@ -1618,17 +1619,21 @@
             }
         }
 
+        // ✅ 장비창 내부 클릭 시 document에 이벤트 안 퍼지도록 막기
+        document.getElementById("미니장비창").addEventListener("click", (e) => {
+            e.stopPropagation();
+        });
+
+        // ✅ 장비창 외부 클릭 시 닫기
         document.addEventListener("click", (e) => {
             const 창 = document.getElementById("미니장비창");
 
-            if (창.style.display !== "block") return; // 열려있을 때만 반응
+            if (창.style.display !== "block") return;
 
-            // 클릭한 대상이 장비창 내부가 아니면 닫기
             if (!창.contains(e.target)) {
                 창.style.display = "none";
             }
         });
-
         document.addEventListener("DOMContentLoaded", async () => {
             // 메시지표시(메시지표시박스, "📡", "Supabase 연결됨", "#00c851");
 
