@@ -599,7 +599,7 @@
 
         </div>
         <div id="몬스터테두리안표시">
-            <div class="사백픽셀테두리 몬스터테두리 양쪽정렬" >
+            <div class="사백픽셀테두리 몬스터테두리 양쪽정렬">
                 <div id="악마이름">
                     몬스터
                 </div>
@@ -691,12 +691,37 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v11";
+        document.getElementById("버전표시").innerText = "v222";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
             localStorage.setItem("기기ID", 기기ID);
         }
+
+        // 색찾기
+        const 색상맵 = {
+            "일반": "#ffffff",
+            "레어": "#00ff00",
+            "신화": "#0000ff",
+            "고대": "#ffff00",
+            "태초": "#800080",
+            "공허": "#ff0000",
+
+            "빨": "#ff0000",
+            "주": "#ff8000",
+            "노": "#ffff00",
+            "초": "#00ff00",
+            "파": "#0080ff",
+            "남": "#8a2be2",
+            "보": "#800080",
+
+            "빨주": "#ff4000",
+            "주노": "#ffbf00",
+            "노초": "#80ff00",
+            "초파": "#00ff80",
+            "파남": "#4455d0",
+            "남보": "#851bb1"
+        };
 
         function 화면잠금() {
             document.body.style.pointerEvents = "none";
@@ -988,6 +1013,11 @@
             }
         }
 
+        document.getElementById("전투").addEventListener("click", () => {
+            if (!유저데이터) return;
+            전투화면보여주기(유저데이터);
+        });
+
         function 전투화면보여주기(유저) {
             // UI 전환
             document.getElementById("인증화면").style.display = "none";
@@ -1018,6 +1048,76 @@
             document.getElementById("현재층").innerText = `${유저.현재층}층`;
         }
 
+        document.getElementById("장비").addEventListener("click", () => {
+            if (!유저데이터) return;
+            장비화면보여주기();
+        });
+
+        function 장비화면보여주기() {
+            // 📌 화면 전환
+            document.getElementById("전투화면").style.display = "none";
+            document.getElementById("에너지박스").style.display = "none";
+            document.getElementById("전당화면").style.display = "none";
+            document.getElementById("스킬화면").style.display = "none";
+            document.getElementById("장비화면").style.display = "block";
+            document.getElementById("획득로그").innerText = "";
+            document.getElementById("레벨업표시").innerText = "";
+
+            // 📌 조우 기록 표시
+            const 기록 = 유저데이터.조우기록 || { 레어: 0, 신화: 0, 고대: 0, 태초: 0, 공허: 0 };
+            document.getElementById("장비목록").innerText =
+                `레어:${기록.레어} 신화:${기록.신화} 고대:${기록.고대} 태초:${기록.태초} 공허:${기록.공허}`;
+
+            // 📌 골드/공격력/체력 표시
+            document.getElementById("장비골드표시").innerText =
+                `💰 ${유저데이터.골드.toLocaleString()} Gold | 🗡 공격력 ${유저데이터.공격력} | ❤️ 최대체력 ${유저데이터.최대체력}`;
+
+            // 📌 장비 컨테이너 정리
+            const 장비컨테이너 = document.getElementById("장비컨테이너");
+            장비컨테이너.innerHTML = "";
+
+            const 장비목록 = 유저데이터.장비목록 || [];
+
+            if (장비목록.length === 0) {
+                장비컨테이너.innerText = "획득한 장비가 없습니다.";
+                return;
+            }
+
+            // 📌 공격력 기준 내림차순 정렬
+            장비목록.sort((a, b) => b.공격력 - a.공격력);
+
+            // 📌 장비 개별 렌더링
+            장비목록.forEach(장비 => {
+                const 박스 = document.createElement("div");
+                박스.className = "기본테두리 양쪽정렬";
+                박스.style.border = `1px solid ${색상맵[장비.등급] || "#fff"}`;
+                박스.style.marginBottom = "8px";
+
+                const 키 = `${장비.이름}|${장비.등급}`;
+                const 합성수 = 유저데이터.합성기록?.[키] ?? 0;
+                const 강화표시 = 장비.강화 ? ` +${장비.강화}` : "";
+                const 이름표시 = `${장비.이름} (${합성수}) +${강화표시}`;
+
+                박스.innerHTML = `
+            <div>[${장비.등급}] ${이름표시}</div>
+            <div>
+                <svg onclick="장비강화('${장비.이름}', '${장비.등급}', this.closest('.기본테두리'))"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="cursor:pointer; margin-right: 4px;">
+                    <path d="m15 12-8.373 8.373a1 1 0 1 1-3-3L12 9"/>
+                    <path d="m18 15 4-4"/>
+                    <path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172V7l-2.26-2.26a6 6 0 0 0-4.202-1.756L9 2.96l.92.82A6.18 6.18 0 0 1 12 8.4V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"/>
+                </svg>
+                공격력 +${장비.공격력}
+            </div>
+        `;
+
+                장비컨테이너.appendChild(박스);
+            });
+        }
+
         document.getElementById("공격버튼").addEventListener("click", async () => {
             if (!유저데이터) return;
 
@@ -1033,7 +1133,6 @@
                 const 결과 = await 응답.json();
 
                 if (결과.결과 === "패배") {
-                    // 메시지표시(전투화면, "💀", "전투에 패배했습니다", "#ef4444");
                     const 몬스터 = 결과.몬스터;
                     유저데이터 = 결과.유저데이터;
 
@@ -1042,20 +1141,13 @@
                     document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
                     document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
 
-                    const 테두리색상 = {
-                        "일반": "#2e2e2e",
-                        "레어": "#2665c9",
-                        "신화": "#c59b20",
-                        "고대": "#c825cd",
-                        "태초": "#cd2525",
-                        "공허": "#2acd25"
-                    };
-                    document.getElementById("등급외테두리").style.border = `0.2px solid ${테두리색상[몬스터.타입] || "#2e2e2e"}`;
+                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#2e2e2e"}`;
 
                     document.getElementById("획득경험치").innerText = "0";
                     document.getElementById("획득골드").innerText = "0";
                     document.getElementById("획득숙련도").innerText = "0";
                     document.getElementById("레벨업표시").innerText = "";
+                    document.getElementById("획득로그").innerText = "";
 
                     document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}`;
                     document.getElementById("승리패배로그").innerText = "패배";
@@ -1064,24 +1156,13 @@
                     const { 유저데이터: 새유저, 몬스터, 보상, 레벨업, 회복 } = 결과;
                     유저데이터 = 새유저;
 
-                    // 몬스터 표시
                     document.getElementById("몬스터테두리안표시").style.display = "block";
                     document.getElementById("악마이름").innerText = 몬스터.이름;
                     document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
                     document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
 
-                    const 테두리색상 = {
-                        "일반": "#2e2e2e",
-                        "레어": "#2665c9",
-                        "신화": "#c59b20",
-                        "고대": "#c825cd",
-                        "태초": "#cd2525",
-                        "공허": "#2acd25"
-                    };
-                    document.getElementById("등급외테두리").style.border = `0.2px solid ${테두리색상[몬스터.타입] || "#2e2e2e"}`;
+                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#2e2e2e"}`;
 
-
-                    // 보상 표시
                     document.getElementById("총경험치").innerText = 새유저.경험치.toLocaleString();
                     document.getElementById("총골드").innerText = 새유저.골드.toLocaleString();
                     document.getElementById("총숙련도").innerText = 새유저.숙련도.toLocaleString();
@@ -1095,7 +1176,13 @@
                         `${보상.경험치} EXP, ${보상.골드} Gold, ${보상.숙련도} 숙련도 획득`;
 
                     if (레벨업.증가한레벨 > 0) {
-                        document.getElementById("레벨업표시").innerText = `레벨업!`;
+                        document.getElementById("레벨업표시").innerText = `레벨 ${새유저.레벨} 달성!`;
+                        document.getElementById("레벨업표시").style.color = "#3f84ec";
+                    }
+
+                    if (결과.드랍장비) {
+                        const 장비 = 결과.드랍장비;
+                        메시지표시(메시지표시박스, "", `[${장비.등급}] ${장비.이름} +${장비.공격력}) 드랍!`, 테두리색상[몬스터.타입]);
                     }
 
                     document.getElementById("승리패배로그").innerText = "승리";
