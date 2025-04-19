@@ -642,7 +642,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v253";
+        document.getElementById("버전표시").innerText = "v254";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1454,6 +1454,11 @@
             화면해제();
 
             스킬화면보여주기();
+        });
+
+        document.getElementById("전당").addEventListener("click", () => {
+            if (!유저데이터) return;
+            전당화면보여주기();
         });
 
         async function 전당화면보여주기() {
