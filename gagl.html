@@ -377,6 +377,21 @@
             }
         }
 
+        #미니장비창 {
+            position: fixed;
+            top: 57px;
+            left: 300px;
+            z-index: 99999;
+            background: black;
+            color: white;
+            display: none;
+            max-height: 600px;
+            overflow-y: auto;
+            /* border: 2px solid #3b82f6; */
+            padding: 12px;
+            border-radius: 8px;
+        }
+
         /* css추가 */
     </style>
 </head>
@@ -642,7 +657,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v260";
+        document.getElementById("버전표시").innerText = "v261";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
