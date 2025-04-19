@@ -425,7 +425,6 @@
                 <div class="가로정렬">
                     <div class="버튼">
                         <div id="전투">
-                            전투
                         </div>
                     </div>
                     <div class="버튼" id="장비">
@@ -671,7 +670,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v11";
+        document.getElementById("버전표시").innerText = "v2";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -999,7 +998,8 @@
         });
 
         function 전투화면보여주기(유저) {
-            // UI 전환
+            document.getElementById("전투").innerText = "전투";
+
             document.getElementById("인증화면").style.display = "none";
             document.getElementById("타이틀을아이디로").innerText = 유저.유저아이디 || "알 수 없음";
             document.getElementById("전투스킬설정버튼").style.display = "block";
@@ -1179,6 +1179,10 @@
             스킬화면보여주기();
         });
 
+        function 숙련도소모계산(투자순번) {
+            return Math.floor(10 * Math.pow(1.02, 투자순번));
+        }
+
         function 스킬정보불러오기() {
             return {
                 버서커: {
@@ -1290,19 +1294,19 @@
                         let 전체레벨 = 유저데이터.스킬[키] || 0;
 
                         if (버튼.innerText === "+") {
-                            const 비용 = 숙련도소모(총투자 + 1);
+                            const 비용 = 숙련도소모계산(총투자 + 1);
                             if (유저데이터.숙련도 < 비용) return 메시지표시(스킬화면, "", "숙련도 부족", "#ef4444");
                             if (전체레벨 >= 단계수 * 단계당레벨) return;
                             유저데이터.숙련도 -= 비용;
                             유저데이터.스킬[키] = 전체레벨 + 1;
                         } else if (버튼.innerText === "-") {
                             if (전체레벨 <= 0) return;
-                            const 환급 = 숙련도소모(총투자);
+                            const 환급 = 숙련도소모계산(총투자);
                             유저데이터.숙련도 += 환급;
                             유저데이터.스킬[키] = 전체레벨 - 1;
                         } else if (버튼.innerText === "M") {
                             while (전체레벨 < 단계수 * 단계당레벨) {
-                                const 비용 = 숙련도소모(총투자 + 1);
+                                const 비용 = 숙련도소모계산(총투자 + 1);
                                 if (유저데이터.숙련도 < 비용) break;
                                 유저데이터.숙련도 -= 비용;
                                 전체레벨++;
@@ -1312,7 +1316,7 @@
                             let 환급 = 0;
                             let 투자순번 = 총투자;
                             for (let i = 0; i < 전체레벨; i++) {
-                                환급 += 숙련도소모(투자순번);
+                                환급 += 숙련도소모계산(투자순번);
                                 투자순번--;
                             }
                             유저데이터.숙련도 += 환급;
