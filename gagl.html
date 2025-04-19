@@ -642,7 +642,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v259";
+        document.getElementById("버전표시").innerText = "v260";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1583,7 +1583,7 @@
                         박스.className = "기본테두리";
                         박스.style.marginBottom = "6px";
                         박스.style.border = `1px solid ${색상맵[장비.등급] || "#ccc"}`;
-                        박스.innerText = `[${장비.등급}] ${이름표시} - 🗡 ${장비.공격력}`;
+                        박스.innerHTML = `[${장비.등급}] ${이름표시} - 🗡 ${장비.공격력}`;
                         창.appendChild(박스);
                     }
                 });
