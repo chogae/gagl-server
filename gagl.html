@@ -105,30 +105,6 @@
             padding: 15px;
         }
 
-        .장비-일반 {
-            border: 1px solid #ffffff;
-        }
-
-        .장비-레어 {
-            border: 1px solid #2665c9;
-        }
-
-        .장비-신화 {
-            border: 1px solid #c59b20;
-        }
-
-        .장비-고대 {
-            border: 1px solid #c825cd;
-        }
-
-        .장비-태초 {
-            border: 1px solid #cd2525;
-        }
-
-        .장비-공허 {
-            border: 1px solid #2acd25;
-        }
-
         .에너지바 {
             background-color: #eab308;
             height: 5px;
@@ -691,7 +667,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v222";
+        document.getElementById("버전표시").innerText = "v111";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -700,7 +676,7 @@
 
         // 색찾기
         const 색상맵 = {
-            "일반": "#ffffff",
+            "일반": "#2e2e2e",
             "레어": "#00ff00",
             "신화": "#0000ff",
             "고대": "#ffff00",
@@ -1021,6 +997,9 @@
         function 전투화면보여주기(유저) {
             // UI 전환
             document.getElementById("인증화면").style.display = "none";
+            document.getElementById("장비화면").style.display = "none";
+            document.getElementById("스킬화면").style.display = "none";
+            document.getElementById("전당화면").style.display = "none";
             document.getElementById("전투화면").style.display = "block";
             document.getElementById("전투스킬설정버튼").style.display = "block";
             document.getElementById("에너지박스").style.display = "block";
@@ -1054,7 +1033,8 @@
         });
 
         function 장비화면보여주기() {
-            // 📌 화면 전환
+            document.getElementById("인증화면").style.display = "none";
+
             document.getElementById("전투화면").style.display = "none";
             document.getElementById("에너지박스").style.display = "none";
             document.getElementById("전당화면").style.display = "none";
@@ -1095,8 +1075,8 @@
 
                 const 키 = `${장비.이름}|${장비.등급}`;
                 const 합성수 = 유저데이터.합성기록?.[키] ?? 0;
-                const 강화표시 = 장비.강화 ? ` +${장비.강화}` : "";
-                const 이름표시 = `${장비.이름} (${합성수}) +${강화표시}`;
+                const 강화표시 = 장비.강화 ? `+${장비.강화}` : "";
+                const 이름표시 = `${장비.이름} (${합성수}) ${강화표시}`;
 
                 박스.innerHTML = `
             <div>[${장비.등급}] ${이름표시}</div>
@@ -1182,7 +1162,7 @@
 
                     if (결과.드랍장비) {
                         const 장비 = 결과.드랍장비;
-                        메시지표시(메시지표시박스, "", `[${장비.등급}] ${장비.이름} +${장비.공격력}) 드랍!`, 테두리색상[몬스터.타입]);
+                        메시지표시(메시지표시박스, "", `[${장비.등급}] ${장비.이름} +${장비.공격력} 드랍!`, 색상맵[장비.등급]);
                     }
 
                     document.getElementById("승리패배로그").innerText = "승리";
