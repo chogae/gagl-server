@@ -598,17 +598,20 @@
             </div>
 
         </div>
-        <div class="사백픽셀테두리 몬스터테두리 양쪽정렬" id="몬스터테두리안표시">
-            <div id="악마이름">
-                몬스터
-            </div>
-            <div class="세로정렬">
-                <div id="악마체력">
-                    체력 100
+        <div id="몬스터테두리안표시">
+            <div class="사백픽셀테두리 몬스터테두리 양쪽정렬" >
+                <div id="악마이름">
+                    몬스터
                 </div>
-                <div id="악마방어력">
-                    방어력 10
+                <div class="세로정렬">
+                    <div id="악마체력">
+                        체력 100
+                    </div>
+                    <div id="악마방어력">
+                        방어력 10
+                    </div>
                 </div>
+
             </div>
         </div>
 
@@ -1088,6 +1091,8 @@
                     document.getElementById("레벨").innerText = `레벨 ${새유저.레벨}`;
                     document.getElementById("유저공격력").innerText = `공격력 ${새유저.공격력}`;
                     document.getElementById("유저체력").innerText = `체력 ${새유저.남은체력}`;
+                    document.getElementById("획득로그").innerText =
+                        `${보상.경험치} EXP, ${보상.골드} Gold, ${보상.숙련도} 숙련도 획득`;
 
                     if (레벨업.증가한레벨 > 0) {
                         document.getElementById("레벨업표시").innerText = `레벨업!`;
