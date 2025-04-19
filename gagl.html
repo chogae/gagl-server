@@ -82,16 +82,10 @@
         .버튼:hover {
             background-color: #333;
             cursor: pointer;
-            width: 100%;
-            display: flex;
-            align-items: center;
         }
 
         .커서호버:hover {
             width: 100%;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
         }
 
         .사백픽셀테두리 {
@@ -401,9 +395,8 @@
 
             <div id="전투스킬설정버튼" style="display: none;">
                 <div class="가로정렬">
-                    <div class="버튼">
-                        <div id="전투">
-                        </div>
+                    <div class="버튼" id="전투">
+                        전투
                     </div>
                     <div class="버튼" id="장비">
                         장비
@@ -648,7 +641,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v249";
+        document.getElementById("버전표시").innerText = "v250";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -976,11 +969,10 @@
         });
 
         function 전투화면보여주기(유저) {
-            document.getElementById("전투").innerText = " 전투";
             document.getElementById("등급외테두리").style.border = "0.2px solid #2e2e2e";
 
             document.getElementById("인증화면").style.display = "none";
-            document.getElementById("타이틀을아이디로").innerText = 유저.유저아이디 || "알 수 없음";
+            document.getElementById("타이틀을아이디로").innerText = 유저.유저아이디;
             document.getElementById("전투스킬설정버튼").style.display = "block";
 
             document.getElementById("에너지박스").style.display = "block";
