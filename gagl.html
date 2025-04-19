@@ -671,7 +671,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v22";
+        document.getElementById("버전표시").innerText = "v11";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1128,6 +1128,12 @@
             }[등급];
 
             const 비용 = 강화비용.toLocaleString();
+
+            if ((유저.골드 || 0) < 비용) {
+                메시지표시(메시지표시박스, "❌", `골드 부족: ${강화비용} 필요`, "#ef4444");
+                return;
+            }
+
             const 확인 = confirm(`[${등급}] 장비를 ${비용} Gold로 강화하시겠습니까?`);
             if (!확인) return;
 
@@ -1186,27 +1192,27 @@
                         "체력-5, 데미지 3.0배", "체력-6, 데미지 3.4배", "체력-7, 데미지 3.8배", "체력-8, 데미지 4.2배",
                         "체력-9, 데미지 4.6배", "체력-10, 데미지 5.0배"
                     ],
-                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵[빨]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`
+                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵["빨"]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`
                 },
                 드레인: {
                     단계: ["기가 드레인", "테라 드레인", "페타 드레인", "엑사 드레인", "제타 드레인", "요타 드레인", "로나 드레인", "쿼카 드레인"],
                     설명: ["처치 후 체력회복 + 1", "처치 후 체력회복 + 2", "처치 후 체력회복 + 3", "처치 후 체력회복 + 4", "처치 후 체력회복 + 5", "처치 후 체력회복 + 6", "처치 후 체력회복 + 7", "처치 후 체력회복 + 8"],
-                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵[주]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>`
+                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵["주"]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>`
                 },
                 발굴: {
                     단계: ["루비 발굴", "사파이어 발굴", "에메랄드 발굴", "다이아몬드 발굴", "토파즈 발굴"],
                     설명: ["골드획득 1.2배", "골드획득 1.4배", "골드획득 1.6배", "골드획득 1.8배", "골드획득 2.0배"],
-                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵[노]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>`
+                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵["노"]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>`
                 },
                 아이언바디: {
                     단계: ["스톤 아이언바디", "스틸 아이언바디", "티탄 아이언바디", "플레이트 아이언바디", "미스릴 아이언바디"],
                     설명: ["공격전 체력회복 + 1", "공격전 체력회복 + 2", "공격전 체력회복 + 3", "공격전 체력회복 + 4", "공격전 체력회복 + 5"],
-                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵[초]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.409 13.017A5 5 0 0 1 22 15c0 3.866-4 7-9 7-4.077 0-8.153-.82-10.371-2.462-.426-.316-.631-.832-.62-1.362C2.118 12.723 2.627 2 10 2a3 3 0 0 1 3 3 2 2 0 0 1-2 2c-1.105 0-1.64-.444-2-1"/><path d="M15 14a5 5 0 0 0-7.584 2"/><path d="M9.964 6.825C8.019 7.977 9.5 13 8 15"/></svg>`
+                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵["초"]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.409 13.017A5 5 0 0 1 22 15c0 3.866-4 7-9 7-4.077 0-8.153-.82-10.371-2.462-.426-.316-.631-.832-.62-1.362C2.118 12.723 2.627 2 10 2a3 3 0 0 1 3 3 2 2 0 0 1-2 2c-1.105 0-1.64-.444-2-1"/><path d="M15 14a5 5 0 0 0-7.584 2"/><path d="M9.964 6.825C8.019 7.977 9.5 13 8 15"/></svg>`
                 },
                 인사이트: {
                     단계: ["마이크로 인사이트", "나노 인사이트"],
                     설명: ["숙련도 + 108", "숙련도 + 216"],
-                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵[파]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v8"/><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41L13.7 2.71a2.41 2.41 0 0 0-3.41 0z"/><path d="M8 12h8"/></svg>`
+                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵["파"]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v8"/><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41L13.7 2.71a2.41 2.41 0 0 0-3.41 0z"/><path d="M8 12h8"/></svg>`
                 },
                 크리티컬: {
                     단계: [
@@ -1221,17 +1227,17 @@
                         "최종데미지 2.4배", "최종데미지 2.6배", "최종데미지 2.8배",
                         "최종데미지 3.0배", "최종데미지 3.2배", "최종데미지 3.6배", "최종데미지 4.0배"
                     ],
-                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵[남]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14 12-8.5 8.5a2.12 2.12 0 1 1-3-3L11 9"/><path d="M15 13 9 7l4-4 6 6h3a8 8 0 0 1-7 7z"/></svg>`
+                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵["남"]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14 12-8.5 8.5a2.12 2.12 0 1 1-3-3L11 9"/><path d="M15 13 9 7l4-4 6 6h3a8 8 0 0 1-7 7z"/></svg>`
                 },
                 버닝: {
                     단계: ["인페르노 버닝", "플레임 버닝", "블레이징 버닝", "헬파이어 버닝", "피닉스 버닝"],
                     설명: ["체력50%이하 데미지1.6배", "체력50%이하 데미지2.2배", "체력50%이하 데미지2.8배", "체력50%이하 데미지3.4배", "체력50%이하 데미지4.0배"],
-                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵[보]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><path d="M6 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h1"/><path d="m11 7-3 5h4l-3 5"/><line x1="22" x2="22" y1="11" y2="13"/></svg>`
+                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵["보"]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><path d="M6 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h1"/><path d="m11 7-3 5h4l-3 5"/><line x1="22" x2="22" y1="11" y2="13"/></svg>`
                 },
                 인텔리전스: {
                     단계: ["클레어 인텔리전스", "옵저브 인텔리전스"],
                     설명: ["경험치 +108", "경험치 +216"],
-                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵[노초]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>`
+                    아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵["노초"]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>`
                 },
             };
         }
