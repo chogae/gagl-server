@@ -23,34 +23,48 @@ const supabaseAdmin = createClient(
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpYWZlc2Z5d3R2cGFjaGJmb3hyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDc4NDAxOCwiZXhwIjoyMDYwMzYwMDE4fQ.inGkUGNirltn3arVtb3rPvLpzoxK28OCDOx04rAH0EE"           // 서비스 롤 키
 );
 
-app.post("/attack", (req, res) => {
+app.post("/attack", async (req, res) => {
     const 유저 = req.body.유저데이터;
-
-    // ✅ 몬스터를 서버에서 직접 생성
     const 몬스터 = 현재악마불러오기(유저.현재층 || 1);
+    // 조우 타입 누적
+    const 타입 = 몬스터.타입 || "일반";  // "일반", "레어", "신화", ...
+    유저.조우기록 = 유저.조우기록 || {
+        일반: 0, 레어: 0, 신화: 0, 고대: 0, 태초: 0, 공허: 0
+    };
 
+    if (유저.조우기록[타입] !== undefined) {
+        유저.조우기록[타입]++;
+    }
 
-    // 1️⃣ 아이언바디로 체력 회복
     const 추가회복 = 아이언바디회복(유저);
     유저.남은체력 = Math.min(유저.최대체력, 유저.남은체력 + 추가회복);
 
-    // 2️⃣ 전투 시뮬레이션 실행
     const 전투 = 전투시뮬레이션(유저, 몬스터);
 
-    // 3️⃣ 패배면 그대로 응답
     if (전투.결과 === "패배") {
+        const 유저복구 = {
+            ...유저,
+            남은체력: 유저.최대체력,
+        };
+
+        // ✅ Supabase에 패배 상태 저장
+        await supabaseAdmin
+            .from("users")
+            .update({
+                남은체력: 유저복구.남은체력,
+                조우기록: 유저.조우기록
+            })
+            .eq("유저UID", 유저복구.유저UID);
+
         return res.json({
             결과: "패배",
             몬스터,
             유저남은체력: 전투.유저남은체력,
-            유저데이터: { ...유저, 남은체력: 유저.최대체력, 현재악마번호: Math.floor(Math.random() * 72) + 1, 강림몬스터: null }
+            유저데이터: 유저복구
         });
     }
 
-    // 4️⃣ 승리면 보상 적용
     const 기본보상 = 보상계산(유저.현재층);
-
-    // 추가 보정
     기본보상.숙련도 += 인사이트추가숙련도(유저);
     기본보상.경험치 += 인텔리전스추가경험치(유저);
     기본보상.골드 = Math.floor(기본보상.골드 * 획득금화발굴(유저));
@@ -58,10 +72,30 @@ app.post("/attack", (req, res) => {
     const 레벨업 = 레벨업판정(유저.경험치 + 기본보상.경험치, 유저.레벨);
     const 드레인 = 드레인회복(유저);
 
-    // 새 유저 데이터 계산
     const 새유저 = 전투보상반영(유저, 기본보상, 드레인, 레벨업);
 
-    res.json({
+    // ✅ Supabase에 승리 상태 저장
+    await supabaseAdmin
+        .from("users")
+        .update({
+            레벨: 새유저.레벨,
+            공격력: 새유저.공격력,
+            경험치: 새유저.경험치,
+            골드: 새유저.골드,
+            최대체력: 새유저.최대체력,
+            남은체력: 새유저.남은체력,
+            숙련도: 새유저.숙련도,
+            현재층: 새유저.현재층,
+            스킬: 새유저.스킬,
+            조우기록: 새유저.조우기록,
+            합성기록: 새유저.합성기록,
+            장비목록: 새유저.장비목록,
+            킬카운트: 새유저.킬카운트,
+            버전업: 새유저.버전업
+        })
+        .eq("유저UID", 새유저.유저UID);
+
+    return res.json({
         결과: "승리",
         몬스터,
         유저남은체력: 새유저.남은체력,

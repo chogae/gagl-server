@@ -688,7 +688,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1";
+        document.getElementById("버전표시").innerText = "v2";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1048,7 +1048,7 @@
                         "공허": "#2acd25"
                     };
                     document.getElementById("등급외테두리").style.border = `0.2px solid ${테두리색상[몬스터.타입] || "#2e2e2e"}`;
-                    
+
                     document.getElementById("획득경험치").innerText = "0";
                     document.getElementById("획득골드").innerText = "0";
                     document.getElementById("획득숙련도").innerText = "0";
@@ -1066,6 +1066,17 @@
                     document.getElementById("악마이름").innerText = 몬스터.이름;
                     document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
                     document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
+
+                    const 테두리색상 = {
+                        "일반": "#2e2e2e",
+                        "레어": "#2665c9",
+                        "신화": "#c59b20",
+                        "고대": "#c825cd",
+                        "태초": "#cd2525",
+                        "공허": "#2acd25"
+                    };
+                    document.getElementById("등급외테두리").style.border = `0.2px solid ${테두리색상[몬스터.타입] || "#2e2e2e"}`;
+
 
                     // 보상 표시
                     document.getElementById("총경험치").innerText = 새유저.경험치.toLocaleString();
