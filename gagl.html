@@ -642,7 +642,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v257";
+        document.getElementById("버전표시").innerText = "v258";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1332,11 +1332,30 @@
                     단계레벨 = 단계당레벨;
                 }
                 const 발동확률 = 단계레벨 * 10;
+                const 아이콘 = 설정.아이콘(); // 이 줄 필요
 
-                const 이름 = 설정.단계[현재단계];
-                const 설명 = 설정.설명[현재단계];
-                const 아이콘 = 설정.아이콘();
-                const 설명표시 = `<div style="font-size: 12px; color: #888; margin-top: 2px;">${설명} <span style="color: #3b82f6;">발동확률(${발동확률}%)</span></div>`;
+                let 이름, 설명, 발동표시;
+
+                if (전체레벨 >= 단계수 * 단계당레벨) {
+                    // 💎 최종단계까지 마스터했을 때 (예: 뉴 크리티컬 +10, 확률 100%)
+                    이름 = 설정.단계[단계수 - 1];
+                    설명 = 설정.설명[단계수 - 1];
+                    발동표시 = `<span style="color: #3b82f6;">발동확률(100%)</span>`;
+                    단계레벨 = 10;
+                } else if (단계레벨 === 10) {
+                    // 🧭 현재단계 마스터 후 다음 단계로 진화 중 (예: 베타 크리티컬 +0)
+                    이름 = 설정.단계[현재단계 + 1];
+                    설명 = 설정.설명[현재단계 + 1];
+                    발동표시 = `<span style="color: #3b82f6;">발동확률(0%)</span>`;
+                    단계레벨 = 0;
+                } else {
+                    // ⚙️ 일반 상태
+                    이름 = 설정.단계[현재단계];
+                    설명 = 설정.설명[현재단계];
+                    발동표시 = `<span style="color: #3b82f6;">발동확률(${발동확률}%)</span>`;
+                }
+
+                const 설명표시 = `<div style="font-size: 12px; color: #888; margin-top: 2px;">${설명} ${발동표시}</div>`;
 
                 const 줄 = document.createElement("div");
                 줄.className = "양쪽정렬 기본테두리";
