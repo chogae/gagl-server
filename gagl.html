@@ -642,7 +642,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v258";
+        document.getElementById("버전표시").innerText = "v259";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1559,6 +1559,7 @@
         `;
 
                 줄.addEventListener("click", () => {
+                    console.log("✅ 유저 클릭됨:", 유저);
                     const 창 = document.getElementById("미니장비창");
                     창.style.display = "block";
                     창.innerHTML = `<div style="font-weight:bold; margin-bottom:8px;">🔍 ${유저.유저아이디} 장비</div>`;
