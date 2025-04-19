@@ -134,6 +134,95 @@ app.post("/attack", async (req, res) => {
     });
 });
 
+app.post("/upgrade-item", async (req, res) => {
+    const { 유저UID, 이름, 등급 } = req.body;
+
+    if (!유저UID || !이름 || !등급) {
+        return res.status(400).json({ 오류: "필수 값 누락됨" });
+    }
+
+    // 유저 정보 조회
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("*")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) {
+        return res.status(404).json({ 오류: "유저 정보 조회 실패" });
+    }
+
+    const 장비목록 = 유저.장비목록 || [];
+    const 대상 = 장비목록.find(j => j.이름 === 이름 && j.등급 === 등급);
+
+    if (!대상) {
+        return res.status(404).json({ 오류: "장비를 찾을 수 없음" });
+    }
+
+    const 강화비용맵 = {
+        "일반": 1000,
+        "레어": 10000,
+        "신화": 100000,
+        "고대": 1000000,
+        "태초": 10000000,
+        "공허": 100000000
+    };
+
+    const 강화비용 = 강화비용맵[등급];
+    if (typeof 강화비용 !== "number") {
+        return res.status(400).json({ 오류: "알 수 없는 등급" });
+    }
+
+    if ((유저.골드 || 0) < 강화비용) {
+        return res.status(400).json({ 오류: `골드 부족: ${강화비용} 필요` });
+    }
+
+    const 성공 = Math.random() < 0.51;
+
+    let 메시지 = "강화 실패..";
+    let 증가량 = 0;
+
+    const 강화증가량맵 = {
+        "레어": 3,
+        "신화": 9,
+        "고대": 27,
+        "태초": 67,
+        "공허": 160
+    };
+
+    if (성공) {
+        증가량 = 강화증가량맵[등급] || 0;
+        대상.강화 = (대상.강화 || 0) + 1;
+        대상.공격력 += 증가량;
+        유저.공격력 += 증가량;
+        유저.골드 -= 강화비용;
+        메시지 = `강화 성공! 공격력 +${증가량}`;
+    }
+
+    // 저장
+    const { error: 저장오류 } = await supabaseAdmin
+        .from("users")
+        .update({
+            장비목록: 장비목록,
+            공격력: 유저.공격력,
+            골드: 유저.골드
+        })
+        .eq("유저UID", 유저UID);
+
+    if (저장오류) {
+        return res.status(500).json({ 오류: "강화 결과 저장 실패" });
+    }
+
+    return res.json({
+        성공,
+        증가량,
+        강화: 대상.강화,
+        공격력: 유저.공격력,
+        메시지
+    });
+});
+
+
 app.post("/delete-user", async (req, res) => {
     const { 유저UID } = req.body;
 

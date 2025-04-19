@@ -416,8 +416,10 @@
 
     <div class="밑줄" id="상단바">
         <div class="양쪽정렬 사백픽셀">
-            <div class="커서호버" id="타이틀을아이디로">
-                gagl
+            <div class="커서호버">
+                <div id="타이틀을아이디로">
+                    gagl
+                </div>
             </div>
             <div id="전투스킬설정버튼" style="display: none;">
                 <div class="가로정렬">
@@ -667,7 +669,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1";
+        document.getElementById("버전표시").innerText = "v2";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1109,6 +1111,60 @@
             });
         }
 
+        async function 장비강화(이름, 등급, 박스) {
+            if (!유저데이터 || !유저데이터.유저UID) return;
+            
+            const 강화비용 = {
+                "일반": 1000,
+                "레어": 10000,
+                "신화": 100000,
+                "고대": 1000000,
+                "태초": 10000000,
+                "공허": 100000000
+            }[등급];
+
+            const 비용 = 강화비용.toLocaleString();
+            const 확인 = confirm(`[${등급}] 장비를 ${비용} Gold로 강화하시겠습니까?`);
+            if (!확인) return;
+
+            화면잠금();
+
+            try {
+                const 응답 = await fetch("/upgrade-item", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        유저UID: 유저데이터.유저UID,
+                        이름,
+                        등급
+                    })
+                });
+
+                const 결과 = await 응답.json();
+
+                if (!응답.ok || 결과.오류) {
+                    메시지표시(메시지표시박스, "❌", 결과.오류 || "강화 실패..", "#ef4444");
+                    return;
+                }
+
+                if (결과.성공) {
+                    메시지표시(박스, "✅", 결과.메시지, "#00c851");
+                } else {
+                    메시지표시(박스, "❌", 결과.메시지, "#ef4444");
+                }
+
+                // 공격력 반영
+                유저데이터.공격력 = 결과.공격력;
+
+                장비화면보여주기();
+            } catch (e) {
+                메시지표시(메시지표시박스, "❌", "오류: " + e.message, "#ef4444");
+            } finally {
+                화면해제();
+            }
+        }
+
+
         document.getElementById("공격버튼").addEventListener("click", async () => {
             if (!유저데이터) return;
 
@@ -1185,86 +1241,6 @@
                 화면해제();
             }
         });
-
-        document.getElementById("타이틀을아이디로").addEventListener("click", () => {
-            if (!유저데이터 || !유저데이터.유저UID) return;
-
-            const 영역 = document.getElementById("타이틀을아이디로");
-            const 기존아이디 = 유저데이터.유저아이디;
-
-            영역.innerHTML = `
-        <input type="text" id="아이디변경입력" placeholder="새 아이디 입력"
-               maxlength="20" autocomplete="off"
-               style="background:white; color:black; border:none; border-bottom:1px solid gray;
-                      outline:none; width:100px; font-weight:bold;">
-    `;
-
-            const 입력 = document.getElementById("아이디변경입력");
-            입력.focus();
-
-            // 외부 클릭 시 원복
-            const 외부클릭처리 = (e) => {
-                if (e.target !== 입력) {
-                    영역.innerText = 기존아이디;
-                    document.removeEventListener("click", 외부클릭처리);
-                }
-            };
-            setTimeout(() => {
-                document.addEventListener("click", 외부클릭처리);
-            }, 0);
-
-            입력.addEventListener("keydown", async (e) => {
-                if (e.key !== "Enter") return;
-
-                const 새아이디 = 입력.value.trim();
-                if (!새아이디) {
-                    메시지표시(메시지표시박스, "⚠️", "아이디를 입력해주세요", "#ef4444");
-                    return;
-                }
-
-                화면잠금();
-
-                try {
-                    const { data: 중복 } = await supabase
-                        .from("users")
-                        .select("유저UID")
-                        .eq("유저아이디", 새아이디)
-                        .neq("유저UID", 유저데이터.유저UID);
-
-                    if ((중복 ?? []).length > 0) {
-                        메시지표시(메시지표시박스, "⚠️", "이미 존재하는 아이디입니다", "#ef4444");
-                        입력.value = "";
-                        입력.focus();
-                        return;
-                    }
-
-                    const { error } = await supabase
-                        .from("users")
-                        .update({ 유저아이디: 새아이디 })
-                        .eq("유저UID", 유저데이터.유저UID);
-
-                    if (error) {
-                        메시지표시(메시지표시박스, "❌", "아이디 변경 실패: " + error.message, "#ef4444");
-                        입력.value = "";
-                        입력.focus();
-                        return;
-                    }
-
-                    유저데이터.유저아이디 = 새아이디;
-                    영역.innerText = 새아이디;
-                    document.getElementById("유저아이디").innerText = 새아이디;
-                    메시지표시(메시지표시박스, "✅", "아이디 변경 완료!", "#00c851");
-
-                } catch (e) {
-                    메시지표시(메시지표시박스, "❌", "오류 발생: " + e.message, "#ef4444");
-                } finally {
-                    화면해제();
-                    document.removeEventListener("click", 외부클릭처리);
-                }
-            }, { once: true });
-        });
-
-
 
         document.addEventListener("DOMContentLoaded", async () => {
             메시지표시(메시지표시박스, "📡", "Supabase 연결됨", "#00c851");
