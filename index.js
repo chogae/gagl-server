@@ -243,6 +243,23 @@ app.post("/update-skill", async (req, res) => {
     return res.json({ 성공: true });
 });
 
+app.post("/ranking", async (req, res) => {
+    try {
+        const { data: 유저들, error } = await supabaseAdmin
+            .from("users")
+            .select("유저아이디, 레벨, 공격력, 현재층, 장비목록, 합성기록")
+            .order("공격력", { ascending: false })
+            .limit(10);
+
+        if (error) {
+            return res.status(500).json({ 오류: "랭킹 조회 실패" });
+        }
+
+        return res.json({ 유저들 });
+    } catch (e) {
+        return res.status(500).json({ 오류: e.message });
+    }
+});
 
 app.post("/delete-user", async (req, res) => {
     const { 유저UID } = req.body;

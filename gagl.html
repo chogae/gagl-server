@@ -642,7 +642,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v251";
+        document.getElementById("버전표시").innerText = "v253";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1455,6 +1455,103 @@
 
             스킬화면보여주기();
         });
+
+        async function 전당화면보여주기() {
+            document.getElementById("전투화면").style.display = "none";
+            document.getElementById("에너지박스").style.display = "none";
+            document.getElementById("전당화면").style.display = "block";
+            document.getElementById("스킬화면").style.display = "none";
+            document.getElementById("장비화면").style.display = "none";
+            document.getElementById("획득로그").innerText = "";
+            document.getElementById("레벨업표시").innerText = "";
+
+            const 컨테이너 = document.getElementById("전당컨테이너");
+            컨테이너.innerHTML = "";
+
+            const 응답 = await fetch("/ranking", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            });
+
+            const 결과 = await 응답.json();
+            const 유저들 = 결과.유저들 || [];
+
+            유저들.forEach((유저, index) => {
+                const 줄 = document.createElement("div");
+                줄.className = "양쪽정렬 밑줄";
+                if (유저.유저아이디 === 유저데이터.유저아이디) 줄.classList.add("내아이디강조");
+
+                let 왕관 = `<span>${index + 1}</span>`;
+                if (index === 0) 왕관 = `
+            <svg class="crown-icon 금" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="gold" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 11l4-4 5 5 5-5 4 4"/>
+                <path d="M5 19h14"/>
+                <path d="M5 15h14"/>
+            </svg>`;
+                else if (index === 1) 왕관 = `
+            <svg class="crown-icon 은" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="silver" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 11l4-4 5 5 5-5 4 4"/>
+                <path d="M5 19h14"/>
+                <path d="M5 15h14"/>
+            </svg>`;
+                else if (index === 2) 왕관 = `
+            <svg class="crown-icon 동" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="#cd7f32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 11l4-4 5 5 5-5 4 4"/>
+                <path d="M5 19h14"/>
+                <path d="M5 15h14"/>
+            </svg>`;
+
+                줄.innerHTML = `
+            <div class="가로정렬">${왕관}</div>
+            <div>${유저.유저아이디} (lv.${유저.레벨 || 1}) - 공격력 ${유저.공격력} / ${유저.현재층}층</div>
+        `;
+
+                줄.addEventListener("click", () => {
+                    const 창 = document.getElementById("미니장비창");
+                    창.style.display = "block";
+                    창.innerHTML = `<div style="font-weight:bold; margin-bottom:8px;">🔍 ${유저.유저아이디} 장비</div>`;
+
+                    const 장비들 = 유저.장비목록 || [];
+                    const 기록 = 유저.합성기록 || {};
+
+                    if (장비들.length === 0) {
+                        창.innerHTML += "장비 없음";
+                        return;
+                    }
+
+                    장비들.sort((a, b) => b.공격력 - a.공격력);
+                    for (const 장비 of 장비들) {
+                        const 키 = `${장비.이름}|${장비.등급}`;
+                        const 합성수 = 기록[키] ?? 0;
+                        const 강화표시 = 장비.강화 ? ` +${장비.강화}` : "";
+                        const 이름표시 = `${장비.이름} (${합성수})${강화표시}`;
+
+                        const 박스 = document.createElement("div");
+                        박스.className = "기본테두리";
+                        박스.style.marginBottom = "6px";
+                        박스.style.border = `1px solid ${색상맵[장비.등급] || "#ccc"}`;
+                        박스.innerText = `[${장비.등급}] ${이름표시} - 🗡 ${장비.공격력}`;
+                        창.appendChild(박스);
+                    }
+                });
+
+                컨테이너.appendChild(줄);
+            });
+
+            const 내순위 = 유저들.findIndex(u => u.유저아이디 === 유저데이터.유저아이디);
+            if (내순위 >= 10) {
+                const 줄 = document.createElement("div");
+                줄.className = "양쪽정렬 사백픽셀테두리 내아이디강조";
+                줄.innerHTML = `
+            <div class="가로정렬">${내순위 + 1}</div>
+            <div>${유저데이터.유저아이디} - 공격력 ${유저데이터.공격력} / ${유저데이터.현재층}층</div>
+        `;
+                컨테이너.appendChild(줄);
+            }
+        }
 
         document.addEventListener("DOMContentLoaded", async () => {
             // 메시지표시(메시지표시박스, "📡", "Supabase 연결됨", "#00c851");
