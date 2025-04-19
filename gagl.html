@@ -82,9 +82,15 @@
         .버튼:hover {
             background-color: #333;
             cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
         }
 
         .커서호버:hover {
+            width: 100%;
+            display: flex;
+            align-items: center;
             cursor: pointer;
         }
 
@@ -391,11 +397,8 @@
 
     <div class="밑줄" id="상단바">
         <div class="양쪽정렬 사백픽셀">
-            <div class="커서호버">
-                <div id="타이틀을아이디로">
-                    gagl
-                </div>
-            </div>
+            <div id="타이틀을아이디로" class="커서호버">gagl</div>
+
             <div id="전투스킬설정버튼" style="display: none;">
                 <div class="가로정렬">
                     <div class="버튼">
@@ -645,7 +648,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v248";
+        document.getElementById("버전표시").innerText = "v249";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
