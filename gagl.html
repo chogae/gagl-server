@@ -642,7 +642,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v255";
+        document.getElementById("버전표시").innerText = "v256";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1189,10 +1189,10 @@
                 "공허": 100000000
             }[등급];
 
-            const 비용 = 강화비용.toLocaleString();
+            const 비용 = 강화비용;  // 숫자 유지
 
-            if ((유저.골드 || 0) < 비용) {
-                메시지표시(메시지표시박스, "❌", `골드 부족: ${강화비용} 필요`, "#ef4444");
+            if ((유저데이터.골드 || 0) < 비용) {
+                메시지표시(메시지표시박스, "❌", `골드 부족: ${비용.toLocaleString()} 필요`, "#ef4444");
                 return;
             }
 
@@ -1523,28 +1523,15 @@
                 줄.className = "양쪽정렬 밑줄";
                 if (유저.유저아이디 === 유저데이터.유저아이디) 줄.classList.add("내아이디강조");
 
-                let 왕관 = `<span>${index + 1}</span>`;
-                if (index === 0) 왕관 = `
-            <svg class="crown-icon 금" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                stroke="gold" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 11l4-4 5 5 5-5 4 4"/>
-                <path d="M5 19h14"/>
-                <path d="M5 15h14"/>
-            </svg>`;
-                else if (index === 1) 왕관 = `
-            <svg class="crown-icon 은" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                stroke="silver" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 11l4-4 5 5 5-5 4 4"/>
-                <path d="M5 19h14"/>
-                <path d="M5 15h14"/>
-            </svg>`;
-                else if (index === 2) 왕관 = `
-            <svg class="crown-icon 동" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                stroke="#cd7f32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 11l4-4 5 5 5-5 4 4"/>
-                <path d="M5 19h14"/>
-                <path d="M5 15h14"/>
-            </svg>`;
+                let 왕관색클래스 = "";
+                if (index === 0) 왕관색클래스 = "금";
+                else if (index === 1) 왕관색클래스 = "은";
+                else if (index === 2) 왕관색클래스 = "동";
+
+                const 왕관 = index < 3
+                    ? `<svg xmlns="http://www.w3.org/2000/svg" class="crown-icon ${왕관색클래스}" ...>...</svg>`
+                    : `<span>${index + 1}</span>`;
+
 
                 줄.innerHTML = `
             <div class="가로정렬">${왕관}</div>
