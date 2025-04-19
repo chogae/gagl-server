@@ -675,6 +675,20 @@
     overflow-y: auto;
   "></div>
 
+    <div id="메시지표시박스" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100vh;
+    z-index: 9998;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 10px;
+    box-sizing: border-box;
+"></div>
 
     <!-- 객체추가 -->
 
@@ -744,13 +758,13 @@
 
             const 아이디패턴 = /^[a-zA-Z0-9_]{3,12}$/;
             if (!아이디패턴.test(아이디)) {
-                메시지표시(document.body, "❌", "아이디는 영문/숫자/밑줄 포함 3~12자로 입력하세요", "#ef4444");
+                메시지표시(메시지표시박스, "❌", "아이디는 영문/숫자/밑줄 포함 3~12자로 입력하세요", "#ef4444");
                 화면해제();
                 return;
             }
 
             if (비번.length < 6) {
-                메시지표시(document.body, "❌", "비밀번호는 6자 이상 입력하세요", "#ef4444");
+                메시지표시(메시지표시박스, "❌", "비밀번호는 6자 이상 입력하세요", "#ef4444");
                 화면해제();
                 return;
             }
@@ -762,7 +776,7 @@
                     .eq("기기ID", 기기ID);
 
                 if ((중복체크 ?? []).length > 0) {
-                    메시지표시(document.body, "⚠️", "이미 이 기기에서 가입한 계정이 있어요!", "#ef4444");
+                    메시지표시(메시지표시박스, "⚠️", "이미 이 기기에서 가입한 계정이 있어요!", "#ef4444");
                     화면해제();
                     return;
                 }
@@ -773,7 +787,7 @@
                 });
 
                 if (error) {
-                    메시지표시(document.body, "❌", "회원가입 실패: " + error.message, "#ef4444");
+                    메시지표시(메시지표시박스, "❌", "회원가입 실패: " + error.message, "#ef4444");
                     화면해제();
                     return;
                 }
@@ -784,7 +798,7 @@
                 });
 
                 if (로그인오류) {
-                    메시지표시(document.body, "❌", "로그인 실패: " + 로그인오류.message, "#ef4444");
+                    메시지표시(메시지표시박스, "❌", "로그인 실패: " + 로그인오류.message, "#ef4444");
                     화면해제();
                     return;
                 }
@@ -794,7 +808,7 @@
                 } = await supabase.auth.getUser();
 
                 if (!user || !user.id) {
-                    메시지표시(document.body, "❌", "유저 인증 정보 없음", "#ef4444");
+                    메시지표시(메시지표시박스, "❌", "유저 인증 정보 없음", "#ef4444");
                     화면해제();
                     return;
                 }
@@ -823,7 +837,7 @@
                 });
 
                 if (삽입에러) {
-                    메시지표시(document.body, "❌", "유저 정보 저장 실패: " + 삽입에러.message, "#ef4444");
+                    메시지표시(메시지표시박스, "❌", "유저 정보 저장 실패: " + 삽입에러.message, "#ef4444");
                     화면해제();
                     return;
                 }
@@ -848,18 +862,18 @@
                 }
 
                 if (!유저정보) {
-                    메시지표시(document.body, "❌", "유저 정보를 불러오지 못했습니다", "#ef4444");
+                    메시지표시(메시지표시박스, "❌", "유저 정보를 불러오지 못했습니다", "#ef4444");
                     화면해제();
                     return;
                 }
 
                 유저데이터 = 유저정보;
-                메시지표시(document.body, "✅", "회원가입 및 로그인 성공!", "#00c851");
+                메시지표시(메시지표시박스, "✅", "회원가입 및 로그인 성공!", "#00c851");
                 전투화면보여주기(유저데이터);
                 supabase.auth.getUser().then(console.log)
 
             } catch (e) {
-                메시지표시(document.body, "❌", "오류 발생: " + e.message, "#ef4444");
+                메시지표시(메시지표시박스, "❌", "오류 발생: " + e.message, "#ef4444");
             } finally {
                 화면해제();
             }
@@ -873,7 +887,7 @@
             const 이메일형식 = `${아이디}@gagl.com`;
 
             if (!아이디 || !비번) {
-                메시지표시(document.body, "⚠️", "아이디와 비밀번호를 입력하세요", "#ef4444");
+                메시지표시(메시지표시박스, "⚠️", "아이디와 비밀번호를 입력하세요", "#ef4444");
                 화면해제();
                 return;
             }
@@ -885,14 +899,14 @@
                 });
 
                 if (로그인오류) {
-                    메시지표시(document.body, "❌", "로그인 실패: " + 로그인오류.message, "#ef4444");
+                    메시지표시(메시지표시박스, "❌", "로그인 실패: " + 로그인오류.message, "#ef4444");
                     화면해제();
                     return;
                 }
 
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user || !user.id) {
-                    메시지표시(document.body, "❌", "유저 인증 정보 없음", "#ef4444");
+                    메시지표시(메시지표시박스, "❌", "유저 인증 정보 없음", "#ef4444");
                     화면해제();
                     return;
                 }
@@ -904,7 +918,7 @@
                     .single();
 
                 if (error || !유저정보) {
-                    메시지표시(document.body, "⚠️", "유저 정보가 존재하지 않습니다", "#ef4444");
+                    메시지표시(메시지표시박스, "⚠️", "유저 정보가 존재하지 않습니다", "#ef4444");
                     화면해제();
                     return;
                 }
@@ -919,11 +933,11 @@
                     강림몬스터: 유저정보.강림몬스터 || null
                 };
 
-                메시지표시(document.body, "✅", "로그인 성공!", "#00c851");
+                메시지표시(메시지표시박스, "✅", "로그인 성공!", "#00c851");
                 전투화면보여주기(유저데이터);
 
             } catch (e) {
-                메시지표시(document.body, "❌", "오류 발생: " + e.message, "#ef4444");
+                메시지표시(메시지표시박스, "❌", "오류 발생: " + e.message, "#ef4444");
             } finally {
                 화면해제();
             }
@@ -938,7 +952,7 @@
                 } = await supabase.auth.getUser();
 
                 if (!user) {
-                    메시지표시(document.body, "❌", "로그인 정보 없음", "#ef4444");
+                    메시지표시(메시지표시박스, "❌", "로그인 정보 없음", "#ef4444");
                     return;
                 }
 
@@ -967,14 +981,14 @@
                     console.warn("auth 삭제 실패", await 응답.text());
                 }
 
-                메시지표시(document.body, "✅", "탈퇴가 완료되었습니다.", "#00c851");
+                메시지표시(메시지표시박스, "✅", "탈퇴가 완료되었습니다.", "#00c851");
 
                 await supabase.auth.signOut();
                 localStorage.removeItem("기기ID");
                 location.reload();
 
             } catch (e) {
-                메시지표시(document.body, "❌", "탈퇴 중 오류 발생: " + e.message, "#ef4444");
+                메시지표시(메시지표시박스, "❌", "탈퇴 중 오류 발생: " + e.message, "#ef4444");
             } finally {
                 화면해제();
             }
@@ -1069,7 +1083,7 @@
                     document.getElementById("승리패배로그").innerText = "승리";
                 }
             } catch (e) {
-                메시지표시(document.body, "❌", "전투 중 오류: " + e.message, "#ef4444");
+                메시지표시(메시지표시박스, "❌", "전투 중 오류: " + e.message, "#ef4444");
             } finally {
                 화면해제();
             }
@@ -1107,7 +1121,7 @@
 
                 const 새아이디 = 입력.value.trim();
                 if (!새아이디) {
-                    메시지표시(document.body, "⚠️", "아이디를 입력해주세요", "#ef4444");
+                    메시지표시(메시지표시박스, "⚠️", "아이디를 입력해주세요", "#ef4444");
                     return;
                 }
 
@@ -1121,7 +1135,7 @@
                         .neq("유저UID", 유저데이터.유저UID);
 
                     if ((중복 ?? []).length > 0) {
-                        메시지표시(document.body, "⚠️", "이미 존재하는 아이디입니다", "#ef4444");
+                        메시지표시(메시지표시박스, "⚠️", "이미 존재하는 아이디입니다", "#ef4444");
                         입력.value = "";
                         입력.focus();
                         return;
@@ -1133,7 +1147,7 @@
                         .eq("유저UID", 유저데이터.유저UID);
 
                     if (error) {
-                        메시지표시(document.body, "❌", "아이디 변경 실패: " + error.message, "#ef4444");
+                        메시지표시(메시지표시박스, "❌", "아이디 변경 실패: " + error.message, "#ef4444");
                         입력.value = "";
                         입력.focus();
                         return;
@@ -1142,10 +1156,10 @@
                     유저데이터.유저아이디 = 새아이디;
                     영역.innerText = 새아이디;
                     document.getElementById("유저아이디").innerText = 새아이디;
-                    메시지표시(document.body, "✅", "아이디 변경 완료!", "#00c851");
+                    메시지표시(메시지표시박스, "✅", "아이디 변경 완료!", "#00c851");
 
                 } catch (e) {
-                    메시지표시(document.body, "❌", "오류 발생: " + e.message, "#ef4444");
+                    메시지표시(메시지표시박스, "❌", "오류 발생: " + e.message, "#ef4444");
                 } finally {
                     화면해제();
                     document.removeEventListener("click", 외부클릭처리);
@@ -1156,12 +1170,12 @@
 
 
         document.addEventListener("DOMContentLoaded", async () => {
-            메시지표시(document.body, "📡", "Supabase 연결됨", "#00c851");
+            메시지표시(메시지표시박스, "📡", "Supabase 연결됨", "#00c851");
 
             const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
 
             if (인증오류) {
-                메시지표시(document.body, "❌", "유저 인증 확인 실패", "#ef4444");
+                메시지표시(메시지표시박스, "❌", "유저 인증 확인 실패", "#ef4444");
                 return;
             }
 
@@ -1174,20 +1188,20 @@
                         .single();
 
                     if (error || !유저정보) {
-                        메시지표시(document.body, "⚠️", "유저 정보 없음", "#ef4444");
+                        메시지표시(메시지표시박스, "⚠️", "유저 정보 없음", "#ef4444");
                         return;
                     }
 
                     // ✅ 병합 생략하고 그대로 사용
                     유저데이터 = 유저정보;
 
-                    메시지표시(document.body, "✅", "자동 로그인 완료", "#00c851");
+                    메시지표시(메시지표시박스, "✅", "자동 로그인 완료", "#00c851");
                     전투화면보여주기(유저데이터);
                 } catch (e) {
-                    메시지표시(document.body, "❌", "자동 로그인 오류: " + e.message, "#ef4444");
+                    메시지표시(메시지표시박스, "❌", "자동 로그인 오류: " + e.message, "#ef4444");
                 }
             } else {
-                메시지표시(document.body, "🔒", "로그인된 유저 없음", "#aaa");
+                메시지표시(메시지표시박스, "🔒", "로그인된 유저 없음", "#aaa");
             }
         });
 
