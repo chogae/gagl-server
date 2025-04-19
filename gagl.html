@@ -642,7 +642,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v262";
+        document.getElementById("버전표시").innerText = "v263";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1221,6 +1221,13 @@
 
                 if (결과.성공) {
                     메시지표시(박스, "✅", 결과.메시지, "#00c851");
+
+                    // ✅ 강화 수치 반영
+                    const 장비 = 유저데이터.장비목록.find(j => j.이름 === 이름 && j.등급 === 등급);
+                    if (장비) {
+                        장비.강화 = 결과.강화;
+                        장비.공격력 = 결과.공격력;
+                    }
                 } else {
                     메시지표시(박스, "❌", 결과.메시지, "#ef4444");
                 }
