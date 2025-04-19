@@ -667,7 +667,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v2";
+        document.getElementById("버전표시").innerText = "v1";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1063,8 +1063,19 @@
                 return;
             }
 
-            // 📌 공격력 기준 내림차순 정렬
-            장비목록.sort((a, b) => b.공격력 - a.공격력);
+            const 등급우선순위 = {
+                "레어": 1,
+                "신화": 2,
+                "고대": 3,
+                "태초": 4,
+                "공허": 5
+            };
+
+            장비목록.sort((a, b) => {
+                const 순서A = 등급우선순위[a.등급] || 999;
+                const 순서B = 등급우선순위[b.등급] || 999;
+                return 순서A - 순서B;
+            });
 
             // 📌 장비 개별 렌더링
             장비목록.forEach(장비 => {
