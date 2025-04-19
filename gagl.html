@@ -645,7 +645,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v247";
+        document.getElementById("버전표시").innerText = "v248";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1519,6 +1519,77 @@
                 console.error("점검 확인 중 오류:", e.message);
             }
         }, 60000); // 30초마다 체크
+
+        document.getElementById("타이틀을아이디로").addEventListener("click", function 아이디수정시작() {
+            const div = document.getElementById("타이틀을아이디로");
+            const 기존아이디 = div.innerText;
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.value = 기존아이디;
+            input.maxLength = 8;
+            input.placeholder = "아이디입력";
+            input.style.width = "100px";
+            input.style.padding = "4px";
+            input.style.fontSize = "16px";
+
+            div.replaceWith(input);
+            input.focus();
+
+            // 전역 클릭 감지 핸들러 정의
+            function 외부클릭감지(e) {
+                if (e.target !== input) {
+                    복원();
+                }
+            }
+
+            function 복원(새값 = 기존아이디) {
+                const 새div = document.createElement("div");
+                새div.id = "타이틀을아이디로";
+                새div.className = "커서호버";
+                새div.innerText = 새값;
+                input.replaceWith(새div);
+                새div.addEventListener("click", 아이디수정시작);
+                document.removeEventListener("click", 외부클릭감지);
+            }
+
+            input.addEventListener("keydown", async (e) => {
+                if (e.key === "Escape") {
+                    복원();
+                }
+
+                if (e.key === "Enter") {
+                    const 새아이디 = input.value.trim();
+                    if (!새아이디) return 메시지표시(메시지표시박스, "❌", "아이디를 입력하세요", "#ef4444");
+                    if (새아이디.length > 8) return 메시지표시(메시지표시박스, "⚠️", "아이디는 최대 8자입니다", "#ef4444");
+
+                    화면잠금();
+
+                    const { error } = await supabase
+                        .from("users")
+                        .update({ 유저아이디: 새아이디 })
+                        .eq("유저UID", 유저데이터.유저UID);
+
+                    화면해제();
+
+                    if (error) {
+                        메시지표시(메시지표시박스, "❌", "변경 실패: " + error.message, "#ef4444");
+                        return;
+                    }
+
+                    유저데이터.유저아이디 = 새아이디;
+                    복원(새아이디);
+
+                    메시지표시(메시지표시박스, "✅", "아이디 변경 완료", "#00c851");
+
+                    // 유저정보 박스도 함께 갱신
+                    document.getElementById("유저아이디").innerText = 새아이디;
+                }
+            });
+
+            // 전역 클릭 감지 시작
+            setTimeout(() => document.addEventListener("click", 외부클릭감지), 0);
+        });
 
     </script>
 </body>
