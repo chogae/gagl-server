@@ -1164,6 +1164,11 @@
             }
         }
 
+        document.getElementById("스킬").addEventListener("click", () => {
+            if (!유저데이터) return;
+            스킬화면보여주기();
+        });
+
         function 스킬정보불러오기() {
             return {
                 버서커: {
@@ -1250,7 +1255,6 @@
                 const 현재단계 = Math.min(Math.floor(전체레벨 / 단계당레벨), 단계수 - 1);
                 const 단계레벨 = 전체레벨 % 단계당레벨;
 
-                const 색 = 설정.색상[현재단계];
                 const 이름 = 설정.단계[현재단계];
                 const 설명 = 설정.설명[현재단계];
                 const 아이콘 = 설정.아이콘(색);
