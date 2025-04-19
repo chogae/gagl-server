@@ -218,8 +218,29 @@ app.post("/upgrade-item", async (req, res) => {
         증가량,
         강화: 대상.강화,
         공격력: 유저.공격력,
+        골드: 유저.골드,
         메시지
     });
+});
+
+app.post("/update-skill", async (req, res) => {
+    const { 유저UID, 스킬, 숙련도 } = req.body;
+
+    if (!유저UID || typeof 스킬 !== "object" || typeof 숙련도 !== "number") {
+        return res.status(400).json({ 오류: "입력값 부족" });
+    }
+
+    const { error } = await supabaseAdmin
+        .from("users")
+        .update({ 스킬, 숙련도 })
+        .eq("유저UID", 유저UID);
+
+    if (error) {
+        console.error("스킬 업데이트 실패:", error.message);
+        return res.status(500).json({ 오류: "스킬 업데이트 실패" });
+    }
+
+    return res.json({ 성공: true });
 });
 
 
@@ -249,7 +270,8 @@ function 공격스킬적용(유저) {
     const 결과 = {
         크리티컬배율: 1,
         버서커배율: 1,
-        체력소모: 1,
+        버닝배율: 1,
+        체력소모: 1
     };
 
     // 크리티컬
@@ -296,6 +318,26 @@ function 공격스킬적용(유저) {
         } else break;
     }
 
+    if (유저.남은체력 < 유저.최대체력 * 0.5) {
+        const 버닝레벨 = 스킬["버닝"] || 0;
+        const 버닝계열 = [
+            { 이름: "인페르노 버닝", 배율: 0.6 },
+            { 이름: "플레임 버닝", 배율: 1.2 },
+            { 이름: "블레이징 버닝", 배율: 1.8 },
+            { 이름: "헬파이어 버닝", 배율: 2.4 },
+            { 이름: "피닉스 버닝", 배율: 3.0 }
+        ];
+        for (let i = 0; i < 버닝계열.length; i++) {
+            const 시작 = i * 10;
+            const 현재 = Math.max(0, Math.min(버닝레벨 - 시작, 10));
+            if (현재 <= 0) break;
+            const 확률 = 현재 >= 10 ? 1 : 현재 * 0.1;
+            if (Math.random() < 확률) {
+                결과.버닝배율 += 버닝계열[i].배율;
+            } else break;
+        }
+    }
+
     return 결과;
 }
 
@@ -306,7 +348,7 @@ function 데미지계산(유저, 몬스터, 스킬결과) {
     const 기본데미지 = Math.max(0, 유저.공격력 - 방어력);
     const 랜덤데미지 = Math.floor(기본데미지 * 랜덤보정);
 
-    const 최종배율 = (스킬결과.크리티컬배율) * (스킬결과.버서커배율);
+    const 최종배율 = (스킬결과.크리티컬배율) * (스킬결과.버서커배율) * (스킬결과.버닝배율);
     const 최종데미지 = Math.floor(랜덤데미지 * 최종배율);
 
     return 최종데미지;
