@@ -642,7 +642,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v254";
+        document.getElementById("버전표시").innerText = "v255";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -673,6 +673,19 @@
             "파남": "#4455d0",
             "남보": "#851bb1"
         };
+
+        const 크리티컬아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-axe-icon lucide-axe"><path d="m14 12-8.5 8.5a2.12 2.12 0 1 1-3-3L11 9"/><path d="M15 13 9 7l4-4 6 6h3a8 8 0 0 1-7 7z"/></svg>`;
+        const 버서커아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flame-icon lucide-flame"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`;
+        const 드레인아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-droplet-icon lucide-droplet"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>`;
+        const 인사이트아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-diamond-plus-icon lucide-diamond-plus"><path d="M12 8v8"/><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41L13.7 2.71a2.41 2.41 0 0 0-3.41 0z"/><path d="M8 12h8"/></svg>`;
+        const 아이언바디아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-biceps-flexed-icon lucide-biceps-flexed"><path d="M12.409 13.017A5 5 0 0 1 22 15c0 3.866-4 7-9 7-4.077 0-8.153-.82-10.371-2.462-.426-.316-.631-.832-.62-1.362C2.118 12.723 2.627 2 10 2a3 3 0 0 1 3 3 2 2 0 0 1-2 2c-1.105 0-1.64-.444-2-1"/><path d="M15 14a5 5 0 0 0-7.584 2"/><path d="M9.964 6.825C8.019 7.977 9.5 13 8 15"/></svg>`;
+        const 퀵니스아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history-icon lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>`;
+        const 발굴아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem-icon lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>`;
+        const 머니아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-coins-icon lucide-coins"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>`;
+        const 성공아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-party-popper-icon lucide-party-popper"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg>`;
+        const 실패아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>`;
+        const 마스터아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap-icon lucide-graduation-cap"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>`;
+        const 버닝아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-battery-charging-icon lucide-battery-charging"><path d="M15 7h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><path d="M6 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h1"/><path d="m11 7-3 5h4l-3 5"/><line x1="22" x2="22" y1="11" y2="13"/></svg>`;
 
         function 화면잠금() {
             document.body.style.pointerEvents = "none";
@@ -1313,12 +1326,16 @@
                 const 단계수 = 설정.단계.length;
                 const 단계당레벨 = 10;
                 const 현재단계 = Math.min(Math.floor(전체레벨 / 단계당레벨), 단계수 - 1);
-                const 단계레벨 = 전체레벨 % 단계당레벨;
+
+                let 단계레벨 = 전체레벨 % 단계당레벨;
+                if (단계레벨 === 0 && 전체레벨 > 0 && 전체레벨 % 단계당레벨 === 0) {
+                    단계레벨 = 단계당레벨;
+                }
+                const 발동확률 = 단계레벨 * 10;
 
                 const 이름 = 설정.단계[현재단계];
                 const 설명 = 설정.설명[현재단계];
                 const 아이콘 = 설정.아이콘();
-                const 발동확률 = 단계레벨 * 10;
                 const 설명표시 = `<div style="font-size: 12px; color: #888; margin-top: 2px;">${설명} <span style="color: #3b82f6;">발동확률(${발동확률}%)</span></div>`;
 
                 const 줄 = document.createElement("div");
@@ -1348,7 +1365,18 @@
 
                             유저데이터.숙련도 -= 비용;
                             유저데이터.스킬[키] = 전체레벨 + 1;
-                            메시지표시(스킬화면, "✅", `${설정.단계[Math.floor((전체레벨 + 1) / 단계당레벨)]} +${(전체레벨 + 1) % 단계당레벨} 강화됨`, "#00c851");
+
+                            let 다음레벨 = 전체레벨 + 1;
+                            let 다음단계 = Math.floor(다음레벨 / 단계당레벨);
+                            let 다음강화 = 다음레벨 % 단계당레벨;
+
+                            if (다음강화 === 0 && 다음레벨 > 0 && 다음레벨 % 단계당레벨 === 0) {
+                                다음강화 = 단계당레벨;
+                                다음단계 = 다음단계 - 1;
+                            }
+
+                            const 스킬이름 = 설정.단계[다음단계] || "최종단계";
+                            메시지표시(스킬화면, "✅", `${스킬이름} +${다음강화} 강화됨`, "#00c851");
 
                         } else if (버튼.innerText === "-") {
                             if (전체레벨 <= 0) return 메시지표시(스킬화면, "❌", "회수할 스킬이 없습니다", "#ef4444");
@@ -1374,10 +1402,19 @@
                             }
 
                             if (성공횟수 > 0) {
+                                let 현재단계 = Math.floor(전체레벨 / 단계당레벨);
+                                let 현재강화 = 전체레벨 % 단계당레벨;
+
+                                if (현재강화 === 0 && 전체레벨 > 0 && 전체레벨 % 단계당레벨 === 0) {
+                                    현재강화 = 단계당레벨;
+                                    현재단계 = 현재단계 - 1;
+                                }
+
+                                const 스킬이름 = 설정.단계[현재단계] || "최종단계";
                                 메시지표시(
                                     스킬화면,
                                     "🚀",
-                                    `${설정.단계[Math.floor(전체레벨 / 단계당레벨)]} +${전체레벨 % 단계당레벨}까지 투자`,
+                                    `${스킬이름} +${현재강화}까지 투자`,
                                     "#00c851"
                                 );
                             } else {
@@ -1558,6 +1595,17 @@
             }
         }
 
+        document.addEventListener("click", (e) => {
+            const 창 = document.getElementById("미니장비창");
+
+            if (창.style.display !== "block") return; // 열려있을 때만 반응
+
+            // 클릭한 대상이 장비창 내부가 아니면 닫기
+            if (!창.contains(e.target)) {
+                창.style.display = "none";
+            }
+        });
+
         document.addEventListener("DOMContentLoaded", async () => {
             // 메시지표시(메시지표시박스, "📡", "Supabase 연결됨", "#00c851");
 
@@ -1618,76 +1666,6 @@
             }
         }, 60000); // 30초마다 체크
 
-        document.getElementById("타이틀을아이디로").addEventListener("click", function 아이디수정시작() {
-            const div = document.getElementById("타이틀을아이디로");
-            const 기존아이디 = div.innerText;
-
-            const input = document.createElement("input");
-            input.type = "text";
-            input.value = 기존아이디;
-            input.maxLength = 8;
-            input.placeholder = "아이디입력";
-            input.style.width = "100px";
-            input.style.padding = "4px";
-            input.style.fontSize = "16px";
-
-            div.replaceWith(input);
-            input.focus();
-
-            // 전역 클릭 감지 핸들러 정의
-            function 외부클릭감지(e) {
-                if (e.target !== input) {
-                    복원();
-                }
-            }
-
-            function 복원(새값 = 기존아이디) {
-                const 새div = document.createElement("div");
-                새div.id = "타이틀을아이디로";
-                새div.className = "커서호버";
-                새div.innerText = 새값;
-                input.replaceWith(새div);
-                새div.addEventListener("click", 아이디수정시작);
-                document.removeEventListener("click", 외부클릭감지);
-            }
-
-            input.addEventListener("keydown", async (e) => {
-                if (e.key === "Escape") {
-                    복원();
-                }
-
-                if (e.key === "Enter") {
-                    const 새아이디 = input.value.trim();
-                    if (!새아이디) return 메시지표시(메시지표시박스, "❌", "아이디를 입력하세요", "#ef4444");
-                    if (새아이디.length > 8) return 메시지표시(메시지표시박스, "⚠️", "아이디는 최대 8자입니다", "#ef4444");
-
-                    화면잠금();
-
-                    const { error } = await supabase
-                        .from("users")
-                        .update({ 유저아이디: 새아이디 })
-                        .eq("유저UID", 유저데이터.유저UID);
-
-                    화면해제();
-
-                    if (error) {
-                        메시지표시(메시지표시박스, "❌", "변경 실패: " + error.message, "#ef4444");
-                        return;
-                    }
-
-                    유저데이터.유저아이디 = 새아이디;
-                    복원(새아이디);
-
-                    메시지표시(메시지표시박스, "✅", "아이디 변경 완료", "#00c851");
-
-                    // 유저정보 박스도 함께 갱신
-                    document.getElementById("유저아이디").innerText = 새아이디;
-                }
-            });
-
-            // 전역 클릭 감지 시작
-            setTimeout(() => document.addEventListener("click", 외부클릭감지), 0);
-        });
 
     </script>
 </body>
