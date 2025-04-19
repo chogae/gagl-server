@@ -245,6 +245,8 @@ function 전투시뮬레이션(유저, 몬스터) {
 function 장비드랍판정(몬스터) {
     if (몬스터.타입 === "일반") return null;
 
+    console.log("📦 드랍 시도 몬스터 타입:", 몬스터.타입);
+
     const 고정드랍 = {
         "레어": { 이름: "디아블로의 심장", 공격력: 30 },
         "신화": { 이름: "레비아탄의 비늘", 공격력: 90 },
@@ -254,7 +256,10 @@ function 장비드랍판정(몬스터) {
     };
 
     const 드랍 = 고정드랍[몬스터.타입];
-    if (!드랍) return null;
+    if (!드랍) {
+        console.warn("❌ 고정드랍에 해당 타입 없음:", 몬스터.타입);
+        return null;
+    }
 
     const 최소 = Math.floor(드랍.공격력 * 0.8);
     const 최대 = Math.floor(드랍.공격력 * 1.1);
