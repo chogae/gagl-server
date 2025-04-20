@@ -1276,7 +1276,7 @@
                 },
                 인사이트: {
                     단계: ["마이크로 인사이트", "나노 인사이트"],
-                    설명: ["숙련도 + 108", "숙련도 + 216"],
+                    설명: ["숙련도 + 10", "숙련도 + 20"],
                     아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵["파"]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v8"/><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41L13.7 2.71a2.41 2.41 0 0 0-3.41 0z"/><path d="M8 12h8"/></svg>`
                 },
                 크리티컬: {
@@ -1590,6 +1590,32 @@
 
             if (user && user.id) {
                 try {
+                    // ✅ 먼저 버전업 확인
+                    const { data: 버전체크, error: 버전에러 } = await supabase
+                        .from("users")
+                        .select("버전업")
+                        .eq("유저UID", user.id)
+                        .single();
+
+                    if (버전에러 || !버전체크) {
+                        메시지표시(메시지표시박스, "⚠️", "유저 정보 없음", "#ef4444");
+                        return;
+                    }
+
+                    if (버전체크.버전업 !== 1) {
+                        await fetch("/delete-user", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ 유저UID: user.id })
+                        });
+
+                        await supabase.auth.signOut();
+                        alert("버전이 맞지 않아 계정이 초기화되었습니다.");
+                        location.reload();
+                        return;
+                    }
+
+                    // ✅ 문제 없으면 전체 유저 정보 로딩
                     const { data: 유저정보, error } = await supabase
                         .from("users")
                         .select("*")
@@ -1601,18 +1627,17 @@
                         return;
                     }
 
-                    // ✅ 병합 생략하고 그대로 사용
                     유저데이터 = 유저정보;
 
                     메시지표시(메시지표시박스, "✅", "자동 로그인 완료", "#00c851");
                     전투화면보여주기(유저데이터);
+
                 } catch (e) {
                     메시지표시(메시지표시박스, "", "자동 로그인 오류: " + e.message, "#ef4444");
                 }
             } else {
                 메시지표시(메시지표시박스, "🔒", "로그인된 유저 없음", "#aaa");
             }
-
         });
 
         document.getElementById("타이틀을아이디로").addEventListener("click", async function 아이디변경시작() {
@@ -1705,7 +1730,7 @@
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1.0.5";
+        document.getElementById("버전표시").innerText = "v1.0.7";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
