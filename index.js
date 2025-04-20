@@ -538,7 +538,7 @@ app.post("/gamble", async (req, res) => {
             // 실패 시: 골드만 차감
             await supabaseAdmin
                 .from("users")
-                .update({ 골드: 남은골드 })
+                .update({ 골드: Math.max(0, 남은골드) }) // ✅ null, NaN, 음수 모두 방지
                 .eq("유저UID", 유저UID);
 
             return res.json({
