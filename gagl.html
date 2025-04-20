@@ -763,7 +763,7 @@
 
             localStorage.setItem("기기ID", 기기ID);
 
-            // 아이디 유효성 검사 (예: 영문+숫자 3~12자 등)
+            // 유효성 검사
             const 아이디패턴 = /^[a-zA-Z0-9_]{3,12}$/;
             if (!아이디패턴.test(아이디)) {
                 메시지표시(document.body, "❌", "아이디는 영문/숫자/밑줄 포함 3~12자여야 합니다", "#ef4444");
@@ -772,41 +772,42 @@
             }
 
             try {
-                const 응답 = await fetch("/register", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 이메일: 이메일형식, 비번, 유저아이디, 기기ID })
-                });
-
-                const 결과 = await 응답.json();
-
-                if (!응답.ok || 결과.오류) {
-                    메시지표시(document.body, "❌", 결과.오류 || "회원가입 실패", "#ef4444");
-                    화면해제();
-                    return;
-                }
-
-                // ✅ 진짜 자동 로그인 시도
-                const 로그인결과 = await supabase.auth.signInWithPassword({
+                const { data, error } = await supabase.auth.signUp({
                     email: 이메일형식,
                     password: 비번
                 });
 
-                if (로그인결과.error) {
-                    메시지표시(document.body, "❌", "자동 로그인 실패", "#ef4444");
+                if (error || !data.user) {
+                    메시지표시(document.body, "❌", "회원가입 실패: " + error.message, "#ef4444");
+                    화면해제();
+                    return;
+                }
+
+                const 유저UID = data.user.id;
+
+                const 응답 = await fetch("/register-user", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 유저UID, 유저아이디, 기기ID })
+                });
+
+                const 결과 = await 응답.json();
+
+                if (!응답.ok) {
+                    메시지표시(document.body, "❌", 결과.오류 || "서버 오류", "#ef4444");
                     화면해제();
                     return;
                 }
 
                 유저데이터 = 결과.유저데이터;
+                메시지표시(document.body, "✅", "회원가입 성공! 자동 로그인 완료", "#00c851");
+                전투화면보여주기();
 
-                메시지표시(document.body, "✅", "회원가입 + 자동 로그인 완료", "#00c851");
-                전투화면보여주기(유저데이터);
             } catch (e) {
-                메시지표시(document.body, "❌", "서버 오류: " + e.message, "#ef4444");
-            } finally {
-                화면해제();
+                메시지표시(document.body, "❌", "예외 오류 발생: " + e.message, "#ef4444");
             }
+
+            화면해제();
         }
 
         async function 로그인() {

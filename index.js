@@ -378,31 +378,15 @@ app.post("/update-skill", async (req, res) => {
     return res.json({ 성공: true, 스킬, 숙련도 });
 });
 
-app.post("/register", async (req, res) => {
-    const { 이메일, 비번, 유저아이디, 기기ID } = req.body;
+app.post("/register-user", async (req, res) => {
+    const { 유저UID, 유저아이디, 기기ID } = req.body;
 
-    if (!이메일 || !비번 || !유저아이디 || !기기ID) {
+    if (!유저UID || !유저아이디 || !기기ID) {
         return res.status(400).json({ 오류: "입력값 누락" });
     }
 
-    // ✅ Supabase Auth 계정 생성
-    const { data: 등록, error: 등록오류 } = await supabaseAdmin.auth.admin.createUser({
-        email: 이메일,
-        password: 비번,
-        email_confirm: true
-    });
-
-    if (등록오류 || !등록.user) {
-        console.error("회원가입 오류:", 등록오류);  // ✅ 추가
-        return res.status(500).json({ 오류: "회원가입 실패" });
-    }
-
-
-    const 유저UID = 등록.user.id;
-
     const 삽입값 = {
         유저UID,
-        로그인이메일: 이메일,
         유저아이디,
         기기ID,
         레벨: 1,
@@ -436,7 +420,6 @@ app.post("/register", async (req, res) => {
 
     return res.json({ 유저데이터: 삽입값 });
 });
-
 
 app.post("/ranking", async (req, res) => {
     try {
