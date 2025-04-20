@@ -763,7 +763,6 @@
 
             localStorage.setItem("기기ID", 기기ID);
 
-            // 유효성 검사
             const 아이디패턴 = /^[a-zA-Z0-9_]{3,12}$/;
             if (!아이디패턴.test(아이디)) {
                 메시지표시(document.body, "❌", "아이디는 영문/숫자/밑줄 포함 3~12자여야 합니다", "#ef4444");
@@ -783,7 +782,18 @@
                     return;
                 }
 
-                const 유저UID = data.user.id;
+                // ✅ 세션 초기화 후 로그인
+                await supabase.auth.signOut();
+                await supabase.auth.signInWithPassword({ email: 이메일형식, password: 비번 });
+
+                const { data: { user }, error: 로그인오류 } = await supabase.auth.getUser();
+                if (로그인오류 || !user) {
+                    메시지표시(document.body, "❌", "재로그인 실패", "#ef4444");
+                    화면해제();
+                    return;
+                }
+
+                const 유저UID = user.id;
 
                 const 응답 = await fetch("/register-user", {
                     method: "POST",
