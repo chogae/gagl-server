@@ -603,7 +603,7 @@
         <div class="밑줄" id="보유숙련도">
 
         </div>
-        <div id="필요숙련도">
+        <div style="font-size: 12px; color: #888" id="필요숙련도">
 
         </div>
 
@@ -1829,7 +1829,7 @@
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1.0.1";
+        document.getElementById("버전표시").innerText = "v1.0.2";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -1953,7 +1953,7 @@ v1.0.1 도파민버전 패치노트<br>
 
                 유저데이터 = 결과.유저데이터;
                 if (결과.결과 === "성공" && 결과.장비) {
-                    메시지표시(메시지표시박스, "🎰", `[${결과.장비.등급}] ${결과.장비.이름} +${결과.장비.공격력} 획득!`, 색상맵[결과.장비.등급]);
+                    메시지표시(메시지표시박스, "", `[${결과.장비.등급}] ${결과.장비.이름} +${결과.장비.공격력} 획득!`, 색상맵[결과.장비.등급]);
                 } else if (결과.결과 === "실패") {
                     메시지표시(메시지표시박스, "❌", "도박에 실패했습니다!", "#ef4444");
                 }
