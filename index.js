@@ -449,6 +449,24 @@ app.post("/gamble", async (req, res) => {
     }
 });
 
+app.post("/update-floor", async (req, res) => {
+    const { 유저UID, 현재층 } = req.body;
+
+    if (!유저UID || typeof 현재층 !== "number") {
+        return res.status(400).json({ 오류: "입력값 누락" });
+    }
+
+    const { error } = await supabaseAdmin
+        .from("users")
+        .update({ 현재층 })
+        .eq("유저UID", 유저UID);
+
+    if (error) {
+        return res.status(500).json({ 오류: "층 정보 업데이트 실패" });
+    }
+
+    return res.json({ 성공: true });
+});
 
 app.listen(3000, () => {
     console.log("서버 실행 중: http://localhost:3000");
