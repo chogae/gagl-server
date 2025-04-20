@@ -633,6 +633,7 @@
     justify-content: flex-start;
     padding: 10px;
     box-sizing: border-box;
+    pointer-events: none;
 "></div>
 
     <!-- 객체추가 -->
@@ -642,7 +643,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v267";
+        document.getElementById("버전표시").innerText = "v268";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1672,7 +1673,7 @@
                 창.style.display = "none";
             }
         });
-        
+
         document.addEventListener("DOMContentLoaded", async () => {
             const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
 
@@ -1706,37 +1707,95 @@
                 메시지표시(메시지표시박스, "🔒", "로그인된 유저 없음", "#aaa");
             }
 
-            document.getElementById("타이틀을아이디로").addEventListener("click", () => {
-                if (!유저데이터) return;
-                메시지표시(메시지표시박스, "✅", "✅ 타이틀을아이디로 클릭됨", "#ef4444");
-                console.log("✅ 유저 클릭됨:", 유저데이터);
-            });
-
         });
 
+        document.getElementById("타이틀을아이디로").addEventListener("click", async function 아이디변경시작() {
+            if (!유저데이터) return;
 
+            const 기존표시 = document.getElementById("타이틀을아이디로");
+            const 원래아이디 = 유저데이터.유저아이디;
 
-        setInterval(async () => {
-            try {
-                const { data, error } = await supabase
-                    .from("점검")
-                    .select("상태")
-                    .limit(1)
-                    .single();
+            // 입력창 생성
+            const 입력창 = document.createElement("input");
+            입력창.type = "text";
+            입력창.maxLength = 8;
+            입력창.placeholder = "새 아이디 입력";
+            입력창.style.background = "black";
+            입력창.style.color = "white";
+            입력창.style.border = "none";
+            입력창.style.fontSize = "20px";
+            입력창.style.outline = "none";
+            입력창.value = "";
+            기존표시.replaceWith(입력창);
+            입력창.focus();
 
-                if (error) {
-                    console.warn("점검 상태 확인 실패:", error.message);
+            // 외부 클릭 감지 핸들러
+            const 외부클릭취소 = (e) => {
+                if (!입력창.contains(e.target)) {
+                    const 복원 = document.createElement("div");
+                    복원.id = "타이틀을아이디로";
+                    복원.className = "커서호버";
+                    복원.innerText = 원래아이디;
+                    입력창.replaceWith(복원);
+                    복원.addEventListener("click", 아이디변경시작);
+                    document.removeEventListener("click", 외부클릭취소);
+                }
+            };
+
+            // 입력창 클릭 제외하고 바깥 클릭 시 취소
+            setTimeout(() => {
+                document.addEventListener("click", 외부클릭취소);
+            }, 0);
+
+            입력창.addEventListener("keydown", async (e) => {
+                if (e.key !== "Enter") return;
+
+                const 새아이디 = 입력창.value.trim();
+                if (!새아이디 || 새아이디.length > 8) {
+                    메시지표시(메시지표시박스, "⚠️", "1~8자 이내로 입력하세요", "#ef4444");
                     return;
                 }
 
-                if (data.상태 === true) {
-                    console.log("🔁 점검 상태 true → 페이지 새로고침");
-                    location.reload();
+                화면잠금();
+
+                try {
+                    const 응답 = await fetch("/update-username", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            유저UID: 유저데이터.유저UID,
+                            새아이디
+                        })
+                    });
+
+                    const 결과 = await 응답.json();
+
+                    if (!응답.ok) {
+                        메시지표시(메시지표시박스, "❌", 결과.오류 || "아이디 변경 실패", "#ef4444");
+                        화면해제();
+                        return;
+                    }
+
+                    유저데이터.유저아이디 = 새아이디;
+
+                    const 복원 = document.createElement("div");
+                    복원.id = "타이틀을아이디로";
+                    복원.className = "커서호버";
+                    복원.innerText = 새아이디;
+                    입력창.replaceWith(복원);
+                    복원.addEventListener("click", 아이디변경시작);
+
+                    document.getElementById("유저아이디").innerText = 새아이디;
+                    메시지표시(메시지표시박스, "✅", "아이디 변경 완료", "#00c851");
+
+                    document.removeEventListener("click", 외부클릭취소);
+                } catch (e) {
+                    메시지표시(메시지표시박스, "❌", "네트워크 오류", "#ef4444");
+                } finally {
+                    화면해제();
                 }
-            } catch (e) {
-                console.error("점검 확인 중 오류:", e.message);
-            }
-        }, 60000); // 30초마다 체크
+            });
+        });
 
 
     </script>
