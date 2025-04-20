@@ -310,6 +310,41 @@ app.post("/delete-user", async (req, res) => {
     return res.json({ 메시지: "탈퇴 처리 완료" });
 });
 
+app.post("/update-username", async (req, res) => {
+    const { 유저UID, 새아이디 } = req.body;
+
+    if (!유저UID || !새아이디 || 새아이디.length > 8) {
+        return res.status(400).json({ 오류: "입력값 누락 또는 길이 초과" });
+    }
+
+    // ✅ 이미 존재하는 아이디 있는지 확인
+    const { data: 중복, error: 조회오류 } = await supabaseAdmin
+        .from("users")
+        .select("유저UID")
+        .eq("유저아이디", 새아이디)
+        .neq("유저UID", 유저UID);
+
+    if (조회오류) {
+        return res.status(500).json({ 오류: "중복 확인 실패" });
+    }
+
+    if (중복.length > 0) {
+        return res.status(409).json({ 오류: "이미 사용 중인 아이디입니다" });
+    }
+
+    const { error: 업데이트오류 } = await supabaseAdmin
+        .from("users")
+        .update({ 유저아이디: 새아이디 })
+        .eq("유저UID", 유저UID);
+
+    if (업데이트오류) {
+        return res.status(500).json({ 오류: "아이디 변경 실패" });
+    }
+
+    return res.json({ 성공: true });
+});
+
+
 app.listen(3000, () => {
     console.log("서버 실행 중: http://localhost:3000");
 });

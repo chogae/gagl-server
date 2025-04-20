@@ -643,7 +643,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v268";
+        document.getElementById("버전표시").innerText = "v269";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1720,10 +1720,11 @@
             입력창.type = "text";
             입력창.maxLength = 8;
             입력창.placeholder = "새 아이디 입력";
-            입력창.style.background = "black";
-            입력창.style.color = "white";
+            입력창.style.background = "white";
+            입력창.style.color = "black";
             입력창.style.border = "none";
-            입력창.style.fontSize = "20px";
+            입력창.style.fontSize = "14px";
+            입력창.size = 8;
             입력창.style.outline = "none";
             입력창.value = "";
             기존표시.replaceWith(입력창);
