@@ -636,14 +636,33 @@
     pointer-events: none;
 "></div>
 
+    <!-- 🟢 도박창 -->
+    <div id="도박창" class="사백픽셀테두리 세로정렬" style="
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: black;
+  color: white;
+  z-index: 10000;
+  padding: 20px;
+  text-align: center;
+">
+        <div id="도박타이틀" style="font-size: 20px; font-weight: bold;">🎰 도박장</div>
+        <div style="margin-top: 15px;">
+            <div class="버튼" onclick="도박시도('레어')">💎 레어 장비 (10만)</div>
+            <div class="버튼" onclick="도박시도('신화')">🪄 신화 장비 (100만)</div>
+            <div class="버튼" onclick="도박시도('고대')">🗿 고대 장비 (1000만)</div>
+        </div>
+    </div>
+
+
     <!-- 객체추가 -->
 
     <script>
         // 최초 접속 시 기기ID를 localStorage에 저장
         let 기기ID = localStorage.getItem("기기ID");
-        // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-        // 업데이트
-        document.getElementById("버전표시").innerText = "v269";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -1215,10 +1234,10 @@
             const 강화비용 = {
                 "일반": 1000,
                 "레어": 10000,
-                "신화": 100000,
-                "고대": 1000000,
-                "태초": 10000000,
-                "공허": 100000000
+                "신화": 30000,
+                "고대": 100000,
+                "태초": 300000,
+                "공허": 1000000
             }[등급];
 
             const 비용 = 강화비용;  // 숫자 유지
@@ -1353,6 +1372,16 @@
             document.getElementById("획득로그").innerText = "";
             document.getElementById("레벨업표시").innerText = "";
             document.getElementById("보유숙련도").innerText = "보유 숙련도 " + 유저데이터.숙련도;
+            const 총투자 = Object.values(유저데이터.스킬 || {}).reduce((a, b) => a + b, 0);
+            const 다음필요숙련도 = 총투자 + 1;
+
+            const 필요숙련도표시 = document.createElement("div");
+            필요숙련도표시.style.fontSize = "12px";
+            필요숙련도표시.style.color = "#888";
+            필요숙련도표시.style.marginTop = "4px";
+            필요숙련도표시.innerText = `다음 투자에 필요한 숙련도: ${다음필요숙련도}`;
+
+            document.getElementById("보유숙련도").appendChild(필요숙련도표시);
 
             const 컨테이너 = document.getElementById("스킬컨테이너");
             컨테이너.innerHTML = "";
@@ -1557,6 +1586,7 @@
         });
 
         async function 전당화면보여주기() {
+            화면잠금();
             document.getElementById("전투화면").style.display = "none";
             document.getElementById("에너지박스").style.display = "none";
             document.getElementById("전당화면").style.display = "block";
@@ -1656,6 +1686,8 @@
         `;
                 컨테이너.appendChild(줄);
             }
+
+            화면해제();
         }
 
         // ✅ 장비창 내부 클릭 시 document에 이벤트 안 퍼지도록 막기
@@ -1798,6 +1830,138 @@
             });
         });
 
+        document.getElementById("버전표시").innerText = "v1.0.1";
+        // 업데이트git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
+
+        const 버전버튼 = document.getElementById("버전표시");
+        버전버튼.style.cursor = "pointer";
+
+        const 메뉴얼창 = document.createElement("div");
+        메뉴얼창.id = "메뉴얼창";
+        메뉴얼창.className = "사백픽셀테두리";
+        메뉴얼창.style.position = "fixed";
+        메뉴얼창.style.top = "40px";
+        메뉴얼창.style.left = "10px";
+        메뉴얼창.style.background = "#000";
+        메뉴얼창.style.color = "white";
+        메뉴얼창.style.zIndex = "9999";
+        메뉴얼창.style.width = "fit-content";
+        // 메뉴얼창.style.whiteSpace = "nowrap";
+        메뉴얼창.style.display = "none";
+        메뉴얼창.innerHTML = `
+  <div style="font-weight: bold; margin-bottom: 10px;">📘 운영자 메뉴얼</div>
+  <div>
+0. 다시만나 반갑습니다<br>
+1. 도박자금 넣어뒀습니다. 골드 클릭해보세요<br>
+2. 상단 아이디 클릭 시 아이디 변경 가능합니다<br>
+3. 전당화면에 유저 아이디 클릭 시 해당유저 장비<br>
+열람 가능합니다<br>
+4. 장비화면에 망치모양이 강화버튼입니다<br>
+5. 일반등급 외 몬스터 승리 시 해당등급 장비<br>
+확정드랍합니다<br>
+6. 일반등급 외 몬스터는 스탯이 높습니다<br>
+층조절에 유의하세요<br>
+7. 모든 팝업창은 팝업 외 화면을 클릭하면 닫힙니다<br>
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
+v1.0.1 도파민버전 패치노트<br>
+드가자~<br>
+</div>
+`;
+        // 버전업
+
+        document.body.appendChild(메뉴얼창);
+
+        버전버튼.addEventListener("click", () => {
+            메뉴얼창.style.display = (메뉴얼창.style.display === "none") ? "block" : "none";
+        });
+
+        document.addEventListener("click", (e) => {
+            if (
+                메뉴얼창.style.display === "block" &&
+                !메뉴얼창.contains(e.target) &&
+                !버전버튼.contains(e.target)
+            ) {
+                메뉴얼창.style.display = "none";
+            }
+        });
+
+
+        // 🟡 무지개 타이틀 애니메이션
+        let 색상인덱스 = 0;
+        const 무지개색들 = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff", "#4b0082", "#9400d3"];
+        setInterval(() => {
+            const 타이틀 = document.getElementById("도박타이틀");
+            if (타이틀) {
+                타이틀.style.color = 무지개색들[색상인덱스 % 무지개색들.length];
+                색상인덱스++;
+            }
+        }, 250);
+
+        // 🟢 도박창 외부 클릭 시 닫기
+        document.addEventListener("click", (e) => {
+            const 도박창 = document.getElementById("도박창");
+            if (도박창.style.display === "none") return;
+            if (!도박창.contains(e.target) && e.target.id !== "총골드") {
+                도박창.style.display = "none";
+            }
+        });
+
+        // 🟢 총골드 클릭 시 도박창 표시
+        document.getElementById("총골드").addEventListener("click", () => {
+            if (!유저데이터) return;
+            const 도박창 = document.getElementById("도박창");
+            도박창.style.display = "block";
+        });
+
+        // 🟡 도박 시도
+        async function 도박시도(등급) {
+            const 비용맵 = {
+                "레어": 100000,
+                "신화": 300000,
+                "고대": 1000000
+            };
+
+            const 비용 = 비용맵[등급];
+            if (유저데이터.골드 < 비용) {
+                메시지표시(메시지표시박스, "❌", "골드 부족!", "#ef4444");
+                return;
+            }
+
+            const 확인 = confirm(`[${등급}] 장비 도박을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`);
+            if (!확인) return;
+
+            화면잠금();
+            try {
+                const 응답 = await fetch("/gamble", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        유저UID: 유저데이터.유저UID,
+                        등급
+                    })
+                });
+
+                const 결과 = await 응답.json();
+                if (!응답.ok || 결과.오류) {
+                    메시지표시(메시지표시박스, "❌", 결과.오류 || "도박 실패", "#ef4444");
+                    return;
+                }
+
+                유저데이터 = 결과.유저데이터;
+                if (결과.결과 === "성공" && 결과.장비) {
+                    메시지표시(메시지표시박스, "🎰", `[${결과.장비.등급}] ${결과.장비.이름} +${결과.장비.공격력} 획득!`, 색상맵[결과.장비.등급]);
+                } else if (결과.결과 === "실패") {
+                    메시지표시(메시지표시박스, "❌", "도박에 실패했습니다!", "#ef4444");
+                }
+
+                document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
+            } catch (e) {
+                메시지표시(메시지표시박스, "❌", "도박 중 오류: " + e.message, "#ef4444");
+            } finally {
+                화면해제();
+            }
+        }
 
     </script>
 </body>
