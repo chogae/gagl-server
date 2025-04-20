@@ -379,9 +379,9 @@ app.post("/update-skill", async (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-    const { 이메일, 비번, 유저아이디 } = req.body;
+    const { 이메일, 비번, 유저아이디, 기기ID } = req.body;
 
-    if (!이메일 || !비번 || !유저아이디) {
+    if (!이메일 || !비번 || !유저아이디 || !기기ID) {
         return res.status(400).json({ 오류: "입력값 누락" });
     }
 
@@ -398,12 +398,11 @@ app.post("/register", async (req, res) => {
 
     const 유저UID = 등록.user.id;
 
-    // ✅ users 테이블 삽입
     const 삽입값 = {
-        유저UID: user.id,
-        로그인이메일: 이메일형식,
-        유저아이디: 아이디,
-        기기ID: 기기ID,
+        유저UID,
+        로그인이메일: 이메일,
+        유저아이디,
+        기기ID,
         레벨: 1,
         공격력: 30,
         경험치: 0,
@@ -418,7 +417,7 @@ app.post("/register", async (req, res) => {
         합성기록: {},
         장비목록: [],
         킬카운트: 0,
-        강림몬스터: {},   // ✅ null → {}로 수정
+        강림몬스터: {},
         버전업: 0,
         현재스태미너: 100,
         최대스태미너: 100,
@@ -435,6 +434,7 @@ app.post("/register", async (req, res) => {
 
     return res.json({ 유저데이터: 삽입값 });
 });
+
 
 app.post("/ranking", async (req, res) => {
     try {
