@@ -427,6 +427,7 @@ app.post("/ranking", async (req, res) => {
         const { data: 유저들, error } = await supabaseAdmin
             .from("users")
             .select("유저아이디, 레벨, 공격력, 현재층, 장비목록, 합성기록")
+            .eq("버전업", 1) // ✅ 버전업 1인 유저만
             .order("공격력", { ascending: false })
             .limit(10);
 
