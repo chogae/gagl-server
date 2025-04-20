@@ -393,8 +393,10 @@ app.post("/register", async (req, res) => {
     });
 
     if (등록오류 || !등록.user) {
+        console.error("회원가입 오류:", 등록오류);  // ✅ 추가
         return res.status(500).json({ 오류: "회원가입 실패" });
     }
+
 
     const 유저UID = 등록.user.id;
 
