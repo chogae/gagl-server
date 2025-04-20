@@ -878,8 +878,6 @@
                 유저데이터 = 유저정보;
                 메시지표시(메시지표시박스, "✅", "회원가입 및 로그인 성공!", "#00c851");
                 전투화면보여주기(유저데이터);
-                supabase.auth.getUser().then(console.log)
-
             } catch (e) {
                 메시지표시(메시지표시박스, "", "오류 발생: " + e.message, "#ef4444");
             } finally {
@@ -1437,144 +1435,81 @@
 
                 줄.querySelectorAll(".버튼").forEach(버튼 => {
                     버튼.addEventListener("click", async () => {
-                        let 전체레벨 = 유저데이터.스킬[키] || 0;
-                        const 단계당레벨 = 10;
-                        const 단계수 = 설정.단계.length;
+                        const 행동맵 = {
+                            "+": "투자",
+                            "-": "회수",
+                            "M": "마스터",
+                            "R": "초기화"
+                        };
 
-                        if (버튼.innerText === "+") {
-                            const 총투자 = Object.values(유저데이터.스킬).reduce((a, b) => a + b, 0);
-                            const 비용 = 총투자 + 1;
-                            if (유저데이터.숙련도 < 비용) return 메시지표시(스킬화면, "", "숙련도 부족", "#ef4444");
-                            if (전체레벨 >= 단계수 * 단계당레벨) return 메시지표시(스킬화면, "⚠️", "최종단계입니다", "#ccc");
-
-                            유저데이터.숙련도 -= 비용;
-                            유저데이터.스킬[키] = 전체레벨 + 1;
-
-                            let 다음레벨 = 전체레벨 + 1;
-                            let 다음단계 = Math.floor(다음레벨 / 단계당레벨);
-                            let 다음강화 = 다음레벨 % 단계당레벨;
-
-                            if (다음강화 === 0 && 다음레벨 > 0 && 다음레벨 % 단계당레벨 === 0) {
-                                다음강화 = 단계당레벨;
-                                다음단계 = 다음단계 - 1;
-                            }
-
-                            const 스킬이름 = 설정.단계[다음단계] || "최종단계";
-                            메시지표시(스킬화면, "✅", `${스킬이름} +${다음강화} 강화됨`, "#00c851");
-
-                        } else if (버튼.innerText === "-") {
-                            if (전체레벨 <= 0) return 메시지표시(스킬화면, "❌", "회수할 스킬이 없습니다", "#ef4444");
-
-                            const 총투자 = Object.values(유저데이터.스킬).reduce((a, b) => a + b, 0);
-                            const 환급 = 총투자;
-                            유저데이터.숙련도 += 환급;
-                            유저데이터.스킬[키] = 전체레벨 - 1;
-                            메시지표시(스킬화면, "↩️", `${설정.단계[Math.floor((전체레벨 - 1) / 단계당레벨)]} 1레벨 회수`, "#3b82f6");
-
-                        } else if (버튼.innerText === "M") {
-                            let 성공횟수 = 0;
-                            while (전체레벨 < 단계수 * 단계당레벨) {
-                                const 총투자 = Object.values(유저데이터.스킬).reduce((a, b) => a + b, 0);
-                                const 비용 = 총투자 + 1;
-
-                                if (유저데이터.숙련도 < 비용) break;
-
-                                유저데이터.숙련도 -= 비용;
-                                전체레벨++;
-                                유저데이터.스킬[키] = 전체레벨;
-                                성공횟수++;
-                            }
-
-                            if (성공횟수 > 0) {
-                                let 현재단계 = Math.floor(전체레벨 / 단계당레벨);
-                                let 현재강화 = 전체레벨 % 단계당레벨;
-
-                                if (현재강화 === 0 && 전체레벨 > 0 && 전체레벨 % 단계당레벨 === 0) {
-                                    현재강화 = 단계당레벨;
-                                    현재단계 = 현재단계 - 1;
-                                }
-
-                                const 스킬이름 = 설정.단계[현재단계] || "최종단계";
-                                메시지표시(
-                                    스킬화면,
-                                    "🚀",
-                                    `${스킬이름} +${현재강화}까지 투자`,
-                                    "#00c851"
-                                );
-                            } else {
-                                메시지표시(스킬화면, "❌", "숙련도 부족 또는 최종단계", "#ef4444");
-                            }
-
-                        } else if (버튼.innerText === "R") {
-                            if (전체레벨 <= 0) return 메시지표시(스킬화면, "❌", "회수할 스킬이 없습니다", "#ef4444");
-
-                            const 총투자 = Object.values(유저데이터.스킬).reduce((a, b) => a + b, 0);
-                            let 환급 = 0;
-                            let 현재투자순번 = 총투자;
-
-                            for (let i = 0; i < 전체레벨; i++) {
-                                환급 += 현재투자순번;
-                                현재투자순번--;
-                            }
-
-                            유저데이터.숙련도 += 환급;
-                            유저데이터.스킬[키] = 0;
-
-                            메시지표시(스킬화면, "🔄", `${설정.단계[현재단계]} 전체 회수 (${전체레벨}레벨)`, "#3b82f6");
-                        }
+                        const 행동 = 행동맵[버튼.innerText];
+                        if (!행동) return;
 
                         화면잠금();
-                        await fetch("/update-skill", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                유저UID: 유저데이터.유저UID,
-                                스킬: 유저데이터.스킬,
-                                숙련도: 유저데이터.숙련도
-                            })
-                        });
-                        화면해제();
-                        스킬화면보여주기();
+                        try {
+                            const 응답 = await fetch("/update-skill", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    유저UID: 유저데이터.유저UID,
+                                    스킬이름: 키,
+                                    행동
+                                })
+                            });
+
+                            const 결과 = await 응답.json();
+
+                            if (!응답.ok || 결과.오류) {
+                                메시지표시(스킬화면, "", 결과.오류 || "스킬 업데이트 실패", "#ef4444");
+                                return;
+                            }
+
+                            유저데이터.스킬 = 결과.스킬;
+                            유저데이터.숙련도 = 결과.숙련도;
+                            메시지표시(스킬화면, "✅", `${행동} 완료`, "#00c851");
+
+                            스킬화면보여주기();
+                        } catch (e) {
+                            메시지표시(스킬화면, "", "서버 오류: " + e.message, "#ef4444");
+                        } finally {
+                            화면해제();
+                        }
                     });
                 });
             }
         }
 
         document.getElementById("보유숙련도").addEventListener("click", async () => {
-            const 스킬들 = 유저데이터.스킬 || {};
-            let 총투자 = Object.values(스킬들).reduce((a, b) => a + b, 0);
-
-            if (총투자 === 0) {
-                메시지표시(스킬화면, "ℹ️", "회수할 스킬이 없습니다.", "#888");
-                return;
-            }
-
-            let 환급 = 0;
-            let 투자순번 = 총투자;
-
-            for (let i = 0; i < 총투자; i++) {
-                환급 += 투자순번;
-                투자순번--;
-            }
-
-            유저데이터.숙련도 += 환급;
-            유저데이터.스킬 = {}; // 전체 초기화
-
-            메시지표시(스킬화면, "🔁", `모든 스킬 초기화, 숙련도 +${환급}`, "#3b82f6");
-
             화면잠금();
-            await fetch("/update-skill", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    유저UID: 유저데이터.유저UID,
-                    스킬: 유저데이터.스킬,
-                    숙련도: 유저데이터.숙련도
-                })
-            });
-            화면해제();
 
-            스킬화면보여주기();
+            try {
+                const 응답 = await fetch("/update-skill", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        유저UID: 유저데이터.유저UID,
+                        스킬이름: "전체", // 특별 키워드
+                        행동: "초기화"
+                    })
+                });
+
+                const 결과 = await 응답.json();
+
+                if (!응답.ok || 결과.오류) {
+                    메시지표시(스킬화면, "", 결과.오류 || "초기화 실패", "#ef4444");
+                    return;
+                }
+
+                유저데이터.숙련도 = 결과.숙련도;
+                유저데이터.스킬 = 결과.스킬;
+
+                메시지표시(스킬화면, "🔁", "모든 스킬 초기화 완료", "#3b82f6");
+                스킬화면보여주기();
+            } catch (e) {
+                메시지표시(스킬화면, "", "서버 오류: " + e.message, "#ef4444");
+            } finally {
+                화면해제();
+            }
         });
 
         document.getElementById("전당").addEventListener("click", () => {
@@ -1828,7 +1763,7 @@
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1.0.2";
+        document.getElementById("버전표시").innerText = "v1.0.3";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");

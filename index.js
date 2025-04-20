@@ -256,24 +256,128 @@ app.post("/upgrade-item", async (req, res) => {
 });
 
 app.post("/update-skill", async (req, res) => {
-    const { 유저UID, 스킬, 숙련도 } = req.body;
+    const { 유저UID, 스킬이름, 행동 } = req.body;
 
-    if (!유저UID || typeof 스킬 !== "object" || typeof 숙련도 !== "number") {
-        return res.status(400).json({ 오류: "입력값 부족" });
+    if (!유저UID || !스킬이름 || !행동) {
+        return res.status(400).json({ 오류: "입력값 누락" });
     }
 
-    const { error } = await supabaseAdmin
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("스킬, 숙련도")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
+
+    let 스킬 = 유저.스킬 || {};
+    let 숙련도 = 유저.숙련도 || 0;
+
+    // ✅ 전체 초기화 요청 분기
+    if (스킬이름 === "전체" && 행동 === "초기화") {
+        const 총투자 = Object.values(스킬).reduce((a, b) => a + b, 0);
+        let 환급 = 0;
+        let 투자순번 = 총투자;
+
+        for (let i = 0; i < 총투자; i++) {
+            환급 += 투자순번--;
+        }
+
+        숙련도 += 환급;
+        스킬 = {};
+
+        const { error: 저장오류 } = await supabaseAdmin
+            .from("users")
+            .update({ 스킬, 숙련도 })
+            .eq("유저UID", 유저UID);
+
+        if (저장오류) {
+            return res.status(500).json({ 오류: "초기화 저장 실패" });
+        }
+
+        return res.json({ 성공: true, 스킬, 숙련도 });
+    }
+
+    // ✅ 아래는 단일 스킬에 대한 투자/회수/마스터 처리
+    const 스킬정보 = {
+        버서커: { 단계: Array(10).fill(0) },
+        드레인: { 단계: Array(8).fill(0) },
+        발굴: { 단계: Array(5).fill(0) },
+        아이언바디: { 단계: Array(5).fill(0) },
+        인사이트: { 단계: Array(2).fill(0) },
+        크리티컬: { 단계: Array(13).fill(0) },
+        버닝: { 단계: Array(5).fill(0) },
+        인텔리전스: { 단계: Array(2).fill(0) },
+    };
+
+    if (!스킬정보[스킬이름]) {
+        return res.status(400).json({ 오류: "존재하지 않는 스킬" });
+    }
+
+    const 단계수 = 스킬정보[스킬이름].단계.length;
+    const 최대레벨 = 단계수 * 10;
+    const 현재레벨 = 스킬[스킬이름] || 0;
+    const 총투자 = Object.values(스킬).reduce((a, b) => a + b, 0);
+
+    if (행동 === "투자") {
+        if (현재레벨 >= 최대레벨) return res.status(400).json({ 오류: "최종단계입니다" });
+        const 비용 = 총투자 + 1;
+        if (숙련도 < 비용) return res.status(400).json({ 오류: "숙련도 부족" });
+
+        숙련도 -= 비용;
+        스킬[스킬이름] = 현재레벨 + 1;
+    }
+
+    else if (행동 === "회수") {
+        if (현재레벨 <= 0) return res.status(400).json({ 오류: "회수할 스킬 없음" });
+
+        숙련도 += 총투자;
+        스킬[스킬이름] = 현재레벨 - 1;
+    }
+
+    else if (행동 === "마스터") {
+        let 레벨 = 현재레벨;
+        let 투자 = 총투자;
+
+        while (레벨 < 최대레벨) {
+            const 비용 = 투자 + 1;
+            if (숙련도 < 비용) break;
+            숙련도 -= 비용;
+            레벨++;
+            투자++;
+        }
+
+        스킬[스킬이름] = 레벨;
+    }
+
+    else if (행동 === "초기화") {
+        let 환급 = 0;
+        let 투자순번 = 총투자;
+
+        for (let i = 0; i < 현재레벨; i++) {
+            환급 += 투자순번--;
+        }
+
+        숙련도 += 환급;
+        스킬[스킬이름] = 0;
+    }
+
+    else {
+        return res.status(400).json({ 오류: "알 수 없는 행동" });
+    }
+
+    const { error: 저장오류 } = await supabaseAdmin
         .from("users")
         .update({ 스킬, 숙련도 })
         .eq("유저UID", 유저UID);
 
-    if (error) {
-        console.error("스킬 업데이트 실패:", error.message);
-        return res.status(500).json({ 오류: "스킬 업데이트 실패" });
+    if (저장오류) {
+        return res.status(500).json({ 오류: "스킬 저장 실패" });
     }
 
-    return res.json({ 성공: true });
+    return res.json({ 성공: true, 스킬, 숙련도 });
 });
+
 
 app.post("/ranking", async (req, res) => {
     try {
