@@ -368,8 +368,7 @@ app.post("/gamble", async (req, res) => {
     }
 
     try {
-        // 유저 데이터 조회
-        const { data: 유저, error } = await supabase
+        const { data: 유저, error } = await supabaseAdmin
             .from("users")
             .select("*")
             .eq("유저UID", 유저UID)
@@ -428,7 +427,7 @@ app.post("/gamble", async (req, res) => {
             최대체력: 100 + 체력보너스
         };
 
-        const { error: 업데이트에러 } = await supabase
+        const { error: 업데이트에러 } = await supabaseAdmin
             .from("users")
             .update(업데이트)
             .eq("유저UID", 유저UID);

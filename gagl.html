@@ -637,10 +637,10 @@
 "></div>
 
     <!-- 🟢 도박창 -->
-    <div id="도박창" class="사백픽셀테두리 세로정렬" style="
+    <div id="도박창" class="기본테두리 세로정렬" style="
   display: none;
   position: fixed;
-  top: 50%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: black;
@@ -649,11 +649,11 @@
   padding: 20px;
   text-align: center;
 ">
-        <div id="도박타이틀" style="font-size: 20px; font-weight: bold;">🎰 도박장</div>
+        <div id="도박타이틀" style="font-size: 20px; font-weight: bold;"></div>
         <div style="margin-top: 15px;">
-            <div class="버튼" onclick="도박시도('레어')">💎 레어 장비 (10만)</div>
-            <div class="버튼" onclick="도박시도('신화')">🪄 신화 장비 (100만)</div>
-            <div class="버튼" onclick="도박시도('고대')">🗿 고대 장비 (1000만)</div>
+            <div class="버튼" onclick="도박시도('레어')">레어 장비 (10만)</div>
+            <div class="버튼" onclick="도박시도('신화')">신화 장비 (100만)</div>
+            <div class="버튼" onclick="도박시도('고대')">고대 장비 (1000만)</div>
         </div>
     </div>
 
@@ -706,6 +706,7 @@
         const 실패아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>`;
         const 마스터아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap-icon lucide-graduation-cap"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>`;
         const 버닝아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-battery-charging-icon lucide-battery-charging"><path d="M15 7h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><path d="M6 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h1"/><path d="m11 7-3 5h4l-3 5"/><line x1="22" x2="22" y1="11" y2="13"/></svg>`;
+        const 도박아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dices-icon lucide-dices"><rect width="12" height="12" x="2" y="10" rx="2" ry="2"/><path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6"/><path d="M6 18h.01"/><path d="M10 14h.01"/><path d="M15 6h.01"/><path d="M18 9h.01"/></svg>`;
 
         function 화면잠금() {
             document.body.style.pointerEvents = "none";
@@ -1892,6 +1893,10 @@ v1.0.1 도파민버전 패치노트<br>
         const 무지개색들 = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff", "#4b0082", "#9400d3"];
         setInterval(() => {
             const 타이틀 = document.getElementById("도박타이틀");
+            타이틀.style.display = "flex";
+            타이틀.style.alignItems = "center";
+            타이틀.style.gap = "6px";
+            타이틀.innerHTML = `${도박아이콘} 도박장`;
             if (타이틀) {
                 타이틀.style.color = 무지개색들[색상인덱스 % 무지개색들.length];
                 색상인덱스++;
