@@ -379,7 +379,7 @@ app.post("/update-skill", async (req, res) => {
 });
 
 app.post("/register-user", async (req, res) => {
-    const { 유저UID, 유저아이디, 기기ID } = req.body;
+    const { 유저UID, 유저아이디, 기기ID, 로그인이메일 } = req.body;
 
     if (!유저UID || !유저아이디 || !기기ID) {
         return res.status(400).json({ 오류: "입력값 누락" });
@@ -388,6 +388,7 @@ app.post("/register-user", async (req, res) => {
     const 삽입값 = {
         유저UID,
         유저아이디,
+        로그인이메일,
         기기ID,
         레벨: 1,
         공격력: 30,

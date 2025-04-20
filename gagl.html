@@ -798,7 +798,7 @@
                 const 응답 = await fetch("/register-user", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 유저UID, 유저아이디, 기기ID })
+                    body: JSON.stringify({ 유저UID, 유저아이디, 기기ID, 로그인이메일: 이메일형식 })
                 });
 
                 const 결과 = await 응답.json();
@@ -1697,7 +1697,7 @@
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1.0.2";
+        document.getElementById("버전표시").innerText = "v1.0.1";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
