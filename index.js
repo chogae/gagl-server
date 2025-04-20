@@ -389,7 +389,7 @@ app.post("/gamble", async (req, res) => {
 
         if (!성공) {
             // 실패 시: 골드만 차감
-            await supabase
+            await supabaseAdmin
                 .from("users")
                 .update({ 골드: 남은골드 })
                 .eq("유저UID", 유저UID);

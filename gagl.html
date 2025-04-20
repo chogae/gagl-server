@@ -629,7 +629,7 @@
     left: 0;
     width: 50%;
     height: 100vh;
-    z-index: 9998;
+    z-index: 9999;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -643,12 +643,12 @@
     <div id="도박창" class="기본테두리 세로정렬" style="
   display: none;
   position: fixed;
-  top: 40%;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: black;
   color: white;
-  z-index: 10000;
+  z-index: 9998;
   padding: 20px;
   text-align: center;
   width:auto;
@@ -1829,7 +1829,7 @@
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1.0.3";
+        document.getElementById("버전표시").innerText = "v1.0.1";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -1891,9 +1891,9 @@ v1.0.1 도파민버전 패치노트<br>
         const 무지개색들 = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff", "#4b0082", "#9400d3"];
         setInterval(() => {
             const 타이틀 = document.getElementById("도박타이틀");
-            타이틀.style.display = "flex";
-            타이틀.style.alignItems = "center";
-            타이틀.style.gap = "6px";
+            // 타이틀.style.display = "flex";
+            // 타이틀.style.alignItems = "center";
+            // 타이틀.style.gap = "6px";
             타이틀.innerHTML = `${도박아이콘} 도박장`;
             if (타이틀) {
                 타이틀.style.color = 무지개색들[색상인덱스 % 무지개색들.length];
