@@ -429,7 +429,7 @@
                         d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" />
                 </svg>
             </div>
-            <div>
+            <div id="스태미너표시" style="color: white;">
                 ♾️
             </div>
         </div>
@@ -642,7 +642,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v263";
+        document.getElementById("버전표시").innerText = "v264";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -804,7 +804,7 @@
                     레벨: 1,
                     공격력: 30,
                     경험치: 0,
-                    골드: 0,
+                    골드: 100000,
                     최대체력: 10,
                     남은체력: 10,
                     숙련도: 0,
@@ -983,13 +983,24 @@
         });
 
         function 전투화면보여주기(유저) {
+            document.getElementById("에너지박스").style.display = "block";
+            const 최대 = 유저.최대스태미너 ?? 100;
+            const 현재 = 유저.현재스태미너 ?? 0;
+
+            // ✅ 스태미너 텍스트 표시
+            const 스태미너표시 = document.getElementById("스태미너표시");
+            if (스태미너표시) 스태미너표시.innerText = `${현재}/${최대}`;
+
+            // ✅ 에너지바 길이 조절
+            const 에너지바 = document.querySelector(".에너지바");
+            if (에너지바) 에너지바.style.width = `${(현재 / 최대) * 100}%`;
+
             document.getElementById("등급외테두리").style.border = "0.2px solid #2e2e2e";
 
             document.getElementById("인증화면").style.display = "none";
             document.getElementById("타이틀을아이디로").innerText = 유저.유저아이디;
             document.getElementById("전투스킬설정버튼").style.display = "block";
 
-            document.getElementById("에너지박스").style.display = "block";
 
             document.getElementById("전투화면").style.display = "block";
             document.getElementById("장비화면").style.display = "none";
@@ -1031,6 +1042,13 @@
                 });
 
                 const 결과 = await 응답.json();
+
+                // ✅ 스태미너 부족 시 처리
+                if (결과.결과 === "불가") {
+                    메시지표시(메시지표시박스, "⚠️", 결과.메시지 || "스태미너 부족", "#ef4444");
+                    화면해제();
+                    return;
+                }
 
                 if (결과.결과 === "패배") {
                     const 몬스터 = 결과.몬스터;
@@ -1078,7 +1096,8 @@
                     if (레벨업.증가한레벨 > 0) {
                         document.getElementById("레벨업표시").innerText = `레벨 ${새유저.레벨} 달성!`;
                         document.getElementById("레벨업표시").style.color = "#3f84ec";
-                    }
+                    } else document.getElementById("레벨업표시").innerText = "";
+
 
                     if (결과.드랍장비) {
                         const 장비 = 결과.드랍장비;
@@ -1087,6 +1106,17 @@
 
                     document.getElementById("승리패배로그").innerText = "승리";
                     document.getElementById("승리패배로그").style.color = "#00c851";
+                }
+
+
+                // ✅ 유저데이터 변경 이후, 승리/패배 관계 없이 실행
+                const 스태미너표시 = document.getElementById("스태미너표시");
+                const 에너지바 = document.querySelector(".에너지바");
+                if (스태미너표시 && 에너지바) {
+                    const 최대 = 유저데이터.최대스태미너 ?? 100;
+                    const 현재 = 유저데이터.현재스태미너 ?? 0;
+                    스태미너표시.innerText = `${현재}/${최대}`;
+                    에너지바.style.width = `${(현재 / 최대) * 100}%`;
                 }
             } catch (e) {
                 메시지표시(메시지표시박스, "❌", "전투 중 오류: " + e.message, "#ef4444");
@@ -1226,7 +1256,7 @@
                     const 장비 = 유저데이터.장비목록.find(j => j.이름 === 이름 && j.등급 === 등급);
                     if (장비) {
                         장비.강화 = 결과.강화;
-                        장비.공격력 = 결과.공격력;
+                        장비.공격력 += 결과.증가량;
                     }
                 } else {
                     메시지표시(박스, "❌", 결과.메시지, "#ef4444");
