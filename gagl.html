@@ -603,6 +603,9 @@
         <div class="밑줄" id="보유숙련도">
 
         </div>
+        <div id="필요숙련도">
+
+        </div>
 
         <div class="사백픽셀테두리" id="스킬컨테이너">
         </div>
@@ -1375,14 +1378,7 @@
             document.getElementById("보유숙련도").innerText = "보유 숙련도 " + 유저데이터.숙련도;
             const 총투자 = Object.values(유저데이터.스킬 || {}).reduce((a, b) => a + b, 0);
             const 다음필요숙련도 = 총투자 + 1;
-
-            const 필요숙련도표시 = document.createElement("div");
-            필요숙련도표시.style.fontSize = "12px";
-            필요숙련도표시.style.color = "#888";
-            필요숙련도표시.style.marginTop = "4px";
-            필요숙련도표시.innerText = `다음 투자에 필요한 숙련도: ${다음필요숙련도}`;
-
-            document.getElementById("보유숙련도").appendChild(필요숙련도표시);
+            document.getElementById("필요숙련도").innerText = "필요숙련도 " + 다음필요숙련도;
 
             const 컨테이너 = document.getElementById("스킬컨테이너");
             컨테이너.innerHTML = "";
@@ -1831,7 +1827,7 @@
             });
         });
 
-        document.getElementById("버전표시").innerText = "v1.0.1";
+        document.getElementById("버전표시").innerText = "v1.0.2";
         // 업데이트git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
