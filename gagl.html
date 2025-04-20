@@ -642,7 +642,7 @@
         let 기기ID = localStorage.getItem("기기ID");
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // 업데이트
-        document.getElementById("버전표시").innerText = "v265";
+        document.getElementById("버전표시").innerText = "v266";
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -929,7 +929,7 @@
         document.getElementById("타이틀을아이디로").addEventListener("click", () => {
             if (!유저데이터) return;
             메시지표시(메시지표시박스, "✅", "✅ 타이틀을아이디로 클릭됨", "#ef4444");
-            console.log("✅ 유저 클릭됨:", 유저);
+            console.log("✅ 유저 클릭됨:", 유저데이터);
         });
 
         async function 회원탈퇴() {
