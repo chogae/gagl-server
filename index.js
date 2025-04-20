@@ -420,7 +420,6 @@ app.post("/gamble", async (req, res) => {
             // ✅ 첫 획득이므로 체력증가 없음
         }
 
-        기록[키] = (기록[키] || 0) + 1;
 
         const 공격력합 = 장비목록.reduce((합, j) => 합 + j.공격력, 0);
         const 체력보너스 = Object.values(기록).reduce((a, b) => a + b, 0);

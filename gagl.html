@@ -1093,7 +1093,7 @@
                     document.getElementById("레벨업표시").innerText = "";
                     document.getElementById("획득로그").innerText = "";
 
-                    document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}`;
+                    document.getElementById("유저체력").innerText = `체력 ${유저.남은체력}/${유저.최대체력}`;
                     document.getElementById("승리패배로그").innerText = "패배";
                     document.getElementById("승리패배로그").style.color = "#ef4444";
                 } else {
@@ -1115,7 +1115,7 @@
                     document.getElementById("획득숙련도").innerText = `+${보상.숙련도}`;
                     document.getElementById("레벨").innerText = `레벨 ${새유저.레벨}`;
                     document.getElementById("유저공격력").innerText = `공격력 ${새유저.공격력}`;
-                    document.getElementById("유저체력").innerText = `체력 ${새유저.남은체력}`;
+                    document.getElementById("유저체력").innerText = `체력 ${새유저.남은체력}/${새유저.최대체력}`;
                     document.getElementById("획득로그").innerText =
                         `${보상.경험치} EXP, ${보상.골드} Gold, ${보상.숙련도} 숙련도 획득`;
 
@@ -1829,7 +1829,7 @@
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1.0.2";
+        document.getElementById("버전표시").innerText = "v1.0.1";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
