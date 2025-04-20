@@ -756,130 +756,54 @@
             화면잠금();
 
             const 아이디 = document.getElementById("이메일입력").value.trim();
-            console.log("입력된 아이디:", 아이디);
             const 비번 = document.getElementById("비번입력").value.trim();
-            const 랜덤 = Date.now();
             const 이메일형식 = `${아이디}@gagl.com`;
+            const 유저아이디 = 아이디;
             const 기기ID = localStorage.getItem("기기ID") || crypto.randomUUID();
 
             localStorage.setItem("기기ID", 기기ID);
 
+            // 아이디 유효성 검사 (예: 영문+숫자 3~12자 등)
             const 아이디패턴 = /^[a-zA-Z0-9_]{3,12}$/;
             if (!아이디패턴.test(아이디)) {
-                메시지표시(메시지표시박스, "", "아이디는 영문/숫자/밑줄 포함 3~12자로 입력하세요", "#ef4444");
-                화면해제();
-                return;
-            }
-
-            if (비번.length < 6) {
-                메시지표시(메시지표시박스, "", "비밀번호는 6자 이상 입력하세요", "#ef4444");
+                메시지표시(document.body, "❌", "아이디는 영문/숫자/밑줄 포함 3~12자여야 합니다", "#ef4444");
                 화면해제();
                 return;
             }
 
             try {
-                const { data: 중복체크 } = await supabase
-                    .from("users")
-                    .select("기기ID")
-                    .eq("기기ID", 기기ID);
+                const 응답 = await fetch("/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 이메일: 이메일형식, 비번, 유저아이디, 기기ID })
+                });
 
-                if ((중복체크 ?? []).length > 0) {
-                    메시지표시(메시지표시박스, "⚠️", "이미 이 기기에서 가입한 계정이 있어요!", "#ef4444");
+                const 결과 = await 응답.json();
+
+                if (!응답.ok || 결과.오류) {
+                    메시지표시(document.body, "❌", 결과.오류 || "회원가입 실패", "#ef4444");
                     화면해제();
                     return;
                 }
 
-                const { data: 가입데이터, error } = await supabase.auth.signUp({
+                // ✅ 진짜 자동 로그인 시도
+                const 로그인결과 = await supabase.auth.signInWithPassword({
                     email: 이메일형식,
-                    password: 비번,
+                    password: 비번
                 });
 
-                if (error) {
-                    메시지표시(메시지표시박스, "", "회원가입 실패: " + error.message, "#ef4444");
+                if (로그인결과.error) {
+                    메시지표시(document.body, "❌", "자동 로그인 실패", "#ef4444");
                     화면해제();
                     return;
                 }
 
-                const { error: 로그인오류 } = await supabase.auth.signInWithPassword({
-                    email: 이메일형식,
-                    password: 비번,
-                });
+                유저데이터 = 결과.유저데이터;
 
-                if (로그인오류) {
-                    메시지표시(메시지표시박스, "", "로그인 실패: " + 로그인오류.message, "#ef4444");
-                    화면해제();
-                    return;
-                }
-
-                const {
-                    data: { user }
-                } = await supabase.auth.getUser();
-
-                if (!user || !user.id) {
-                    메시지표시(메시지표시박스, "", "유저 인증 정보 없음", "#ef4444");
-                    화면해제();
-                    return;
-                }
-
-                const { error: 삽입에러 } = await supabase.from("users").insert({
-                    유저UID: user.id,
-                    로그인이메일: 이메일형식,
-                    유저아이디: 아이디,
-                    기기ID: 기기ID,
-                    레벨: 1,
-                    공격력: 30,
-                    경험치: 0,
-                    골드: 100000,
-                    최대체력: 10,
-                    남은체력: 10,
-                    숙련도: 0,
-                    현재층: 1,
-                    현재악마번호: Math.floor(Math.random() * 72) + 1,
-                    스킬: {},
-                    조우기록: { 일반: 0, 레어: 0, 신화: 0, 고대: 0, 태초: 0, 공허: 0 },
-                    합성기록: {},
-                    장비목록: [],
-                    킬카운트: 0,
-                    강림몬스터: {},   // ✅ null → {}로 수정
-                    버전업: 0
-                });
-
-                if (삽입에러) {
-                    메시지표시(메시지표시박스, "", "유저 정보 저장 실패: " + 삽입에러.message, "#ef4444");
-                    화면해제();
-                    return;
-                }
-
-                // ✅ 서버 반영 대기
-                await new Promise(resolve => setTimeout(resolve, 100));
-
-                // ✅ 유저 정보 조회 재시도
-                let 유저정보 = null;
-                for (let 시도 = 0; 시도 < 10; 시도++) {
-                    const { data } = await supabase
-                        .from("users")
-                        .select("*")
-                        .eq("유저UID", user.id)
-                        .single();
-
-                    if (data && data.유저아이디) {
-                        유저정보 = data;
-                        break;
-                    }
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                }
-
-                if (!유저정보) {
-                    메시지표시(메시지표시박스, "", "유저 정보를 불러오지 못했습니다", "#ef4444");
-                    화면해제();
-                    return;
-                }
-
-                유저데이터 = 유저정보;
-                메시지표시(메시지표시박스, "✅", "회원가입 및 로그인 성공!", "#00c851");
+                메시지표시(document.body, "✅", "회원가입 + 자동 로그인 완료", "#00c851");
                 전투화면보여주기(유저데이터);
             } catch (e) {
-                메시지표시(메시지표시박스, "", "오류 발생: " + e.message, "#ef4444");
+                메시지표시(document.body, "❌", "서버 오류: " + e.message, "#ef4444");
             } finally {
                 화면해제();
             }
@@ -948,7 +872,6 @@
                 화면해제();
             }
         }
-
 
         async function 회원탈퇴() {
             화면잠금();
@@ -1460,7 +1383,7 @@
                             const 결과 = await 응답.json();
 
                             if (!응답.ok || 결과.오류) {
-                                메시지표시(스킬화면, "", 결과.오류 || "스킬 업데이트 실패", "#ef4444");
+                                메시지표시(스킬화면, "", 결과.오류 || "실패", "#ef4444");
                                 return;
                             }
 
@@ -1763,7 +1686,7 @@
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1.0.3";
+        document.getElementById("버전표시").innerText = "v1.0.1";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -1802,7 +1725,7 @@
 하루 단 100번의 기회, 스킬 선택을 중요시하세요<br>
 </div>
 `;
-        // 버전업
+        // 업데이트
 
         document.body.appendChild(메뉴얼창);
 

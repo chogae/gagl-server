@@ -378,6 +378,63 @@ app.post("/update-skill", async (req, res) => {
     return res.json({ 성공: true, 스킬, 숙련도 });
 });
 
+app.post("/register", async (req, res) => {
+    const { 이메일, 비번, 유저아이디 } = req.body;
+
+    if (!이메일 || !비번 || !유저아이디) {
+        return res.status(400).json({ 오류: "입력값 누락" });
+    }
+
+    // ✅ Supabase Auth 계정 생성
+    const { data: 등록, error: 등록오류 } = await supabaseAdmin.auth.admin.createUser({
+        email: 이메일,
+        password: 비번,
+        email_confirm: true
+    });
+
+    if (등록오류 || !등록.user) {
+        return res.status(500).json({ 오류: "회원가입 실패" });
+    }
+
+    const 유저UID = 등록.user.id;
+
+    // ✅ users 테이블 삽입
+    const 삽입값 = {
+        유저UID: user.id,
+        로그인이메일: 이메일형식,
+        유저아이디: 아이디,
+        기기ID: 기기ID,
+        레벨: 1,
+        공격력: 30,
+        경험치: 0,
+        골드: 100000,
+        최대체력: 10,
+        남은체력: 10,
+        숙련도: 0,
+        현재층: 1,
+        현재악마번호: Math.floor(Math.random() * 72) + 1,
+        스킬: {},
+        조우기록: { 일반: 0, 레어: 0, 신화: 0, 고대: 0, 태초: 0, 공허: 0 },
+        합성기록: {},
+        장비목록: [],
+        킬카운트: 0,
+        강림몬스터: {},   // ✅ null → {}로 수정
+        버전업: 0,
+        현재스태미너: 100,
+        최대스태미너: 100,
+        스태미너갱신시각: new Date().toISOString()
+    };
+
+    const { error: 삽입오류 } = await supabaseAdmin
+        .from("users")
+        .insert(삽입값);
+
+    if (삽입오류) {
+        return res.status(500).json({ 오류: "유저 DB 저장 실패" });
+    }
+
+    return res.json({ 유저데이터: 삽입값 });
+});
 
 app.post("/ranking", async (req, res) => {
     try {
