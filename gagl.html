@@ -1658,7 +1658,7 @@
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1.1.5";
+        document.getElementById("버전표시").innerText = "v1.1.6";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -1812,24 +1812,6 @@
             유저데이터.현재층++;
             document.getElementById("현재층").innerText = `${유저데이터.현재층}층`;
         });
-
-        async function 층정보저장() {
-            화면잠금();
-            try {
-                await fetch("/update-floor", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        유저UID: 유저데이터.유저UID,
-                        현재층: 유저데이터.현재층
-                    })
-                });
-            } catch (e) {
-                메시지표시(메시지표시박스, "", "층 저장 실패", "#ef4444");
-            } finally {
-                화면해제();
-            }
-        }
 
         document.addEventListener("DOMContentLoaded", async () => {
             const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();

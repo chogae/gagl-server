@@ -67,7 +67,8 @@ app.post("/attack", async (req, res) => {
         await supabaseAdmin.from("users").update({
             남은체력: 유저복구.남은체력,
             조우기록: 유저.조우기록,
-            현재스태미너
+            현재스태미너,
+            현재층: 클라이언트층
         }).eq("유저UID", 유저복구.유저UID);
 
         return res.json({
