@@ -905,7 +905,7 @@
                     return;
                 }
 
-                await fetch("/delete-user", {
+                const 응답 = await fetch("/delete-user", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ 유저UID: user.id })
@@ -917,9 +917,9 @@
 
                 메시지표시(메시지표시박스, "✅", "탈퇴가 완료되었습니다.", "#00c851");
 
-                await supabase.auth.signOut();
-                localStorage.removeItem("기기ID");
-                location.reload();
+                await supabase.auth.signOut(); // 세션 삭제
+                localStorage.removeItem("기기ID"); // UUID 삭제
+                location.reload(); // 로그인 화면으로 새로고침
 
             } catch (e) {
                 메시지표시(메시지표시박스, "", "탈퇴 중 오류 발생: " + e.message, "#ef4444");
@@ -1655,7 +1655,7 @@
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1.1.1";
+        document.getElementById("버전표시").innerText = "v1.1.2";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -1690,7 +1690,7 @@
 
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
 패치노트<br>
-발굴 스킬 버그가 해결되었습니다<br>
+회원탈퇴, 메테오처리 로직변경<br>
 </div>
 `;
         // 업데이트
