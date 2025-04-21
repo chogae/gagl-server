@@ -1459,11 +1459,13 @@
 
             const 응답 = await fetch("/ranking", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" }
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
             });
 
-            const 결과 = await 응답.json();
+            const 결과 = await 응답.json(); // ✅ 이 줄이 필요합니다!
             const 유저들 = 결과.유저들 || [];
+            const 내순위 = 결과.내순위;
 
             유저들.forEach((유저, index) => {
                 const 줄 = document.createElement("div");
@@ -1535,14 +1537,13 @@
                 컨테이너.appendChild(줄);
             });
 
-            const 내순위 = 유저들.findIndex(u => u.유저아이디 === 유저데이터.유저아이디);
-            if (내순위 >= 10) {
+            if (내순위 !== undefined && 내순위 >= 10) {
                 const 줄 = document.createElement("div");
                 줄.className = "양쪽정렬 사백픽셀테두리 내아이디강조";
                 줄.innerHTML = `
-            <div class="가로정렬">${내순위 + 1}</div>
-            <div>${유저데이터.유저아이디} - 공격력 ${유저데이터.공격력} / ${유저데이터.현재층}층</div>
-        `;
+        <div class="가로정렬">${내순위 + 1}</div>
+        <div>${유저데이터.유저아이디} - 공격력 ${유저데이터.공격력} / ${유저데이터.현재층}층</div>
+    `;
                 컨테이너.appendChild(줄);
             }
 
