@@ -423,11 +423,14 @@ app.post("/register-user", async (req, res) => {
 });
 
 app.post("/ranking", async (req, res) => {
+    const { 유저UID } = req.body;
+
     try {
+        // 1. 상위 10명 조회
         const { data: 유저들, error } = await supabaseAdmin
             .from("users")
             .select("유저아이디, 레벨, 공격력, 현재층, 장비목록, 합성기록")
-            .eq("버전업", 1) // ✅ 버전업 1인 유저만
+            .eq("버전업", 1)
             .order("공격력", { ascending: false })
             .limit(10);
 
@@ -435,7 +438,19 @@ app.post("/ranking", async (req, res) => {
             return res.status(500).json({ 오류: "랭킹 조회 실패" });
         }
 
-        return res.json({ 유저들 });
+        // 2. 내 순위 계산
+        let 내순위 = null;
+        if (유저UID) {
+            const { data: 전체유저 } = await supabaseAdmin
+                .from("users")
+                .select("유저UID, 공격력")
+                .eq("버전업", 1)
+                .order("공격력", { ascending: false });
+
+            내순위 = 전체유저.findIndex(u => u.유저UID === 유저UID);
+        }
+
+        return res.json({ 유저들, 내순위 });
     } catch (e) {
         return res.status(500).json({ 오류: e.message });
     }

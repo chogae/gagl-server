@@ -1537,7 +1537,7 @@
                 컨테이너.appendChild(줄);
             });
 
-            if (내순위 !== undefined && 내순위 >= 10) {
+            if (typeof 내순위 === "number" && 내순위 >= 10) {
                 const 줄 = document.createElement("div");
                 줄.className = "양쪽정렬 사백픽셀테두리 내아이디강조";
                 줄.innerHTML = `
@@ -1656,7 +1656,7 @@
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1.1.2";
+        document.getElementById("버전표시").innerText = "v1.1.4";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
