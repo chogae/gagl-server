@@ -388,7 +388,7 @@ app.post("/register-user", async (req, res) => {
         장비목록: [],
         킬카운트: 0,
         강림몬스터: {},
-        버전업: 1,
+        버전업: 2,
         현재스태미너: 100,
         최대스태미너: 100,
         스태미너갱신시각: new Date().toISOString()
