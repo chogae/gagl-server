@@ -448,14 +448,31 @@ app.post("/delete-user", async (req, res) => {
         return res.status(400).json({ 오류: "UID 누락됨" });
     }
 
-    const { error } = await supabaseAdmin.auth.admin.deleteUser(유저UID);
+    try {
+        // 1. users 테이블 삭제
+        const { error: 테이블삭제오류 } = await supabaseAdmin
+            .from("users")
+            .delete()
+            .eq("유저UID", 유저UID);
 
-    if (error) {
-        console.error("Auth 삭제 실패:", error.message);
-        return res.status(500).json({ 오류: "Auth 삭제 실패" });
+        if (테이블삭제오류) {
+            console.error("유저 테이블 삭제 실패:", 테이블삭제오류.message);
+            return res.status(500).json({ 오류: "유저 테이블 삭제 실패" });
+        }
+
+        // 2. Supabase Auth 계정 삭제
+        const { error: 인증삭제오류 } = await supabaseAdmin.auth.admin.deleteUser(유저UID);
+
+        if (인증삭제오류) {
+            console.error("Auth 삭제 실패:", 인증삭제오류.message);
+            return res.status(500).json({ 오류: "인증 계정 삭제 실패" });
+        }
+
+        return res.json({ 메시지: "유저 데이터 및 인증 삭제 완료" });
+    } catch (e) {
+        console.error("유저 삭제 중 예외:", e.message);
+        return res.status(500).json({ 오류: "서버 예외 발생" });
     }
-
-    return res.json({ 메시지: "탈퇴 처리 완료" });
 });
 
 app.post("/update-username", async (req, res) => {

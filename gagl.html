@@ -905,25 +905,10 @@
                     return;
                 }
 
-                // ✅ 유저 테이블 삭제 (컬럼명 주의)
-                await supabase.from("users").delete().eq("유저UID", user.id);
-
                 await fetch("/delete-user", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ 유저UID: user.id })
-                });
-
-                // ✅ access token으로 인증 삭제
-                const 세션 = await supabase.auth.getSession();
-                const accessToken = 세션.data.session.access_token;
-
-                const 응답 = await fetch("https://piafesfywtvpachbfoxr.supabase.co/auth/v1/user", {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${accessToken}`
-                    }
                 });
 
                 if (!응답.ok) {
@@ -1580,66 +1565,6 @@
             }
         });
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
-
-            if (인증오류) {
-                메시지표시(메시지표시박스, "", "유저 인증 확인 실패", "#ef4444");
-                return;
-            }
-
-            if (user && user.id) {
-                try {
-                    // ✅ 먼저 버전업 확인
-                    const { data: 버전체크, error: 버전에러 } = await supabase
-                        .from("users")
-                        .select("버전업")
-                        .eq("유저UID", user.id)
-                        .single();
-
-                    if (버전에러 || !버전체크) {
-                        메시지표시(메시지표시박스, "⚠️", "유저 정보 없음", "#ef4444");
-                        return;
-                    }
-
-                    if (버전체크.버전업 !== 1) {
-                        await fetch("/delete-user", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ 유저UID: user.id })
-                        });
-
-                        await supabase.auth.signOut();
-                        alert("버전이 맞지 않아 계정이 초기화되었습니다.");
-                        location.reload();
-                        return;
-                    }
-
-                    // ✅ 문제 없으면 전체 유저 정보 로딩
-                    const { data: 유저정보, error } = await supabase
-                        .from("users")
-                        .select("*")
-                        .eq("유저UID", user.id)
-                        .single();
-
-                    if (error || !유저정보) {
-                        메시지표시(메시지표시박스, "⚠️", "유저 정보 없음", "#ef4444");
-                        return;
-                    }
-
-                    유저데이터 = 유저정보;
-
-                    메시지표시(메시지표시박스, "✅", "자동 로그인 완료", "#00c851");
-                    전투화면보여주기(유저데이터);
-
-                } catch (e) {
-                    메시지표시(메시지표시박스, "", "자동 로그인 오류: " + e.message, "#ef4444");
-                }
-            } else {
-                메시지표시(메시지표시박스, "🔒", "로그인된 유저 없음", "#aaa");
-            }
-        });
-
         document.getElementById("타이틀을아이디로").addEventListener("click", async function 아이디변경시작() {
             if (!유저데이터) return;
 
@@ -1730,7 +1655,7 @@
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1.0.8";
+        document.getElementById("버전표시").innerText = "v1.1.0";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -1902,6 +1827,66 @@
                 화면해제();
             }
         }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
+
+            if (인증오류) {
+                메시지표시(메시지표시박스, "", "유저 인증 확인 실패", "#ef4444");
+                return;
+            }
+
+            if (user && user.id) {
+                try {
+                    // ✅ 먼저 버전업 확인
+                    const { data: 버전체크, error: 버전에러 } = await supabase
+                        .from("users")
+                        .select("버전업")
+                        .eq("유저UID", user.id)
+                        .single();
+
+                    if (버전에러 || !버전체크) {
+                        메시지표시(메시지표시박스, "⚠️", "유저 정보 없음", "#ef4444");
+                        return;
+                    }
+
+                    if (버전체크.버전업 !== 1) {
+                        await fetch("/delete-user", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ 유저UID: user.id })
+                        });
+
+                        await supabase.auth.signOut();
+                        alert("버전이 맞지 않아 계정이 초기화되었습니다.");
+                        location.reload();
+                        return;
+                    }
+
+                    // ✅ 문제 없으면 전체 유저 정보 로딩
+                    const { data: 유저정보, error } = await supabase
+                        .from("users")
+                        .select("*")
+                        .eq("유저UID", user.id)
+                        .single();
+
+                    if (error || !유저정보) {
+                        메시지표시(메시지표시박스, "⚠️", "유저 정보 없음", "#ef4444");
+                        return;
+                    }
+
+                    유저데이터 = 유저정보;
+
+                    메시지표시(메시지표시박스, "✅", "자동 로그인 완료", "#00c851");
+                    전투화면보여주기(유저데이터);
+
+                } catch (e) {
+                    메시지표시(메시지표시박스, "", "자동 로그인 오류: " + e.message, "#ef4444");
+                }
+            } else {
+                메시지표시(메시지표시박스, "🔒", "로그인된 유저 없음", "#aaa");
+            }
+        });
 
     </script>
 </body>
