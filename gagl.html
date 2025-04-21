@@ -730,7 +730,6 @@
     <script>
         // 최초 접속 시 기기ID를 localStorage에 저장
         let 기기ID = localStorage.getItem("기기ID");
-        console.log("기기ID:", 기기ID);  // 한번 로그로 확인한 후 값 복사해서 위에 넣으면 됨
 
         if (!기기ID) {
             기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
@@ -818,12 +817,6 @@
 
         async function 회원가입() {
             화면잠금();
-            const 허용기기ID = "cf3783af-8235-4567-919c-256d2d9fd4ff";
-            if (기기ID !== 허용기기ID) {
-                메시지표시(메시지표시박스, "❌", "회원가입이 제한된 상태입니다", "#ef4444");
-                화면해제();
-                return;
-            }
 
             const 아이디 = document.getElementById("이메일입력").value.trim();
             const 비번 = document.getElementById("비번입력").value.trim();
@@ -832,6 +825,14 @@
             const 기기ID = localStorage.getItem("기기ID") || crypto.randomUUID();
 
             localStorage.setItem("기기ID", 기기ID);
+            
+            const 허용기기ID = "cf3783af-8235-4567-919c-256d2d9fd4ff";
+
+            if (기기ID !== 허용기기ID) {
+                메시지표시(메시지표시박스, "❌", "회원가입이 제한된 상태입니다", "#ef4444");
+                화면해제();
+                return;
+            }
 
             const 아이디패턴 = /^[a-zA-Z0-9_]{3,12}$/;
             if (!아이디패턴.test(아이디)) {
