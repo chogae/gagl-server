@@ -1542,7 +1542,7 @@
                 줄.className = "양쪽정렬 사백픽셀테두리 내아이디강조";
                 줄.innerHTML = `
         <div class="가로정렬">${내순위 + 1}</div>
-        <div>${유저데이터.유저아이디} - 공격력 ${유저데이터.공격력} / ${유저데이터.현재층}층</div>
+        <div>${유저데이터.유저아이디} (lv.${유저데이터.레벨 || 1}) - 공격력 ${유저데이터.공격력} / ${유저데이터.현재층}층</div>
     `;
                 컨테이너.appendChild(줄);
             }
@@ -1656,7 +1656,7 @@
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1.1.4";
+        document.getElementById("버전표시").innerText = "v1.1.5";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -1799,7 +1799,6 @@
             if (유저데이터.현재층 <= 1) return 메시지표시(층조절, "", "지하로 내려갈 수 없습니다", "#ef4444");
 
             유저데이터.현재층--;
-            await 층정보저장();
             document.getElementById("현재층").innerText = `${유저데이터.현재층}층`;
         });
 
@@ -1807,7 +1806,6 @@
             if (!유저데이터) return;
 
             유저데이터.현재층++;
-            await 층정보저장();
             document.getElementById("현재층").innerText = `${유저데이터.현재층}층`;
         });
 
@@ -1880,6 +1878,26 @@
                     유저데이터 = 유저정보;
 
                     메시지표시(메시지표시박스, "✅", "자동 로그인 완료", "#00c851");
+
+
+
+                    // ✅ 스태미너 갱신 요청
+                    try {
+                        const 응답 = await fetch("/refresh-stamina", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ 유저UID: 유저정보.유저UID })
+                        });
+
+                        const 결과 = await 응답.json();
+                        if (응답.ok && 결과.유저데이터) {
+                            유저정보.현재스태미너 = 결과.유저데이터.현재스태미너;
+                            유저정보.스태미너갱신시각 = 결과.유저데이터.스태미너갱신시각;
+                        }
+                    } catch (e) {
+                        console.warn("스태미너 갱신 실패", e);
+                    }
+
                     전투화면보여주기(유저데이터);
 
                 } catch (e) {

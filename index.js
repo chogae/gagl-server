@@ -24,7 +24,7 @@ const supabaseAdmin = createClient(
 );
 
 app.post("/attack", async (req, res) => {
-    const { 유저UID } = req.body.유저데이터;
+    const { 유저UID, 현재층: 클라이언트층 } = req.body.유저데이터;
     if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
 
     // ✅ Supabase에서 유저 최신 정보 조회
@@ -36,21 +36,7 @@ app.post("/attack", async (req, res) => {
 
     if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
 
-    // ✅ 한국 기준 오늘 오전 9시 계산
-    const now = new Date();
-    const kstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-    const today9am = new Date(kstNow);
-    today9am.setHours(9, 0, 0, 0);
-
     let 현재스태미너 = 유저.현재스태미너 ?? 100;
-    let 최대스태미너 = 유저.최대스태미너 ?? 100;
-    let 갱신시각 = 유저.스태미너갱신시각 ? new Date(유저.스태미너갱신시각) : null;
-
-    // ✅ 매일 오전 9시 리셋
-    if (!갱신시각 || 갱신시각 < today9am) {
-        현재스태미너 = 최대스태미너;
-        갱신시각 = today9am;
-    }
 
     // ✅ 스태미너 부족 시 차단
     if (현재스태미너 <= 0) {
@@ -60,8 +46,8 @@ app.post("/attack", async (req, res) => {
     // ✅ 스태미너 1 소모
     현재스태미너--;
 
-    // ✅ 일반 전투 로직 시작
-    const 몬스터 = 현재악마불러오기(유저.현재층 || 1);
+    // ✅ 전투 시작 (클라이언트층 기준)
+    const 몬스터 = 현재악마불러오기(클라이언트층 || 1);
     const 타입 = 몬스터.타입 || "일반";
     유저.조우기록 = 유저.조우기록 || { 일반: 0, 레어: 0, 신화: 0, 고대: 0, 태초: 0, 공허: 0 };
     if (유저.조우기록[타입] !== undefined) 유저.조우기록[타입]++;
@@ -75,15 +61,13 @@ app.post("/attack", async (req, res) => {
         const 유저복구 = {
             ...유저,
             남은체력: 유저.최대체력,
-            현재스태미너,
-            스태미너갱신시각: 갱신시각.toISOString()
+            현재스태미너
         };
 
         await supabaseAdmin.from("users").update({
             남은체력: 유저복구.남은체력,
             조우기록: 유저.조우기록,
-            현재스태미너,
-            스태미너갱신시각: 갱신시각.toISOString()
+            현재스태미너
         }).eq("유저UID", 유저복구.유저UID);
 
         return res.json({
@@ -94,7 +78,8 @@ app.post("/attack", async (req, res) => {
         });
     }
 
-    const 기본보상 = 보상계산(유저.현재층);
+    // ✅ 보상 계산도 클라이언트층 기준
+    const 기본보상 = 보상계산(클라이언트층);
     기본보상.숙련도 += 인사이트추가숙련도(유저);
     기본보상.경험치 += 인텔리전스추가경험치(유저);
     기본보상.골드 = Math.floor(기본보상.골드 * 획득금화발굴(유저));
@@ -110,6 +95,10 @@ app.post("/attack", async (req, res) => {
         전투.유저남은체력
     );
 
+    // ✅ 클라이언트층을 새유저 객체에 반영
+    새유저.현재층 = 클라이언트층;
+
+    // ✅ 장비 드랍 반영
     const 드랍장비 = 장비드랍판정(몬스터);
     if (드랍장비) {
         새유저.장비목록 = 새유저.장비목록 || [];
@@ -130,7 +119,7 @@ app.post("/attack", async (req, res) => {
         새유저.공격력 += 드랍장비.공격력;
     }
 
-    // ✅ 최종 저장
+    // ✅ Supabase에 최종 저장
     await supabaseAdmin.from("users").update({
         레벨: 새유저.레벨,
         공격력: 새유저.공격력,
@@ -139,15 +128,14 @@ app.post("/attack", async (req, res) => {
         최대체력: 새유저.최대체력,
         남은체력: 새유저.남은체력,
         숙련도: 새유저.숙련도,
-        현재층: 새유저.현재층,
+        현재층: 새유저.현재층, // ✅ 저장됨
         스킬: 새유저.스킬,
         조우기록: 새유저.조우기록,
         합성기록: 새유저.합성기록,
         장비목록: 새유저.장비목록,
         킬카운트: 새유저.킬카운트,
         버전업: 새유저.버전업,
-        현재스태미너,
-        스태미너갱신시각: 갱신시각.toISOString()
+        현재스태미너
     }).eq("유저UID", 새유저.유저UID);
 
     return res.json({
@@ -159,10 +147,51 @@ app.post("/attack", async (req, res) => {
         회복: 드레인,
         유저데이터: {
             ...새유저,
-            현재스태미너,
-            스태미너갱신시각: 갱신시각.toISOString()
+            현재스태미너
         },
         드랍장비
+    });
+});
+
+
+app.post("/refresh-stamina", async (req, res) => {
+    const { 유저UID } = req.body;
+
+    if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("*")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
+
+    const now = new Date();
+    const kstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+    const today9am = new Date(kstNow);
+    today9am.setHours(9, 0, 0, 0);
+
+    let 현재스태미너 = 유저.현재스태미너 ?? 100;
+    let 최대스태미너 = 유저.최대스태미너 ?? 100;
+    let 갱신시각 = 유저.스태미너갱신시각 ? new Date(유저.스태미너갱신시각) : null;
+
+    if (!갱신시각 || 갱신시각 < today9am) {
+        현재스태미너 = 최대스태미너;
+        갱신시각 = today9am;
+    }
+
+    await supabaseAdmin.from("users").update({
+        현재스태미너,
+        스태미너갱신시각: 갱신시각.toISOString()
+    }).eq("유저UID", 유저.유저UID);
+
+    return res.json({
+        유저데이터: {
+            ...유저,
+            현재스태미너,
+            스태미너갱신시각: 갱신시각.toISOString()
+        }
     });
 });
 
@@ -632,25 +661,6 @@ app.post("/gamble", async (req, res) => {
     } catch (e) {
         return res.status(500).json({ 오류: "서버 오류: " + e.message });
     }
-});
-
-app.post("/update-floor", async (req, res) => {
-    const { 유저UID, 현재층 } = req.body;
-
-    if (!유저UID || typeof 현재층 !== "number") {
-        return res.status(400).json({ 오류: "입력값 누락" });
-    }
-
-    const { error } = await supabaseAdmin
-        .from("users")
-        .update({ 현재층 })
-        .eq("유저UID", 유저UID);
-
-    if (error) {
-        return res.status(500).json({ 오류: "층 정보 업데이트 실패" });
-    }
-
-    return res.json({ 성공: true });
 });
 
 app.listen(3000, () => {
