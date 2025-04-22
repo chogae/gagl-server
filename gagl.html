@@ -801,6 +801,9 @@
         const 버닝아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-battery-charging-icon lucide-battery-charging"><path d="M15 7h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><path d="M6 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h1"/><path d="m11 7-3 5h4l-3 5"/><line x1="22" x2="22" y1="11" y2="13"/></svg>`;
         const 도박아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dices-icon lucide-dices"><rect width="12" height="12" x="2" y="10" rx="2" ry="2"/><path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6"/><path d="M6 18h.01"/><path d="M10 14h.01"/><path d="M15 6h.01"/><path d="M18 9h.01"/></svg>`;
 
+        let 자동공격중 = false;
+        let 공격버튼눌림 = false;
+
         function 화면잠금() {
             document.body.style.pointerEvents = "none";
             document.body.style.opacity = "0.5";
@@ -1076,6 +1079,30 @@
 
             document.getElementById("현재층").innerText = `${유저.현재층}층`;
         }
+
+        async function 자동공격루프() {
+            if (!공격버튼눌림 || 자동공격중) return;
+
+            자동공격중 = true;
+            await 공격버튼.click(); // 이건 진짜 클릭이 아니라 내부 호출로 바꾸는 게 좋음
+            자동공격중 = false;
+
+            // 화면해제 후 다음 공격 재귀
+            if (공격버튼눌림) {
+                requestAnimationFrame(() => 자동공격루프()); // 약간의 프레임 대기 후 반복
+            }
+        }
+
+        공격버튼.addEventListener("mousedown", () => {
+            공격버튼눌림 = true;
+            자동공격루프();
+        });
+
+        ["mouseup", "mouseleave"].forEach(type =>
+            공격버튼.addEventListener(type, () => {
+                공격버튼눌림 = false;
+            })
+        );
 
         document.getElementById("공격버튼").addEventListener("click", async () => {
             if (!유저데이터) return;
@@ -2132,24 +2159,6 @@
                     }
 
                     전투화면보여주기(유저데이터);
-
-                    // ✅ 여기에 추가하세요
-                    let 공격자동반복 = null;
-                    const 공격버튼 = document.getElementById("공격버튼");
-
-                    공격버튼.addEventListener("mousedown", () => {
-                        if (공격자동반복) return;
-                        공격자동반복 = setInterval(() => {
-                            공격버튼.click();
-                        }, 1000); // 0.3초마다 클릭
-                    });
-
-                    ["mouseup", "mouseleave"].forEach(type =>
-                        공격버튼.addEventListener(type, () => {
-                            clearInterval(공격자동반복);
-                            공격자동반복 = null;
-                        })
-                    );
 
                 } catch (e) {
                     메시지표시(메시지표시박스, "", "자동 로그인 오류: " + e.message, "#ef4444");
