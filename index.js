@@ -2,15 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 
-
 const { createClient } = require("@supabase/supabase-js"); // 🟡 Supabase Admin용
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-// 🟡 정적 파일 경로 설정
-app.use(express.static(path.join(__dirname)));
 
 // 🟡 gagl.html 요청 시 해당 파일 반환
 app.get("/gagl.html", (req, res) => {
@@ -1063,3 +1059,7 @@ function 현재악마불러오기(층) {
 
     return 기준몬스터;
 }
+
+// 🟡 정적 파일 경로 설정
+app.use(express.static(path.join(__dirname)));
+
