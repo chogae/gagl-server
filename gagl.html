@@ -606,7 +606,7 @@
                     <div>
                         <div style="display: inline-block;" class="공격버튼" id="공격버튼">악마성</div>
                     </div>
-                    <div style="display: inline-block;" class="레어몬스터" id="레어몬스터">레어몬스터</div>
+                    <div style="display: inline-block;" style="display: none;" class="레어몬스터" id="레어몬스터">레어몬스터</div>
 
                 </div>
 
@@ -1053,7 +1053,7 @@
             document.getElementById("장비화면").style.display = "none";
             document.getElementById("스킬화면").style.display = "none";
             document.getElementById("전당화면").style.display = "none";
-            document.getElementById("레어몬스터").style.display = "none";
+            // document.getElementById("레어몬스터").style.display = "none";
 
             // 유저 정보 표시
             document.getElementById("유저아이디").innerText = 유저.유저아이디 || "알 수 없음";
@@ -1191,6 +1191,123 @@
                 화면해제();
             }
         });
+
+        document.getElementById("레어몬스터").addEventListener("click", async () => {
+            if (!유저데이터) return;
+
+            const 이름 = document.getElementById("레어몬스터").innerText;
+            화면잠금();
+
+            try {
+                const 응답 = await fetch("/attack", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 유저데이터, 레어몬스터이름: 이름 })
+                });
+
+                const 결과 = await 응답.json();
+                // ✅ 스태미너 부족 시 처리
+                if (결과.결과 === "불가") {
+                    메시지표시(메시지표시박스, "⚠️", 결과.메시지 || "스태미너 부족", "#ef4444");
+                    화면해제();
+                    return;
+                }
+
+                if (결과.결과 === "패배") {
+                    const 몬스터 = 결과.몬스터;
+                    유저데이터 = 결과.유저데이터;
+
+                    document.getElementById("몬스터테두리안표시").style.display = "block";
+                    document.getElementById("악마이름").innerText = 몬스터.이름;
+                    document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
+                    document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
+
+                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#2e2e2e"}`;
+
+                    document.getElementById("획득경험치").innerText = "0";
+                    document.getElementById("획득골드").innerText = "0";
+                    document.getElementById("획득숙련도").innerText = "0";
+                    document.getElementById("레벨업표시").innerText = "";
+                    document.getElementById("획득로그").innerText = "";
+
+                    document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}/${유저데이터.최대체력}`;
+                    document.getElementById("승리패배로그").innerText = "패배";
+                    document.getElementById("승리패배로그").style.color = "#ef4444";
+                } else {
+                    const { 유저데이터: 새유저, 몬스터, 보상, 레벨업, 회복 } = 결과;
+                    유저데이터 = 새유저;
+
+                    document.getElementById("몬스터테두리안표시").style.display = "block";
+                    document.getElementById("악마이름").innerText = 몬스터.이름;
+                    document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
+                    document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
+
+                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#2e2e2e"}`;
+
+                    document.getElementById("총경험치").innerText = 새유저.경험치.toLocaleString();
+                    document.getElementById("총골드").innerText = 새유저.골드.toLocaleString();
+                    document.getElementById("총숙련도").innerText = 새유저.숙련도.toLocaleString();
+                    document.getElementById("획득경험치").innerText = `+${보상.경험치}`;
+                    document.getElementById("획득골드").innerText = `+${보상.골드}`;
+                    document.getElementById("획득숙련도").innerText = `+${보상.숙련도}`;
+                    document.getElementById("레벨").innerText = `레벨 ${새유저.레벨}`;
+                    document.getElementById("유저공격력").innerText = `공격력 ${새유저.공격력}`;
+                    document.getElementById("유저체력").innerText = `체력 ${새유저.남은체력}/${새유저.최대체력}`;
+                    document.getElementById("획득로그").innerText =
+                        `${보상.경험치} EXP, ${보상.골드} Gold, ${보상.숙련도} 숙련도 획득`;
+
+                    if (레벨업.증가한레벨 > 0) {
+                        document.getElementById("레벨업표시").innerText = `레벨 ${새유저.레벨} 달성!`;
+                        document.getElementById("레벨업표시").style.color = "#3f84ec";
+                    } else document.getElementById("레벨업표시").innerText = "";
+
+
+                    if (결과.드랍장비) {
+                        const 장비 = 결과.드랍장비;
+                        메시지표시(메시지표시박스, "", `[${장비.등급}] ${장비.이름} +${장비.공격력} 드랍!`, 색상맵[장비.등급]);
+                    }
+
+                    document.getElementById("승리패배로그").innerText = "승리";
+                    document.getElementById("승리패배로그").style.color = "#00c851";
+                }
+
+                // ✅ 레어몬스터 확률 표시
+                const 레어몬스터 = document.getElementById("레어몬스터");
+
+                // 가장 희귀한 몬스터부터 우선순위 평가 (각각 독립 확률)
+                if (Math.random() < 1 / 18000) {
+                    레어몬스터.innerText = "Ξ. 바론";
+                    레어몬스터.style.display = "block";
+                } else if (Math.random() < 1 / 9000) {
+                    레어몬스터.innerText = "Ω. 사탄";
+                    레어몬스터.style.display = "block";
+                } else if (Math.random() < 1 / 3000) {
+                    레어몬스터.innerText = "DCCLXXVII. 벨제부브";
+                    레어몬스터.style.display = "block";
+                } else if (Math.random() < 1 / 900) {
+                    레어몬스터.innerText = "LXXXIX. 레비아탄";
+                    레어몬스터.style.display = "block";
+                } else {
+                    레어몬스터.style.display = "none";
+                }
+
+                // ✅ 유저데이터 변경 이후, 승리/패배 관계 없이 실행
+                const 스태미너표시 = document.getElementById("스태미너표시");
+                const 에너지바 = document.querySelector(".에너지바");
+                if (스태미너표시 && 에너지바) {
+                    const 최대 = 유저데이터.최대스태미너 ?? 100;
+                    const 현재 = 유저데이터.현재스태미너 ?? 0;
+                    스태미너표시.innerText = `${현재}/${최대}`;
+                    에너지바.style.width = `${(현재 / 최대) * 100}%`;
+                }
+
+            } catch (e) {
+                메시지표시(메시지표시박스, "", "레어 전투 오류: " + e.message, "#ef4444");
+            } finally {
+                화면해제();
+            }
+        });
+
 
         document.getElementById("장비").addEventListener("click", () => {
             if (!유저데이터) return;
