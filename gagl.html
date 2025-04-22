@@ -95,7 +95,7 @@
         }
 
         .레어몬스터 {
-            margin-top: 15px;
+            margin-top: 7px;
             background-color: #a853f7;
             color: black;
             border-radius: 5px;
@@ -334,12 +334,22 @@
         }
 
         #층조절 {
-            background: linear-gradient(135deg, #330000, #660000, #990000);
+            background: transparent;
+            /* 내부 배경 제거 */
             border: 2px solid #ff3300;
-            box-shadow: 0 0 12px #ff0000, 0 0 24px #440000 inset;
+            box-shadow:
+                0 0 12px #ff0000,
+                /* 바깥쪽 발광 효과 */
+                0 0 24px #440000,
+                /* 바깥쪽 어두운 발광 */
+                0 0 0 4px rgba(255, 0, 0, 0.2) inset;
+            /* 안쪽 테두리 강조 */
             animation: 마계불길 4s ease-in-out infinite;
             gap: 30px;
             position: relative;
+            border-radius: 10px;
+            /* 둥글게 유지 */
+            color: white;
         }
 
         @keyframes 마계불길 {
