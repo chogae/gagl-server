@@ -456,7 +456,7 @@ app.post("/ranking", async (req, res) => {
         const { data: 유저들, error } = await supabaseAdmin
             .from("users")
             .select("유저아이디, 레벨, 공격력, 현재층, 장비목록, 합성기록")
-            .eq("버전업", 1)
+            .eq("버전업", 2)
             .order("공격력", { ascending: false })
             .limit(10);
 
@@ -470,7 +470,7 @@ app.post("/ranking", async (req, res) => {
             const { data: 전체유저 } = await supabaseAdmin
                 .from("users")
                 .select("유저UID, 공격력")
-                .eq("버전업", 1)
+                .eq("버전업", 2)
                 .order("공격력", { ascending: false });
 
             내순위 = 전체유저.findIndex(u => u.유저UID === 유저UID);
@@ -819,8 +819,8 @@ function 장비드랍판정(몬스터) {
 
 function 보상계산(층, 유저) {
     const 경험치 = Math.floor((층 * 10) / (유저.레벨 ** 0.5));
-    const 골드 = (Math.floor(Math.random() * 100) + 층 * 100) * 108;
-    const 숙련도 = Math.floor(층 * 1 * 10);
+    const 골드 = Math.floor(Math.random() * 100) + (층 - 1) * 100;
+    const 숙련도 = Math.floor(층 * 1);
 
     return { 경험치, 골드, 숙련도 };
 }
