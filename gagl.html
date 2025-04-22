@@ -1081,6 +1081,7 @@
             if (!유저데이터) return;
 
             화면잠금();
+            let 레어몬스터등장 = false;
 
             try {
                 const 응답 = await fetch("/attack", {
@@ -1158,7 +1159,6 @@
 
                 // ✅ 레어몬스터 확률 표시
                 const 레어몬스터 = document.getElementById("레어몬스터");
-                let 레어몬스터등장 = false;
 
                 if (Math.random() < 1 / 18000) {
                     레어몬스터.innerText = "Ξ. 바론";
@@ -1205,6 +1205,7 @@
 
             const 이름 = document.getElementById("레어몬스터").innerText;
             화면잠금();
+            let 레어몬스터등장 = false;
 
             try {
                 const 응답 = await fetch("/attack", {
@@ -1281,7 +1282,6 @@
 
                 // ✅ 레어몬스터 확률 표시
                 const 레어몬스터 = document.getElementById("레어몬스터");
-                let 레어몬스터등장 = false;
 
                 if (Math.random() < 1 / 18000) {
                     레어몬스터.innerText = "Ξ. 바론";
