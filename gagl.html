@@ -1158,20 +1158,24 @@
 
                 // ✅ 레어몬스터 확률 표시
                 const 레어몬스터 = document.getElementById("레어몬스터");
+                let 레어몬스터등장 = false;
 
-                // 가장 희귀한 몬스터부터 우선순위 평가 (각각 독립 확률)
                 if (Math.random() < 1 / 18000) {
                     레어몬스터.innerText = "Ξ. 바론";
                     레어몬스터.style.display = "block";
+                    레어몬스터등장 = true;
                 } else if (Math.random() < 1 / 9000) {
                     레어몬스터.innerText = "Ω. 사탄";
                     레어몬스터.style.display = "block";
+                    레어몬스터등장 = true;
                 } else if (Math.random() < 1 / 3000) {
                     레어몬스터.innerText = "DCCLXXVII. 벨제부브";
                     레어몬스터.style.display = "block";
+                    레어몬스터등장 = true;
                 } else if (Math.random() < 1 / 900) {
                     레어몬스터.innerText = "LXXXIX. 레비아탄";
                     레어몬스터.style.display = "block";
+                    레어몬스터등장 = true;
                 } else {
                     레어몬스터.style.display = "none";
                 }
@@ -1188,7 +1192,11 @@
             } catch (e) {
                 메시지표시(메시지표시박스, "", "전투 중 오류: " + e.message, "#ef4444");
             } finally {
-                화면해제();
+                if (레어몬스터등장) {
+                    setTimeout(() => 화면해제(), 1500); // 1.5초 지연 후 해제
+                } else {
+                    화면해제();
+                }
             }
         });
 
@@ -1273,20 +1281,24 @@
 
                 // ✅ 레어몬스터 확률 표시
                 const 레어몬스터 = document.getElementById("레어몬스터");
+                let 레어몬스터등장 = false;
 
-                // 가장 희귀한 몬스터부터 우선순위 평가 (각각 독립 확률)
                 if (Math.random() < 1 / 18000) {
                     레어몬스터.innerText = "Ξ. 바론";
                     레어몬스터.style.display = "block";
+                    레어몬스터등장 = true;
                 } else if (Math.random() < 1 / 9000) {
                     레어몬스터.innerText = "Ω. 사탄";
                     레어몬스터.style.display = "block";
+                    레어몬스터등장 = true;
                 } else if (Math.random() < 1 / 3000) {
                     레어몬스터.innerText = "DCCLXXVII. 벨제부브";
                     레어몬스터.style.display = "block";
+                    레어몬스터등장 = true;
                 } else if (Math.random() < 1 / 900) {
                     레어몬스터.innerText = "LXXXIX. 레비아탄";
                     레어몬스터.style.display = "block";
+                    레어몬스터등장 = true;
                 } else {
                     레어몬스터.style.display = "none";
                 }
@@ -1304,7 +1316,11 @@
             } catch (e) {
                 메시지표시(메시지표시박스, "", "레어 전투 오류: " + e.message, "#ef4444");
             } finally {
-                화면해제();
+                if (레어몬스터등장) {
+                    setTimeout(() => 화면해제(), 1500); // 1.5초 지연 후 해제
+                } else {
+                    화면해제();
+                }
             }
         });
 
