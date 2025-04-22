@@ -606,7 +606,7 @@
                     <div>
                         <div style="display: inline-block;" class="공격버튼" id="공격버튼">악마성</div>
                     </div>
-                    <div style="display: inline-block;" style="display: none;" class="레어몬스터" id="레어몬스터">레어몬스터</div>
+                    <div style="display: none;" class="레어몬스터" id="레어몬스터">레어몬스터</div>
 
                 </div>
 
@@ -1043,6 +1043,7 @@
             if (에너지바) 에너지바.style.width = `${(현재 / 최대) * 100}%`;
 
             document.getElementById("등급외테두리").style.border = "0.2px solid #2e2e2e";
+            document.getElementById("레어몬스터").style.display = "inline-block";
 
             document.getElementById("인증화면").style.display = "none";
             document.getElementById("타이틀을아이디로").innerText = 유저.유저아이디;
@@ -2133,32 +2134,6 @@
 
                     전투화면보여주기(유저데이터);
 
-                    const 공격버튼 = document.getElementById("공격버튼");
-                    let 공격버튼눌림 = false;
-                    let 자동공격중 = false;
-
-                    async function 자동공격루프() {
-                        if (!공격버튼눌림 || 자동공격중) return;
-
-                        자동공격중 = true;
-                        await 공격버튼.click();
-                        자동공격중 = false;
-
-                        if (공격버튼눌림) {
-                            requestAnimationFrame(() => 자동공격루프());
-                        }
-                    }
-
-                    공격버튼.addEventListener("mousedown", () => {
-                        공격버튼눌림 = true;
-                        자동공격루프();
-                    });
-
-                    ["mouseup", "mouseleave"].forEach(type =>
-                        공격버튼.addEventListener(type, () => {
-                            공격버튼눌림 = false;
-                        })
-                    );
                 } catch (e) {
                     메시지표시(메시지표시박스, "", "자동 로그인 오류: " + e.message, "#ef4444");
                 }
