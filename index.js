@@ -429,7 +429,7 @@ app.post("/register-user", async (req, res) => {
         골드: 0,
         최대체력: 10,
         남은체력: 10,
-        숙련도: 999999,
+        숙련도: 0,
         현재층: 1,
         현재악마번호: Math.floor(Math.random() * 72) + 1,
         스킬: {},
