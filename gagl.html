@@ -37,7 +37,7 @@
         }
 
         .밑줄 {
-            border-bottom: 0.2px solid #2e2e2e;
+            border-bottom: 0.2px solid #4b4b4b;
             /* position: fixed; */
             /* top: 0; */
             width: 100%;
@@ -120,7 +120,7 @@
         .사백픽셀테두리 {
             margin-top: 15px;
             width: 400px;
-            border: 0.2px solid #2e2e2e;
+            border: 0.2px solid #4b4b4b;
             border-radius: 10px;
             padding: 15px;
         }
@@ -129,7 +129,7 @@
             margin-top: 15px;
             width: 100%;
             box-sizing: border-box;
-            border: 0.2px solid #2e2e2e;
+            border: 0.2px solid #4b4b4b;
             border-radius: 10px;
             padding: 15px;
         }
@@ -764,7 +764,7 @@
 
         // 색찾기
         const 색상맵 = {
-            "일반": "#2e2e2e",
+            "일반": "#4b4b4b",
             "레어": "#00ff00",
             "신화": "#0000ff",
             "고대": "#ffff00",
@@ -1042,7 +1042,7 @@
             const 에너지바 = document.querySelector(".에너지바");
             if (에너지바) 에너지바.style.width = `${(현재 / 최대) * 100}%`;
 
-            document.getElementById("등급외테두리").style.border = "0.2px solid #2e2e2e";
+            document.getElementById("등급외테두리").style.border = "0.2px solid #4b4b4b";
             document.getElementById("레어몬스터").style.display = "inline-block";
 
             document.getElementById("레어몬스터").style.display = "none";
@@ -1072,6 +1072,7 @@
             document.getElementById("획득경험치").innerText = "0";
             document.getElementById("획득골드").innerText = "0";
             document.getElementById("획득숙련도").innerText = "0";
+            document.getElementById("승리패배로그").innerText = "";
 
             // 기본값 설정 (없을 수도 있음)
             if (!유저.현재층) 유저.현재층 = 1;
@@ -1110,7 +1111,8 @@
                     document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
                     document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
 
-                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#2e2e2e"}`;
+                    // document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#4b4b4b"}`;
+
 
                     document.getElementById("획득경험치").innerText = "0";
                     document.getElementById("획득골드").innerText = "0";
@@ -1130,7 +1132,7 @@
                     document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
                     document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
 
-                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#2e2e2e"}`;
+                    // document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#4b4b4b"}`;
 
                     document.getElementById("총경험치").innerText = 새유저.경험치.toLocaleString();
                     document.getElementById("총골드").innerText = 새유저.골드.toLocaleString();
@@ -1152,7 +1154,11 @@
 
                     if (결과.드랍장비) {
                         const 장비 = 결과.드랍장비;
-                        메시지표시(메시지표시박스, "", `[${장비.등급}] ${장비.이름} +${장비.공격력} 드랍!`, 색상맵[장비.등급]);
+                        const 네온박스 = document.getElementById("네온박스");
+                        if (네온박스) {
+                            네온박스.innerText = `[${장비.등급}] ${장비.이름} +${장비.공격력} 드랍!`;
+                            네온박스.style.display = "block";
+                        }
                     }
 
                     document.getElementById("승리패배로그").innerText = "승리";
@@ -1182,23 +1188,28 @@
                 //     레어몬스터.style.display = "none";
                 // }
                 if (Math.random() < 1 / 2) {
+                    document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
                     레어몬스터.innerText = "Ξ. 바론";
                     레어몬스터.style.display = "block";
                     레어몬스터등장 = true;
                 } else if (Math.random() < 1 / 2) {
+                    document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
                     레어몬스터.innerText = "Ω. 사탄";
                     레어몬스터.style.display = "block";
                     레어몬스터등장 = true;
                 } else if (Math.random() < 1 / 2) {
+                    document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
                     레어몬스터.innerText = "DCCLXXVII. 벨제부브";
                     레어몬스터.style.display = "block";
                     레어몬스터등장 = true;
                 } else if (Math.random() < 1 / 2) {
+                    document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
                     레어몬스터.innerText = "LXXXIX. 레비아탄";
                     레어몬스터.style.display = "block";
                     레어몬스터등장 = true;
                 } else {
                     레어몬스터.style.display = "none";
+                    document.getElementById("등급외테두리").style.border = "0.2px solid #4b4b4b";
                 }
 
                 // ✅ 유저데이터 변경 이후, 승리/패배 관계 없이 실행
@@ -1252,7 +1263,7 @@
                     document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
                     document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
 
-                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#2e2e2e"}`;
+                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#4b4b4b"}`;
 
                     document.getElementById("획득경험치").innerText = "0";
                     document.getElementById("획득골드").innerText = "0";
@@ -1272,7 +1283,7 @@
                     document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
                     document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
 
-                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#2e2e2e"}`;
+                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#4b4b4b"}`;
 
                     document.getElementById("총경험치").innerText = 새유저.경험치.toLocaleString();
                     document.getElementById("총골드").innerText = 새유저.골드.toLocaleString();
@@ -1429,7 +1440,7 @@
         }
 
         async function 장비강화(이름, 등급, 박스) {
-            메시지표시(박스, "", "악마성의 대장장이는 공허에 갇혀있습니다", "#ef4444");
+            메시지표시(메시지표시박스, "", "악마성의 대장장이는 공허에 갇혀있습니다", "#ef4444");
             return;
             if (!유저데이터 || !유저데이터.유저UID) return;
 
@@ -2131,7 +2142,7 @@ style="margin-right: 2px;">
                         return;
                     }
 
-                    if (버전체크.버전업 !== 1) {
+                    if (버전체크.버전업 !== 0) {
                         await fetch("/delete-user", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
