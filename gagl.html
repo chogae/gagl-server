@@ -1152,14 +1152,6 @@
                     } else document.getElementById("레벨업표시").innerText = "";
 
 
-                    if (결과.드랍장비) {
-                        const 장비 = 결과.드랍장비;
-                        const 네온박스 = document.getElementById("네온박스");
-                        if (네온박스) {
-                            네온박스.innerText = `[${장비.등급}] ${장비.이름} +${장비.공격력} 드랍!`;
-                            네온박스.style.display = "block";
-                        }
-                    }
 
                     document.getElementById("승리패배로그").innerText = "승리";
                     document.getElementById("승리패배로그").style.color = "#00c851";
@@ -1305,9 +1297,12 @@
 
                     if (결과.드랍장비) {
                         const 장비 = 결과.드랍장비;
-                        메시지표시(메시지표시박스, "", `[${장비.등급}] ${장비.이름} +${장비.공격력} 드랍!`, 색상맵[장비.등급]);
+                        const 네온박스 = document.getElementById("네온박스");
+                        if (네온박스) {
+                            네온박스.innerText = `[${장비.등급}] ${장비.이름} +${장비.공격력} 드랍!`;
+                            네온박스.style.display = "block";
+                        }
                     }
-
                     document.getElementById("승리패배로그").innerText = "승리";
                     document.getElementById("승리패배로그").style.color = "#00c851";
                 }
