@@ -473,6 +473,9 @@
             &lt;&lt; 클릭 시 메뉴얼 오픈
         </span>
     </div>
+    <div class="네온박스" id="네온박스">
+        gagl에 찾아와주셔서 감사합니다
+    </div>
 
     <div class="밑줄" id="상단바">
         <div class="양쪽정렬 사백픽셀">
@@ -529,9 +532,6 @@
         <input id="비번입력" type="password" placeholder="비밀번호 입력" autocomplete="off" />
         <button onclick="회원가입()">회원가입</button>
         <button onclick="로그인()">로그인</button>
-        <div class="네온박스" id="네온박스">
-            gagl에 찾아와주셔서 감사합니다
-        </div>
     </div>
 
 
@@ -2142,7 +2142,7 @@ style="margin-right: 2px;">
                         return;
                     }
 
-                    if (버전체크.버전업 !== 0) {
+                    if (버전체크.버전업 !== 1) {
                         await fetch("/delete-user", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
