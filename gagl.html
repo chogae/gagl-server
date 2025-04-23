@@ -1255,7 +1255,7 @@
                     document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
                     document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
 
-                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#4b4b4b"}`;
+                    // document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#4b4b4b"}`;
 
                     document.getElementById("획득경험치").innerText = "0";
                     document.getElementById("획득골드").innerText = "0";
@@ -1275,7 +1275,7 @@
                     document.getElementById("악마체력").innerText = `체력 ${몬스터.체력}`;
                     document.getElementById("악마방어력").innerText = `방어력 ${몬스터.방어력}`;
 
-                    document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#4b4b4b"}`;
+                    // document.getElementById("등급외테두리").style.border = `0.2px solid ${색상맵[몬스터.타입] || "#4b4b4b"}`;
 
                     document.getElementById("총경험치").innerText = 새유저.경험치.toLocaleString();
                     document.getElementById("총골드").innerText = 새유저.골드.toLocaleString();
@@ -1310,24 +1310,29 @@
                 // ✅ 레어몬스터 확률 표시
                 const 레어몬스터 = document.getElementById("레어몬스터");
 
-                if (Math.random() < 1 / 18000) {
+                if (Math.random() < 1 / 2) {
+                    document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
                     레어몬스터.innerText = "Ξ. 바론";
                     레어몬스터.style.display = "block";
                     레어몬스터등장 = true;
-                } else if (Math.random() < 1 / 9000) {
+                } else if (Math.random() < 1 / 2) {
+                    document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
                     레어몬스터.innerText = "Ω. 사탄";
                     레어몬스터.style.display = "block";
                     레어몬스터등장 = true;
-                } else if (Math.random() < 1 / 3000) {
+                } else if (Math.random() < 1 / 2) {
+                    document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
                     레어몬스터.innerText = "DCCLXXVII. 벨제부브";
                     레어몬스터.style.display = "block";
                     레어몬스터등장 = true;
-                } else if (Math.random() < 1 / 900) {
+                } else if (Math.random() < 1 / 2) {
+                    document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
                     레어몬스터.innerText = "LXXXIX. 레비아탄";
                     레어몬스터.style.display = "block";
                     레어몬스터등장 = true;
                 } else {
                     레어몬스터.style.display = "none";
+                    document.getElementById("등급외테두리").style.border = "0.2px solid #4b4b4b";
                 }
 
                 // ✅ 유저데이터 변경 이후, 승리/패배 관계 없이 실행
