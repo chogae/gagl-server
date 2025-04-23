@@ -111,7 +111,7 @@ app.post("/attack", async (req, res) => {
         const 기존 = 새유저.장비목록.find(j => j.이름 === 드랍장비.이름 && j.등급 === 드랍장비.등급);
 
         if (기존) {
-            기존.공격력 += 드랍장비.공격력;
+            // 기존.공격력 += 드랍장비.공격력;
             새유저.최대체력 += 1;
             새유저.합성기록[키] = (새유저.합성기록[키] || 0) + 1;
         } else {
@@ -437,7 +437,7 @@ app.post("/register-user", async (req, res) => {
         장비목록: [],
         킬카운트: 0,
         강림몬스터: {},
-        버전업: 2,
+        버전업: 1,
         현재스태미너: 300,
         최대스태미너: 300,
         스태미너갱신시각: new Date().toISOString()
@@ -462,7 +462,7 @@ app.post("/ranking", async (req, res) => {
         const { data: 유저들, error } = await supabaseAdmin
             .from("users")
             .select("유저아이디, 레벨, 공격력, 현재층, 장비목록, 합성기록")
-            .eq("버전업", 2)
+            .eq("버전업", 1)
             .order("공격력", { ascending: false })
             .limit(10);
 
@@ -476,7 +476,7 @@ app.post("/ranking", async (req, res) => {
             const { data: 전체유저 } = await supabaseAdmin
                 .from("users")
                 .select("유저UID, 공격력")
-                .eq("버전업", 2)
+                .eq("버전업", 1)
                 .order("공격력", { ascending: false });
 
             내순위 = 전체유저.findIndex(u => u.유저UID === 유저UID);
@@ -810,18 +810,14 @@ function 장비드랍판정(몬스터) {
         console.warn("❌ 고정드랍에 해당 타입 없음:", 몬스터.타입);
         return null;
     }
-
-    const 최소 = Math.floor(드랍.공격력 * 0.8);
-    const 최대 = Math.floor(드랍.공격력 * 1.1);
-    const 랜덤공격력 = Math.floor(Math.random() * (최대 - 최소 + 1)) + 최소;
+    const 고정공격력 = 드랍.공격력;
 
     return {
         이름: 드랍.이름,
-        공격력: 랜덤공격력,
+        공격력: 고정공격력,
         등급: 몬스터.타입,
         강화: 0
-    };
-}
+    };}
 
 function 보상계산(층, 유저) {
     const 경험치 = Math.floor((층 * 10) / (유저.레벨 ** 0.5));
@@ -1018,52 +1014,8 @@ function 일반악마불러오기(층) {
     }));
 
     const 기준몬스터 = 일반목록[Math.floor(Math.random() * 일반목록.length)];
-
-    const 특수몬스터 = [
-        {
-            이름: "Ξ. 바론",
-            확률: 0.0001,
-            체력: Math.floor(기준몬스터.체력 * 3.0),
-            방어력: Math.floor(기준몬스터.방어력 * 2.0),
-            타입: "공허"
-        },
-        {
-            이름: "Ω. 사탄",
-            확률: 0.0008,
-            체력: Math.floor(기준몬스터.체력 * 2.6),
-            방어력: Math.floor(기준몬스터.방어력 * 1.8),
-            타입: "태초"
-        },
-        {
-            이름: "DCCLXXVII. 벨제부브",
-            확률: 0.002,
-            체력: Math.floor(기준몬스터.체력 * 2.2),
-            방어력: Math.floor(기준몬스터.방어력 * 1.6),
-            타입: "고대"
-        },
-        {
-            이름: "LXXXIX. 레비아탄",
-            확률: 0.008,
-            체력: Math.floor(기준몬스터.체력 * 1.8),
-            방어력: Math.floor(기준몬스터.방어력 * 1.4),
-            타입: "신화"
-        },
-        {
-            이름: "IV. 디아블로",
-            확률: 0.05,
-            체력: Math.floor(기준몬스터.체력 * 1.4),
-            방어력: Math.floor(기준몬스터.방어력 * 1.2),
-            타입: "레어"
-        }
-    ];
-
-    for (const 몬스터 of 특수몬스터) {
-        if (Math.random() < 몬스터.확률) {
-            return 몬스터;
-        }
-    }
-
     return 기준몬스터;
+
 }
 
 function 레어악마불러오기(층, 이름) {
