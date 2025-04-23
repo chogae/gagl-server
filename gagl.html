@@ -1157,33 +1157,18 @@
                     document.getElementById("승리패배로그").style.color = "#00c851";
                 }
 
-                // ✅ 레어몬스터 확률 표시
                 const 레어몬스터 = document.getElementById("레어몬스터");
 
-                if (Math.random() < 1 / 18000) {
+                if (결과.레어몬스터이름) {
                     document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
-                    레어몬스터.innerText = "Ξ. 바론";
-                    레어몬스터.style.display = "block";
-                    레어몬스터등장 = true;
-                } else if (Math.random() < 1 / 9000) {
-                    document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
-                    레어몬스터.innerText = "Ω. 사탄";
-                    레어몬스터.style.display = "block";
-                    레어몬스터등장 = true;
-                } else if (Math.random() < 1 / 3000) {
-                    document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
-                    레어몬스터.innerText = "DCCLXXVII. 벨제부브";
-                    레어몬스터.style.display = "block";
-                    레어몬스터등장 = true;
-                } else if (Math.random() < 1 / 900) {
-                    document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
-                    레어몬스터.innerText = "LXXXIX. 레비아탄";
+                    레어몬스터.innerText = 결과.레어몬스터이름;
                     레어몬스터.style.display = "block";
                     레어몬스터등장 = true;
                 } else {
                     레어몬스터.style.display = "none";
                     document.getElementById("등급외테두리").style.border = "0.2px solid #4b4b4b";
                 }
+
 
                 // ✅ 유저데이터 변경 이후, 승리/패배 관계 없이 실행
                 const 스태미너표시 = document.getElementById("스태미너표시");
@@ -1288,29 +1273,13 @@
                     document.getElementById("승리패배로그").style.color = "#00c851";
                 }
 
-                // ✅ 레어몬스터 확률 표시
                 const 레어몬스터 = document.getElementById("레어몬스터");
 
-                if (Math.random() < 1 / 18000) {
-                    document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
-                    레어몬스터.innerText = "Ξ. 바론";
+                if (결과.레어몬스터이름) {
+                    레어몬스터.innerText = 결과.레어몬스터이름;
                     레어몬스터.style.display = "block";
                     레어몬스터등장 = true;
-                } else if (Math.random() < 1 / 9000) {
                     document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
-                    레어몬스터.innerText = "Ω. 사탄";
-                    레어몬스터.style.display = "block";
-                    레어몬스터등장 = true;
-                } else if (Math.random() < 1 / 3000) {
-                    document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
-                    레어몬스터.innerText = "DCCLXXVII. 벨제부브";
-                    레어몬스터.style.display = "block";
-                    레어몬스터등장 = true;
-                } else if (Math.random() < 1 / 900) {
-                    document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
-                    레어몬스터.innerText = "LXXXIX. 레비아탄";
-                    레어몬스터.style.display = "block";
-                    레어몬스터등장 = true;
                 } else {
                     레어몬스터.style.display = "none";
                     document.getElementById("등급외테두리").style.border = "0.2px solid #4b4b4b";
@@ -1957,7 +1926,7 @@ style="margin-right: 2px;">
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v1";
+        document.getElementById("버전표시").innerText = "v2";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -1979,7 +1948,12 @@ style="margin-right: 2px;">
   <div style="font-weight: bold; margin-bottom: 10px;">📘 운영자 메뉴얼</div>
   <div>
 0. 다시만나 반갑습니다<br>
-
+1. 도박은 정신건강에 해롭기 때문에 폐지했습니다<br>
+2. 레어몬스터 등장 시, 현재 층을 내리시면<br>
+공략에 도움이 됩니다<br>
+3. 더이상 장비 중복 드랍으로 공격력이 증가하지 않습니다<br>
+4. 장비 강화 실패 시 강화수치가 하락합니다<br>
+5. 행운을 빕니다<br>
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
 패치노트<br>
 </div>
@@ -2027,12 +2001,12 @@ style="margin-right: 2px;">
             }
         });
 
-        // 🟢 총골드 클릭 시 도박창 표시
-        document.getElementById("총골드").addEventListener("click", () => {
-            if (!유저데이터) return;
-            const 도박창 = document.getElementById("도박창");
-            도박창.style.display = "block";
-        });
+        // // 🟢 총골드 클릭 시 도박창 표시
+        // document.getElementById("총골드").addEventListener("click", () => {
+        //     if (!유저데이터) return;
+        //     const 도박창 = document.getElementById("도박창");
+        //     도박창.style.display = "block";
+        // });
 
         // 🟡 도박 시도
         async function 도박시도(등급) {
