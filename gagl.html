@@ -1625,15 +1625,26 @@ style="margin-right: 2px;">
 <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>
 </svg>`;
 
-                // ⭐ SVG 아이콘 묶음 생성 및 표시
                 if (마스터단계수 > 0) {
                     const 아이콘박스 = document.createElement("div");
-                    아이콘박스.innerHTML = Array(마스터단계수).fill(루시드아이콘SVG).join("");
                     아이콘박스.style.position = "absolute";
-                    아이콘박스.style.top = "-10px"; // ⭐ 테두리 위에 겹치게
-                    아이콘박스.style.left = "6px";  // 약간 안쪽 정렬
-                    아이콘박스.style.zIndex = "10"; // ⭐ 테두리보다 위에
+                    아이콘박스.style.top = "-10px";
+                    아이콘박스.style.left = "6px";
+                    아이콘박스.style.zIndex = "10";
                     아이콘박스.style.display = "flex";
+
+                    const 황금색 = "#facc15";
+                    const 전부마스터 = 마스터단계수 === 단계수;
+
+                    for (let i = 0; i < 마스터단계수; i++) {
+                        const 아이콘 = document.createElement("div");
+                        아이콘.innerHTML = 루시드아이콘SVG;
+                        if (전부마스터) {
+                            아이콘.style.color = 황금색; // ⭐ 전부 마스터 시 황금색
+                        }
+                        아이콘박스.appendChild(아이콘);
+                    }
+
                     줄.appendChild(아이콘박스);
                 }
 
