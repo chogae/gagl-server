@@ -2185,29 +2185,27 @@ style="margin-right: 2px;">
                 메시지표시(메시지표시박스, "🔒", "로그인된 유저 없음", "#aaa");
             }
 
-            let 자동공격타이머 = null;
-
-            const 공격버튼 = document.getElementById("공격버튼"); // div든 button이든 상관없음
-            const 공격간격 = 1000; // 1초
-
-            공격버튼.addEventListener("mousedown", () => {
-                if (자동공격타이머) return;
-
-                공격버튼.click(); // 1회 즉시 실행
-
-                자동공격타이머 = setInterval(() => {
-                    공격버튼.click(); // 무조건 실행
-                }, 공격간격);
-            });
-
-            ["mouseup", "mouseleave"].forEach(event =>
-                공격버튼.addEventListener(event, () => {
-                    clearInterval(자동공격타이머);
-                    자동공격타이머 = null;
-                })
-            );
         });
 
+        let 자동공격타이머 = null;
+        const 공격간격 = 1000;
+        const 공격버튼 = document.getElementById("공격버튼");
+
+        document.addEventListener("mousedown", (e) => {
+            if (!e.target.closest("#공격버튼")) return; // 공격버튼이 아닌 다른 곳 누른 건 무시
+            if (자동공격타이머) return;
+
+            공격버튼.click(); // 첫 공격 1회
+
+            자동공격타이머 = setInterval(() => {
+                공격버튼.click(); // 반복 공격
+            }, 공격간격);
+        });
+
+        document.addEventListener("mouseup", () => {
+            clearInterval(자동공격타이머);
+            자동공격타이머 = null;
+        });
 
         document.addEventListener("click", function () {
             const 박스 = document.getElementById("네온박스");
