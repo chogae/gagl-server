@@ -2194,21 +2194,26 @@ style="margin-right: 2px;">
         const 공격간격 = 1000;
         const 공격버튼 = document.getElementById("공격버튼");
 
-        // 브라우저 기본 click 이벤트 막기
-        공격버튼.addEventListener("click", e => {
+        // ✅ click 이벤트를 완전히 막아버림
+        공격버튼.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
         });
 
-        // 수동으로만 클릭 제어
+        // ✅ 우리가 만든 공격 이벤트 (브라우저 click 대신 사용)
+        공격버튼.addEventListener("가짜공격", () => {
+            console.log("🔫 실제 공격 실행");
+            공격버튼.click(); // 실제 로직이 연결된 곳이 여기에 있으면 된다
+        });
+
         document.addEventListener("mousedown", (e) => {
             if (!e.target.closest("#공격버튼")) return;
             if (자동공격타이머) return;
 
-            e.preventDefault(); // 👈 브라우저 자동 click 차단
-            마우스누름중 = true;
+            e.preventDefault(); // ✅ 브라우저의 자동 click 차단
 
-            공격버튼.dispatchEvent(new Event("인위적클릭")); // 수동 클릭 1회만
+            마우스누름중 = true;
+            공격버튼.dispatchEvent(new Event("가짜공격")); // ✅ 수동 1회 공격
 
             자동공격타이머 = setInterval(() => {
                 const 레어몬스터 = document.getElementById("레어몬스터");
@@ -2221,7 +2226,7 @@ style="margin-right: 2px;">
                     return;
                 }
 
-                공격버튼.dispatchEvent(new Event("인위적클릭"));
+                공격버튼.dispatchEvent(new Event("가짜공격")); // ✅ 반복 공격
             }, 공격간격);
         });
 
@@ -2232,14 +2237,6 @@ style="margin-right: 2px;">
                 자동공격타이머 = null;
             })
         );
-
-        // ✅ 실제 공격 처리 (click 대신 custom event 사용)
-        공격버튼.addEventListener("인위적클릭", () => {
-            // 👇 여기에 공격 로직 있으면 됩니다
-            console.log("🔫 공격 실행");
-            공격버튼.click(); // 원래 쓰던 함수 호출
-        });
-
 
 
 
