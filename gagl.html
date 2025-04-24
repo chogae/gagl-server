@@ -1266,6 +1266,7 @@
                     document.getElementById("추가획득로그").innerHTML =
                         (결과.추가골드 > 0 ? `<span style="color: ${document.getElementById("보유골드")?.style.color || "#ffd700"}; font-weight: bold;">추가획득 +${결과.추가골드} Gold</span> ` : "") +
                         (결과.추가숙련도 > 0 ? `<span style="color: ${document.getElementById("보유숙련도")?.style.color || "#00bcd4"}; font-weight: bold;">추가획득 +${결과.추가숙련도} 숙련도</span>` : "");
+                    console.log("🪙 추가획득 골드:", 결과.추가골드);
 
                     if (레벨업.증가한레벨 > 0) {
                         document.getElementById("레벨업표시").innerText = `레벨 ${새유저.레벨} 달성!`;
