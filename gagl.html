@@ -1188,8 +1188,12 @@
             } catch (e) {
                 메시지표시(메시지표시박스, "", "전투 중 오류: " + e.message, "#ef4444");
             } finally {
+                if (레어몬스터등장) {
+                    await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
+                }
                 화면해제();
             }
+
         });
 
         document.getElementById("레어몬스터").addEventListener("click", async () => {
@@ -1306,8 +1310,12 @@
             } catch (e) {
                 메시지표시(메시지표시박스, "", "레어 전투 오류: " + e.message, "#ef4444");
             } finally {
+                if (레어몬스터등장) {
+                    await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
+                }
                 화면해제();
             }
+
         });
 
 
