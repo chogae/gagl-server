@@ -1266,7 +1266,6 @@
                     document.getElementById("추가획득로그").innerHTML =
                         (결과.추가골드 > 0 ? `<span style="color: ${document.getElementById("보유골드")?.style.color || "#ffd700"};">추가획득 +${결과.추가골드} Gold</span> ` : "") +
                         (결과.추가숙련도 > 0 ? `<span style="color: ${document.getElementById("보유숙련도")?.style.color || "#00bcd4"};">추가획득 +${결과.추가숙련도} 숙련도</span>` : "");
-                    console.log("🪙 추가획득 골드:", 결과.추가골드);
 
                     if (레벨업.증가한레벨 > 0) {
                         document.getElementById("레벨업표시").innerText = `레벨 ${새유저.레벨} 달성!`;
@@ -1977,6 +1976,8 @@ style="margin-right: 2px;">
 3. 더이상 장비 중복 드랍으로 공격력이 증가하지 않습니다<br>
 4. 장비 강화 실패 시 강화수치가 하락합니다<br>
 5. 매일 아침 9시에 스태미너가 최대치로 회복됩니다<br>
+6. 등장한 레어몬스터는 화면전환시 사라집니다<br>
+지금 이 순간에 처리하셔야 합니다<br>
 <br>
 행운을 빕니다<br>
 <br>
@@ -2186,20 +2187,16 @@ style="margin-right: 2px;">
 
             let 자동공격타이머 = null;
 
-            const 공격버튼 = document.getElementById("악마성"); // 버튼 id가 '악마성'인 경우
-            const 공격간격 = 1000; // 1초 간격으로 공격 (필요 시 조정)
+            const 공격버튼 = document.getElementById("공격버튼"); // div든 button이든 상관없음
+            const 공격간격 = 1000; // 1초
 
             공격버튼.addEventListener("mousedown", () => {
-                if (자동공격타이머) return; // 중복방지
+                if (자동공격타이머) return;
 
-                // 최초 1회 즉시 공격
-                공격버튼.click();
+                공격버튼.click(); // 1회 즉시 실행
 
-                // 주기적 자동공격
                 자동공격타이머 = setInterval(() => {
-                    if (document.body.style.pointerEvents !== "none") {
-                        공격버튼.click();
-                    }
+                    공격버튼.click(); // 무조건 실행
                 }, 공격간격);
             });
 
