@@ -1263,7 +1263,9 @@
                     document.getElementById("유저체력").innerText = `체력 ${새유저.남은체력}/${새유저.최대체력}`;
                     document.getElementById("획득로그").innerText =
                         `${보상.경험치} EXP, ${보상.골드} Gold, ${보상.숙련도} 숙련도 획득`;
-                    document.getElementById("추가획득로그").innerText = "";
+                    document.getElementById("추가획득로그").innerHTML =
+                        (결과.추가골드 > 0 ? `<span style="color: ${document.getElementById("보유골드")?.style.color || "#ffd700"}; font-weight: bold;">추가획득 +${결과.추가골드} Gold</span> ` : "") +
+                        (결과.추가숙련도 > 0 ? `<span style="color: ${document.getElementById("보유숙련도")?.style.color || "#00bcd4"}; font-weight: bold;">추가획득 +${결과.추가숙련도} 숙련도</span>` : "");
 
                     if (레벨업.증가한레벨 > 0) {
                         document.getElementById("레벨업표시").innerText = `레벨 ${새유저.레벨} 달성!`;
