@@ -2187,6 +2187,14 @@ style="margin-right: 2px;">
 
         });
 
+        document.addEventListener("click", function () {
+            const 박스 = document.getElementById("네온박스");
+            if (박스) {
+                박스.style.display = "none";
+            }
+        });
+
+
         let 자동공격타이머 = null;
         let 마우스누름중 = false;
         const 공격간격 = 1000;
@@ -2200,7 +2208,16 @@ style="margin-right: 2px;">
             공격버튼.click(); // 최초 1회
 
             자동공격타이머 = setInterval(() => {
-                if (!마우스누름중) return; // 마우스 떼면 중단
+                const 레어몬스터 = document.getElementById("레어몬스터");
+                const 표시중 = 레어몬스터 && getComputedStyle(레어몬스터).display === "block";
+
+                if (!마우스누름중 || 표시중) {
+                    clearInterval(자동공격타이머);
+                    자동공격타이머 = null;
+                    마우스누름중 = false;
+                    return;
+                }
+
                 공격버튼.click();
             }, 공격간격);
         });
@@ -2212,12 +2229,6 @@ style="margin-right: 2px;">
                 자동공격타이머 = null;
             })
         );
-        document.addEventListener("click", function () {
-            const 박스 = document.getElementById("네온박스");
-            if (박스) {
-                박스.style.display = "none";
-            }
-        });
 
 
     </script>
