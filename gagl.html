@@ -2158,7 +2158,6 @@ style="margin-right: 2px;">
 5. 매일 아침 9시에 스태미너가 최대치로 회복됩니다<br>
 6. 등장한 레어몬스터는 화면전환시 사라집니다<br>
 지금 이 순간에 처리하셔야 합니다<br>
-7. 악마성 버튼을 꾹 누르고 계시면 자동사냥 가능합니다<br>
 <br>
 행운을 빕니다<br>
 <br>
@@ -2167,7 +2166,6 @@ style="margin-right: 2px;">
 패치노트<br>
 1. magl 식 레어맵(특수몬스터)이 추가되었습니다<br>
 2. 경험치 획득량증가 스킬이 버프되었습니다<br>
-3. 악마성 버튼을 꾹 누르고 계셔보세요<br>
 </div>
 `;
         // 업데이트
@@ -2187,67 +2185,6 @@ style="margin-right: 2px;">
                 메뉴얼창.style.display = "none";
             }
         });
-
-
-
-        let 자동공격타이머 = null;
-        let 마우스누름중 = false;
-
-        const 공격버튼 = document.getElementById("공격버튼");
-        const 레어몬스터 = document.getElementById("레어몬스터");
-
-        function 자동공격시작() {
-            if (자동공격타이머) return;
-
-            마우스누름중 = true;
-
-            공격버튼.click(); // 첫 클릭
-            자동공격타이머 = setInterval(() => {
-                // 레어몬스터가 화면에 표시되면 중단
-                if (레어몬스터 && getComputedStyle(레어몬스터).display === "block") {
-                    자동공격중지();
-                    공격버튼숨기기(); // 버튼 숨기기
-                    return;
-                }
-
-                공격버튼.click();
-            }, 1000); // 원하는 간격
-        }
-
-        function 자동공격중지() {
-            if (자동공격타이머) {
-                clearInterval(자동공격타이머);
-                자동공격타이머 = null;
-            }
-            마우스누름중 = false;
-        }
-
-        function 공격버튼숨기기() {
-            공격버튼.style.display = "none";
-        }
-
-        function 공격버튼보이기() {
-            공격버튼.style.display = "inline-block";
-        }
-
-        document.addEventListener("mousedown", (e) => {
-            if (!e.target.closest("#공격버튼")) return;
-            e.preventDefault(); // 브라우저 기본 클릭 막기
-            자동공격시작();
-        });
-
-        document.addEventListener("mouseup", () => {
-            자동공격중지();
-        });
-
-        // 레어몬스터 사라졌을 때 공격버튼 복구
-        레어몬스터.addEventListener("click", async () => {
-            // 서버 호출 후 전투 끝나면 다시 버튼 보이기
-            setTimeout(() => {
-                공격버튼보이기();
-            }, 300); // 적당한 복구 타이밍
-        });
-
 
 
     </script>
