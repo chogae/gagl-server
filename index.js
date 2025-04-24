@@ -192,21 +192,21 @@ app.post("/refresh-stamina", async (req, res) => {
     const now = new Date();
     const kstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
 
-    // ✅ 오늘 날짜의 12:35 (KST 기준)
-    const today1235 = new Date(
+    // ✅ 오늘 날짜의 오전 9시 (KST 기준)
+    const today9am = new Date(
         kstNow.getFullYear(),
         kstNow.getMonth(),
         kstNow.getDate(),
-        12, 35, 0, 0
+        9, 0, 0, 0
     );
 
     let 현재스태미너 = 유저.현재스태미너 ?? 300;
     let 최대스태미너 = 유저.최대스태미너 ?? 300;
     let 갱신시각 = 유저.스태미너갱신시각 ? new Date(유저.스태미너갱신시각) : null;
 
-    if (!갱신시각 || 갱신시각 < today1235) {
+    if (!갱신시각 || 갱신시각 < today9am) {
         현재스태미너 = 최대스태미너;
-        갱신시각 = today1235;
+        갱신시각 = today9am;
     }
 
     await supabaseAdmin.from("users").update({
