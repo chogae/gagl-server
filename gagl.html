@@ -2194,26 +2194,31 @@ style="margin-right: 2px;">
         const 공격간격 = 1000;
         const 공격버튼 = document.getElementById("공격버튼");
 
-        // ✅ click 이벤트를 완전히 막아버림
-        공격버튼.addEventListener("click", (e) => {
+        // ✅ 브라우저 자동 클릭 막기
+        공격버튼.addEventListener("click", e => {
             e.preventDefault();
             e.stopImmediatePropagation();
         });
 
-        // ✅ 우리가 만든 공격 이벤트 (브라우저 click 대신 사용)
-        공격버튼.addEventListener("가짜공격", () => {
-            console.log("🔫 실제 공격 실행");
-            공격버튼.click(); // 실제 로직이 연결된 곳이 여기에 있으면 된다
-        });
+        // ✅ 직접 호출 전용 공격 함수
+        function 공격하기() {
+            const 레어몬스터 = document.getElementById("레어몬스터");
+            const 표시중 = 레어몬스터 && getComputedStyle(레어몬스터).display === "block";
+            if (표시중) return;
 
+            console.log("✅ 공격 1회 실행");
+            // 여기에 실제 공격 로직 넣으세요
+        }
+
+        // ✅ 마우스를 눌렀을 때만 공격 시작
         document.addEventListener("mousedown", (e) => {
             if (!e.target.closest("#공격버튼")) return;
             if (자동공격타이머) return;
 
-            e.preventDefault(); // ✅ 브라우저의 자동 click 차단
+            e.preventDefault(); // 브라우저 자동 click 막기
 
             마우스누름중 = true;
-            공격버튼.dispatchEvent(new Event("가짜공격")); // ✅ 수동 1회 공격
+            공격하기(); // 수동 공격 1회
 
             자동공격타이머 = setInterval(() => {
                 const 레어몬스터 = document.getElementById("레어몬스터");
@@ -2226,7 +2231,7 @@ style="margin-right: 2px;">
                     return;
                 }
 
-                공격버튼.dispatchEvent(new Event("가짜공격")); // ✅ 반복 공격
+                공격하기();
             }, 공격간격);
         });
 
@@ -2237,7 +2242,6 @@ style="margin-right: 2px;">
                 자동공격타이머 = null;
             })
         );
-
 
 
     </script>
