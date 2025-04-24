@@ -188,18 +188,25 @@ app.post("/refresh-stamina", async (req, res) => {
 
     if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
 
+    // ✅ 한국 시간 (UTC+9) 계산
     const now = new Date();
     const kstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-    const today9am = new Date(kstNow);
-    today9am.setHours(9, 0, 0, 0);
+
+    // ✅ 오늘 날짜의 12:35 (KST 기준)
+    const today1235 = new Date(
+        kstNow.getFullYear(),
+        kstNow.getMonth(),
+        kstNow.getDate(),
+        12, 35, 0, 0
+    );
 
     let 현재스태미너 = 유저.현재스태미너 ?? 300;
     let 최대스태미너 = 유저.최대스태미너 ?? 300;
     let 갱신시각 = 유저.스태미너갱신시각 ? new Date(유저.스태미너갱신시각) : null;
 
-    if (!갱신시각 || 갱신시각 < today9am) {
+    if (!갱신시각 || 갱신시각 < today1235) {
         현재스태미너 = 최대스태미너;
-        갱신시각 = today9am;
+        갱신시각 = today1235;
     }
 
     await supabaseAdmin.from("users").update({
