@@ -2191,34 +2191,23 @@ style="margin-right: 2px;">
 
         let 자동공격타이머 = null;
         let 마우스누름중 = false;
+        let 클릭차단 = false;
         const 공격간격 = 1000;
         const 공격버튼 = document.getElementById("공격버튼");
 
-        // ✅ 브라우저 자동 클릭 막기
-        공격버튼.addEventListener("click", e => {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-        });
-
-        // ✅ 직접 호출 전용 공격 함수
-        function 공격하기() {
-            const 레어몬스터 = document.getElementById("레어몬스터");
-            const 표시중 = 레어몬스터 && getComputedStyle(레어몬스터).display === "block";
-            if (표시중) return;
-
-            console.log("✅ 공격 1회 실행");
-            // 여기에 실제 공격 로직 넣으세요
-        }
-
-        // ✅ 마우스를 눌렀을 때만 공격 시작
         document.addEventListener("mousedown", (e) => {
             if (!e.target.closest("#공격버튼")) return;
+            e.preventDefault(); // 브라우저 기본 클릭 발생 방지
+
             if (자동공격타이머) return;
 
-            e.preventDefault(); // 브라우저 자동 click 막기
-
             마우스누름중 = true;
-            공격하기(); // 수동 공격 1회
+            클릭차단 = false;
+
+            // 클릭을 브라우저 기본 흐름보다 약간 뒤로 지연
+            setTimeout(() => {
+                if (!클릭차단) 공격버튼.click();
+            }, 0);
 
             자동공격타이머 = setInterval(() => {
                 const 레어몬스터 = document.getElementById("레어몬스터");
@@ -2228,10 +2217,11 @@ style="margin-right: 2px;">
                     clearInterval(자동공격타이머);
                     자동공격타이머 = null;
                     마우스누름중 = false;
+                    클릭차단 = true;
                     return;
                 }
 
-                공격하기();
+                공격버튼.click();
             }, 공격간격);
         });
 
@@ -2240,8 +2230,13 @@ style="margin-right: 2px;">
                 마우스누름중 = false;
                 clearInterval(자동공격타이머);
                 자동공격타이머 = null;
+                클릭차단 = true;
             })
         );
+
+        // 클릭 자체는 그냥 통과 (지연 click만 허용하므로 이 부분 불필요)
+
+
 
 
     </script>
