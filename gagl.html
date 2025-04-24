@@ -615,6 +615,8 @@
                 </div>
                 <div class="가로정렬" id="획득로그">
                 </div>
+                <div class="가로정렬" id="추가획득로그">
+                </div>
 
                 <div class="가로정렬" id="레벨업표시">
 
@@ -1120,6 +1122,7 @@
                     document.getElementById("획득숙련도").innerText = "0";
                     document.getElementById("레벨업표시").innerText = "";
                     document.getElementById("획득로그").innerText = "";
+                    document.getElementById("추가획득로그").innerText = "";
 
                     document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}/${유저데이터.최대체력}`;
                     document.getElementById("승리패배로그").innerText = "패배";
@@ -1147,6 +1150,7 @@
                     document.getElementById("유저체력").innerText = `체력 ${새유저.남은체력}/${새유저.최대체력}`;
                     document.getElementById("획득로그").innerText =
                         `${보상.경험치} EXP, ${보상.골드} Gold, ${보상.숙련도} 숙련도 획득`;
+                    document.getElementById("추가획득로그").innerText = "";
 
                     if (레벨업.증가한레벨 > 0) {
                         document.getElementById("레벨업표시").innerText = `레벨 ${새유저.레벨} 달성!`;
@@ -1231,6 +1235,7 @@
                     document.getElementById("획득숙련도").innerText = "0";
                     document.getElementById("레벨업표시").innerText = "";
                     document.getElementById("획득로그").innerText = "";
+                    document.getElementById("추가획득로그").innerText = "";
 
                     document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}/${유저데이터.최대체력}`;
                     document.getElementById("승리패배로그").innerText = "패배";
@@ -1258,6 +1263,7 @@
                     document.getElementById("유저체력").innerText = `체력 ${새유저.남은체력}/${새유저.최대체력}`;
                     document.getElementById("획득로그").innerText =
                         `${보상.경험치} EXP, ${보상.골드} Gold, ${보상.숙련도} 숙련도 획득`;
+                    document.getElementById("추가획득로그").innerText = "";
 
                     if (레벨업.증가한레벨 > 0) {
                         document.getElementById("레벨업표시").innerText = `레벨 ${새유저.레벨} 달성!`;
@@ -1325,6 +1331,7 @@
             document.getElementById("전당화면").style.display = "none";
 
             document.getElementById("획득로그").innerText = "";
+            document.getElementById("추가획득로그").innerText = "";
             document.getElementById("레벨업표시").innerText = "";
 
             // 📌 조우 기록 표시
@@ -1475,9 +1482,16 @@
                         "데스 버서커", "루나틱 버서커"
                     ],
                     설명: [
-                        "체력-1, 데미지 1.4배", "체력-2, 데미지 1.8배", "체력-3, 데미지 2.2배", "체력-4, 데미지 2.6배",
-                        "체력-5, 데미지 3.0배", "체력-6, 데미지 3.4배", "체력-7, 데미지 3.8배", "체력-8, 데미지 4.2배",
-                        "체력-9, 데미지 4.6배", "체력-10, 데미지 5.0배"
+                        "턴당 체력-1, 데미지 1.4배",
+                        "턴당 체력-2, 데미지 1.8배",
+                        "턴당 체력-3, 데미지 2.2배",
+                        "턴당 체력-4, 데미지 2.6배",
+                        "턴당 체력-5, 데미지 3.0배",
+                        "턴당 체력-6, 데미지 3.4배",
+                        "턴당 체력-7, 데미지 3.8배",
+                        "턴당 체력-8, 데미지 4.2배",
+                        "턴당 체력-9, 데미지 4.6배",
+                        "턴당 체력-10, 데미지 5.0배"
                     ],
                     아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵["빨"]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`
                 },
@@ -1523,7 +1537,7 @@
                 },
                 인텔리전스: {
                     단계: ["클레어 인텔리전스", "옵저브 인텔리전스"],
-                    설명: ["경험치 +1", "경험치 +2"],
+                    설명: ["경험치 +20%", "경험치 +40%"],
                     아이콘: () => `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${색상맵["빨주"]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy-plus-icon lucide-copy-plus"><line x1="15" x2="15" y1="12" y2="18"/><line x1="12" x2="18" y1="15" y2="15"/><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`
                 },
             };
@@ -1537,6 +1551,7 @@
             document.getElementById("전당화면").style.display = "none";
 
             document.getElementById("획득로그").innerText = "";
+            document.getElementById("추가획득로그").innerText = "";
             document.getElementById("레벨업표시").innerText = "";
             document.getElementById("보유숙련도").innerText = "보유 숙련도 " + 유저데이터.숙련도;
             const 총투자 = Object.values(유저데이터.스킬 || {}).reduce((a, b) => a + b, 0);
@@ -1726,6 +1741,7 @@ style="margin-right: 2px;">
             document.getElementById("스킬화면").style.display = "none";
             document.getElementById("장비화면").style.display = "none";
             document.getElementById("획득로그").innerText = "";
+            document.getElementById("추가획득로그").innerText = "";
             document.getElementById("레벨업표시").innerText = "";
 
             const 컨테이너 = document.getElementById("전당컨테이너");
@@ -1930,7 +1946,7 @@ style="margin-right: 2px;">
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v2";
+        document.getElementById("버전표시").innerText = "v3";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -1957,9 +1973,15 @@ style="margin-right: 2px;">
 공략에 도움이 됩니다<br>
 3. 더이상 장비 중복 드랍으로 공격력이 증가하지 않습니다<br>
 4. 장비 강화 실패 시 강화수치가 하락합니다<br>
-5. 행운을 빕니다<br>
+5. 매일 아침 9시에 스태미너가 최대치로 회복됩니다<br>
+<br>
+행운을 빕니다<br>
+<br>
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
+<br>
 패치노트<br>
+1. magl 식 레어맵(특수몬스터)이 추가되었습니다<br>
+2. 경험치 획득량증가 스킬이 버프되었습니다<br>
 </div>
 `;
         // 업데이트
