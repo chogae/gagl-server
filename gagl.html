@@ -2195,6 +2195,37 @@ style="margin-right: 2px;">
         });
 
 
+        let 자동공격타이머 = null;
+
+        const 공격버튼 = document.getElementById("공격버튼");
+        const 레어몬스터버튼 = document.getElementById("레어몬스터");
+
+        공격버튼.addEventListener("mousedown", () => {
+            if (자동공격타이머) return;
+
+            자동공격타이머 = setInterval(() => {
+                // 레어몬스터 등장 시 자동공격 정지
+                const 레어몬스터표시 = getComputedStyle(레어몬스터버튼).display === "block";
+                if (레어몬스터표시) {
+                    clearInterval(자동공격타이머);
+                    자동공격타이머 = null;
+                    return;
+                }
+
+                공격버튼.click();
+            }, 1000); // 0.5초 간격으로 공격
+        });
+
+        ["mouseup", "mouseleave"].forEach(event => {
+            document.addEventListener(event, () => {
+                if (자동공격타이머) {
+                    clearInterval(자동공격타이머);
+                    자동공격타이머 = null;
+                }
+            });
+        });
+
+
     </script>
 </body>
 
