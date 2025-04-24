@@ -1939,68 +1939,6 @@ style="margin-right: 2px;">
             });
         });
 
-        // 업데이트
-        document.getElementById("버전표시").innerText = "v4";
-        ////git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-
-        const 버전버튼 = document.getElementById("버전표시");
-        버전버튼.style.cursor = "pointer";
-
-        const 메뉴얼창 = document.createElement("div");
-        메뉴얼창.id = "메뉴얼창";
-        메뉴얼창.className = "사백픽셀테두리";
-        메뉴얼창.style.position = "fixed";
-        메뉴얼창.style.top = "40px";
-        메뉴얼창.style.left = "10px";
-        메뉴얼창.style.background = "#000";
-        메뉴얼창.style.color = "white";
-        메뉴얼창.style.zIndex = "9999";
-        메뉴얼창.style.width = "fit-content";
-        // 메뉴얼창.style.whiteSpace = "nowrap";
-        메뉴얼창.style.display = "none";
-        메뉴얼창.innerHTML = `
-  <div style="font-weight: bold; margin-bottom: 10px;">📘 운영자 메뉴얼</div>
-  <div>
-0. 다시만나 반갑습니다<br>
-1. 도박은 정신건강에 해롭기 때문에 폐지했습니다<br>
-2. 레어몬스터 등장 시, 현재 층을 내리시면<br>
-공략에 도움이 됩니다<br>
-3. 더이상 장비 중복 드랍으로 공격력이 증가하지 않습니다<br>
-4. 장비 강화 실패 시 강화수치가 하락합니다<br>
-5. 매일 아침 9시에 스태미너가 최대치로 회복됩니다<br>
-6. 등장한 레어몬스터는 화면전환시 사라집니다<br>
-지금 이 순간에 처리하셔야 합니다<br>
-7. 악마성 버튼을 꾹 누르고 계시면 자동사냥 가능합니다<br>
-<br>
-행운을 빕니다<br>
-<br>
-ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
-<br>
-패치노트<br>
-1. magl 식 레어맵(특수몬스터)이 추가되었습니다<br>
-2. 경험치 획득량증가 스킬이 버프되었습니다<br>
-3. 악마성 버튼을 꾹 누르고 계셔보세요<br>
-</div>
-`;
-        // 업데이트
-
-        document.body.appendChild(메뉴얼창);
-
-        버전버튼.addEventListener("click", () => {
-            메뉴얼창.style.display = (메뉴얼창.style.display === "none") ? "block" : "none";
-        });
-
-        document.addEventListener("click", (e) => {
-            if (
-                메뉴얼창.style.display === "block" &&
-                !메뉴얼창.contains(e.target) &&
-                !버전버튼.contains(e.target)
-            ) {
-                메뉴얼창.style.display = "none";
-            }
-        });
-
-
         // 🟡 무지개 타이틀 애니메이션
         let 색상인덱스 = 0;
         const 무지개색들 = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff", "#4b0082", "#9400d3"];
@@ -2189,6 +2127,126 @@ style="margin-right: 2px;">
         });
 
 
+        // 업데이트
+        document.getElementById("버전표시").innerText = "v4";
+        ////git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
+
+        const 버전버튼 = document.getElementById("버전표시");
+        버전버튼.style.cursor = "pointer";
+
+        const 메뉴얼창 = document.createElement("div");
+        메뉴얼창.id = "메뉴얼창";
+        메뉴얼창.className = "사백픽셀테두리";
+        메뉴얼창.style.position = "fixed";
+        메뉴얼창.style.top = "40px";
+        메뉴얼창.style.left = "10px";
+        메뉴얼창.style.background = "#000";
+        메뉴얼창.style.color = "white";
+        메뉴얼창.style.zIndex = "9999";
+        메뉴얼창.style.width = "fit-content";
+        // 메뉴얼창.style.whiteSpace = "nowrap";
+        메뉴얼창.style.display = "none";
+        메뉴얼창.innerHTML = `
+  <div style="font-weight: bold; margin-bottom: 10px;">📘 운영자 메뉴얼</div>
+  <div>
+0. 다시만나 반갑습니다<br>
+1. 도박은 정신건강에 해롭기 때문에 폐지했습니다<br>
+2. 레어몬스터 등장 시, 현재 층을 내리시면<br>
+공략에 도움이 됩니다<br>
+3. 더이상 장비 중복 드랍으로 공격력이 증가하지 않습니다<br>
+4. 장비 강화 실패 시 강화수치가 하락합니다<br>
+5. 매일 아침 9시에 스태미너가 최대치로 회복됩니다<br>
+6. 등장한 레어몬스터는 화면전환시 사라집니다<br>
+지금 이 순간에 처리하셔야 합니다<br>
+7. 악마성 버튼을 꾹 누르고 계시면 자동사냥 가능합니다<br>
+<br>
+행운을 빕니다<br>
+<br>
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
+<br>
+패치노트<br>
+1. magl 식 레어맵(특수몬스터)이 추가되었습니다<br>
+2. 경험치 획득량증가 스킬이 버프되었습니다<br>
+3. 악마성 버튼을 꾹 누르고 계셔보세요<br>
+</div>
+`;
+        // 업데이트
+
+        document.body.appendChild(메뉴얼창);
+
+        버전버튼.addEventListener("click", () => {
+            메뉴얼창.style.display = (메뉴얼창.style.display === "none") ? "block" : "none";
+        });
+
+        document.addEventListener("click", (e) => {
+            if (
+                메뉴얼창.style.display === "block" &&
+                !메뉴얼창.contains(e.target) &&
+                !버전버튼.contains(e.target)
+            ) {
+                메뉴얼창.style.display = "none";
+            }
+        });
+
+
+
+        let 자동공격타이머 = null;
+        let 마우스누름중 = false;
+
+        const 공격버튼 = document.getElementById("공격버튼");
+        const 레어몬스터 = document.getElementById("레어몬스터");
+
+        function 자동공격시작() {
+            if (자동공격타이머) return;
+
+            마우스누름중 = true;
+
+            공격버튼.click(); // 첫 클릭
+            자동공격타이머 = setInterval(() => {
+                // 레어몬스터가 화면에 표시되면 중단
+                if (레어몬스터 && getComputedStyle(레어몬스터).display === "block") {
+                    자동공격중지();
+                    공격버튼숨기기(); // 버튼 숨기기
+                    return;
+                }
+
+                공격버튼.click();
+            }, 300); // 원하는 간격
+        }
+
+        function 자동공격중지() {
+            if (자동공격타이머) {
+                clearInterval(자동공격타이머);
+                자동공격타이머 = null;
+            }
+            마우스누름중 = false;
+        }
+
+        function 공격버튼숨기기() {
+            공격버튼.style.display = "none";
+        }
+
+        function 공격버튼보이기() {
+            공격버튼.style.display = "inline-block";
+        }
+
+        document.addEventListener("mousedown", (e) => {
+            if (!e.target.closest("#공격버튼")) return;
+            e.preventDefault(); // 브라우저 기본 클릭 막기
+            자동공격시작();
+        });
+
+        document.addEventListener("mouseup", () => {
+            자동공격중지();
+        });
+
+        // 레어몬스터 사라졌을 때 공격버튼 복구
+        레어몬스터.addEventListener("click", async () => {
+            // 서버 호출 후 전투 끝나면 다시 버튼 보이기
+            setTimeout(() => {
+                공격버튼보이기();
+            }, 300); // 적당한 복구 타이밍
+        });
 
 
 
