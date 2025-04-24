@@ -2191,6 +2191,7 @@ style="margin-right: 2px;">
 
         let 자동공격타이머 = null;
         let 마우스누름중 = false;
+        let 클릭차단 = false; // 👈 클릭 차단용 플래그
         const 공격간격 = 1000;
         const 공격버튼 = document.getElementById("공격버튼");
 
@@ -2199,6 +2200,7 @@ style="margin-right: 2px;">
             if (자동공격타이머) return;
 
             마우스누름중 = true;
+            클릭차단 = false;
             공격버튼.click(); // 최초 1회
 
             자동공격타이머 = setInterval(() => {
@@ -2209,6 +2211,7 @@ style="margin-right: 2px;">
                     clearInterval(자동공격타이머);
                     자동공격타이머 = null;
                     마우스누름중 = false;
+                    클릭차단 = true; // 👈 마우스 떼면서 자동 클릭 차단
                     return;
                 }
 
@@ -2217,12 +2220,23 @@ style="margin-right: 2px;">
         });
 
         ["mouseup", "mouseleave"].forEach(event =>
-            document.addEventListener(event, () => {
+            document.addEventListener(event, (e) => {
                 마우스누름중 = false;
                 clearInterval(자동공격타이머);
                 자동공격타이머 = null;
+                클릭차단 = true;
             })
         );
+
+        // 공격버튼 클릭 자체에 차단 로직 걸기 (필요시)
+        공격버튼.addEventListener("click", (e) => {
+            if (클릭차단) {
+                e.stopImmediatePropagation(); // 클릭 자체 중단
+                클릭차단 = false;
+                return;
+            }
+        });
+
 
 
     </script>
