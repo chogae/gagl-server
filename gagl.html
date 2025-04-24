@@ -2183,6 +2183,32 @@ style="margin-right: 2px;">
             } else {
                 메시지표시(메시지표시박스, "🔒", "로그인된 유저 없음", "#aaa");
             }
+
+            let 자동공격타이머 = null;
+
+            const 공격버튼 = document.getElementById("악마성"); // 버튼 id가 '악마성'인 경우
+            const 공격간격 = 1000; // 1초 간격으로 공격 (필요 시 조정)
+
+            공격버튼.addEventListener("mousedown", () => {
+                if (자동공격타이머) return; // 중복방지
+
+                // 최초 1회 즉시 공격
+                공격버튼.click();
+
+                // 주기적 자동공격
+                자동공격타이머 = setInterval(() => {
+                    if (document.body.style.pointerEvents !== "none") {
+                        공격버튼.click();
+                    }
+                }, 공격간격);
+            });
+
+            ["mouseup", "mouseleave"].forEach(event =>
+                공격버튼.addEventListener(event, () => {
+                    clearInterval(자동공격타이머);
+                    자동공격타이머 = null;
+                })
+            );
         });
 
 
