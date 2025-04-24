@@ -2188,25 +2188,30 @@ style="margin-right: 2px;">
         });
 
         let 자동공격타이머 = null;
+        let 마우스누름중 = false;
         const 공격간격 = 1000;
         const 공격버튼 = document.getElementById("공격버튼");
 
         document.addEventListener("mousedown", (e) => {
-            if (!e.target.closest("#공격버튼")) return; // 공격버튼이 아닌 다른 곳 누른 건 무시
+            if (!e.target.closest("#공격버튼")) return;
             if (자동공격타이머) return;
 
-            공격버튼.click(); // 첫 공격 1회
+            마우스누름중 = true;
+            공격버튼.click(); // 최초 1회
 
             자동공격타이머 = setInterval(() => {
-                공격버튼.click(); // 반복 공격
+                if (!마우스누름중) return; // 마우스 떼면 중단
+                공격버튼.click();
             }, 공격간격);
         });
 
-        document.addEventListener("mouseup", () => {
-            clearInterval(자동공격타이머);
-            자동공격타이머 = null;
-        });
-
+        ["mouseup", "mouseleave"].forEach(event =>
+            document.addEventListener(event, () => {
+                마우스누름중 = false;
+                clearInterval(자동공격타이머);
+                자동공격타이머 = null;
+            })
+        );
         document.addEventListener("click", function () {
             const 박스 = document.getElementById("네온박스");
             if (박스) {
