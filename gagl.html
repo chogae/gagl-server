@@ -655,6 +655,8 @@
             </div>
         </div>
 
+        <div id="전투로그컨테이너" class="세로정렬">
+        </div>
 
     </div>
 
@@ -1134,6 +1136,39 @@
                     화면해제();
                     return;
                 }
+
+                if (결과.전투로그) {
+                    const 로그컨테이너 = document.getElementById("전투로그컨테이너");
+                    로그컨테이너.innerHTML = ""; // 이전 로그 제거
+
+                    결과.전투로그.forEach(항목 => {
+                        const 턴블럭 = document.createElement("div");
+                        턴블럭.className = "전투로그라인 사백픽셀테두리";
+                        턴블럭.style.backgroundColor = "#4b4b4b";
+                        턴블럭.style.color = "#ffffff";
+                        턴블럭.style.padding = "10px";
+                        턴블럭.style.borderRadius = "6px";
+                        턴블럭.style.marginBottom = "10px";
+
+                        const 아이콘HTML = 항목.아이콘
+                            .filter(이름 => window[이름])
+                            .map(이름 => window[이름])
+                            .join("");
+
+                        턴블럭.innerHTML = `
+                    <div style="margin-bottom: 4px;"><strong>Turn ${항목.턴}</strong></div>
+                    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                        ${아이콘HTML}
+                        ${항목.효과?.[0] ? `<span>${항목.효과[0]}</span>` : ""}
+                    </div>
+                    <div>'${항목.몬스터이름}'에게 ${항목.데미지}의 데미지를 입혔다!</div>
+                    <div>유저 체력: ${항목.유저체력} / 몬스터 체력: ${항목.몬스터체력}</div>
+                `;
+
+                        로그컨테이너.appendChild(턴블럭);
+                    });
+                }
+
 
                 if (결과.결과 === "패배") {
                     const 몬스터 = 결과.몬스터;
@@ -2107,12 +2142,13 @@ style="margin-right: 2px;">
                         return;
                     }
 
-                    // ✅ 문제 없으면 전체 유저 정보 로딩
-                    const { data: 유저정보, error } = await supabase
-                        .from("users")
-                        .select("*")
-                        .eq("유저UID", user.id)
-                        .single();
+                    const 응답 = await fetch("/get-user", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ 유저UID: user.id })
+                    });
+                    const 결과 = await 응답.json();
+                    const 유저정보 = 결과.유저데이터;
 
                     if (error || !유저정보) {
                         메시지표시(메시지표시박스, "⚠️", "유저 정보 없음", "#ef4444");

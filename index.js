@@ -19,6 +19,26 @@ const supabaseAdmin = createClient(
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpYWZlc2Z5d3R2cGFjaGJmb3hyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDc4NDAxOCwiZXhwIjoyMDYwMzYwMDE4fQ.inGkUGNirltn3arVtb3rPvLpzoxK28OCDOx04rAH0EE"           // 서비스 롤 키
 );
 
+app.post("/get-user", async (req, res) => {
+    const { 유저UID } = req.body;
+
+    if (!유저UID) {
+        return res.status(400).json({ 오류: "유저UID 누락" });
+    }
+
+    const { data, error } = await supabaseAdmin
+        .from("users")
+        .select("*")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !data) {
+        return res.status(404).json({ 오류: "유저 정보 없음" });
+    }
+
+    return res.json({ 유저데이터: data });
+});
+
 app.post("/attack-normal", async (req, res) => {
     const { 유저데이터 } = req.body;
     const { 유저UID, 현재층: 클라이언트층 } = 유저데이터;
@@ -56,7 +76,7 @@ app.post("/attack-normal", async (req, res) => {
             유저체력: 유저.남은체력,
             몬스터체력: 몬스터.체력,
             몬스터이름: 몬스터.이름,
-            아이콘: ["아이언바디"],
+            아이콘: ["아이언바디아이콘"],
             효과: [`체력을 ${유저.남은체력 - 회복전체력} 회복합니다 (${유저.남은체력}/${유저.최대체력})`],
             데미지: 0
         });
@@ -134,7 +154,8 @@ app.post("/attack-normal", async (req, res) => {
             ...새유저,
             현재스태미너
         },
-        레어몬스터이름
+        레어몬스터이름,
+        전투로그
     });
 });
 
