@@ -1089,7 +1089,7 @@
             let 레어몬스터등장 = false;
 
             try {
-                const 응답 = await fetch("/attack", {
+                const 응답 = await fetch("/attack-normal", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ 유저데이터 })
@@ -1204,7 +1204,7 @@
             let 레어몬스터등장 = false;
 
             try {
-                const 응답 = await fetch("/attack", {
+                const 응답 = await fetch("/attack-rare", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ 유저데이터, 레어몬스터이름: 이름 })
@@ -1403,8 +1403,6 @@
         }
 
         async function 장비강화(이름, 등급, 박스) {
-            // 메시지표시(메시지표시박스, "", "악마성의 대장장이는 공허에 갇혀있습니다", "#ef4444");
-            // return;
             if (!유저데이터 || !유저데이터.유저UID) return;
 
             const 강화비용 = {
@@ -1416,7 +1414,7 @@
                 "공허": 500000
             }[등급];
 
-            const 비용 = 강화비용;  // 숫자 유지
+            const 비용 = 강화비용;
 
             if ((유저데이터.골드 || 0) < 비용) {
                 메시지표시(메시지표시박스, "", `골드 부족: ${비용.toLocaleString()} 필요`, "#ef4444");
@@ -1446,17 +1444,14 @@
                     return;
                 }
 
-                if (결과.성공) {
-                    메시지표시(박스, "✅", 결과.메시지, "#00c851");
+                // ✅ 메시지 출력
+                메시지표시(박스, 결과.성공 ? "✅" : "", 결과.메시지, 결과.성공 ? "#00c851" : "#ef4444");
 
-                    // ✅ 강화 수치 반영
-                    const 장비 = 유저데이터.장비목록.find(j => j.이름 === 이름 && j.등급 === 등급);
-                    if (장비) {
-                        장비.강화 = 결과.강화;               // ✅ 강화 수치 덮어쓰기
-                        장비.공격력 += 결과.증가량;         // ✅ 증가량이 0일 수도 있음
-                    }
-                } else {
-                    메시지표시(박스, "", 결과.메시지, "#ef4444");
+                // ✅ 항상 장비정보 갱신
+                const 장비 = 유저데이터.장비목록.find(j => j.이름 === 이름 && j.등급 === 등급);
+                if (장비) {
+                    장비.강화 = 결과.강화;
+                    장비.공격력 = 결과.무기공격력;
                 }
 
                 유저데이터.공격력 = 결과.공격력;
