@@ -655,7 +655,7 @@
             </div>
         </div>
 
-        <div id="전투로그컨테이너" class="세로정렬">
+        <div id="전투로그컨테이너" class="세로정렬 사백픽셀테두리">
         </div>
 
     </div>
@@ -1142,16 +1142,13 @@
 
                 if (결과.전투로그) {
                     const 로그컨테이너 = document.getElementById("전투로그컨테이너");
-                    로그컨테이너.innerHTML = ""; // 이전 로그 제거
+                    로그컨테이너.innerHTML = "";
 
                     결과.전투로그.forEach(항목 => {
                         const 턴블럭 = document.createElement("div");
                         턴블럭.className = "전투로그라인 사백픽셀테두리";
-                        턴블럭.style.backgroundColor = "#4b4b4b";
-                        턴블럭.style.color = "#ffffff";
-                        턴블럭.style.padding = "10px";
-                        턴블럭.style.borderRadius = "6px";
                         턴블럭.style.marginBottom = "10px";
+                        턴블럭.style.padding = "10px";
 
                         const 아이콘HTML = 항목.아이콘
                             .filter(이름 => window[이름])
@@ -1159,14 +1156,28 @@
                             .join("");
 
                         턴블럭.innerHTML = `
-                    <div style="margin-bottom: 4px;"><strong>Turn ${항목.턴}</strong></div>
-                    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                        ${아이콘HTML}
-                        ${항목.효과?.[0] ? `<span>${항목.효과[0]}</span>` : ""}
-                    </div>
-                    <div>'${항목.몬스터이름}'에게 ${항목.데미지}의 데미지를 입혔다!</div>
-                    <div>유저 체력: ${항목.유저체력} / 몬스터 체력: ${항목.몬스터체력}</div>
-                `;
+        <div style="
+            background-color: #4b4b4b;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        ">
+            Turn ${항목.턴 + 1}
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+            ${아이콘HTML}
+            ${항목.효과?.[0] ? `<span>${항목.효과[0]}</span>` : ""}
+        </div>
+
+        <div style="margin-bottom: 2px;">
+            '${항목.몬스터이름}'에게 ${항목.데미지}의 데미지를 입혔다!
+        </div>
+
+        <div>유저 체력: ${항목.유저체력} / 몬스터 체력: ${항목.몬스터체력}</div>
+    `;
 
                         로그컨테이너.appendChild(턴블럭);
                     });
@@ -2178,7 +2189,6 @@ style="margin-right: 2px;">
                 박스.style.display = "none";
             }
         });
-
 
         // 업데이트
         document.getElementById("버전표시").innerText = "v7";
