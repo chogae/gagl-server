@@ -145,7 +145,6 @@ app.post("/attack", async (req, res) => {
             새유저.합성기록[키] = 0;
             새유저.공격력 += 드랍장비.공격력;
         }
-
     }
 
     // ✅ Supabase에 최종 저장
@@ -277,7 +276,7 @@ app.post("/upgrade-item", async (req, res) => {
         return res.status(400).json({ 오류: `골드 부족: ${강화비용} 필요` });
     }
 
-    const 성공 = Math.random() < 0.51;
+    const 성공 = Math.random() < 0.61;
 
     let 메시지 = "강화 실패..";
     let 증가량 = 0;
@@ -823,6 +822,7 @@ function 데미지계산(유저, 몬스터, 스킬결과) {
 function 전투시뮬레이션(유저, 몬스터) {
     let 유저HP = 유저.남은체력;
     let 몬스터HP = 몬스터.체력;
+    const 로그 = [];
 
     while (유저HP > 0 && 몬스터HP > 0) {
         const 스킬 = 공격스킬적용(유저);
@@ -854,7 +854,7 @@ function 장비드랍판정(몬스터) {
     };
 
     const 드랍 = 고정드랍[몬스터.타입];
-    const 드랍확률 = 0.51;
+    const 드랍확률 = 0.61;
 
     if (!드랍 || Math.random() > 드랍확률) return null;
 
