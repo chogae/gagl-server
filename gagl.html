@@ -2119,13 +2119,17 @@ style="margin-right: 2px;">
 
             if (user && user.id) {
                 try {
-                    // ✅ 먼저 버전업 확인
                     const { data: 버전체크, error: 버전에러 } = await supabase
                         .from("users")
                         .select("버전업")
                         .eq("유저UID", user.id)
                         .single();
 
+                    if (버전에러 || !버전체크) {
+                        메시지표시(메시지표시박스, "⚠️", "유저 정보 없음", "#ef4444");
+                        return;
+                    }
+                    
                     if (버전에러 || !버전체크) {
                         메시지표시(메시지표시박스, "⚠️", "유저 정보 없음", "#ef4444");
                         return;
