@@ -2119,23 +2119,15 @@ style="margin-right: 2px;">
 
             if (user && user.id) {
                 try {
-                    const { data: 버전체크, error: 버전에러 } = await supabase
-                        .from("users")
-                        .select("버전업")
-                        .eq("유저UID", user.id)
-                        .single();
+                    const 응답 = await fetch("/get-user", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ 유저UID: user.id })
+                    });
+                    const 결과 = await 응답.json();
+                    const 유저정보 = 결과.유저데이터;
 
-                    if (버전에러 || !버전체크) {
-                        메시지표시(메시지표시박스, "⚠️", "유저 정보 없음", "#ef4444");
-                        return;
-                    }
-                    
-                    if (버전에러 || !버전체크) {
-                        메시지표시(메시지표시박스, "⚠️", "유저 정보 없음", "#ef4444");
-                        return;
-                    }
-
-                    if (버전체크.버전업 !== 4) {
+                    if (!유저정보 || 유저정보.버전업 !== 4) {
                         await fetch("/delete-user", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
@@ -2149,24 +2141,8 @@ style="margin-right: 2px;">
                         return;
                     }
 
-                    const 응답 = await fetch("/get-user", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ 유저UID: user.id })
-                    });
-                    const 결과 = await 응답.json();
-                    const 유저정보 = 결과.유저데이터;
-
-                    if (!유저정보) {
-                        메시지표시(메시지표시박스, "⚠️", "유저 정보 없음", "#ef4444");
-                        return;
-                    }
-
                     유저데이터 = 유저정보;
-
                     메시지표시(메시지표시박스, "✅", "자동 로그인 완료", "#00c851");
-
-
 
                     // ✅ 스태미너 갱신 요청
                     try {
