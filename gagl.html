@@ -1230,7 +1230,7 @@
             if (!유저데이터) return;
 
             const 이름 = document.getElementById("레어몬스터").innerText;
-            화면잠금();
+            공격버튼잠금();
             let 레어몬스터등장 = false;
 
             try {
@@ -1343,7 +1343,7 @@
                 if (레어몬스터등장) {
                     await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
                 }
-                화면해제();
+                공격버튼잠금해제();
             }
 
         });
