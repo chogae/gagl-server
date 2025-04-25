@@ -819,17 +819,31 @@
 
         function 공격버튼잠금() {
             const 공격버튼 = document.getElementById("공격버튼");
+            const 레어몬스터 = document.getElementById("레어몬스터");
+
             if (공격버튼) {
                 공격버튼.style.pointerEvents = "none";
                 공격버튼.style.opacity = "0.5"; // 시각적 효과
+            }
+
+            if (레어몬스터) {
+                레어몬스터.style.pointerEvents = "none";
+                레어몬스터.style.opacity = "0.5"; // 시각적 효과
             }
         }
 
         function 공격버튼잠금해제() {
             const 공격버튼 = document.getElementById("공격버튼");
+            const 레어몬스터 = document.getElementById("레어몬스터");
+
             if (공격버튼) {
                 공격버튼.style.pointerEvents = "auto";
                 공격버튼.style.opacity = "1";
+            }
+
+            if (레어몬스터) {
+                레어몬스터.style.pointerEvents = "auto";
+                레어몬스터.style.opacity = "1";
             }
         }
 
