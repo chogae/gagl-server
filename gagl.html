@@ -803,6 +803,23 @@
         const 도박아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dices-icon lucide-dices"><rect width="12" height="12" x="2" y="10" rx="2" ry="2"/><path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6"/><path d="M6 18h.01"/><path d="M10 14h.01"/><path d="M15 6h.01"/><path d="M18 9h.01"/></svg>`;
         const 인텔리전스아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy-plus-icon lucide-copy-plus"><line x1="15" x2="15" y1="12" y2="18"/><line x1="12" x2="18" y1="15" y2="15"/><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
 
+        const 아이콘맵 = {
+            크리티컬아이콘,
+            드레인아이콘,
+            버서커아이콘,
+            아이언바디아이콘,
+            인사이트아이콘,
+            퀵니스아이콘,
+            발굴아이콘,
+            머니아이콘,
+            성공아이콘,
+            실패아이콘,
+            마스터아이콘,
+            버닝아이콘,
+            도박아이콘,
+            인텔리전스아이콘,
+        };
+
         function 화면잠금() {
             document.body.style.pointerEvents = "none";
             document.body.style.opacity = "0.5";
@@ -1132,9 +1149,42 @@
 
                 // ✅ 스태미너 부족 시 처리
                 if (결과.결과 === "불가") {
-                    메시지표시(메시지표시박스, "⚠️", 결과.메시지 || "스태미너 부족", "#ef4444");
+                    메시지표시(메시지표시박스, 실패아이콘, 결과.메시지 || "스태미너 부족", "#ef4444");
                     화면해제();
                     return;
+                }
+
+                // 기존 전투 로그 삭제
+                const 기존로그들 = document.querySelectorAll(".전투로그컨테이너");
+                기존로그들.forEach(e => e.remove());
+
+                // 새로운 로그 생성
+                if (결과.전투로그 && Array.isArray(결과.전투로그)) {
+                    결과.전투로그.forEach(로그 => {
+                        const 로그컨테이너 = document.createElement("div");
+                        로그컨테이너.className = "전투로그컨테이너";
+                        로그컨테이너.style.marginTop = "15px";
+                        로그컨테이너.style.border = "0.2px solid #4b4b4b";
+                        로그컨테이너.style.borderRadius = "10px";
+                        로그컨테이너.style.padding = "15px";
+
+                        const 아이콘HTML = (로그.아이콘 || []).map(이름 => 아이콘맵[이름] || "").join(" ");
+
+                        로그컨테이너.innerHTML = `
+            <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                <strong>Turn ${로그.턴}</strong>
+            </div>
+            <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
+                ${아이콘HTML}
+                <span><span style="color: #f63b3b;">${로그.몬스터이름}</span>에게 ${로그.데미지}의 데미지를 입혔습니다.</span>
+            </div>
+        `;
+
+                        const 타겟 = document.getElementById("몬스터테두리안표시");
+                        if (타겟 && 타겟.parentNode) {
+                            타겟.parentNode.insertBefore(로그컨테이너, 타겟.nextSibling);
+                        }
+                    });
                 }
 
                 if (결과.결과 === "패배") {
