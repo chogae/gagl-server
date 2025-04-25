@@ -991,13 +991,16 @@
                     return;
                 }
 
-                const { data: 유저정보, error } = await supabase
-                    .from("users")
-                    .select("*")
-                    .eq("유저UID", user.id)
-                    .single();
+                const 응답 = await fetch("/get-user", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 유저UID: user.id })
+                });
 
-                if (error || !유저정보) {
+                const 결과 = await 응답.json();
+                const 유저정보 = 결과.유저데이터;
+
+                if (!유저정보) {
                     메시지표시(메시지표시박스, "⚠️", "유저 정보가 존재하지 않습니다", "#ef4444");
                     화면해제();
                     return;
