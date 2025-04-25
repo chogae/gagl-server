@@ -2153,7 +2153,7 @@ style="margin-right: 2px;">
                     const 결과 = await 응답.json();
                     const 유저정보 = 결과.유저데이터;
 
-                    if (error || !유저정보) {
+                    if (!유저정보) {
                         메시지표시(메시지표시박스, "⚠️", "유저 정보 없음", "#ef4444");
                         return;
                     }
