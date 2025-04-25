@@ -655,8 +655,7 @@
             </div>
         </div>
 
-        <div id="전투로그컨테이너" class="세로정렬" style="width: 400px;">
-        </div>
+        <div id="전투로그루트"></div> <!-- 여기에 컨테이너들이 계속 붙음 -->
 
     </div>
 
@@ -1141,47 +1140,43 @@
                 }
 
                 if (결과.전투로그) {
-                    const 로그컨테이너 = document.getElementById("전투로그컨테이너");
-                    로그컨테이너.innerHTML = "";
+                    const 로그루트 = document.getElementById("전투로그루트");
 
                     결과.전투로그.forEach(항목 => {
-                        const 턴블럭 = document.createElement("div");
-                        턴블럭.className = "전투로그라인 사백픽셀테두리";
-                        턴블럭.style.width = "400px";
-                        턴블럭.style.boxSizing = "border-box";
+                        const 컨테이너 = document.createElement("div");
+                        컨테이너.className = "전투로그컨테이너 사백픽셀테두리";
+                        컨테이너.style.width = "400px";
+                        컨테이너.style.boxSizing = "border-box";
+                        컨테이너.style.borderRadius = "6px";
+                        컨테이너.style.overflow = "hidden";
+                        컨테이너.style.marginBottom = "12px";
+                        컨테이너.style.backgroundColor = "#1e1e1e";
+                        컨테이너.style.color = "#ffffff";
 
                         const 아이콘HTML = 항목.아이콘
-                            .filter(이름 => window[이름])
-                            .map(이름 => window[이름])
+                            .filter(n => window[n])
+                            .map(n => window[n])
                             .join("");
 
-                        턴블럭.innerHTML = `
-    <div style="
-        background-color: #4b4b4b;
-        color: white;
-        padding: 6px 12px;
-        font-weight: bold;
-        width: 100%;
-        box-sizing: border-box;
-        border-top-left-radius: 6px;
-        border-top-right-radius: 6px;
-    ">
-        Turn ${항목.턴 + 1}
-    </div>
+                        컨테이너.innerHTML = `
+    <div class="현재턴" style="
+      background-color: #4b4b4b;
+      font-weight: bold;
+      padding: 6px 12px;
+      box-sizing: border-box;
+    ">Turn ${항목.턴 + 1}</div>
 
-    <div style="padding: 10px;">
-        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-            ${아이콘HTML}
-            ${항목.효과?.[0] ? `<span>${항목.효과[0]}</span>` : ""}
-        </div>
-        <div style="margin-bottom: 2px;">
-            '${항목.몬스터이름}'에게 ${항목.데미지}의 데미지를 입혔다!
-        </div>
-        <div>유저 체력: ${항목.유저체력} / 몬스터 체력: ${항목.몬스터체력}</div>
+    <div class="전투로그내용" style="padding: 10px;">
+      <div class="전투로그아이콘줄" style="display: flex; gap: 6px; margin-bottom: 4px;">
+        ${아이콘HTML}
+        ${항목.효과?.[0] ? `<span>${항목.효과[0]}</span>` : ""}
+      </div>
+      <div class="전투로그메시지">'${항목.몬스터이름}'에게 ${항목.데미지}의 데미지를 입혔다!</div>
+      <div class="전투로그체력">유저 체력: ${항목.유저체력} / 몬스터 체력: ${항목.몬스터체력}</div>
     </div>
-`;
+  `;
 
-                        로그컨테이너.appendChild(턴블럭);
+                        로그루트.appendChild(컨테이너);
                     });
                 }
 
