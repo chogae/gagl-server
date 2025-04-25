@@ -817,6 +817,22 @@
             버튼들.forEach(btn => btn.disabled = false);
         }
 
+        function 공격버튼잠금() {
+            const 공격버튼 = document.getElementById("공격버튼");
+            if (공격버튼) {
+                공격버튼.style.pointerEvents = "none";
+                공격버튼.style.opacity = "0.5"; // 시각적 효과
+            }
+        }
+
+        function 공격버튼잠금해제() {
+            const 공격버튼 = document.getElementById("공격버튼");
+            if (공격버튼) {
+                공격버튼.style.pointerEvents = "auto";
+                공격버튼.style.opacity = "1";
+            }
+        }
+
         function 메시지표시(대상, 아이콘HTML, 텍스트, 글자색) {
             // const 대상 = document.getElementById("층조절");
             const rect = 대상.getBoundingClientRect();
@@ -1085,7 +1101,7 @@
         document.getElementById("공격버튼").addEventListener("click", async () => {
             if (!유저데이터) return;
 
-            화면잠금();
+            공격버튼잠금();
             let 레어몬스터등장 = false;
 
             try {
@@ -1191,7 +1207,7 @@
                 if (레어몬스터등장) {
                     await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
                 }
-                화면해제();
+                공격버튼잠금해제();
             }
 
         });
