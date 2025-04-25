@@ -404,9 +404,11 @@ app.post("/upgrade-item", async (req, res) => {
         증가량,
         강화: 대상.강화,
         공격력: 유저.공격력,
+        무기공격력: 대상.공격력, // ✅ 추가!
         골드: 유저.골드,
         메시지
     });
+
 });
 
 app.post("/update-skill", async (req, res) => {
