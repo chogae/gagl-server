@@ -22,7 +22,7 @@ const supabaseAdmin = createClient(
 app.post("/attack-normal", async (req, res) => {
     const { 유저데이터 } = req.body;
     const { 유저UID, 현재층: 클라이언트층 } = 유저데이터;
-
+    const 전투로그 = [];
     if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
 
     const { data: 유저 } = await supabaseAdmin
@@ -39,14 +39,28 @@ app.post("/attack-normal", async (req, res) => {
     현재스태미너--;
 
     const 몬스터 = 일반악마불러오기(클라이언트층 || 1);
-
     유저.조우기록 = 유저.조우기록 || {
         일반: 0
     };
     유저.조우기록["일반"]++;
 
+    const 회복전체력 = 유저.남은체력;
     const 추가회복 = 아이언바디회복(유저);
-    유저.남은체력 = Math.min(유저.최대체력, 유저.남은체력 + 추가회복);
+    let 현재턴 = 0;
+
+    if (추가회복 > 0) {
+        유저.남은체력 = Math.min(유저.최대체력, 회복전체력 + 추가회복);
+
+        전투로그.push({
+            턴: 현재턴,
+            유저체력: 유저.남은체력,
+            몬스터체력: 몬스터.체력,
+            몬스터이름: 몬스터.이름,
+            아이콘: ["아이언바디"],
+            효과: [`체력을 ${유저.남은체력 - 회복전체력} 회복합니다 (${유저.남은체력}/${유저.최대체력})`],
+            데미지: 0
+        });
+    }
 
     const 전투 = 전투시뮬레이션(유저, 몬스터);
 
