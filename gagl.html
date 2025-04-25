@@ -655,7 +655,7 @@
             </div>
         </div>
 
-        <div id="전투로그컨테이너" class="세로정렬">
+        <div id="전투로그컨테이너" class="세로정렬" style="width: 400px;">
         </div>
 
     </div>
@@ -1154,27 +1154,29 @@
                             .join("");
 
                         턴블럭.innerHTML = `
-        <div style="
-            background-color: #4b4b4b;
-            color: white;
-            font-weight: bold;
-            margin-bottom: 6px;
-            box-sizing: border-box;
-        ">
-            Turn ${항목.턴 + 1}
-        </div>
+    <div style="
+        background-color: #4b4b4b;
+        color: white;
+        padding: 6px 10px;
+        border-radius: 4px 4px 0 0;
+        font-weight: bold;
+        width: 100%; /* ✅ 상단 줄이 부모 전체에 꽉 차게 */
+        box-sizing: border-box;
+    ">
+        Turn ${항목.턴 + 1}
+    </div>
 
+    <div style="padding: 8px;">
         <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
             ${아이콘HTML}
             ${항목.효과?.[0] ? `<span>${항목.효과[0]}</span>` : ""}
         </div>
-
         <div style="margin-bottom: 2px;">
             '${항목.몬스터이름}'에게 ${항목.데미지}의 데미지를 입혔다!
         </div>
-
         <div>유저 체력: ${항목.유저체력} / 몬스터 체력: ${항목.몬스터체력}</div>
-    `;
+    </div>
+`;
 
                         로그컨테이너.appendChild(턴블럭);
                     });
