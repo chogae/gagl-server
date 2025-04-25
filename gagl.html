@@ -655,8 +655,6 @@
             </div>
         </div>
 
-        <div id="전투로그루트"></div> <!-- 여기에 컨테이너들이 계속 붙음 -->
-
     </div>
 
     <div id="전당화면" style="display: none;">
@@ -1138,48 +1136,6 @@
                     화면해제();
                     return;
                 }
-
-                if (결과.전투로그) {
-                    const 로그루트 = document.getElementById("전투로그루트");
-
-                    결과.전투로그.forEach(항목 => {
-                        const 컨테이너 = document.createElement("div");
-                        컨테이너.className = "전투로그컨테이너 사백픽셀테두리";
-                        컨테이너.style.width = "400px";
-                        컨테이너.style.boxSizing = "border-box";
-                        컨테이너.style.borderRadius = "6px";
-                        컨테이너.style.overflow = "hidden";
-                        컨테이너.style.marginBottom = "12px";
-                        컨테이너.style.backgroundColor = "#1e1e1e";
-                        컨테이너.style.color = "#ffffff";
-
-                        const 아이콘HTML = 항목.아이콘
-                            .filter(n => window[n])
-                            .map(n => window[n])
-                            .join("");
-
-                        컨테이너.innerHTML = `
-    <div class="현재턴" style="
-      background-color: #4b4b4b;
-      font-weight: bold;
-      padding: 6px 12px;
-      box-sizing: border-box;
-    ">Turn ${항목.턴 + 1}</div>
-
-    <div class="전투로그내용" style="padding: 10px;">
-      <div class="전투로그아이콘줄" style="display: flex; gap: 6px; margin-bottom: 4px;">
-        ${아이콘HTML}
-        ${항목.효과?.[0] ? `<span>${항목.효과[0]}</span>` : ""}
-      </div>
-      <div class="전투로그메시지">'${항목.몬스터이름}'에게 ${항목.데미지}의 데미지를 입혔다!</div>
-      <div class="전투로그체력">유저 체력: ${항목.유저체력} / 몬스터 체력: ${항목.몬스터체력}</div>
-    </div>
-  `;
-
-                        로그루트.appendChild(컨테이너);
-                    });
-                }
-
 
                 if (결과.결과 === "패배") {
                     const 몬스터 = 결과.몬스터;
