@@ -1095,7 +1095,7 @@
             if (에너지바) 에너지바.style.width = `${(현재 / 최대) * 100}%`;
 
             document.getElementById("등급외테두리").style.border = "0.2px solid #4b4b4b";
-            document.getElementById("레어몬스터").style.display = "inline-block";
+            // document.getElementById("레어몬스터").style.display = "inline-block";
 
             // document.getElementById("레어몬스터").style.display = "none";
             document.getElementById("인증화면").style.display = "none";
@@ -1295,7 +1295,7 @@
                 if (결과.레어몬스터이름) {
                     document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
                     레어몬스터.innerText = 결과.레어몬스터이름;
-                    레어몬스터.style.display = "block";
+                    레어몬스터.style.display = "inline-block";
                     레어몬스터등장 = true;
                 } else {
                     레어몬스터.style.display = "none";
@@ -1494,7 +1494,7 @@
 
                 if (결과.레어몬스터이름) {
                     레어몬스터.innerText = 결과.레어몬스터이름;
-                    레어몬스터.style.display = "block";
+                    레어몬스터.style.display = "inline-block";
                     레어몬스터등장 = true;
                     document.getElementById("등급외테두리").style.border = "0.2px solid #c653ff";
                 } else {
