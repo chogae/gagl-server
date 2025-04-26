@@ -1125,6 +1125,7 @@
             document.getElementById("획득골드").innerText = "0";
             document.getElementById("획득숙련도").innerText = "0";
             document.getElementById("승리패배로그").innerText = "";
+            document.querySelectorAll(".전투로그컨테이너").forEach(e => e.remove());
 
             // 기본값 설정 (없을 수도 있음)
             if (!유저.현재층) 유저.현재층 = 1;
