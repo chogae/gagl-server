@@ -1175,7 +1175,7 @@
                         let 회복텍스트 = "";
 
                         if (로그.타입 === "공격") {
-                            데미지텍스트 = `<span><span style="color: #f63b3b;">${로그.몬스터이름}</span>에게 ${로그.효과}</span>`;
+                            데미지텍스트 = `<span><span style="color: #f63b3b;">${로그.몬스터이름}</span>에게 ${로그.효과} 피해를 입혔다!</span>`;
                         } else if (로그.타입 === "회복") {
                             회복텍스트 = `<span><span style="color: #3b82f6;">${로그.유저아이디}</span> 체력 ${로그.효과} 회복</span>`;
                         }
