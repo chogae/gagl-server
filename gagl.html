@@ -1391,7 +1391,7 @@
                         const 장비 = 결과.드랍장비;
                         const 네온박스 = document.getElementById("네온박스");
                         if (네온박스) {
-                            네온박스.innerText = `[${장비.등급}] ${장비.이름} +${장비.공격력} 드랍!`;
+                            네온박스.innerText = `${장비.이름}을 획득했다!`;
                             네온박스.style.display = "block";
                         }
                     }
@@ -2225,7 +2225,7 @@ style="margin-right: 2px;">
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v7";
+        document.getElementById("버전표시").innerText = "v8";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -2262,8 +2262,8 @@ style="margin-right: 2px;">
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
 <br>
 패치노트<br>
-1. 레어몬스터 사냥시 장비드랍확률과 강화확률이 상향되었습니다<br>
-2. 자동공격 기능 오류로 삭제했습니다<br>
+최대스태미너가 1000으로 상향되었습니다<br>
+
 </div>
 `;
         // 업데이트
