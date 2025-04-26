@@ -36,17 +36,6 @@
             font-weight: 500;
         }
 
-        .밑줄 {
-            border-bottom: 0.2px solid #4b4b4b;
-            /* position: fixed; */
-            /* top: 0; */
-            width: 100%;
-            height: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         .가로정렬 {
             display: flex;
             align-items: center;
@@ -115,6 +104,17 @@
 
         .커서호버:hover {
             cursor: pointer;
+        }
+
+        .밑줄 {
+            border-bottom: 0.2px solid #4b4b4b;
+            /* position: fixed; */
+            /* top: 0; */
+            width: 100%;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .사백픽셀테두리 {
@@ -459,6 +459,11 @@
             50% {
                 opacity: 0;
             }
+        }
+
+        html {
+            overflow-y: scroll;
+            /* 스크롤 항상 표시 */
         }
 
         /* css추가 */
@@ -2316,7 +2321,7 @@ style="margin-right: 2px;">
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v9";
+        document.getElementById("버전표시").innerText = "v10";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -2344,6 +2349,10 @@ style="margin-right: 2px;">
 3. 장비 강화 실패 시 강화수치가 하락합니다<br>
 4. 매일 아침 9시에 스태미너가 최대치로 회복됩니다<br>
 5. 최상단 아이디를 클릭하시면 아이디 변경이 가능합니다<br>
+6. 모바일보단 pc ui가 훨씬 멋집니다<br>
+7. 황금고블린은 획득금화 보너스<br>
+8. 메타트론은 획득숙련도 보너스 몬스터입니다<br>
+9. 황금고블린과 메타트론은 장비를 드랍하지 않습니다<br>
 
 <br>
 행운을 빕니다<br>
@@ -2351,11 +2360,12 @@ style="margin-right: 2px;">
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
 <br>
 패치노트<br>
-최대스태미너가 1000으로 상향되었습니다<br>
-황금고블린의 골드획득량이 대폭 상향되었습니다<br>
-메타트론의 숙련도 보상이 상향되었습니다<br>
-더이상 화면전환으로 레어몬스터가 사라지지 않습니다<br>
-전투로그가 추가되었습니다<br>
+1. 최대스태미너가 1000으로 상향되었습니다<br>
+2. 황금고블린의 골드획득량이 대폭 상향되었습니다<br>
+3. 메타트론의 숙련도 보상이 상향되었습니다<br>
+4. 더이상 화면전환으로 레어몬스터가 사라지지 않습니다<br>
+5. 전투로그가 추가되었습니다<br>
+6. 전투로그로 상단바가 찌그러지는 현상을 개선했습니다<br>
 </div>
 `;
         // 업데이트
@@ -2375,8 +2385,6 @@ style="margin-right: 2px;">
                 메뉴얼창.style.display = "none";
             }
         });
-
-
 
 
     </script>
