@@ -108,7 +108,13 @@ app.post("/attack-normal", async (req, res) => {
             결과: "패배",
             몬스터,
             유저남은체력: 전투.유저남은체력,
-            유저데이터: 유저복구
+            유저데이터: 유저복구,
+            전투로그,
+            스킬발동: {
+                인사이트: 인사이트발동,   // true/false
+                인텔리전스: 인텔리전스발동, // true/false
+                발굴: 발굴발동              // true/false
+            }
         });
     }
 
@@ -275,7 +281,13 @@ app.post("/attack-rare", async (req, res) => {
             결과: "패배",
             몬스터,
             유저남은체력: 전투.유저남은체력,
-            유저데이터: 유저복구
+            유저데이터: 유저복구,
+            전투로그,
+            스킬발동: {
+                인사이트: 인사이트발동,   // true/false
+                인텔리전스: 인텔리전스발동, // true/false
+                발굴: 발굴발동              // true/false
+            }
         });
     }
 
@@ -1007,7 +1019,7 @@ function 공격스킬적용(유저) {
 
 function 데미지계산(유저, 몬스터, 스킬결과) {
     const 방어력 = 몬스터.방어력 || 0;
-    const 랜덤보정 = Math.random() * 0.2 + 0.8;
+    const 랜덤보정 = Math.random() * 0.4 + 0.8;
 
     const 기본데미지 = Math.max(0, 유저.공격력 - 방어력);
     const 랜덤데미지 = Math.floor(기본데미지 * 랜덤보정);
