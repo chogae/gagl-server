@@ -168,6 +168,7 @@ app.post("/attack-normal", async (req, res) => {
 app.post("/attack-rare", async (req, res) => {
     const { 유저데이터, 레어몬스터이름 } = req.body;
     const { 유저UID, 현재층: 클라이언트층 } = 유저데이터;
+    const 전투로그 = [];
 
     if (!유저UID || !레어몬스터이름) {
         return res.status(400).json({ 오류: "입력값 누락" });
@@ -965,10 +966,10 @@ function 데미지계산(유저, 몬스터, 스킬결과) {
     return 최종데미지;
 }
 
-function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴 = 0) {
+function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴) {
     let 유저HP = 유저.남은체력;
     let 몬스터HP = 몬스터.체력;
-    let 현재턴 = 0;
+    let 현재턴 = 시작턴;
 
     while (유저HP > 0 && 몬스터HP > 0) {
         const 스킬 = 공격스킬적용(유저);
