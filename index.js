@@ -401,7 +401,7 @@ app.post("/refresh-stamina", async (req, res) => {
     const now = new Date();
     const kstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
 
-    // ✅ 오늘 날짜의 오전 9시 (KST 기준)
+    // ✅ 오늘 오전 9시 (KST 기준)
     const today9am = new Date(
         kstNow.getFullYear(),
         kstNow.getMonth(),
@@ -413,21 +413,22 @@ app.post("/refresh-stamina", async (req, res) => {
     let 최대스태미너 = 유저.최대스태미너 ?? 1000;
     let 갱신시각 = 유저.스태미너갱신시각 ? new Date(유저.스태미너갱신시각) : null;
 
-    if (!갱신시각 || 갱신시각 < today9am) {
+    // ✅ (갱신시각이 오늘 9시 이전이고) && (현재 시간이 오늘 9시 이후일 때)만 갱신
+    if ((!갱신시각 || 갱신시각 < today9am) && kstNow >= today9am) {
         현재스태미너 = 최대스태미너;
-        갱신시각 = today9am;
+        갱신시각 = kstNow; // ✅ 갱신 시각을 현재 시각으로 기록
     }
 
     await supabaseAdmin.from("users").update({
         현재스태미너,
-        스태미너갱신시각: 갱신시각.toISOString()
+        스태미너갱신시각: 갱신시각 ? 갱신시각.toISOString() : null
     }).eq("유저UID", 유저.유저UID);
 
     return res.json({
         유저데이터: {
             ...유저,
             현재스태미너,
-            스태미너갱신시각: 갱신시각.toISOString()
+            스태미너갱신시각: 갱신시각 ? 갱신시각.toISOString() : null
         }
     });
 });
@@ -924,7 +925,7 @@ app.listen(3000, () => {
     console.log("서버 실행 중: http://localhost:3000");
 });
 
-function 공격스킬적용(유저) {
+function 공격스킬적용(유저, 현재유저HP) {
     const 스킬 = 유저.스킬 || {};
     const 결과 = {
         크리티컬배율: 1,
@@ -984,7 +985,7 @@ function 공격스킬적용(유저) {
         } else break;
     }
 
-    if (유저.남은체력 < 유저.최대체력 * 0.5) {
+    if (현재유저HP < 유저.최대체력 * 0.5) {
         const 버닝레벨 = 스킬["버닝"] || 0;
         const 버닝계열 = [
             { 이름: "인페르노 버닝", 배율: 0.6 },
@@ -1026,7 +1027,7 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴) {
     let 현재턴 = 시작턴;
 
     while (유저HP > 0 && 몬스터HP > 0) {
-        const 스킬 = 공격스킬적용(유저);
+        const 스킬 = 공격스킬적용(유저, 유저HP);
         const 데미지 = 데미지계산(유저, 몬스터, 스킬);
 
         몬스터HP -= 데미지;
