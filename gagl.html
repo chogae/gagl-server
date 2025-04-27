@@ -110,13 +110,19 @@
 
         .밑줄 {
             border-bottom: 0.2px solid #4b4b4b;
-            /* position: fixed; */
-            /* top: 0; */
             width: 100%;
             height: 56px;
+            min-height: 56px;
+            /* ✅ 추가 */
+            max-height: 56px;
+            /* ✅ 추가 */
             display: flex;
             align-items: center;
             justify-content: center;
+            box-sizing: border-box;
+            /* ✅ 추가 */
+            overflow: hidden;
+            /* ✅ 추가 */
         }
 
         .사백픽셀테두리 {
