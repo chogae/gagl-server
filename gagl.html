@@ -672,9 +672,8 @@
     <div id="장비화면" style="display: none;">
         <div class="밑줄 양쪽정렬">
             <div>강림카운트</div>
-            <div class="가로정렬">
+            <div style="flex: 1; display: flex; justify-content: flex-end;">
                 <div id="장비목록"></div>
-                <!-- <div class="버튼" onclick="장비자동합성()">자동합성</div> -->
             </div>
         </div>
 
@@ -2313,7 +2312,7 @@ style="margin-right: 2px;">
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v11";
+        document.getElementById("버전표시").innerText = "v12";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -2352,14 +2351,14 @@ style="margin-right: 2px;">
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
 <br>
 패치노트<br>
-1. 최대스태미너가 1000으로 상향되었습니다<br>
-2. 황금고블린의 골드획득량이 대폭 상향되었습니다<br>
-3. 메타트론의 숙련도 보상이 상향되었습니다<br>
-4. 더이상 화면전환으로 레어몬스터가 사라지지 않습니다<br>
-5. 전투로그가 추가되었습니다<br>
-6. 전투로그로 상단바가 찌그러지는 현상을 개선했습니다<br>
-7. 버닝계열 스킬이 정상발동됩니다<br>
-8. 매일 오전 9시 스태미너 갱신 로직 수정했습니다<br>
+- 최대스태미너가 1000으로 상향되었습니다<br>
+- 황금고블린의 골드획득량이 대폭 상향되었습니다<br>
+- 더이상 화면전환으로 레어몬스터가 사라지지 않습니다<br>
+- 전투로그가 추가되었습니다<br>
+- 전투로그로 상단바가 찌그러지는 현상을 개선했습니다<br>
+- 버닝계열 스킬이 정상발동됩니다<br>
+- 매일 오전 9시 스태미너 갱신 로직 수정했습니다<br>
+- 메타트론의 숙련도 보상이 100배 상향되었습니다<br>
 </div>
 `;
         // 업데이트
