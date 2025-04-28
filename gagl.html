@@ -474,6 +474,82 @@
             /* 스크롤 항상 표시 */
         }
 
+        .그라데이션텍스트블라섬 {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .그라데이션텍스트무지개 {
+            background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .그라데이션텍스트오로라 {
+            background: linear-gradient(90deg, #00c3ff, #ffff1c, #ff0080);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .그라데이션텍스트네온블루 {
+            background: linear-gradient(45deg, #00ffff, #0066ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .그라데이션텍스트선셋 {
+            background: linear-gradient(45deg, #ff7e5f, #feb47b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+
+        .그라데이션텍스트핑크블루 {
+            background: linear-gradient(45deg, #ff6a88, #ff99ac);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .그라데이션텍스트골드 {
+            background: linear-gradient(45deg, #ffd700, #ffcc00);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        .그라데이션텍스트천사 {
+            background: linear-gradient(90deg, #ffffff, #e0f7fa, #b2ebf2, #ffffff);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+
+
         /* css추가 */
     </style>
 </head>
@@ -1136,8 +1212,19 @@
             document.getElementById("현재층").innerText = `${유저.현재층}층`;
         }
 
+        let 자동사냥허용 = true;
+
         document.getElementById("공격버튼").addEventListener("click", async () => {
             if (!유저데이터) return;
+
+            자동사냥허용 = true; 
+            
+            const 레어몬스터 = document.getElementById("레어몬스터");
+            // ✅ 레어몬스터가 등장하면 클릭 중단
+            if (레어몬스터 && getComputedStyle(레어몬스터).display === "block") {
+                자동사냥허용 = false;
+                return;
+            }
 
             공격버튼잠금();
             let 레어몬스터등장 = false;
@@ -1155,6 +1242,7 @@
                 if (결과.결과 === "불가") {
                     메시지표시(메시지표시박스, 실패아이콘, 결과.메시지 || "스태미너 부족", "#ef4444");
                     화면해제();
+                    자동사냥허용 = false;
                     return;
                 }
 
@@ -1301,6 +1389,7 @@
                     레어몬스터.innerText = 결과.레어몬스터이름;
                     레어몬스터.style.display = "inline-block";
                     레어몬스터등장 = true;
+                    자동사냥허용 = false;
                 } else {
                     레어몬스터.style.display = "none";
                     document.getElementById("등급외테두리").style.border = "0.2px solid #4b4b4b";
@@ -1318,13 +1407,27 @@
                 }
             } catch (e) {
                 메시지표시(메시지표시박스, "", "전투 중 오류: " + e.message, "#ef4444");
+                자동사냥허용 = false;
             } finally {
                 if (레어몬스터등장) {
                     await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
                 }
                 공격버튼잠금해제();
+
+                // ✅ 자동사냥 허용되어있으면 바로 다시 클릭
+                if (자동사냥허용) {
+                    document.getElementById("공격버튼").click();
+                }
             }
 
+        });
+
+        // ✅ 화면 아무데나 클릭하면 자동사냥 강제 종료
+        document.addEventListener("click", (e) => {
+            // 공격버튼 자체를 누른 경우는 무시
+            if (e.target.closest("#공격버튼")) return;
+
+            자동사냥허용 = false;
         });
 
         document.getElementById("레어몬스터").addEventListener("click", async () => {
@@ -2341,18 +2444,13 @@ style="margin-right: 2px;">
         메뉴얼창.innerHTML = `
   <div style="font-weight: bold; margin-bottom: 10px;">📘 운영자 메뉴얼</div>
   <div>
-0. 다시만나 반갑습니다<br>
-1. 도박은 정신건강에 해롭기 때문에 폐지했습니다<br>
-2. 더이상 장비 중복 드랍으로 공격력이 증가하지 않습니다<br>
+- 다시만나 반갑습니다<br>
+- 도박은 정신건강에 해롭기 때문에 폐지했습니다<br>
+- 더이상 장비 중복 드랍으로 공격력이 증가하지 않습니다<br>
 합성 시 최대체력만 1씩 증가합니다<br>
-3. 장비 강화 실패 시 강화수치가 하락합니다<br>
-4. 매일 아침 9시에 스태미너가 최대치로 회복됩니다<br>
-5. 최상단 아이디를 클릭하시면 아이디 변경이 가능합니다<br>
-6. 모바일보단 pc ui가 훨씬 멋집니다<br>
-7. 황금고블린은 획득금화 보너스<br>
-8. 메타트론은 획득숙련도 보너스 몬스터입니다<br>
-9. 황금고블린과 메타트론은 장비를 드랍하지 않습니다<br>
-
+- 장비 강화 실패 시 강화수치가 하락합니다<br>
+- 매일 아침 9시에 스태미너가 최대치로 회복됩니다<br>
+- 최상단 아이디를 클릭하시면 아이디 변경이 가능합니다<br>
 <br>
 행운을 빕니다<br>
 <br>
@@ -2363,10 +2461,13 @@ style="margin-right: 2px;">
 - 황금고블린의 골드획득량이 대폭 상향되었습니다<br>
 - 더이상 화면전환으로 레어몬스터가 사라지지 않습니다<br>
 - 전투로그가 추가되었습니다<br>
-- 전투로그로 상단바가 찌그러지는 현상을 개선했습니다<br>
 - 버닝계열 스킬이 정상발동됩니다<br>
 - 매일 오전 9시 스태미너 갱신 로직 수정했습니다<br>
 - 메타트론의 숙련도 보상이 100배 상향되었습니다<br>
+- 드디어 전투로그따위로 상단바가 찌그러지지 않습니다<br>
+- 메타트론의 이름을 숙고블린으로 변경하였습니다<br>
+- 모든 강림몬스터들의 등장률이 10배씩 상향되었습니다<br>
+- 악마성 버튼을 클릭 시 레어몬스터 등장 전까지 자동사냥<br>
 </div>
 `;
         // 업데이트
