@@ -598,6 +598,8 @@ app.post("/update-skill", async (req, res) => {
         크리티컬: { 단계: Array(13).fill(0) },
         버닝: { 단계: Array(5).fill(0) },
         인텔리전스: { 단계: Array(2).fill(0) },
+        브로큰: { 단계: Array(2).fill(0) },
+        즉사: { 단계: Array(2).fill(0) },
     };
 
     if (!스킬정보[스킬이름]) {
