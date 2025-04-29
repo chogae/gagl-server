@@ -883,6 +883,7 @@
         const 도박아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dices-icon lucide-dices"><rect width="12" height="12" x="2" y="10" rx="2" ry="2"/><path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6"/><path d="M6 18h.01"/><path d="M10 14h.01"/><path d="M15 6h.01"/><path d="M18 9h.01"/></svg>`;
         const 인텔리전스아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy-plus-icon lucide-copy-plus"><line x1="15" x2="15" y1="12" y2="18"/><line x1="12" x2="18" y1="15" y2="15"/><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
         const 브로큰아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-off-icon lucide-shield-off"><path d="m2 2 20 20"/><path d="M5 5a1 1 0 0 0-1 1v7c0 5 3.5 7.5 7.67 8.94a1 1 0 0 0 .67.01c2.35-.82 4.48-1.97 5.9-3.71"/><path d="M9.309 3.652A12.252 12.252 0 0 0 11.24 2.28a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1v7a9.784 9.784 0 0 1-.08 1.264"/></svg>`;
+        const 즉사아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-skull-icon lucide-skull"><path d="m12.5 17-.5-1-.5 1h1z"/><path d="M15 22a1 1 0 0 0 1-1v-1a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20v1a1 1 0 0 0 1 1z"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="12" r="1"/></svg>`;
 
         const 아이콘맵 = {
             크리티컬아이콘,
@@ -900,6 +901,7 @@
             도박아이콘,
             인텔리전스아이콘,
             브로큰아이콘,
+            즉사아이콘,
         };
 
         function 화면잠금() {
@@ -1856,8 +1858,13 @@
                 },
                 브로큰: {
                     단계: ["쉴드 브로큰", "배리어 브로큰", "포트리스 브로큰"],
-                    설명: ["방어력 무시 10%","방어력 무시 20%","방어력 무시 30%"],
+                    설명: ["방어력 무시 10%", "방어력 무시 20%", "방어력 무시 30%"],
                     아이콘: 브로큰아이콘
+                },
+                즉사: {
+                    단계: ["즉사", "섬멸격", "원콤"],
+                    설명: ["11번째 몬스터 즉사","8번째 몬스터 즉사","5번째 몬스터 즉사"],
+                    아이콘: 즉사아이콘
                 },
             };
         }
@@ -2433,7 +2440,7 @@ style="margin-right: 2px;">
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v13";
+        document.getElementById("버전표시").innerText = "v15";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -2454,13 +2461,12 @@ style="margin-right: 2px;">
         메뉴얼창.innerHTML = `
   <div style="font-weight: bold; margin-bottom: 10px;">📘 운영자 메뉴얼</div>
   <div>
-- 다시만나 반갑습니다<br>
-- 도박은 정신건강에 해롭기 때문에 폐지했습니다<br>
-- 더이상 장비 중복 드랍으로 공격력이 증가하지 않습니다<br>
-합성 시 최대체력만 1씩 증가합니다<br>
-- 장비 강화 실패 시 강화수치가 하락합니다<br>
-- 매일 아침 9시에 스태미너가 최대치로 회복됩니다<br>
+    - 악마성을 클릭하세요<br>
+    - 매일 아침 9시에 스태미너가 최대치로 회복됩니다<br>
 - 최상단 아이디를 클릭하시면 아이디 변경이 가능합니다<br>
+
+- 장비 강화 실패 시 강화수치가 하락합니다<br>
+- 전당화면에서 유저를 클릭하면 해당 유저의 장비열람 가능합니다<br>
 <br>
 행운을 빕니다<br>
 <br>
@@ -2484,6 +2490,8 @@ style="margin-right: 2px;">
 - 가그린님의 희생으로 탈퇴버튼 시 알림창이 생성됩니다<br>
 - 전투로그 몬스터들의 체력이 0 이하일 시 0으로 표기됩니다<br>
 - 유저 공격력 버그가 해결되었을까요?<br>
+- 브로큰 스킬이 추가되었습니다<br>
+- 즉사 스킬이 추가되었습니다<br>
 </div>
 `;
         // 업데이트
