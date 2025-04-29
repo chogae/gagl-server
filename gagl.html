@@ -1312,7 +1312,7 @@
     <div style="border: 0.2px solid #f63b3b; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
         <div>${로그.몬스터이름}</div>
         <div>
-            <div>체력 ${로그.몬스터체력}/${로그.몬스터최대체력}</div>
+            <div>체력 ${Math.max(0, 로그.몬스터체력)}/${로그.몬스터최대체력}</div>
             <div>방어력 ${로그.몬스터방어력}</div>
         </div>
     </div>
@@ -2474,7 +2474,8 @@ style="margin-right: 2px;">
 화면을 클릭하기 전까지 자동사냥이 진행됩니다<br>
 - 유저의 공격력 표시에 버그가있습니다<br>
 장비 공격력 총합보다 공격력이 낮다면, 강화를 1회 진행하세요<br>
-- 탈퇴버튼 시 바로 탈퇴되지 않고 마지막으로 물어봅니다<br>
+- 가그린님의 희생으로 탈퇴버튼 시 알림창이 생성됩니다<br>
+- 전투로그 몬스터들의 체력이 0 이하일 시 0으로 표기됩니다<br>
 </div>
 `;
         // 업데이트
