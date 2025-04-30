@@ -1590,11 +1590,32 @@
                     if (결과.드랍장비) {
                         const 장비 = 결과.드랍장비;
                         const 네온박스 = document.getElementById("네온박스");
+                        const 등급외테두리 = document.getElementById("등급외테두리");
+
                         if (네온박스) {
                             네온박스.innerText = `${장비.이름}을 획득했다!`;
                             네온박스.style.display = "block";
+
+                            // 위치 조정용 부모 변경
+                            if (등급외테두리) {
+                                // 등급외테두리에 위치 기준 설정
+                                등급외테두리.style.position = "relative";
+
+                                // 네온박스를 등급외테두리 내부로 이동
+                                등급외테두리.appendChild(네온박스);
+
+                                // 전투화면용 위치 조정
+                                Object.assign(네온박스.style, {
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    zIndex: "100"
+                                });
+                            }
                         }
                     }
+
                     document.getElementById("승리패배로그").innerText = "승리";
                     document.getElementById("승리패배로그").style.color = "#00c851";
                 }
