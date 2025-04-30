@@ -2285,12 +2285,12 @@ style="margin-right: 2px;">
             }
         });
 
-        // // 🟢 총골드 클릭 시 도박창 표시
-        // document.getElementById("총골드").addEventListener("click", () => {
-        //     if (!유저데이터) return;
-        //     const 도박창 = document.getElementById("도박창");
-        //     도박창.style.display = "block";
-        // });
+        // 🟢 총골드 클릭 시 도박창 표시
+        document.getElementById("총골드").addEventListener("click", () => {
+            if (!유저데이터) return;
+            const 도박창 = document.getElementById("도박창");
+            도박창.style.display = "block";
+        });
 
         // 🟡 도박 시도
         async function 도박시도(등급) {
