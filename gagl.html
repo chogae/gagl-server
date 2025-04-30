@@ -823,11 +823,8 @@
 ">
         <div id="도박타이틀" style="font-size: 20px; font-weight: bold;"></div>
         <div style="margin-top: 15px;">
-            <div class="버튼" onclick="도박시도('레어')">레어 장비 (10만)</div>
-            <div class="버튼" onclick="도박시도('신화')">신화 장비 (30만)</div>
-            <div class="버튼" onclick="도박시도('고대')">고대 장비 (100만)</div>
-            <div class="버튼" onclick="도박시도('태초')">태초 장비 (1000만)</div>
-            <div class="버튼" onclick="도박시도('공허')">공허 장비 (1억)</div>
+            <div class="버튼" onclick="도박시도('태초')">태초 장비 (100만)</div>
+            <div class="버튼" onclick="도박시도('공허')">공허 장비 (1000만)</div>
         </div>
     </div>
 
@@ -2298,11 +2295,8 @@ style="margin-right: 2px;">
         // 🟡 도박 시도
         async function 도박시도(등급) {
             const 비용맵 = {
-                "레어": 100000,
-                "신화": 300000,
-                "고대": 1000000,
-                "태초": 10000000,
-                "공허": 100000000,
+                "태초": 1000000,
+                "공허": 10000000,
             };
 
             const 비용 = 비용맵[등급];
@@ -2333,7 +2327,7 @@ style="margin-right: 2px;">
 
                 유저데이터 = 결과.유저데이터;
                 if (결과.결과 === "성공" && 결과.장비) {
-                    메시지표시(메시지표시박스, "", `[${결과.장비.등급}] ${결과.장비.이름} +${결과.장비.공격력} 획득!`, 색상맵[결과.장비.등급]);
+                    메시지표시(메시지표시박스, "", `${결과.장비.이름} 획득!`, 색상맵[결과.장비.등급]);
                 } else if (결과.결과 === "실패") {
                     메시지표시(메시지표시박스, "", "도박에 실패했습니다!", "#ef4444");
                 }
@@ -2433,7 +2427,7 @@ style="margin-right: 2px;">
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v16";
+        document.getElementById("버전표시").innerText = "v17";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -2467,7 +2461,7 @@ style="margin-right: 2px;">
 <br>
 패치노트<br>
 - 고등급일수록 효율이 높게 장비강화 시스템이 개편되었습니다<br>
-
+- 도박이 부활했습니다. 도파민 터쳐보즈ㅏ(천장있음^^)<br>
 </div>
 `;
         // 업데이트
