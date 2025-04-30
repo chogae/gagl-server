@@ -883,6 +883,7 @@
         const 브로큰아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-off-icon lucide-shield-off"><path d="m2 2 20 20"/><path d="M5 5a1 1 0 0 0-1 1v7c0 5 3.5 7.5 7.67 8.94a1 1 0 0 0 .67.01c2.35-.82 4.48-1.97 5.9-3.71"/><path d="M9.309 3.652A12.252 12.252 0 0 0 11.24 2.28a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1v7a9.784 9.784 0 0 1-.08 1.264"/></svg>`;
         const 공격력아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-swords-icon lucide-swords"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"/><line x1="5" x2="9" y1="14" y2="18"/><line x1="7" x2="4" y1="17" y2="20"/><line x1="3" x2="5" y1="19" y2="21"/></svg>`;
         const 체력아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-icon lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
+        const 즉사아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-skull-icon lucide-skull"><path d="m12.5 17-.5-1-.5 1h1z"/><path d="M15 22a1 1 0 0 0 1-1v-1a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20v1a1 1 0 0 0 1 1z"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="12" r="1"/></svg>`;
 
         const 아이콘맵 = {
             크리티컬아이콘,
@@ -900,6 +901,7 @@
             도박아이콘,
             인텔리전스아이콘,
             브로큰아이콘,
+            즉사아이콘,
         };
 
         function 화면잠금() {
@@ -1880,6 +1882,11 @@
                     설명: ["방어력 무시 10%", "방어력 무시 20%", "방어력 무시 30%"],
                     아이콘: 브로큰아이콘
                 },
+                즉사: {
+                    단계: ["일급 즉사","이급 즉사","삼급 즉사"],
+                    설명: ["11번째 몬스터 즉사","8번째 몬스터 즉사","5번째 몬스터 즉사"],
+                    아이콘: 즉사아이콘
+                },
             };
         }
 
@@ -2451,7 +2458,7 @@ style="margin-right: 2px;">
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v19";
+        document.getElementById("버전표시").innerText = "v20";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -2485,10 +2492,8 @@ style="margin-right: 2px;">
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
 <br>
 패치노트<br>
-- 고등급일수록 효율이 높게 장비강화 시스템이 개편되었습니다<br>
-- 도박이 부활했습니다. 도파민 터쳐보즈ㅏ(천장있음^^)<br>
-- 장비화면 아이콘 변경<br>
-- 버서커 스킬이 초 상향되었습니다<br>
+- 즉사스킬이 추가되었습니다<br>
+
 </div>
 `;
         // 업데이트

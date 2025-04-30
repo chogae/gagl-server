@@ -592,7 +592,7 @@ app.post("/update-skill", async (req, res) => {
     };
 
     if (!스킬정보[스킬이름]) {
-        return res.status(400).json({ 오류: "존재하지 않는 스킬" });
+        return res.status(400).json({ 오류: "구현중인 스킬" });
     }
 
     const 단계수 = 스킬정보[스킬이름].단계.length;
