@@ -2233,6 +2233,7 @@ style="margin-right: 2px;">
             }
         });
 
+        //유물화면보여주기
         document.getElementById("유물").addEventListener("click", () => {
             if (!유저데이터) return;
 
@@ -2260,18 +2261,23 @@ style="margin-right: 2px;">
                 const div = document.createElement("div");
                 div.className = "기본테두리";
                 div.style.position = "relative";
-                div.style.display = "inline-block";
-                div.style.padding = "5px";
+                div.style.display = "flex";
+                div.style.alignItems = "center";
+                div.style.justifyContent = "center";
+                div.style.width = "40px"; // 루시드아이콘 크기 기준
+                div.style.height = "40px";
+                div.style.margin = "5px";
+                div.style.padding = "2px";
 
                 div.innerHTML = `
             ${아이콘HTML}
-            <div style="
-                position: absolute;
-                bottom: 0px;
-                right: 2px;
-                font-size: 10px;
-                color: #aaa;
-            ">x${수량}</div>
+<div style="
+    position: absolute;
+    bottom: 0px;
+    right: 2px;
+    font-size: 10px;
+    color: #aaa;
+">x${수량}</div>
         `;
 
                 컨테이너.appendChild(div);
@@ -2534,7 +2540,7 @@ style="margin-right: 2px;">
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v20";
+        document.getElementById("버전표시").innerText = "v21";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -2570,7 +2576,7 @@ style="margin-right: 2px;">
 패치노트<br>
 - 즉사스킬을 구현중입니다<br>
 - 더 급한일이 생겨 스킬구현을 뒤로 미루겠습니다<br>
-
+- 유물이 추가되는중입니다<br>
 
 </div>
 `;
