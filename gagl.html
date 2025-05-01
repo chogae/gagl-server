@@ -548,6 +548,12 @@
             font-weight: bold;
         }
 
+        #유물컨테이너 {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-start;
+        }
 
 
         /* css추가 */
@@ -586,7 +592,7 @@
     </div>
 
     <div id="유물화면">
-        <div class="사백픽셀테두리 가로정렬 세로정렬" id="유물컨테이너">
+        <div class="사백픽셀테두리" id="유물컨테이너">
 
         </div>
     </div>
@@ -915,6 +921,12 @@
             인텔리전스아이콘,
             브로큰아이콘,
             즉사아이콘,
+            소드아이콘,
+            하트플러스아이콘,
+            고스트아이콘,
+            쉴드벤아이콘,
+            하트마이너스아이콘,
+            엑스아이콘,
         };
 
         function 화면잠금() {
@@ -2231,9 +2243,8 @@ style="margin-right: 2px;">
             document.getElementById("에너지박스").style.display = "none";
             document.getElementById("유물화면").style.display = "block";
 
-            // 🟢 유물 렌더링 시작
             const 컨테이너 = document.getElementById("유물컨테이너");
-            컨테이너.innerHTML = ""; // 초기화
+            컨테이너.innerHTML = "";
 
             const 유물목록 = 유저데이터.유물목록 || {};
             if (Object.keys(유물목록).length === 0) {
@@ -2244,22 +2255,20 @@ style="margin-right: 2px;">
             for (const 유물이름 in 유물목록) {
                 const 수량 = 유물목록[유물이름] || 0;
 
-                // 루시드아이콘 변수명은 이름+"아이콘" 구조임
-                const 아이콘HTML = window[`${유물이름}아이콘`] || "";
+                const 아이콘HTML = 아이콘맵[`${유물이름}아이콘`] || "";
 
                 const div = document.createElement("div");
                 div.className = "기본테두리";
                 div.style.position = "relative";
                 div.style.display = "inline-block";
-                div.style.margin = "5px";
-                div.style.padding = "10px";
+                div.style.padding = "5px";
 
                 div.innerHTML = `
             ${아이콘HTML}
             <div style="
                 position: absolute;
-                bottom: 2px;
-                right: 4px;
+                bottom: 0px;
+                right: 2px;
                 font-size: 10px;
                 color: #aaa;
             ">x${수량}</div>
@@ -2268,6 +2277,7 @@ style="margin-right: 2px;">
                 컨테이너.appendChild(div);
             }
         });
+
 
         document.getElementById("타이틀을아이디로").addEventListener("click", async function 아이디변경시작() {
             if (!유저데이터) return;
