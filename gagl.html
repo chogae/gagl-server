@@ -577,6 +577,7 @@
                         <div class="버튼" id="장비">장비</div>
                         <div class="버튼" id="스킬">스킬</div>
                         <div class="버튼" id="전당">전당</div>
+                        <div class="버튼" id="유물">유물</div>
                         <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
                     </div>
                 </div>
@@ -584,7 +585,11 @@
         </div>
     </div>
 
+    <div id="유물화면">
+        <div class="사백픽셀테두리 가로정렬 세로정렬" id="유물컨테이너">
 
+        </div>
+    </div>
 
 
     <div class="사백픽셀테두리 세로정렬" id="에너지박스" style="display: none;">
@@ -1194,6 +1199,7 @@
             document.getElementById("장비화면").style.display = "none";
             document.getElementById("스킬화면").style.display = "none";
             document.getElementById("전당화면").style.display = "none";
+            document.getElementById("유물화면").style.display = "none";
 
             // 유저 정보 표시
             document.getElementById("유저아이디").innerText = 유저.유저아이디 || "알 수 없음";
@@ -1671,6 +1677,7 @@
             document.getElementById("장비화면").style.display = "block";
             document.getElementById("스킬화면").style.display = "none";
             document.getElementById("전당화면").style.display = "none";
+            document.getElementById("유물화면").style.display = "none";
 
             document.getElementById("획득로그").innerText = "";
             document.getElementById("추가획득로그").innerText = "";
@@ -1883,8 +1890,8 @@
                     아이콘: 브로큰아이콘
                 },
                 즉사: {
-                    단계: ["일급 즉사","이급 즉사","삼급 즉사"],
-                    설명: ["11번째 몬스터 즉사","8번째 몬스터 즉사","5번째 몬스터 즉사"],
+                    단계: ["일급 즉사", "이급 즉사", "삼급 즉사"],
+                    설명: ["11번째 몬스터 즉사", "8번째 몬스터 즉사", "5번째 몬스터 즉사"],
                     아이콘: 즉사아이콘
                 },
             };
@@ -1896,6 +1903,7 @@
             document.getElementById("장비화면").style.display = "none";
             document.getElementById("스킬화면").style.display = "block";
             document.getElementById("전당화면").style.display = "none";
+            document.getElementById("유물화면").style.display = "none";
 
             document.getElementById("획득로그").innerText = "";
             document.getElementById("추가획득로그").innerText = "";
@@ -2087,6 +2095,8 @@ style="margin-right: 2px;">
             document.getElementById("전당화면").style.display = "block";
             document.getElementById("스킬화면").style.display = "none";
             document.getElementById("장비화면").style.display = "none";
+            document.getElementById("유물화면").style.display = "none";
+
             document.getElementById("획득로그").innerText = "";
             document.getElementById("추가획득로그").innerText = "";
             document.getElementById("레벨업표시").innerText = "";
@@ -2202,6 +2212,21 @@ style="margin-right: 2px;">
                 창.style.display = "none";
             }
         });
+
+        document.getElementById("유물").addEventListener("click", () => {
+            if (!유저데이터) return;
+
+            document.getElementById("전투화면").style.display = "none";
+            document.getElementById("장비화면").style.display = "none";
+            document.getElementById("스킬화면").style.display = "none";
+            document.getElementById("전당화면").style.display = "none";
+            document.getElementById("에너지박스").style.display = "none";
+
+            document.getElementById("유물화면").style.display = "block";
+
+            
+        });
+
 
         document.getElementById("타이틀을아이디로").addEventListener("click", async function 아이디변경시작() {
             if (!유저데이터) return;
