@@ -552,7 +552,8 @@
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            justify-content: flex-start;
+            justify-content: center;
+            /* ✅ 중앙정렬 */
         }
 
 
@@ -2259,7 +2260,7 @@ style="margin-right: 2px;">
                 const 아이콘HTML = 아이콘맵[`${유물이름}아이콘`] || "";
 
                 const div = document.createElement("div");
-                div.className = "기본테두리";
+                div.className = "기본테두리 커서호버";
                 div.style.position = "relative";
                 div.style.display = "flex";
                 div.style.alignItems = "center";
