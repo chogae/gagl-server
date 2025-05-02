@@ -1269,11 +1269,17 @@
             자동사냥허용 = true;
 
             const 레어몬스터 = document.getElementById("레어몬스터");
-            // ✅ 레어몬스터가 등장하면 클릭 중단
             if (레어몬스터 && getComputedStyle(레어몬스터).display === "block") {
                 자동사냥허용 = false;
+
+                // ✅ 풀자동사냥이면 레어몬스터 자동 클릭
+                if (풀자동사냥허용) {
+                    레어몬스터.click();
+                }
+
                 return;
             }
+
 
             공격버튼잠금();
             let 레어몬스터등장 = false;
@@ -2562,7 +2568,7 @@ style="margin-right: 2px;">
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v21";
+        document.getElementById("버전표시").innerText = "v22";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -2599,7 +2605,8 @@ style="margin-right: 2px;">
 - 즉사스킬을 구현중입니다<br>
 - 더 급한일이 생겨 스킬구현을 뒤로 미루겠습니다<br>
 - 유물 구현중입니다<br>
-
+- 레어몬스터 등장 시 레어몬스터를 우선하는 풀자동 구현되었습니다<br>
+풀자동 단축키는 Alt + X 입니다<br>
 </div>
 `;
         // 업데이트
