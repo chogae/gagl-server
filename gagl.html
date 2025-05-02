@@ -1266,7 +1266,9 @@
         document.getElementById("공격버튼").addEventListener("click", async () => {
             if (!유저데이터) return;
 
-            자동사냥허용 = true;
+            if (!풀자동사냥허용) {
+                자동사냥허용 = true;
+            }
 
             const 레어몬스터 = document.getElementById("레어몬스터");
             if (레어몬스터 && getComputedStyle(레어몬스터).display === "block") {
@@ -1705,7 +1707,12 @@
                 공격버튼잠금해제();
 
                 if (풀자동사냥허용) {
-                    document.getElementById("공격버튼").click();
+                    const 레어 = document.getElementById("레어몬스터");
+                    if (레어 && getComputedStyle(레어).display === "block") {
+                        레어.click(); // ✅ 새로 나온 레어몬스터 우선 클릭
+                    } else {
+                        document.getElementById("공격버튼").click(); // 일반몬스터 공격
+                    }
                 }
 
             }
