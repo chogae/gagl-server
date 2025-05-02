@@ -621,7 +621,7 @@
     <div class="네온박스" id="네온박스">
         gagl에 찾아와주셔서 감사합니다
     </div>
-    <div class="유물드랍박스" id="유물드랍박스">
+    <div class="유물드랍박스" id="유물드랍박스" style="display: none;">
         전설 유물이 드랍되었습니다!
     </div>
 
@@ -1506,24 +1506,23 @@
                     } else document.getElementById("레벨업표시").innerText = "";
 
                     if (결과.드랍유물) {
-                        const 유물 = 결과.드랍유물;
-                        const 드랍유물박스 = document.getElementById("드랍유물박스");
+                        const 유물드랍박스 = document.getElementById("유물드랍박스");
                         const 등급외테두리 = document.getElementById("등급외테두리");
 
-                        if (드랍유물박스) {
-                            드랍유물박스.innerText = `유물 [${결과.드랍유물}]을(를) 획득했다!`;
-                            드랍유물박스.style.display = "block";
+                        if (유물드랍박스) {
+                            유물드랍박스.innerText = `유물 [${결과.드랍유물}]을(를) 획득했다!`;
+                            유물드랍박스.style.display = "block";
 
                             // 위치 조정용 부모 변경
                             if (등급외테두리) {
                                 // 등급외테두리에 위치 기준 설정
                                 등급외테두리.style.position = "relative";
 
-                                // 드랍유물박스를 등급외테두리 내부로 이동
-                                등급외테두리.appendChild(드랍유물박스);
+                                // 유물드랍박스를 등급외테두리 내부로 이동
+                                등급외테두리.appendChild(유물드랍박스);
 
                                 // 전투화면용 위치 조정
-                                Object.assign(드랍유물박스.style, {
+                                Object.assign(유물드랍박스.style, {
                                     position: "absolute",
                                     top: "10%",
                                     left: "50%",
@@ -1532,6 +1531,9 @@
                                 });
                             }
                         }
+                        setTimeout(() => {
+                            유물드랍박스.style.display = "none";
+                        }, 3000);
                     }
 
                     document.getElementById("승리패배로그").innerText = "승리";
@@ -1780,24 +1782,23 @@
                     }
 
                     if (결과.드랍유물) {
-                        const 유물 = 결과.드랍유물;
-                        const 드랍유물박스 = document.getElementById("드랍유물박스");
+                        const 유물드랍박스 = document.getElementById("유물드랍박스");
                         const 등급외테두리 = document.getElementById("등급외테두리");
 
-                        if (드랍유물박스) {
-                            드랍유물박스.innerText = `유물 [${결과.드랍유물}]을(를) 획득했다!`;
-                            드랍유물박스.style.display = "block";
+                        if (유물드랍박스) {
+                            유물드랍박스.innerText = `유물 [${결과.드랍유물}]을(를) 획득했다!`;
+                            유물드랍박스.style.display = "block";
 
                             // 위치 조정용 부모 변경
                             if (등급외테두리) {
                                 // 등급외테두리에 위치 기준 설정
                                 등급외테두리.style.position = "relative";
 
-                                // 드랍유물박스를 등급외테두리 내부로 이동
-                                등급외테두리.appendChild(드랍유물박스);
+                                // 유물드랍박스를 등급외테두리 내부로 이동
+                                등급외테두리.appendChild(유물드랍박스);
 
                                 // 전투화면용 위치 조정
-                                Object.assign(드랍유물박스.style, {
+                                Object.assign(유물드랍박스.style, {
                                     position: "absolute",
                                     top: "10%",
                                     left: "50%",
@@ -1806,6 +1807,9 @@
                                 });
                             }
                         }
+                        setTimeout(() => {
+                            유물드랍박스.style.display = "none";
+                        }, 3000);
                     }
 
                     document.getElementById("승리패배로그").innerText = "승리";
@@ -2708,7 +2712,7 @@ style="margin-right: 2px;">
             const 유물드랍박스 = document.getElementById("유물드랍박스");
             if (박스) {
                 박스.style.display = "none";
-                유물드랍박스.style.display = "none";
+                // 유물드랍박스.style.display = "none";
             }
         });
 
