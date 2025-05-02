@@ -191,6 +191,7 @@ app.post("/attack-normal", async (req, res) => {
         },
         레어몬스터이름,
         전투로그,
+        드랍유물,
         스킬발동: {
             인사이트: 인사이트발동,   // true/false
             인텔리전스: 인텔리전스발동, // true/false
@@ -390,6 +391,7 @@ app.post("/attack-rare", async (req, res) => {
         },
         레어몬스터이름: 새로운레어몬스터이름,
         전투로그,
+        드랍유물,
         스킬발동: {
             인사이트: 인사이트발동,   // true/false
             인텔리전스: 인텔리전스발동, // true/false
