@@ -592,7 +592,7 @@
         </div>
     </div>
 
-    <div id="유물화면"  style="display: none;">
+    <div id="유물화면" style="display: none;">
         <div class="사백픽셀테두리" id="유물컨테이너">
 
         </div>
@@ -1247,6 +1247,21 @@
         }
 
         let 자동사냥허용 = true;
+        let 풀자동사냥허용 = false;
+
+        document.addEventListener("keydown", (e) => {
+            if (e.altKey && e.key === "x") {
+                if (!유저데이터) return;
+                풀자동사냥허용 = !풀자동사냥허용; // 토글 방식 (한 번 누르면 켜지고, 또 누르면 꺼짐)
+                자동사냥허용 = false; // 기존 자동사냥은 강제 종료
+
+                if (풀자동사냥허용) {
+                    document.getElementById("공격버튼").click(); // 즉시 시작
+                } else {
+                }
+            }
+        });
+
 
         document.getElementById("공격버튼").addEventListener("click", async () => {
             if (!유저데이터) return;
@@ -1448,8 +1463,7 @@
                 }
                 공격버튼잠금해제();
 
-                // ✅ 자동사냥 허용되어있으면 바로 다시 클릭
-                if (자동사냥허용) {
+                if (자동사냥허용 || 풀자동사냥허용) {
                     document.getElementById("공격버튼").click();
                 }
             }
@@ -1462,6 +1476,8 @@
             if (e.target.closest("#공격버튼")) return;
 
             자동사냥허용 = false;
+            풀자동사냥허용 = false;
+
         });
 
         document.getElementById("레어몬스터").addEventListener("click", async () => {
@@ -1681,6 +1697,11 @@
                     await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
                 }
                 공격버튼잠금해제();
+
+                if (풀자동사냥허용) {
+                    document.getElementById("공격버튼").click();
+                }
+
             }
 
         });
