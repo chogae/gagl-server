@@ -1272,6 +1272,8 @@
                 자동사냥허용 = true;
             }
 
+            await new Promise(resolve => setTimeout(resolve, 0));
+
             const 레어몬스터 = document.getElementById("레어몬스터");
             if (레어몬스터 && getComputedStyle(레어몬스터).display === "block") {
                 자동사냥허용 = false;
