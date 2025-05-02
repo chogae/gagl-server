@@ -966,11 +966,13 @@
             if (공격버튼) {
                 공격버튼.style.pointerEvents = "auto";
                 공격버튼.style.opacity = "1";
+                공격버튼.disabled = false;  // ✅ 반드시 추가
             }
 
             if (레어몬스터) {
                 레어몬스터.style.pointerEvents = "auto";
                 레어몬스터.style.opacity = "1";
+                레어몬스터.disabled = false;  // ✅ 혹시 모르니 추가
             }
         }
 
