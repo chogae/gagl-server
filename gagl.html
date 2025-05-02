@@ -2455,9 +2455,45 @@ style="margin-right: 2px;">
 ">x${수량}</div>
         `;
 
+                div.addEventListener("mouseover", () => {
+                    const 설명 = 유물데이터[유물이름]?.설명 || "설명이 없습니다";
+                    유물설명보여주기(div, 설명);
+                });
+                div.addEventListener("mouseout", () => {
+                    유물설명숨기기(div);
+                });
+
                 컨테이너.appendChild(div);
             }
         });
+
+        function 유물설명보여주기(대상div, 설명) {
+            const 기존 = 대상div.querySelector(".유물설명창");
+            if (기존) 기존.remove();
+
+            const 설명div = document.createElement("div");
+            설명div.className = "유물설명창";
+            설명div.innerText = 설명;
+            설명div.style.position = "absolute";
+            설명div.style.bottom = `${대상div.offsetHeight}px`;
+            설명div.style.left = "50%";
+            설명div.style.transform = "translateX(-50%)";
+            설명div.style.background = "rgba(0,0,0,0.8)";
+            설명div.style.color = "white";
+            설명div.style.padding = "4px 8px";
+            설명div.style.borderRadius = "6px";
+            설명div.style.fontSize = "12px";
+            설명div.style.whiteSpace = "nowrap";
+            설명div.style.zIndex = "10";
+
+            대상div.style.position = "relative";
+            대상div.appendChild(설명div);
+        }
+
+        function 유물설명숨기기(대상div) {
+            const 설명div = 대상div.querySelector(".유물설명창");
+            if (설명div) 설명div.remove();
+        }
 
 
         document.getElementById("타이틀을아이디로").addEventListener("click", async function 아이디변경시작() {
