@@ -966,13 +966,11 @@
             if (공격버튼) {
                 공격버튼.style.pointerEvents = "auto";
                 공격버튼.style.opacity = "1";
-                공격버튼.disabled = false;  // ✅ 반드시 추가
             }
 
             if (레어몬스터) {
                 레어몬스터.style.pointerEvents = "auto";
                 레어몬스터.style.opacity = "1";
-                레어몬스터.disabled = false;  // ✅ 혹시 모르니 추가
             }
         }
 
@@ -1248,21 +1246,20 @@
             document.getElementById("현재층").innerText = `${유저.현재층}층`;
         }
 
-        let 자동사냥허용 = true;
-        let 풀자동사냥허용 = false;
+
+        // 풀자동사냥 구현중
+        let 자동사냥허용 = false;
+        let 풀자동사냥허용 = false;  // 기본값 false
 
         document.addEventListener("keydown", (e) => {
-            if (e.altKey && e.key === "x") {
-                if (!유저데이터) return;
-                풀자동사냥허용 = !풀자동사냥허용; // 토글 방식 (한 번 누르면 켜지고, 또 누르면 꺼짐)
-                자동사냥허용 = false; // 기존 자동사냥은 강제 종료
+            if (e.altKey && e.key.toLowerCase() === "x") {
+                풀자동사냥허용 = !풀자동사냥허용;
 
                 if (풀자동사냥허용) {
-                    document.getElementById("공격버튼").click(); // 즉시 시작
-                } else {
+                    자동사냥허용 = false;  // 기존 자동사냥 플래그는 끄기
+                    document.getElementById("공격버튼").click(); // 시작 신호
                 }
-            }
-        });
+            });
 
 
         document.getElementById("공격버튼").addEventListener("click", async () => {
@@ -1272,20 +1269,12 @@
                 자동사냥허용 = true;
             }
 
-            await new Promise(resolve => setTimeout(resolve, 0));
-
-            const 레어몬스터 = document.getElementById("레어몬스터");
             if (레어몬스터 && getComputedStyle(레어몬스터).display === "block") {
-                자동사냥허용 = false;
-
-                // ✅ 풀자동사냥이면 레어몬스터 자동 클릭
-                if (풀자동사냥허용) {
-                    레어몬스터.click();
+                if (!풀자동사냥허용) {
+                    자동사냥허용 = false;
+                    return;
                 }
-
-                return;
             }
-
 
             공격버튼잠금();
             let 레어몬스터등장 = false;
@@ -1475,21 +1464,28 @@
                 }
                 공격버튼잠금해제();
 
-                if (자동사냥허용 || 풀자동사냥허용) {
+                if (풀자동사냥허용) {
+                    // 우선 레어몬스터 공격
+                    const 레어 = document.getElementById("레어몬스터");
+                    if (레어 && getComputedStyle(레어).display !== "none") {
+                        레어.click();
+                    } else {
+                        document.getElementById("공격버튼").click();
+                    }
+                } else if (자동사냥허용) {
                     document.getElementById("공격버튼").click();
                 }
             }
 
         });
-
-        // ✅ 화면 아무데나 클릭하면 자동사냥 강제 종료
+        
+        // ✅ 화면 아무데나 클릭하면 자동사냥, 풀자동사냥 모두 강제 종료
         document.addEventListener("click", (e) => {
             // 공격버튼 자체를 누른 경우는 무시
             if (e.target.closest("#공격버튼")) return;
 
             자동사냥허용 = false;
-            풀자동사냥허용 = false;
-
+            풀자동사냥허용 = false;  // ⭐ 추가
         });
 
         document.getElementById("레어몬스터").addEventListener("click", async () => {
@@ -1712,10 +1708,10 @@
 
                 if (풀자동사냥허용) {
                     const 레어 = document.getElementById("레어몬스터");
-                    if (레어 && getComputedStyle(레어).display === "block") {
-                        레어.click(); // ✅ 새로 나온 레어몬스터 우선 클릭
+                    if (레어 && getComputedStyle(레어).display !== "none") {
+                        레어.click();
                     } else {
-                        document.getElementById("공격버튼").click(); // 일반몬스터 공격
+                        document.getElementById("공격버튼").click();
                     }
                 }
 
@@ -2616,8 +2612,8 @@ style="margin-right: 2px;">
 - 즉사스킬을 구현중입니다<br>
 - 더 급한일이 생겨 스킬구현을 뒤로 미루겠습니다<br>
 - 유물 구현중입니다<br>
-- 레어몬스터 등장 시 레어몬스터를 우선하는 풀자동 구현되었습니다<br>
-풀자동 단축키는 Alt + X 입니다<br>
+- 레어몬스터를 우선 공격하는 풀자동 시스템을 구현했습니다<br>
+단축키 Alt + X 로 실행 가능합니다<br>
 </div>
 `;
         // 업데이트
