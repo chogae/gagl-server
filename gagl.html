@@ -1259,7 +1259,7 @@
                     자동사냥허용 = false;  // 기존 자동사냥 플래그는 끄기
                     document.getElementById("공격버튼").click(); // 시작 신호
                 }
-            } 
+            }
         });
 
 
@@ -1480,13 +1480,12 @@
 
         });
 
-        // ✅ 화면 아무데나 클릭하면 자동사냥, 풀자동사냥 모두 강제 종료
         document.addEventListener("click", (e) => {
-            // 공격버튼 자체를 누른 경우는 무시
-            if (e.target.closest("#공격버튼")) return;
+            // 공격버튼 또는 레어몬스터 버튼 누른 경우는 무시
+            if (e.target.closest("#공격버튼") || e.target.closest("#레어몬스터")) return;
 
             자동사냥허용 = false;
-            풀자동사냥허용 = false;  // ⭐ 추가
+            풀자동사냥허용 = false;
         });
 
         document.getElementById("레어몬스터").addEventListener("click", async () => {
@@ -1706,8 +1705,6 @@
                     await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
                 }
                 공격버튼잠금해제();
-                console.log("풀자동사냥 상태:", 풀자동사냥허용);
-                console.log("자동사냥 상태:", 자동사냥허용);
 
                 if (풀자동사냥허용) {
                     const 레어 = document.getElementById("레어몬스터");
