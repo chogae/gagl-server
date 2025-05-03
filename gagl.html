@@ -651,6 +651,12 @@
         </div>
     </div>
 
+    <div id="전직화면" style="display: none;">
+        <div class="사백픽셀테두리" id="전직컨테이너">
+
+        </div>
+    </div>
+
 
     <div class="사백픽셀테두리 세로정렬" id="에너지박스" style="display: none;">
         <div class="양쪽정렬">
@@ -2455,45 +2461,9 @@ style="margin-right: 2px;">
 ">x${수량}</div>
         `;
 
-                div.addEventListener("mouseover", () => {
-                    const 설명 = 유물데이터[유물이름]?.설명 || "설명이 없습니다";
-                    유물설명보여주기(div, 설명);
-                });
-                div.addEventListener("mouseout", () => {
-                    유물설명숨기기(div);
-                });
-
                 컨테이너.appendChild(div);
             }
         });
-
-        function 유물설명보여주기(대상div, 설명) {
-            const 기존 = 대상div.querySelector(".유물설명창");
-            if (기존) 기존.remove();
-
-            const 설명div = document.createElement("div");
-            설명div.className = "유물설명창";
-            설명div.innerText = 설명;
-            설명div.style.position = "absolute";
-            설명div.style.bottom = `${대상div.offsetHeight}px`;
-            설명div.style.left = "50%";
-            설명div.style.transform = "translateX(-50%)";
-            설명div.style.background = "rgba(0,0,0,0.8)";
-            설명div.style.color = "white";
-            설명div.style.padding = "4px 8px";
-            설명div.style.borderRadius = "6px";
-            설명div.style.fontSize = "12px";
-            설명div.style.whiteSpace = "nowrap";
-            설명div.style.zIndex = "10";
-
-            대상div.style.position = "relative";
-            대상div.appendChild(설명div);
-        }
-
-        function 유물설명숨기기(대상div) {
-            const 설명div = 대상div.querySelector(".유물설명창");
-            if (설명div) 설명div.remove();
-        }
 
 
         document.getElementById("타이틀을아이디로").addEventListener("click", async function 아이디변경시작() {
@@ -2753,7 +2723,7 @@ style="margin-right: 2px;">
         });
 
         // 업데이트
-        document.getElementById("버전표시").innerText = "v24";
+        document.getElementById("버전표시").innerText = "v25";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -2812,6 +2782,18 @@ style="margin-right: 2px;">
             }
         });
 
+        //전직화면보여주기
+        document.getElementById("총경험치").addEventListener("click", () => {
+            if (!유저데이터) return;
+
+            const 컨테이너 = document.getElementById("전직컨테이너");
+            컨테이너.innerHTML = "";
+
+        });
+
+
+
+
         //장비도박
         //장비드랍
         //장비강화
@@ -2819,6 +2801,41 @@ style="margin-right: 2px;">
         //악마전투
         //레어악마전투
 
+        document.addEventListener("click", (e) => {
+            const target = e.target;
+
+            switch (target.id) {
+                // case "객체아이디":
+                //     실행함수();
+                //     break;
+
+            }
+
+            if (
+                target.matches("#전투") ||
+                target.matches("#장비") ||
+                target.matches("#스킬") ||
+                target.matches("#전당") ||
+                target.matches("#유물")
+            ) {
+                document.getElementById("전직화면").style.display = "none";
+            }
+
+            if (
+                target.matches("#총경험치")
+            ) {
+                document.getElementById("전투화면").style.display = "none";
+                document.getElementById("장비화면").style.display = "none";
+                document.getElementById("스킬화면").style.display = "none";
+                document.getElementById("전당화면").style.display = "none";
+                document.getElementById("에너지박스").style.display = "none";
+                document.getElementById("유물화면").style.display = "none";
+
+                document.getElementById("전직화면").style.display = "block";
+                전직화면보여주기();
+            }
+
+        });
 
     </script>
 </body>
