@@ -2722,14 +2722,12 @@ style="margin-right: 2px;">
             }
         });
 
-        const 전직순서 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
-
         async function 전직화면보여주기() {
             화면잠금();
             const 응답 = await fetch("/get-job-info", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                body: JSON.stringify({ 유저UID: 현재유저.유저UID })
             });
 
             const 결과 = await 응답.json();
@@ -2739,24 +2737,46 @@ style="margin-right: 2px;">
                 return;
             }
 
-            // ✅ 여기서 바로 화면에 출력
             const 전직정보 = 결과.전직정보;
+
+            const 전직순서 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
 
             const container = document.getElementById("전직컨테이너");
             container.innerHTML = "";  // 이전 내용 비우기
 
-            let 다음전직 = null;
+            let 첫미완료발견 = false;
 
-            for (const [직위, 완료여부] of Object.entries(전직정보)) {
+            for (const 직위 of 전직순서) {
+                const 완료여부 = 전직정보[직위] ?? 0;
+
                 const div = document.createElement("div");
-                div.textContent = `${직위} : ${완료여부 === 1 ? "전직 완료" : "미완료"}`;
-                if (완료여부 === 0 && !다음전직) {
-                    다음전직 = 직위;
-                    div.style.fontWeight = "bold";
-                    div.style.color = "gold";
-                    div.textContent += " (다음 전직 가능!)";
+                div.style.display = "flex";
+                div.style.justifyContent = "space-between";
+                div.style.marginBottom = "5px";
+
+                const left = document.createElement("span");
+                left.textContent = `${직위} : ${완료여부 === 1 ? "전직 완료" : "미완료"}`;
+                div.appendChild(left);
+
+                if (완료여부 === 1) {
+                    container.appendChild(div);
+                    continue;
                 }
-                container.appendChild(div);
+
+                if (!첫미완료발견) {
+                    첫미완료발견 = true;
+
+                    // 오른쪽에 버튼 추가
+                    const button = document.createElement("button");
+                    button.textContent = "전직하기";
+                    button.onclick = () => {
+                        메시지표시(`"${직위}" 전직 시도! (여기에 실제 전직 로직 연결 예정)`);
+                    };
+                    div.appendChild(button);
+
+                    container.appendChild(div);
+                    break; // 첫 미완료 항목까지만 출력
+                }
             }
 
             화면해제();
