@@ -2724,9 +2724,42 @@ style="margin-right: 2px;">
 
         const 전직순서 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
 
-        function 전직화면보여주기() {
+        async function 전직화면보여주기() {
+            화면잠금();
+            const 응답 = await fetch("/get-job-info", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 유저UID: 현재유저.유저UID })
+            });
 
+            const 결과 = await 응답.json();
+            if (!응답.ok) {
+                메시지표시("전직정보 조회 실패: " + 결과.오류);
+                화면해제();
+                return;
+            }
 
+            // ✅ 여기서 바로 화면에 출력
+            const 전직정보 = 결과.전직정보;
+
+            const container = document.getElementById("전직컨테이너");
+            container.innerHTML = "";  // 이전 내용 비우기
+
+            let 다음전직 = null;
+
+            for (const [직위, 완료여부] of Object.entries(전직정보)) {
+                const div = document.createElement("div");
+                div.textContent = `${직위} : ${완료여부 === 1 ? "전직 완료" : "미완료"}`;
+                if (완료여부 === 0 && !다음전직) {
+                    다음전직 = 직위;
+                    div.style.fontWeight = "bold";
+                    div.style.color = "gold";
+                    div.textContent += " (다음 전직 가능!)";
+                }
+                container.appendChild(div);
+            }
+
+            화면해제();
         }
 
 

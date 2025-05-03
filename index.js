@@ -842,6 +842,22 @@ app.post("/update-username", async (req, res) => {
     return res.json({ 성공: true });
 });
 
+app.post("/get-job-info", async (req, res) => {
+    const { 유저UID } = req.body;
+
+    if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("전직정보")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
+
+    return res.json({ 전직정보: 유저.전직정보 });
+});
+
 app.post("/gamble", async (req, res) => {
     const { 유저UID, 등급 } = req.body;
 
