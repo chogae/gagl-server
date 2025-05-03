@@ -2750,12 +2750,14 @@ style="margin-right: 2px;">
                 const 완료여부 = 전직정보[직위] ?? 0;
 
                 const div = document.createElement("div");
+                div.style.className = "기본테두리 양쪽정렬"
                 div.style.display = "flex";
                 div.style.justifyContent = "space-between";
-                div.style.marginBottom = "5px";
+                // div.style.marginBottom = "5px";
 
                 const left = document.createElement("span");
-                left.textContent = `${직위} : ${완료여부 === 1 ? "전직 완료" : "미완료"}`;
+                // left.textContent = `${직위} : ${완료여부 === 1 ? "전직 완료" : "미완료"}`;
+                left.textContent = `${직위}`;
                 div.appendChild(left);
 
                 if (완료여부 === 1) {
@@ -2766,16 +2768,24 @@ style="margin-right: 2px;">
                 if (!첫미완료발견) {
                     첫미완료발견 = true;
 
-                    // 오른쪽에 버튼 추가
-                    const button = document.createElement("button");
-                    button.textContent = "전직하기";
-                    button.onclick = () => {
+                    // 오른쪽에 버튼 대신 div 추가
+                    const buttonDiv = document.createElement("div");
+                    buttonDiv.textContent = "전직하기";
+                    buttonDiv.style.cursor = "pointer";
+                    buttonDiv.style.padding = "4px 8px";
+                    buttonDiv.style.backgroundColor = "#444";
+                    buttonDiv.style.color = "white";
+                    buttonDiv.style.borderRadius = "4px";
+                    buttonDiv.style.marginLeft = "10px";
+                    buttonDiv.onmouseenter = () => buttonDiv.style.backgroundColor = "#666";
+                    buttonDiv.onmouseleave = () => buttonDiv.style.backgroundColor = "#444";
+
+                    buttonDiv.onclick = () => {
                         메시지표시(`"${직위}" 전직 시도! (여기에 실제 전직 로직 연결 예정)`);
                     };
-                    div.appendChild(button);
 
-                    container.appendChild(div);
-                    break; // 첫 미완료 항목까지만 출력
+                    div.appendChild(buttonDiv);
+
                 }
             }
 
