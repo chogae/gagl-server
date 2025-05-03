@@ -2339,7 +2339,7 @@ style="margin-right: 2px;">
                 줄.addEventListener("click", (e) => {
                     e.stopPropagation(); // ✅ document로 이벤트 퍼지는 것 차단
 
-                    console.log("✅ 유저 클릭됨:", 유저);
+                    // console.log("유저 클릭됨:", 유저);
                     const 창 = document.getElementById("미니장비창");
                     창.style.display = "block";
                     창.innerHTML = `<div style="font-weight:bold; margin-bottom:8px;">🔍 ${유저.유저아이디} 장비</div>`;
@@ -2722,6 +2722,14 @@ style="margin-right: 2px;">
             }
         });
 
+        const 전직순서 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
+
+        function 전투화면보여주기(유저) {
+
+
+        }
+
+
         document.getElementById("버전표시").innerText = "v25";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
@@ -2772,28 +2780,6 @@ gagl 패치노트<br>
         });
 
         document.addEventListener("click", (e) => {
-            if (
-                메뉴얼창.style.display === "block" &&
-                !메뉴얼창.contains(e.target) &&
-                !버전버튼.contains(e.target)
-            ) {
-                메뉴얼창.style.display = "none";
-            }
-        });
-
-
-        const 전직순서 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
-
-     
-
-        //장비도박
-        //장비드랍
-        //장비강화
-        //스킬
-        //악마전투
-        //레어악마전투
-
-        document.addEventListener("click", (e) => {
             const target = e.target;
 
             switch (target.id) {
@@ -2802,6 +2788,15 @@ gagl 패치노트<br>
                 //     break;
 
             }
+
+            if (
+                메뉴얼창.style.display === "block" &&
+                !메뉴얼창.contains(e.target) &&
+                !버전버튼.contains(e.target)
+            ) {
+                메뉴얼창.style.display = "none";
+            }
+
 
             if (
                 target.matches("#전투") ||
@@ -2828,6 +2823,16 @@ gagl 패치노트<br>
             }
 
         });
+
+
+
+        //장비도박
+        //장비드랍
+        //장비강화
+        //스킬
+        //악마전투
+        //레어악마전투
+
 
     </script>
 </body>
