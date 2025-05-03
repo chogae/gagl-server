@@ -2793,7 +2793,7 @@ gagl 패치노트<br>
         async function 전직화면보여주기() {
             화면잠금();
 
-            const 응답 = await fetch("/내전직정보조회");
+            const 응답 = await fetch("/내전직정보조회?유저UID=" + 로그인정보.유저UID);
             const 결과 = await 응답.json();
 
             화면해제();
