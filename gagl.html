@@ -2727,7 +2727,7 @@ style="margin-right: 2px;">
             const 응답 = await fetch("/get-job-info", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 유저UID: 현재유저.유저UID })
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
             });
 
             const 결과 = await 응답.json();
@@ -2783,7 +2783,7 @@ style="margin-right: 2px;">
         }
 
 
-        document.getElementById("버전표시").innerText = "v25";
+        document.getElementById("버전표시").innerText = "v26";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
@@ -2819,9 +2819,8 @@ style="margin-right: 2px;">
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
 <br>
 gagl 패치노트<br>
-- 유물 시스템이 구현중입니다<br>
-- 전직 업데이트가 완료되었습니다<br>
-전투화면에서 경험치를 클릭해보세요<br>
+- 유물 시스템을 구현중입니다<br>
+- 전직 시스템을 구현중입니다<br>
 </div>
 `;
         // 업데이트
