@@ -740,8 +740,8 @@ app.post("/register-user", async (req, res) => {
     return res.json({ 유저데이터: 삽입값 });
 });
 
-app.get("/내전직정보조회", async (req, res) => {
-    const 유저UID = req.query.유저UID;
+app.post("/내전직정보조회", async (req, res) => {
+    const 유저UID = req.body.유저UID;
 
     if (!유저UID) {
         return res.status(400).json({ 메시지: "유저UID가 필요합니다." });
