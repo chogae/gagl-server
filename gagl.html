@@ -719,7 +719,7 @@
                         <div class="레벨" id="레벨">
                             레벨 129
                         </div>
-                        <div class="총경험치" id="총경험치">
+                        <div class="총경험치 커서호버" id="총경험치">
                             12,932
                         </div>
                         <div class="획득경험치" id="획득경험치">
@@ -2722,7 +2722,6 @@ style="margin-right: 2px;">
             }
         });
 
-        // 업데이트
         document.getElementById("버전표시").innerText = "v25";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
@@ -2748,20 +2747,20 @@ style="margin-right: 2px;">
     - 매일 아침 9시에 스태미너가 최대치로 회복됩니다<br>
 - 최상단 아이디를 클릭하시면 아이디 변경이 가능합니다<br>
 - 전투화면의 보유골드를 클릭하시면 도박창이 열립니다<br>
-
 - 장비 강화 실패 시 강화수치가 하락합니다<br>
 - 전당화면에서 유저를 클릭하면 해당 유저의 장비열람 가능합니다<br>
 - 단축키 Alt + A 로 레어몬스터를 우선 공격하는<br>
 풀자동 사냥이 가능합니다<br>
+- 모든팝업창은 외부를 클릭 시 닫힙니다<br>
 <br>
 행운을 빕니다<br>
 <br>
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
 <br>
-패치노트<br>
+gagl 패치노트<br>
 - 유물 시스템이 구현중입니다<br>
-- 레어몬스터를 우선 공격하는 풀자동 시스템을 구현했습니다<br>
-단축키 Alt + A 로 실행 가능합니다<br>
+- 전직 업데이트가 완료되었습니다<br>
+전투화면에서 경험치를 클릭해보세요<br>
 </div>
 `;
         // 업데이트
@@ -2786,13 +2785,141 @@ style="margin-right: 2px;">
         document.getElementById("총경험치").addEventListener("click", () => {
             if (!유저데이터) return;
 
-            const 컨테이너 = document.getElementById("전직컨테이너");
-            컨테이너.innerHTML = "";
 
         });
 
+        const 전직순서 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
 
+        async function 전직화면보여주기() {
+            화면잠금();
 
+            const 응답 = await fetch("/내전직정보조회");
+            const 결과 = await 응답.json();
+
+            화면해제();
+
+            if (!응답.ok) {
+                메시지표시("전직정보를 불러올 수 없습니다.");
+                return;
+            }
+
+            const 전직정보 = 결과.전직정보;
+            const 총경험치 = 결과.총경험치;
+            const 전직영역 = document.getElementById("전직컨테이너");
+            전직영역.innerHTML = "";  // 기존 내용 초기화
+
+            // ---- 타이틀 ----
+            const 타이틀 = document.createElement("div");
+            타이틀.textContent = "전직";
+            타이틀.style.fontSize = "20px";
+            타이틀.style.fontWeight = "bold";
+            전직영역.appendChild(타이틀);
+
+            // ---- 밑줄 ----
+            const 밑줄 = document.createElement("hr");
+            전직영역.appendChild(밑줄);
+
+            // ---- 경험치 라인 ----
+            const 경험치라인 = document.createElement("div");
+            경험치라인.style.display = "flex";
+            경험치라인.style.justifyContent = "space-between";
+            경험치라인.style.marginBottom = "10px";
+
+            const 경험치라벨 = document.createElement("div");
+            경험치라벨.textContent = "경험치";
+
+            const 경험치값 = document.createElement("div");
+            경험치값.textContent = 총경험치.toLocaleString() + " exp";
+
+            경험치라인.appendChild(경험치라벨);
+            경험치라인.appendChild(경험치값);
+
+            전직영역.appendChild(경험치라인);
+
+            // ---- 전직완료 항목들 ----
+            for (const 직위 of 전직순서) {
+                if (전직정보[직위] === 1) {
+                    const 전직박스 = document.createElement("div");
+                    전직박스.style.display = "flex";
+                    전직박스.style.justifyContent = "space-between";
+                    전직박스.style.alignItems = "center";
+                    전직박스.style.border = "1px solid gray";
+                    전직박스.style.borderRadius = "8px";
+                    전직박스.style.padding = "10px";
+                    전직박스.style.marginBottom = "5px";
+
+                    const 이름 = document.createElement("div");
+                    이름.textContent = 직위;
+
+                    const 버튼 = document.createElement("div");
+                    버튼.textContent = "전직완료";
+                    버튼.style.opacity = "0.6";
+
+                    전직박스.appendChild(이름);
+                    전직박스.appendChild(버튼);
+                    전직영역.appendChild(전직박스);
+                } else {
+                    // 아직 전직하지 않은 첫 항목만 표시하고 루프 종료
+                    const 전직박스 = document.createElement("div");
+                    전직박스.style.display = "flex";
+                    전직박스.style.justifyContent = "space-between";
+                    전직박스.style.alignItems = "center";
+                    전직박스.style.border = "1px solid gray";
+                    전직박스.style.borderRadius = "8px";
+                    전직박스.style.padding = "10px";
+                    전직박스.style.marginBottom = "5px";
+                    전직박스.style.cursor = "pointer";
+
+                    const 이름 = document.createElement("div");
+                    이름.textContent = 직위;
+
+                    const 버튼 = document.createElement("div");
+                    버튼.textContent = "전직 (100000p)";
+                    버튼.style.padding = "5px 10px";
+                    버튼.style.border = "1px solid white";
+                    버튼.style.borderRadius = "5px";
+
+                    전직박스.appendChild(이름);
+                    전직박스.appendChild(버튼);
+
+                    전직박스.addEventListener("click", () => {
+                        전직시도(직위, 전직박스, 버튼);
+                    });
+
+                    전직영역.appendChild(전직박스);
+                    break;  // 첫 미전직 항목만 보여주고 루프 종료
+                }
+            }
+        }
+
+        async function 전직시도(직위, 전직박스, 버튼) {
+            화면잠금();
+
+            const 응답 = await fetch("/전직요청", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    유저UID: 로그인정보.유저UID,  // ✅ 반드시 추가!
+                    직위: 직위
+                })
+            });
+
+            const 결과 = await 응답.json();
+            화면해제();
+
+            if (!응답.ok) {
+                메시지표시(결과.메시지 || "전직에 실패했습니다.");
+                return;
+            }
+
+            // 성공 시 UI 업데이트
+            버튼.textContent = "전직완료";
+            버튼.style.pointerEvents = "none";
+            버튼.style.opacity = "0.6";
+
+            // 다음 전직 항목 표시
+            전직화면보여주기();
+        }
 
         //장비도박
         //장비드랍
