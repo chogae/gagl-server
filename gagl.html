@@ -2729,7 +2729,7 @@ style="margin-right: 2px;">
             const 응답 = await fetch("/get-job-info", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 유저UID: 현재유저.유저UID })
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
             });
 
             const 결과 = await 응답.json();
