@@ -2792,7 +2792,7 @@ style="margin-right: 2px;">
 
                 const div = document.createElement("div");
                 div.className = "사백픽셀테두리 양쪽정렬 전직항목";
-                div.style.marginTop = "5px"; 
+                div.style.marginTop = "5px";
 
                 const 왼쪽 = document.createElement("div");
                 왼쪽.textContent = 직위;
@@ -2812,15 +2812,15 @@ style="margin-right: 2px;">
                     오른쪽.onclick = () => {
                         // 여기에 전직 버튼 로직
                     };
-                    div.appendChild(왼쪽);
-                    div.appendChild(오른쪽);
-                    container.appendChild(div);
-                    break;  // 🔥 첫 미완료 항목까지만 표시하고 종료
+                    // break 전에 append 해야 하므로 if 밖에서 append 진행
                 }
 
                 div.appendChild(왼쪽);
                 div.appendChild(오른쪽);
                 container.appendChild(div);
+
+                if (완료여부 === 0) break; // 미완료 항목 만나면 루프 종료
+
             }
 
             화면해제();
