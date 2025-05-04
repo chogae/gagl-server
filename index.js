@@ -849,13 +849,16 @@ app.post("/get-job-info", async (req, res) => {
 
     const { data: 유저, error } = await supabaseAdmin
         .from("users")
-        .select("전직정보")
+        .select("전직정보, 경험치")
         .eq("유저UID", 유저UID)
         .single();
 
     if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
 
-    return res.json({ 전직정보: 유저.전직정보 });
+    return res.json({
+        전직정보: 유저.전직정보,
+        경험치: 유저.경험치
+    });
 });
 
 app.post("/gamble", async (req, res) => {

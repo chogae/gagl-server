@@ -652,7 +652,13 @@
     </div>
 
     <div id="전직화면" style="display: none;">
-        <div id="전직컨테이너">
+        <div id="전직컨테이너" class="세로정렬">
+            <div id="전직화면타이틀" class="밑줄">
+                전직
+            </div>
+            <div class="양쪽정렬" id="경험치와포인트">
+
+            </div>
 
         </div>
     </div>
@@ -2732,69 +2738,61 @@ style="margin-right: 2px;">
 
             const 결과 = await 응답.json();
             if (!응답.ok) {
-                메시지표시("전직정보 조회 실패: " + 결과.오류);
+                메시지표시(메시지표시박스, "", "전직정보 조회 실패: " + 결과.오류, "");
                 화면해제();
                 return;
             }
 
             const 전직정보 = 결과.전직정보;
+            const 경험치 = 결과.경험치 ?? 0;
 
             const 전직순서 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
 
             const container = document.getElementById("전직컨테이너");
-            container.innerHTML = "";  // 이전 내용 비우기
 
-            let 첫미완료발견 = false;
+            // 🔷 기존 전직 항목만 삭제 (타이틀/경험치 영역은 유지)
+            document.querySelectorAll(".전직항목").forEach(e => e.remove());
 
+            // 🔷 경험치 표시 갱신
+            const 경험치div = document.getElementById("경험치와포인트");
+            경험치div.innerHTML = `
+        <div>경험치</div>
+        <div>${경험치.toLocaleString()} 포인트</div>
+    `;
+
+            // 🔷 전직 리스트 추가
             for (const 직위 of 전직순서) {
                 const 완료여부 = 전직정보[직위] ?? 0;
 
                 const div = document.createElement("div");
-                div.style.className = "사백픽셀테두리 양쪽정렬"
-                div.style.display = "flex";
-                div.style.justifyContent = "space-between";
-                // div.style.marginBottom = "5px";
+                div.className = "사백픽셀테두리 양쪽정렬 전직항목";
 
-                const left = document.createElement("span");
-                // left.textContent = `${직위} : ${완료여부 === 1 ? "전직 완료" : "미완료"}`;
-                left.textContent = `${직위}`;
-                div.appendChild(left);
+                const 왼쪽 = document.createElement("div");
+                왼쪽.textContent = 직위;
 
+                const 오른쪽 = document.createElement("div");
                 if (완료여부 === 1) {
-                    container.appendChild(div);
-                    continue;
-                }
-
-                if (!첫미완료발견) {
-                    첫미완료발견 = true;
-
-                    // 오른쪽에 버튼 대신 div 추가
-                    const buttonDiv = document.createElement("div");
-                    buttonDiv.textContent = "전직하기";
-                    buttonDiv.style.cursor = "pointer";
-                    buttonDiv.style.padding = "7px 17px";
-                    buttonDiv.style.backgroundColor = "#444";
-                    buttonDiv.style.color = "black";
-                    buttonDiv.style.borderRadius = "5px";
-                    buttonDiv.style.marginTop = "15px";
-                    buttonDiv.style.marginLeft = "20px";
-                    buttonDiv.onmouseenter = () => buttonDiv.style.backgroundColor = "#9e9e9e";
-                    buttonDiv.onmouseleave = () => buttonDiv.style.backgroundColor = "#fafafa";
-
-                    buttonDiv.onclick = () => {
-                        메시지표시(`"${직위}" 전직 시도! (여기에 실제 전직 로직 연결 예정)`);
+                    오른쪽.textContent = "전직완료";
+                } else {
+                    오른쪽.textContent = "전직 (100,000p)";
+                    오른쪽.style.cursor = "pointer";
+                    오른쪽.style.color = "blue";
+                    오른쪽.onclick = () => {
+                        // 여기에 전직 버튼 로직
                     };
-
-                    div.appendChild(buttonDiv);
-
-                    container.appendChild(div);  // ✅ 추가!
-                    break; // ✅ 다음 항목들은 무시
+                    div.appendChild(왼쪽);
+                    div.appendChild(오른쪽);
+                    container.appendChild(div);
+                    break;  // 🔥 첫 미완료 항목까지만 표시하고 종료
                 }
+
+                div.appendChild(왼쪽);
+                div.appendChild(오른쪽);
+                container.appendChild(div);
             }
 
             화면해제();
         }
-
 
         document.getElementById("버전표시").innerText = "v26";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
@@ -2884,7 +2882,7 @@ gagl 패치노트<br>
                 document.getElementById("유물화면").style.display = "none";
 
                 document.getElementById("전직화면").style.display = "block";
-                // 전직화면보여주기();
+                전직화면보여주기();
             }
 
         });
