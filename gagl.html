@@ -616,9 +616,10 @@
             padding: 5px 5px;
             background-color: white;
             color: black;
-            border-radius: 10px;
+            border-radius: 5px;
             border: 1px solid #ccc;
             cursor: pointer;
+            font-size: 12;
         }
 
         .전직버튼디자인:hover {
@@ -2793,7 +2794,7 @@ style="margin-right: 2px;">
                 if (완료여부 === 1) {
                     오른쪽.textContent = "전직완료";
                 } else {
-                    오른쪽.textContent = "전직 (100,000p)";
+                    오른쪽.textContent = "전직(100,000p)";
                     오른쪽.className = "전직버튼디자인";
                     오른쪽.onclick = () => {
                         // 여기에 전직 버튼 로직
