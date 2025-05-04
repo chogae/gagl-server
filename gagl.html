@@ -605,18 +605,11 @@
             /* ✅ 중앙정렬 */
         }
 
-        #전직화면타이틀 {
-            text-align: left;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
         .전직버튼디자인 {
             display: inline-block;
-            padding: 5px 5px;
+            padding: 5px;
             background-color: white;
             color: black;
-            border: 1px solid #ccc;
             cursor: pointer;
         }
 
@@ -626,7 +619,7 @@
 
         .전직완료디자인 {
             display: inline-block;
-            padding: 5px 5px;
+            padding: 5px;
             background-color: transparent;
             color: white;
             border: 0.2px solid #4b4b4b;
@@ -2793,15 +2786,15 @@ style="margin-right: 2px;">
                 const div = document.createElement("div");
                 div.className = "사백픽셀테두리 양쪽정렬 전직항목";
                 div.style.marginTop = "5px";
+                div.style.textAlign = "left";
 
                 const 왼쪽 = document.createElement("div");
                 왼쪽.textContent = 직위;
                 왼쪽.style.fontWeight = "bold";
 
                 const 오른쪽 = document.createElement("div");
-                오른쪽.style.fontSize = "12px";
                 오른쪽.style.borderRadius = "7px";
-                오른쪽.style.paddingLeft = "7px";
+                오른쪽.style.paddingLeft = "10px";
 
                 if (완료여부 === 1) {
                     오른쪽.textContent = "전직완료";
@@ -2812,7 +2805,6 @@ style="margin-right: 2px;">
                     오른쪽.onclick = () => {
                         // 여기에 전직 버튼 로직
                     };
-                    // break 전에 append 해야 하므로 if 밖에서 append 진행
                 }
 
                 div.appendChild(왼쪽);
@@ -2826,7 +2818,7 @@ style="margin-right: 2px;">
             화면해제();
         }
 
-        document.getElementById("버전표시").innerText = "v26";
+        document.getElementById("버전표시").innerText = "v27";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
