@@ -616,10 +616,8 @@
             padding: 5px 5px;
             background-color: white;
             color: black;
-            border-radius: 5px;
             border: 1px solid #ccc;
             cursor: pointer;
-            font-size: 12;
         }
 
         .전직버튼디자인:hover {
@@ -631,9 +629,7 @@
             padding: 5px 5px;
             background-color: transparent;
             color: white;
-            border-radius: 5px;
             border: 0.2px solid #4b4b4b;
-            font-size: 12;
         }
 
         /* css추가 */
@@ -2796,12 +2792,16 @@ style="margin-right: 2px;">
 
                 const div = document.createElement("div");
                 div.className = "사백픽셀테두리 양쪽정렬 전직항목";
-                div.style.marginBottom = "5px";
+                div.style.marginTop = "5px"; 
 
                 const 왼쪽 = document.createElement("div");
                 왼쪽.textContent = 직위;
+                왼쪽.style.fontWeight = "bold";
 
                 const 오른쪽 = document.createElement("div");
+                오른쪽.style.fontSize = "12px";
+                오른쪽.style.borderRadius = "4px";
+
                 if (완료여부 === 1) {
                     오른쪽.textContent = "전직완료";
                     오른쪽.className = "전직완료디자인";
