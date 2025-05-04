@@ -605,26 +605,6 @@
             /* ✅ 중앙정렬 */
         }
 
-        .전직버튼디자인 {
-            display: inline-block;
-            padding: 5px;
-            background-color: white;
-            color: black;
-            cursor: pointer;
-        }
-
-        .전직버튼디자인:hover {
-            background-color: #f0f0f0;
-        }
-
-        .전직완료디자인 {
-            display: inline-block;
-            padding: 5px;
-            background-color: transparent;
-            color: white;
-            border: 0.2px solid #4b4b4b;
-        }
-
         /* css추가 */
     </style>
 </head>
@@ -2794,14 +2774,25 @@ style="margin-right: 2px;">
 
                 const 오른쪽 = document.createElement("div");
                 오른쪽.style.borderRadius = "7px";
+                오른쪽.style.padding = "7px";
                 오른쪽.style.paddingLeft = "10px";
+                오른쪽.style.paddingRight = "10px";
+                오른쪽.style.fontSize = "13px";
 
                 if (완료여부 === 1) {
                     오른쪽.textContent = "전직완료";
-                    오른쪽.className = "전직완료디자인";
+                    // 오른쪽.style.display = "inline-block";
+                    오른쪽.style.backgroundColor = "transparent";
+                    오른쪽.style.color = "white";
+                    오른쪽.style.border = "0.2px solid #4b4b4b";
+
                 } else {
                     오른쪽.textContent = "전직(100,000p)";
-                    오른쪽.className = "전직버튼디자인";
+                    // 오른쪽.style.display = "inline-block";
+                    오른쪽.style.backgroundColor = "white";
+                    오른쪽.style.color = "black";
+                    오른쪽.style.cursor = "pointer";
+
                     오른쪽.onclick = () => {
                         // 여기에 전직 버튼 로직
                     };
