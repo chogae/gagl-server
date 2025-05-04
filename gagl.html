@@ -2807,10 +2807,13 @@ style="margin-right: 2px;">
             for (const 직위 of 전직순서) {
                 const 완료여부 = 전직정보[직위] ?? 0;
 
+                // 완료된 직위는 건너뜀
+                if (완료여부 === 1) continue;
+
+                // 첫 번째 안 배운 직위만 표시하고, 이후는 표시하지 않음
                 const div = document.createElement("div");
                 div.className = "사백픽셀테두리 양쪽정렬 전직항목";
                 div.style.marginTop = "5px";
-                // div.style.textAlign = "left";
 
                 const 왼쪽 = document.createElement("div");
                 왼쪽.textContent = 직위;
@@ -2823,30 +2826,41 @@ style="margin-right: 2px;">
                 오른쪽.style.paddingRight = "10px";
                 오른쪽.style.fontSize = "13px";
 
-                if (완료여부 === 1) {
-                    오른쪽.textContent = "전직 완료";
-                    // 오른쪽.style.display = "inline-block";
-                    오른쪽.style.backgroundColor = "transparent";
-                    오른쪽.style.color = "white";
-                    오른쪽.style.border = "0.2px solid #4b4b4b";
+                오른쪽.textContent = "전직(100,000p)";
+                오른쪽.style.backgroundColor = "white";
+                오른쪽.style.color = "black";
+                오른쪽.style.cursor = "pointer";
 
-                } else {
-                    오른쪽.textContent = "전직(100,000p)";
-                    // 오른쪽.style.display = "inline-block";
-                    오른쪽.style.backgroundColor = "white";
-                    오른쪽.style.color = "black";
-                    오른쪽.style.cursor = "pointer";
-
-                    오른쪽.onclick = () => {
-                        전직하기(직위, div);
-                    };
-                }
+                오른쪽.onclick = () => {
+                    전직하기(직위, div);
+                };
 
                 div.appendChild(왼쪽);
                 div.appendChild(오른쪽);
                 container.appendChild(div);
 
-                if (완료여부 === 0) break; // 미완료 항목 만나면 루프 종료
+                // 🔥 첫 번째 미완료 직위만 표시 → 루프 종료
+                break;
+
+                
+                // if (완료여부 === 1) {
+                //     오른쪽.textContent = "전직 완료";
+                //     // 오른쪽.style.display = "inline-block";
+                //     오른쪽.style.backgroundColor = "transparent";
+                //     오른쪽.style.color = "white";
+                //     오른쪽.style.border = "0.2px solid #4b4b4b";
+
+                // } else {
+                //     오른쪽.textContent = "전직(100,000p)";
+                //     // 오른쪽.style.display = "inline-block";
+                //     오른쪽.style.backgroundColor = "white";
+                //     오른쪽.style.color = "black";
+                //     오른쪽.style.cursor = "pointer";
+
+                //     오른쪽.onclick = () => {
+                //         전직하기(직위, div);
+                //     };
+                // }
 
             }
 
@@ -2879,7 +2893,7 @@ style="margin-right: 2px;">
         }
 
 
-        document.getElementById("버전표시").innerText = "v27";
+        document.getElementById("버전표시").innerText = "v28";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
         const 버전버튼 = document.getElementById("버전표시");
