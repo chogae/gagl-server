@@ -626,6 +626,16 @@
             background-color: #f0f0f0;
         }
 
+        .전직완료디자인 {
+            display: inline-block;
+            padding: 5px 5px;
+            background-color: transparent;
+            color: white;
+            border-radius: 5px;
+            border: 0.2px solid #4b4b4b;
+            font-size: 12;
+        }
+
         /* css추가 */
     </style>
 </head>
@@ -2786,6 +2796,7 @@ style="margin-right: 2px;">
 
                 const div = document.createElement("div");
                 div.className = "사백픽셀테두리 양쪽정렬 전직항목";
+                div.style.marginBottom = "5px";
 
                 const 왼쪽 = document.createElement("div");
                 왼쪽.textContent = 직위;
@@ -2793,6 +2804,7 @@ style="margin-right: 2px;">
                 const 오른쪽 = document.createElement("div");
                 if (완료여부 === 1) {
                     오른쪽.textContent = "전직완료";
+                    오른쪽.className = "전직완료디자인";
                 } else {
                     오른쪽.textContent = "전직(100,000p)";
                     오른쪽.className = "전직버튼디자인";
