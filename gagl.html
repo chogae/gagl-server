@@ -1311,7 +1311,7 @@
             document.getElementById("유물화면").style.display = "none";
 
             // 유저 정보 표시
-            document.getElementById("유저아이디").innerText = 유저.유저아이디 || "알 수 없음";
+            document.getElementById("유저아이디").innerText = (유저.직위 ? `[${유저.직위}] ` : "") + (유저.유저아이디 || "알 수 없음");
             document.getElementById("유저공격력").innerText = `공격력 ${유저.공격력 || 10}`;
             document.getElementById("유저체력").innerText = `체력 ${유저.남은체력}/${유저.최대체력}`;
 
@@ -2338,7 +2338,7 @@ style="margin-right: 2px;">
 
                 줄.innerHTML = `
             <div class="가로정렬">${왼쪽표시}</div>
-            <div>${유저.유저아이디} (lv.${유저.레벨 || 1}) - 공격력 ${유저.공격력} / ${유저.현재층}층</div>
+<div>${유저.직위 ? `[${유저.직위}] ` : ""}${유저.유저아이디} (lv.${유저.레벨 || 1}) - 공격력 ${유저.공격력} / ${유저.현재층}층</div>
         `;
 
                 줄.addEventListener("click", (e) => {
