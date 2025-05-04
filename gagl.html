@@ -1310,8 +1310,8 @@
             document.getElementById("전당화면").style.display = "none";
             document.getElementById("유물화면").style.display = "none";
 
-            // 유저 정보 표시
-            document.getElementById("유저아이디").innerText = (유저.직위 ? `[${유저.직위}] ` : "") + (유저.유저아이디 || "알 수 없음");
+            const 직위 = 최고전직명(유저.전직정보);
+            document.getElementById("유저아이디").innerText = (직위 ? `[${직위}] ` : "") + (유저.유저아이디 || "알 수 없음");
             document.getElementById("유저공격력").innerText = `공격력 ${유저.공격력 || 10}`;
             document.getElementById("유저체력").innerText = `체력 ${유저.남은체력}/${유저.최대체력}`;
 
@@ -1332,6 +1332,20 @@
             if (!유저.현재층) 유저.현재층 = 1;
 
             document.getElementById("현재층").innerText = `${유저.현재층}층`;
+        }
+
+        function 최고전직명(전직정보) {
+            const 전직순서 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
+
+            let 마지막직위 = null;
+            for (const 직위 of 전직순서) {
+                if (전직정보?.[직위] === 1) {
+                    마지막직위 = 직위;
+                } else {
+                    break;
+                }
+            }
+            return 마지막직위;
         }
 
 
