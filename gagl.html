@@ -2626,7 +2626,37 @@ style="margin-right: 2px;">
 
                 유저데이터 = 결과.유저데이터;
                 if (결과.결과 === "성공" && 결과.장비) {
-                    메시지표시(메시지표시박스, "", `도파민 폭발! ${결과.장비.이름} 획득!`, 색상맵[결과.장비.등급]);
+
+
+                    // 메시지표시(메시지표시박스, "", `도파민 폭발! 획득!`, 색상맵[결과.장비.등급]);
+
+                    const 네온박스 = document.getElementById("네온박스");
+                    const 등급외테두리 = document.getElementById("등급외테두리");
+
+                    if (네온박스) {
+                        네온박스.innerText = `도파민 폭발! ${결과.장비.이름} 도박성공!`;
+                        네온박스.style.display = "block";
+
+                        // 위치 조정용 부모 변경
+                        if (등급외테두리) {
+                            // 등급외테두리에 위치 기준 설정
+                            등급외테두리.style.position = "relative";
+
+                            // 네온박스를 등급외테두리 내부로 이동
+                            등급외테두리.appendChild(네온박스);
+
+                            // 전투화면용 위치 조정
+                            Object.assign(네온박스.style, {
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                zIndex: "100"
+                            });
+                        }
+                    }
+
+
                 } else if (결과.결과 === "실패") {
                     메시지표시(메시지표시박스, "", "도박에 실패했습니다!", "#ef4444");
                 }
