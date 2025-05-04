@@ -652,7 +652,7 @@
 
     <div id="전직화면" style="display: none;">
         <div id="전직컨테이너" class="세로정렬">
-            <div id="전직화면타이틀" class="밑줄" style="text-align: left; font-weight: bold;  font-size: 24px;" >
+            <div id="전직화면타이틀" class="밑줄" style="text-align: left; font-weight: bold;  font-size: 24px;">
                 전직
             </div>
             <div class="양쪽정렬" id="경험치와포인트">
@@ -2766,7 +2766,7 @@ style="margin-right: 2px;">
                 const div = document.createElement("div");
                 div.className = "사백픽셀테두리 양쪽정렬 전직항목";
                 div.style.marginTop = "5px";
-                div.style.textAlign = "left";
+                // div.style.textAlign = "left";
 
                 const 왼쪽 = document.createElement("div");
                 왼쪽.textContent = 직위;
@@ -2780,7 +2780,7 @@ style="margin-right: 2px;">
                 오른쪽.style.fontSize = "13px";
 
                 if (완료여부 === 1) {
-                    오른쪽.textContent = "전직완료";
+                    오른쪽.textContent = "전직 완료";
                     // 오른쪽.style.display = "inline-block";
                     오른쪽.style.backgroundColor = "transparent";
                     오른쪽.style.color = "white";
@@ -2794,7 +2794,7 @@ style="margin-right: 2px;">
                     오른쪽.style.cursor = "pointer";
 
                     오른쪽.onclick = () => {
-                        // 여기에 전직 버튼 로직
+                        전직하기(직위, div);
                     };
                 }
 
@@ -2808,6 +2808,32 @@ style="margin-right: 2px;">
 
             화면해제();
         }
+
+        async function 전직하기(직위, 위치참조) {
+            화면잠금();
+
+            const 응답 = await fetch("/promote-job", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    유저UID: 유저데이터.유저UID,
+                    직위: 직위
+                })
+            });
+
+            const 결과 = await 응답.json();
+
+            if (!응답.ok) {
+                메시지표시(위치참조, "", "전직 실패: " + 결과.오류, "");
+                화면해제();
+                return;
+            }
+
+            // 성공하면 화면 갱신
+            메시지표시(위치참조, "", 직위 + " 전직 성공!", "");
+            전직화면보여주기();
+        }
+
 
         document.getElementById("버전표시").innerText = "v27";
         //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main

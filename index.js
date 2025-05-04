@@ -861,6 +861,58 @@ app.post("/get-job-info", async (req, res) => {
     });
 });
 
+app.post("/promote-job", async (req, res) => {
+    const { 유저UID, 직위 } = req.body;
+
+    if (!유저UID || !직위) {
+        return res.status(400).json({ 오류: "유저UID 또는 직위 누락" });
+    }
+
+    const 비용 = 100000;
+
+    // 유저 정보 불러오기
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("경험치, 전직정보")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) {
+        return res.status(404).json({ 오류: "유저 정보 없음" });
+    }
+
+    const 경험치 = 유저.경험치 ?? 0;
+    const 전직정보 = 유저.전직정보 ?? {};
+
+    if (경험치 < 비용) {
+        return res.status(400).json({ 오류: "경험치 부족" });
+    }
+
+    if (전직정보[직위] === 1) {
+        return res.status(400).json({ 오류: "이미 전직 완료된 직위입니다" });
+    }
+
+    전직정보[직위] = 1;
+
+    const 업데이트 = {
+        경험치: 경험치 - 비용,
+        전직정보
+    };
+
+    const { error: 업데이트오류 } = await supabaseAdmin
+        .from("users")
+        .update(업데이트)
+        .eq("유저UID", 유저UID);
+
+    if (업데이트오류) {
+        return res.status(500).json({ 오류: "전직 업데이트 실패" });
+    }
+
+    return res.json({ 성공: true, 전직정보: 전직정보, 경험치: 경험치 - 비용 });
+});
+
+
+
 app.post("/gamble", async (req, res) => {
     const { 유저UID, 등급 } = req.body;
 
