@@ -760,7 +760,7 @@ app.post("/ranking", async (req, res) => {
         유저들.forEach(유저 => {
             유저.직위 = 최고전직명(유저.전직정보) || "";
         });
-        
+
         // 2. 내 순위 계산
         let 내순위 = null;
         if (유저UID) {
@@ -899,11 +899,14 @@ app.post("/promote-job", async (req, res) => {
 
     전직정보[직위] = 1;
 
+    const 완료전직갯수 = Object.values(전직정보).filter(v => v === 1).length;
+
     const 업데이트 = {
         경험치: 경험치 - 비용,
-        전직정보
+        전직정보,
+        전직공격력: 완료전직갯수  // ✅ 추가됨
     };
-
+    
     const { error: 업데이트오류 } = await supabaseAdmin
         .from("users")
         .update(업데이트)

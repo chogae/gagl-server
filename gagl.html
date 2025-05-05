@@ -916,7 +916,12 @@
             localStorage.setItem("기기ID", 기기ID);
         }
 
-        // 색찾기
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                document.getElementById("네온박스").style.display = "none";
+            }, 3000);
+        });
+
         const 색상맵 = {
             "일반": "#4b4b4b",
             "레어": "#00ff00",
@@ -1804,6 +1809,10 @@
                                 });
                             }
                         }
+                        setTimeout(() => {
+                            네온박스.style.display = "none";
+                        }, 3000);
+
                     }
 
                     if (결과.드랍유물) {
@@ -2330,13 +2339,17 @@ style="margin-right: 2px;">
                 body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
             });
 
-            const 결과 = await 응답.json(); // ✅ 이 줄이 필요합니다!
+            const 결과 = await 응답.json();
             const 유저들 = 결과.유저들 || [];
             const 내순위 = 결과.내순위;
 
             유저들.forEach((유저, index) => {
                 const 줄 = document.createElement("div");
-                줄.className = "양쪽정렬 밑줄";
+                줄.className = "밑줄 양쪽정렬";
+                줄.style.display = "flex";
+                줄.style.justifyContent = "space-between";
+                줄.style.width = "100%";
+
                 if (유저.유저아이디 === 유저데이터.유저아이디) 줄.classList.add("내아이디강조");
 
                 let 왼쪽표시;
@@ -2350,15 +2363,23 @@ style="margin-right: 2px;">
                     왼쪽표시 = `<span style="width:24px; display:inline-block;">${index + 1}</span>`;
                 }
 
-                줄.innerHTML = `
-            <div class="가로정렬">${왼쪽표시}</div>
-<div>${유저.직위 ? `[${유저.직위}] ` : ""}${유저.유저아이디} (lv.${유저.레벨 || 1}) - 공격력 ${유저.공격력} / ${유저.현재층}층</div>
-        `;
+                // 왼쪽 div (순위/왕관)
+                const 왼쪽 = document.createElement("div");
+                왼쪽.innerHTML = 왼쪽표시;
+                왼쪽.style.flex = "0 0 auto";
+
+                // 오른쪽 div (유저정보)
+                const 오른쪽 = document.createElement("div");
+                오른쪽.textContent = `${유저.직위 ? `[${유저.직위}] ` : ""}${유저.유저아이디} (lv.${유저.레벨 || 1}) - 공격력 ${유저.공격력} / ${유저.현재층}층`;
+                오른쪽.style.flex = "1";
+                오른쪽.style.textAlign = "right";
+
+                줄.appendChild(왼쪽);
+                줄.appendChild(오른쪽);
 
                 줄.addEventListener("click", (e) => {
-                    e.stopPropagation(); // ✅ document로 이벤트 퍼지는 것 차단
+                    e.stopPropagation();
 
-                    // console.log("유저 클릭됨:", 유저);
                     const 창 = document.getElementById("미니장비창");
                     창.style.display = "block";
                     창.innerHTML = `<div style="font-weight:bold; margin-bottom:8px;">🔍 ${유저.유저아이디} 장비</div>`;
@@ -2371,7 +2392,6 @@ style="margin-right: 2px;">
                         return;
                     }
 
-                    // ✅ 등급 순 정렬
                     const 등급순서 = {
                         "레어": 1,
                         "신화": 2,
@@ -2404,13 +2424,28 @@ style="margin-right: 2px;">
                 컨테이너.appendChild(줄);
             });
 
+            // 내 순위가 10등 밖이면 별도로 표시
             if (typeof 내순위 === "number" && 내순위 >= 10) {
+                const 직위 = 최고전직명(유저데이터.전직정보);
+
                 const 줄 = document.createElement("div");
                 줄.className = "양쪽정렬 사백픽셀테두리 내아이디강조";
-                줄.innerHTML = `
-        <div class="가로정렬">${내순위 + 1}</div>
-        <div>${유저데이터.유저아이디} (lv.${유저데이터.레벨 || 1}) - 공격력 ${유저데이터.공격력} / ${유저데이터.현재층}층</div>
-    `;
+                줄.style.display = "flex";
+                줄.style.justifyContent = "space-between";
+                줄.style.width = "100%";
+
+                const 왼쪽 = document.createElement("div");
+                왼쪽.textContent = `${내순위 + 1}`;
+                왼쪽.style.flex = "0 0 auto";
+
+                const 오른쪽 = document.createElement("div");
+                오른쪽.textContent = `${직위 ? `[${직위}] ` : ""}${유저데이터.유저아이디} (lv.${유저데이터.레벨 || 1}) - 공격력 ${유저데이터.공격력} / ${유저데이터.현재층}층`;
+                오른쪽.style.flex = "1";
+                오른쪽.style.textAlign = "right";
+
+                줄.appendChild(왼쪽);
+                줄.appendChild(오른쪽);
+
                 컨테이너.appendChild(줄);
             }
 
@@ -2669,6 +2704,10 @@ style="margin-right: 2px;">
                             });
                         }
                     }
+                    setTimeout(() => {
+                        네온박스.style.display = "none";
+                    }, 3000);
+
 
 
                 } else if (결과.결과 === "실패") {
@@ -2762,15 +2801,6 @@ style="margin-right: 2px;">
 
         });
 
-        document.addEventListener("click", function () {
-            const 박스 = document.getElementById("네온박스");
-            const 유물드랍박스 = document.getElementById("유물드랍박스");
-            if (박스) {
-                박스.style.display = "none";
-                // 유물드랍박스.style.display = "none";
-            }
-        });
-
         async function 전직화면보여주기() {
             화면잠금();
             const 응답 = await fetch("/get-job-info", {
@@ -2832,38 +2862,15 @@ style="margin-right: 2px;">
                 오른쪽.style.cursor = "pointer";
 
                 오른쪽.onclick = () => {
-                    전직하기(직위, div);
+                    전직하기(직위, 왼쪽);
                 };
 
                 div.appendChild(왼쪽);
                 div.appendChild(오른쪽);
                 container.appendChild(div);
 
-                // 🔥 첫 번째 미완료 직위만 표시 → 루프 종료
                 break;
-
-                
-                // if (완료여부 === 1) {
-                //     오른쪽.textContent = "전직 완료";
-                //     // 오른쪽.style.display = "inline-block";
-                //     오른쪽.style.backgroundColor = "transparent";
-                //     오른쪽.style.color = "white";
-                //     오른쪽.style.border = "0.2px solid #4b4b4b";
-
-                // } else {
-                //     오른쪽.textContent = "전직(100,000p)";
-                //     // 오른쪽.style.display = "inline-block";
-                //     오른쪽.style.backgroundColor = "white";
-                //     오른쪽.style.color = "black";
-                //     오른쪽.style.cursor = "pointer";
-
-                //     오른쪽.onclick = () => {
-                //         전직하기(직위, div);
-                //     };
-                // }
-
             }
-
             화면해제();
         }
 
@@ -2917,11 +2924,13 @@ style="margin-right: 2px;">
     - 악마성을 클릭하세요<br>
     - 매일 아침 9시에 스태미너가 최대치로 회복됩니다<br>
 - 최상단 아이디를 클릭하시면 아이디 변경이 가능합니다<br>
+- 전투화면의 경험치를 클릭하시면 전직창이 열립니다<br>
 - 전투화면의 보유골드를 클릭하시면 도박창이 열립니다<br>
 - 장비 강화 실패 시 강화수치가 하락합니다<br>
 - 전당화면에서 유저를 클릭하면 해당 유저의 장비열람 가능합니다<br>
 - 단축키 Alt + A 로 레어몬스터를 우선 공격하는<br>
 풀자동 사냥이 가능합니다<br>
+☆누르고 계시면 안되고, 알트에이 딸깍 한번만 실행하시면 됩니다☆<br>
 - 모든팝업창은 외부를 클릭 시 닫힙니다<br>
 <br>
 행운을 빕니다<br>
