@@ -462,8 +462,8 @@
 
         .내아이디강조 {
             background-color: #505050;
-            /* font-weight: bold;
-            border-radius: 6px; */
+            /* font-weight: bold; */
+            border-radius: 6px;
         }
 
         .색상실험 {
@@ -2793,6 +2793,7 @@ style="margin-right: 2px;">
                 }
 
                 오른쪽.innerHTML = `${직위 ? `[${직위}] ` : ""}${닉네임표시} (lv.${유저데이터.레벨 || 1}) - 공격력 ${유저데이터.최종공격력} / ${유저데이터.현재층}층`;
+                // 오른쪽.textContent = `${직위 ? `[${직위}] ` : ""}${유저데이터.유저아이디} (lv.${유저데이터.레벨 || 1}) - 공격력 ${유저데이터.최종공격력} / ${유저데이터.현재층}층`;
 
                 오른쪽.style.flex = "1";
                 오른쪽.style.textAlign = "right";
@@ -2868,6 +2869,43 @@ style="margin-right: 2px;">
     color: #aaa;
 ">x${수량}</div>
         `;
+
+                div.addEventListener("mouseover", () => {
+                    const 기존설명 = div.querySelector(".유물설명");
+                    if (기존설명) 기존설명.remove();
+
+                    const 데이터 = 유물데이터[유물이름];
+
+                    const 설명div = document.createElement("div");
+                    설명div.className = "유물설명";
+                    설명div.style.position = "absolute";
+                    설명div.style.top = "100%";
+                    설명div.style.left = "50%";
+                    설명div.style.transform = "translateX(-50%)";
+                    설명div.style.backgroundColor = "transparent";  // ✅ 완전 투명
+                    설명div.style.color = "yellow";
+                    설명div.style.fontSize = "12px";
+                    설명div.style.padding = "2px 4px";
+                    설명div.style.borderRadius = "3px";
+                    설명div.style.whiteSpace = "nowrap";
+                    설명div.style.zIndex = "10";
+                    설명div.style.textAlign = "center"; // ✅ 가운데 정렬
+
+                    if (데이터) {
+                        설명div.innerHTML = `<b>${유물이름}</b><br>${데이터.설명}`;
+                    } else {
+                        설명div.innerText = "정보 없음";
+                    }
+
+                    div.appendChild(설명div);
+                });
+
+                // ✅ 마우스 아웃 시 설명 div 삭제
+                div.addEventListener("mouseout", () => {
+                    const 기존설명 = div.querySelector(".유물설명");
+                    if (기존설명) 기존설명.remove();
+                });
+
 
                 컨테이너.appendChild(div);
             }
@@ -3272,12 +3310,32 @@ style="margin-right: 2px;">
             전직화면보여주기();
         }
 
+        const 유물데이터 = {
+            "소드": { 설명: "공격력이 증가합니다", 효과: "공격력증가", 배율: 0.01 },
+            "하트플러스": { 설명: "체력이 증가합니다", 효과: "체력증가", 배율: 0.01 },
+            "고스트": { 설명: "히든몬스터 등장률이 증가합니다", 효과: "등장률증가", 배율: 0.01 },
+            "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다", 효과: "방어력감소", 배율: 0.01 },
+            "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다", 효과: "체력감소", 배율: 0.01 },
+            "엑스": { 설명: "크리티컬 피해량을 증가시킵니다", 효과: "크리배율증가", 배율: 0.01 },
+            "암포라": { 설명: "미정", 효과: "미정", 배율: 0.01 },
+            "모루": { 설명: "장비 강화확률을 증가시킵니다", 효과: "장비강화확률증가", 배율: 0.001 },
+            "클로버": { 설명: "장비 드랍율을 증가시킵니다", 효과: "장비드랍율증가", 배율: 0.001 },
+            "플라워": { 설명: "미정", 효과: "미정", 배율: 0.01 },
+            "모래시계": { 설명: "미정", 효과: "미정", 배율: 0.01 },
+            "퍼즐": { 설명: "미정", 효과: "미정", 배율: 0.01 },
+            "로켓": { 설명: "미정", 효과: "미정", 배율: 0.01 },
+            "표창": { 설명: "미정", 효과: "미정", 배율: 0.01 },
+            "봄": { 설명: "미정", 효과: "미정", 배율: 0.01 },
+            "여름": { 설명: "미정", 효과: "미정", 배율: 0.01 },
+            "가을": { 설명: "미정", 효과: "미정", 배율: 0.01 },
+            "겨울": { 설명: "미정", 효과: "미정", 배율: 0.01 },
+        };
+
 
         document.getElementById("버전표시").innerText = "v34";
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // npm install -g nodemon
         // nodemon index.js
-
 
         const 버전버튼 = document.getElementById("버전표시");
         버전버튼.style.cursor = "pointer";
@@ -3295,9 +3353,9 @@ style="margin-right: 2px;">
         // 메뉴얼창.style.whiteSpace = "nowrap";
         메뉴얼창.style.display = "none";
         메뉴얼창.innerHTML = `
-  <div style="font-weight: bold; margin-bottom: 10px;">📘 운영자 메뉴얼</div>
+  <div style="font-weight: bold; margin-bottom: 10px;">📘 gagl 메뉴얼</div>
   <div>
-    - 악마성을 클릭하세요<br>
+    - gagl은 자동사냥 게임입니다. 악마성을 클릭하세요<br>
     - 매일 아침 9시에 스태미너가 최대치로 회복됩니다<br>
 - 최상단 아이디를 클릭하시면 아이디 변경이 가능합니다<br>
 - 전투화면의 경험치를 클릭하시면 전직창이 열립니다<br>
@@ -3310,12 +3368,12 @@ style="margin-right: 2px;">
 <br>
 행운을 빕니다<br>
 <br>
-ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
 <br>
 gagl 패치노트<br>
-- 신규장비, 루시퍼의 심장이 추가되었습니다<br>
-- 드랍이 힘들다면 인생한방 도박장을 이용하세요<br>
-- 전직효과가 적용됩니다<br>
+- 전당에 운영자 표시가 추가되었습니다. 맞습니다 제가 운영자입니다<br>
+- 유물 효과를 구현중입니다. 미정인 유물에 대한 효과를 추천해주시면<br>
+감사히 받겠습니다<br>
 </div>
 `;
         // 업데이트
@@ -3370,6 +3428,7 @@ gagl 패치노트<br>
             }
 
         });
+
 
 
 
