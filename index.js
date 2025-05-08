@@ -423,6 +423,7 @@ app.post("/attack-rare", async (req, res) => {
     await supabaseAdmin.from("users").update({
         레벨: 새유저.레벨,
         공격력: 새유저.공격력,
+        장비공격력:새유저.장비공격력,
         최종공격력: 새유저.최종공격력,
         경험치: 새유저.경험치,
         골드: 새유저.골드,
