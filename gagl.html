@@ -529,6 +529,23 @@
             /* 스크롤 항상 표시 */
         }
 
+        .운영자표시 {
+            background: linear-gradient(90deg, #ff6ec4, #7873f5, #4adede, #4adede, #ff6ec4);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            animation: 무지개흐름 3s linear infinite;
+        }
+
+        @keyframes 무지개흐름 {
+            to {
+                background-position: 200% center;
+            }
+        }
+
         .그라데이션텍스트블라섬 {
             background: linear-gradient(45deg, #ff9a9e, #fad0c4);
             background-clip: text;
@@ -2686,7 +2703,14 @@ style="margin-right: 2px;">
 
                 // 오른쪽 div (유저정보)
                 const 오른쪽 = document.createElement("div");
-                오른쪽.textContent = `${유저.직위 ? `[${유저.직위}] ` : ""}${유저.유저아이디} (lv.${유저.레벨 || 1}) - 공격력 ${유저.최종공격력} / ${유저.현재층}층`;
+                let 닉네임표시 = 유저.유저아이디;
+                if (닉네임표시 === "채이") {
+                    닉네임표시 = `<span class="운영자표시">${닉네임표시}</span>`;
+                }
+
+                오른쪽.innerHTML = `${유저.직위 ? `[${유저.직위}] ` : ""}${닉네임표시} (lv.${유저.레벨 || 1}) - 공격력 ${유저.최종공격력} / ${유저.현재층}층`;
+
+                // 오른쪽.textContent = `${유저.직위 ? `[${유저.직위}] ` : ""}${유저.유저아이디} (lv.${유저.레벨 || 1}) - 공격력 ${유저.최종공격력} / ${유저.현재층}층`;
                 오른쪽.style.flex = "1";
                 오른쪽.style.textAlign = "right";
 
@@ -2763,7 +2787,13 @@ style="margin-right: 2px;">
                 왼쪽.style.flex = "0 0 auto";
 
                 const 오른쪽 = document.createElement("div");
-                오른쪽.textContent = `${직위 ? `[${직위}] ` : ""}${유저데이터.유저아이디} (lv.${유저데이터.레벨 || 1}) - 공격력 ${유저데이터.최종공격력} / ${유저데이터.현재층}층`;
+                let 닉네임표시 = 유저데이터.유저아이디;
+                if (닉네임표시 === "채이") {
+                    닉네임표시 = `<span class="운영자표시">${닉네임표시}</span>`;
+                }
+
+                오른쪽.innerHTML = `${직위 ? `[${직위}] ` : ""}${닉네임표시} (lv.${유저데이터.레벨 || 1}) - 공격력 ${유저데이터.최종공격력} / ${유저데이터.현재층}층`;
+
                 오른쪽.style.flex = "1";
                 오른쪽.style.textAlign = "right";
 
@@ -3243,7 +3273,7 @@ style="margin-right: 2px;">
         }
 
 
-        document.getElementById("버전표시").innerText = "v33";
+        document.getElementById("버전표시").innerText = "v34";
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // npm install -g nodemon
         // nodemon index.js
