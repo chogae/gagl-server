@@ -142,6 +142,12 @@
             padding: 15px;
         }
 
+        .타락테두리 {
+            border: 0.2px solid #CD7F32;
+            /* 브론즈 색 */
+            box-shadow: 0 0 10px #CD7F32;
+        }
+
         .에너지바 {
             background-color: #eab308;
             height: 5px;
@@ -605,6 +611,8 @@
             /* ✅ 중앙정렬 */
         }
 
+
+
         /* css추가 */
     </style>
 </head>
@@ -899,8 +907,9 @@
 ">
         <div id="도박타이틀" style="font-size: 20px; font-weight: bold;"></div>
         <div style="margin-top: 15px;">
-            <div class="버튼" onclick="도박시도('태초')">태초 장비 (100만)</div>
-            <div class="버튼" onclick="도박시도('공허')">공허 장비 (1000만)</div>
+            <div class="버튼" onclick="도박시도('태초')">태초 장비 (70만)</div>
+            <div class="버튼" onclick="도박시도('공허')">공허 장비 (700만)</div>
+            <div class="버튼" onclick="도박시도('타락')">타락 장비 (7000만)</div>
         </div>
     </div>
 
@@ -1226,7 +1235,7 @@
                 유저데이터 = {
                     ...유저정보,
                     스킬: 유저정보.스킬 || {},
-                    조우기록: 유저정보.조우기록 || { 일반: 0, 레어: 0, 신화: 0, 고대: 0, 태초: 0, 공허: 0 },
+                    조우기록: 유저정보.조우기록 || { 일반: 0, 레어: 0, 신화: 0, 고대: 0, 태초: 0, 공허: 0, 타락: 0 },
                     합성기록: 유저정보.합성기록 || {},
                     장비목록: 유저정보.장비목록 || [],
                     몇마리죽였나: 유저정보.킬카운트 || 0,
@@ -1318,11 +1327,10 @@
 
             const 직위 = 최고전직명(유저.전직정보);
             document.getElementById("유저아이디").innerText = (직위 ? `[${직위}] ` : "") + (유저.유저아이디 || "알 수 없음");
-            document.getElementById("유저공격력").innerText = `공격력 ${유저.공격력 || 10}`;
+            document.getElementById("유저공격력").innerText = `공격력 ${유저.최종공격력 || 10}`;
             document.getElementById("유저체력").innerText = `체력 ${유저.남은체력}/${유저.최대체력}`;
 
             document.getElementById("몬스터테두리안표시").style.display = "none";
-
             document.getElementById("레벨").innerText = `레벨 ${유저.레벨 || 1}`;
             document.getElementById("총경험치").innerText = 유저.경험치?.toLocaleString() || "0";
             document.getElementById("총골드").innerText = (유저.골드 || 0).toLocaleString();
@@ -1461,7 +1469,7 @@
     <div style="border: 0.2px solid #3b82f6; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
         <div>${로그.유저아이디}</div>
         <div>
-            <div>공격력 ${로그.유저공격력}</div>
+            <div>공격력 ${로그.유저최종공격력}</div>
             <div>체력 ${로그.유저체력}/${로그.유저최대체력}</div>
         </div>
     </div>
@@ -1525,7 +1533,7 @@
                     document.getElementById("획득골드").innerText = `+${보상.골드}`;
                     document.getElementById("획득숙련도").innerText = `+${보상.숙련도}`;
                     document.getElementById("레벨").innerText = `레벨 ${새유저.레벨}`;
-                    document.getElementById("유저공격력").innerText = `공격력 ${새유저.공격력}`;
+                    document.getElementById("유저공격력").innerText = `공격력 ${새유저.최종공격력}`;
                     document.getElementById("유저체력").innerText = `체력 ${새유저.남은체력}/${새유저.최대체력}`;
                     document.getElementById("획득로그").innerText =
                         `${보상.경험치} EXP, ${보상.골드} Gold, ${보상.숙련도} 숙련도 획득`;
@@ -1705,7 +1713,7 @@
     <div style="border: 0.2px solid #3b82f6; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
         <div>${로그.유저아이디}</div>
         <div>
-            <div>공격력 ${로그.유저공격력}</div>
+            <div>공격력 ${로그.유저최종공격력}</div>
             <div>체력 ${로그.유저체력}/${로그.유저최대체력}</div>
         </div>
     </div>
@@ -1769,7 +1777,7 @@
                     document.getElementById("획득골드").innerText = `+${보상.골드}`;
                     document.getElementById("획득숙련도").innerText = `+${보상.숙련도}`;
                     document.getElementById("레벨").innerText = `레벨 ${새유저.레벨}`;
-                    document.getElementById("유저공격력").innerText = `공격력 ${새유저.공격력}`;
+                    document.getElementById("유저공격력").innerText = `공격력 ${새유저.최종공격력}`;
                     document.getElementById("유저체력").innerText = `체력 ${새유저.남은체력}/${새유저.최대체력}`;
                     document.getElementById("획득로그").innerText =
                         `${보상.경험치} EXP, ${보상.골드} Gold, ${보상.숙련도} 숙련도 획득`;
@@ -1914,13 +1922,13 @@
             document.getElementById("레벨업표시").innerText = "";
 
             // 📌 조우 기록 표시
-            const 기록 = 유저데이터.조우기록 || { 레어: 0, 신화: 0, 고대: 0, 태초: 0, 공허: 0 };
+            const 기록 = 유저데이터.조우기록 || { 레어: 0, 신화: 0, 고대: 0, 태초: 0, 공허: 0, 타락: 0 };
             document.getElementById("장비목록").innerText =
-                `레어:${기록.레어} 신화:${기록.신화} 고대:${기록.고대} 태초:${기록.태초} 공허:${기록.공허}`;
+                `레어:${기록.레어} 신화:${기록.신화} 고대:${기록.고대} 태초:${기록.태초} 공허:${기록.공허} 타락:${기록.타락}`;
 
             // 📌 골드/공격력/체력 표시
             document.getElementById("장비골드표시").innerHTML =
-                `${머니아이콘} ${유저데이터.골드.toLocaleString()} Gold | ${공격력아이콘} 공격력 ${유저데이터.공격력} | ${체력아이콘} 최대체력 ${유저데이터.최대체력}`;
+                `${머니아이콘} ${유저데이터.골드.toLocaleString()} Gold | ${공격력아이콘} 공격력 ${유저데이터.최종공격력} | ${체력아이콘} 최대체력 ${유저데이터.최대체력}`;
 
             // 📌 장비 컨테이너 정리
             const 장비컨테이너 = document.getElementById("장비컨테이너");
@@ -1938,7 +1946,8 @@
                 "신화": 2,
                 "고대": 3,
                 "태초": 4,
-                "공허": 5
+                "공허": 5,
+                "타락": 6,
             };
 
             장비목록.sort((a, b) => {
@@ -1951,8 +1960,15 @@
             장비목록.forEach(장비 => {
                 const 박스 = document.createElement("div");
                 박스.className = "기본테두리 양쪽정렬";
-                박스.style.border = `1px solid ${색상맵[장비.등급] || "#fff"}`;
                 박스.style.marginBottom = "8px";
+
+                // 박스.style.border = `0.2px solid ${색상맵[장비.등급] || "#fff"}`;
+                // 타락이면 특별 테두리, 아니면 색상맵 사용
+                if (장비.등급 === "타락") {
+                    박스.classList.add("타락테두리");
+                } else {
+                    박스.style.border = `0.2px solid ${색상맵[장비.등급] || "#fff"}`;
+                }
 
                 const 키 = `${장비.이름}|${장비.등급}`;
                 const 합성수 = 유저데이터.합성기록?.[키] ?? 0;
@@ -1988,7 +2004,8 @@
                 "신화": 100000,
                 "고대": 200000,
                 "태초": 300000,
-                "공허": 400000
+                "공허": 400000,
+                "타락": 1000000,
             }[등급];
 
             const 비용 = 강화비용;
@@ -2032,6 +2049,8 @@
                 }
 
                 유저데이터.공격력 = 결과.공격력;
+                유저데이터.장비공격력 = 결과.장비공격력;
+                유저데이터.최종공격력 = 결과.최종공격력;
                 유저데이터.골드 = 결과.골드;
 
                 장비화면보여주기();
@@ -2667,7 +2686,7 @@ style="margin-right: 2px;">
 
                 // 오른쪽 div (유저정보)
                 const 오른쪽 = document.createElement("div");
-                오른쪽.textContent = `${유저.직위 ? `[${유저.직위}] ` : ""}${유저.유저아이디} (lv.${유저.레벨 || 1}) - 공격력 ${유저.공격력} / ${유저.현재층}층`;
+                오른쪽.textContent = `${유저.직위 ? `[${유저.직위}] ` : ""}${유저.유저아이디} (lv.${유저.레벨 || 1}) - 공격력 ${유저.최종공격력} / ${유저.현재층}층`;
                 오른쪽.style.flex = "1";
                 오른쪽.style.textAlign = "right";
 
@@ -2694,7 +2713,8 @@ style="margin-right: 2px;">
                         "신화": 2,
                         "고대": 3,
                         "태초": 4,
-                        "공허": 5
+                        "공허": 5,
+                        "타락": 6,
                     };
 
                     장비들.sort((a, b) => {
@@ -2712,7 +2732,14 @@ style="margin-right: 2px;">
                         const 박스 = document.createElement("div");
                         박스.className = "기본테두리";
                         박스.style.marginBottom = "6px";
-                        박스.style.border = `1px solid ${색상맵[장비.등급] || "#ccc"}`;
+                        // 박스.style.border = `1px solid ${색상맵[장비.등급] || "#fff"}`;
+
+                        if (장비.등급 === "타락") {
+                            박스.classList.add("타락테두리");
+                        } else {
+                            박스.style.border = `0.2px solid ${색상맵[장비.등급] || "#fff"}`;
+                        }
+
                         박스.innerHTML = `[${장비.등급}] ${이름표시} - 🗡 ${장비.공격력}`;
                         창.appendChild(박스);
                     }
@@ -2736,7 +2763,7 @@ style="margin-right: 2px;">
                 왼쪽.style.flex = "0 0 auto";
 
                 const 오른쪽 = document.createElement("div");
-                오른쪽.textContent = `${직위 ? `[${직위}] ` : ""}${유저데이터.유저아이디} (lv.${유저데이터.레벨 || 1}) - 공격력 ${유저데이터.공격력} / ${유저데이터.현재층}층`;
+                오른쪽.textContent = `${직위 ? `[${직위}] ` : ""}${유저데이터.유저아이디} (lv.${유저데이터.레벨 || 1}) - 공격력 ${유저데이터.최종공격력} / ${유저데이터.현재층}층`;
                 오른쪽.style.flex = "1";
                 오른쪽.style.textAlign = "right";
 
@@ -2832,7 +2859,7 @@ style="margin-right: 2px;">
             입력창.style.color = "black";
             입력창.style.border = "none";
             입력창.style.fontSize = "14px";
-            입력창.size = 8;
+            입력창.size = 6;
             입력창.style.outline = "none";
             입력창.value = "";
             기존표시.replaceWith(입력창);
@@ -2860,8 +2887,8 @@ style="margin-right: 2px;">
                 if (e.key !== "Enter") return;
 
                 const 새아이디 = 입력창.value.trim();
-                if (!새아이디 || 새아이디.length > 8) {
-                    메시지표시(메시지표시박스, "⚠️", "1~8자 이내로 입력하세요", "#ef4444");
+                if (!새아이디 || 새아이디.length > 6) {
+                    메시지표시(메시지표시박스, "⚠️", "1~6자 이내로 입력하세요", "#ef4444");
                     return;
                 }
 
@@ -2942,6 +2969,7 @@ style="margin-right: 2px;">
             const 비용맵 = {
                 "태초": 700000,
                 "공허": 7000000,
+                "타락": 70000000,
             };
 
             const 비용 = 비용맵[등급];
@@ -3131,7 +3159,8 @@ style="margin-right: 2px;">
     `;
 
             // 🔷 전직 리스트 추가
-            for (const 직위 of 전직순서) {
+            for (let i = 0; i < 전직순서.length; i++) {
+                const 직위 = 전직순서[i];
                 const 완료여부 = 전직정보[직위] ?? 0;
 
                 // 완료된 직위는 건너뜀
@@ -3143,8 +3172,22 @@ style="margin-right: 2px;">
                 div.style.marginTop = "5px";
 
                 const 왼쪽 = document.createElement("div");
-                왼쪽.textContent = 직위;
+                왼쪽.style.display = "flex";
+                왼쪽.style.flexDirection = "column";  // 세로로 쌓기
                 왼쪽.style.fontWeight = "bold";
+
+                const 직위텍스트 = document.createElement("div");
+                직위텍스트.textContent = 직위;
+
+                // 🔶 효과 설명 추가
+                const 효과텍스트 = document.createElement("div");
+                효과텍스트.textContent = `최종공격력 x${2 + i}`;  // 2배부터 시작
+                효과텍스트.style.fontSize = "12px";
+                효과텍스트.style.color = "gray";
+                효과텍스트.style.marginTop = "3px";
+
+                왼쪽.appendChild(직위텍스트);
+                왼쪽.appendChild(효과텍스트);
 
                 const 오른쪽 = document.createElement("div");
                 오른쪽.style.borderRadius = "7px";
@@ -3166,7 +3209,7 @@ style="margin-right: 2px;">
                 div.appendChild(오른쪽);
                 container.appendChild(div);
 
-                break;
+                break;  // 첫 번째 미완료 항목만 보여줌
             }
             화면해제();
         }
@@ -3190,6 +3233,9 @@ style="margin-right: 2px;">
                 화면해제();
                 return;
             }
+            유저데이터.레벨 = 결과.레벨;
+            유저데이터.경험치 = 결과.경험치;
+            유저데이터.최종공격력 = 결과.최종공격력;
 
             // 성공하면 화면 갱신
             메시지표시(위치참조, "", 직위 + " 전직 성공!", "");
@@ -3197,7 +3243,7 @@ style="margin-right: 2px;">
         }
 
 
-        document.getElementById("버전표시").innerText = "v31";
+        document.getElementById("버전표시").innerText = "v33";
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // npm install -g nodemon
         // nodemon index.js
@@ -3228,8 +3274,7 @@ style="margin-right: 2px;">
 - 전투화면의 보유골드를 클릭하시면 도박창이 열립니다<br>
 - 장비 강화 실패 시 강화수치가 하락합니다<br>
 - 전당화면에서 유저를 클릭하면 해당 유저의 장비열람 가능합니다<br>
-- 단축키 Alt + A 로 레어몬스터를 우선 공격하는<br>
-풀자동 사냥이 가능합니다<br>
+- 단축키 Alt + A 로 레어몬스터를 우선 공격하는 풀자동 사냥이 가능합니다<br>
 ☆누르고 계시면 안되고, 알트에이 딸깍 한번만 실행하시면 됩니다☆<br>
 - 모든팝업창은 외부를 클릭 시 닫힙니다<br>
 <br>
@@ -3238,9 +3283,9 @@ style="margin-right: 2px;">
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
 <br>
 gagl 패치노트<br>
-- 유물 시스템을 구현중입니다<br>
-- 전직 시스템 구현중입니다<br>
-- 스킬 단계가 추가되었습니다
+- 신규장비, 루시퍼의 심장이 추가되었습니다<br>
+- 드랍이 힘들다면 인생한방 도박장을 이용하세요<br>
+- 전직효과가 적용됩니다<br>
 </div>
 `;
         // 업데이트
