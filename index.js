@@ -841,7 +841,7 @@ app.post("/ranking", async (req, res) => {
             .eq("버전업", 4)
             .not("최종공격력", "is", null)
             .order("최종공격력", { ascending: false })
-            .limit(10);
+            .limit(100);
 
         if (error) {
             return res.status(500).json({ 오류: "랭킹 조회 실패" });

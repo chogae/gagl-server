@@ -2773,36 +2773,36 @@ style="margin-right: 2px;">
             });
 
             // 내 순위가 10등 밖이면 별도로 표시
-            if (typeof 내순위 === "number" && 내순위 >= 10) {
-                const 직위 = 최고전직명(유저데이터.전직정보);
+            // if (typeof 내순위 === "number" && 내순위 >= 10) {
+            //     const 직위 = 최고전직명(유저데이터.전직정보);
 
-                const 줄 = document.createElement("div");
-                줄.className = "양쪽정렬 사백픽셀테두리 내아이디강조";
-                줄.style.display = "flex";
-                줄.style.justifyContent = "space-between";
-                줄.style.width = "100%";
+            //     const 줄 = document.createElement("div");
+            //     줄.className = "양쪽정렬 사백픽셀테두리 내아이디강조";
+            //     줄.style.display = "flex";
+            //     줄.style.justifyContent = "space-between";
+            //     줄.style.width = "100%";
 
-                const 왼쪽 = document.createElement("div");
-                왼쪽.textContent = `${내순위 + 1}`;
-                왼쪽.style.flex = "0 0 auto";
+            //     const 왼쪽 = document.createElement("div");
+            //     왼쪽.textContent = `${내순위 + 1}`;
+            //     왼쪽.style.flex = "0 0 auto";
 
-                const 오른쪽 = document.createElement("div");
-                let 닉네임표시 = 유저데이터.유저아이디;
-                if (닉네임표시 === "채이") {
-                    닉네임표시 = `<span class="운영자표시">${닉네임표시}</span>`;
-                }
+            //     const 오른쪽 = document.createElement("div");
+            //     let 닉네임표시 = 유저데이터.유저아이디;
+            //     if (닉네임표시 === "채이") {
+            //         닉네임표시 = `<span class="운영자표시">${닉네임표시}</span>`;
+            //     }
 
-                오른쪽.innerHTML = `${직위 ? `[${직위}] ` : ""}${닉네임표시} (lv.${유저데이터.레벨 || 1}) - 공격력 ${유저데이터.최종공격력} / ${유저데이터.현재층}층`;
-                // 오른쪽.textContent = `${직위 ? `[${직위}] ` : ""}${유저데이터.유저아이디} (lv.${유저데이터.레벨 || 1}) - 공격력 ${유저데이터.최종공격력} / ${유저데이터.현재층}층`;
+            //     오른쪽.innerHTML = `${직위 ? `[${직위}] ` : ""}${닉네임표시} (lv.${유저데이터.레벨 || 1}) - 공격력 ${유저데이터.최종공격력} / ${유저데이터.현재층}층`;
+            //     // 오른쪽.textContent = `${직위 ? `[${직위}] ` : ""}${유저데이터.유저아이디} (lv.${유저데이터.레벨 || 1}) - 공격력 ${유저데이터.최종공격력} / ${유저데이터.현재층}층`;
 
-                오른쪽.style.flex = "1";
-                오른쪽.style.textAlign = "right";
+            //     오른쪽.style.flex = "1";
+            //     오른쪽.style.textAlign = "right";
 
-                줄.appendChild(왼쪽);
-                줄.appendChild(오른쪽);
+            //     줄.appendChild(왼쪽);
+            //     줄.appendChild(오른쪽);
 
-                컨테이너.appendChild(줄);
-            }
+            //     컨테이너.appendChild(줄);
+            // }
 
             화면해제();
         }
@@ -3332,7 +3332,7 @@ style="margin-right: 2px;">
         };
 
 
-        document.getElementById("버전표시").innerText = "v36";
+        document.getElementById("버전표시").innerText = "v37";
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // npm install -g nodemon
         // nodemon index.js
@@ -3374,6 +3374,7 @@ gagl 패치노트<br>
 - 유물 효과를 구현중입니다. 유물에 마우스를 올리면 설명이 나옵니다<br>
 미정인 유물에 대해 아이디어를 주시면 감사히 받겠습니다<br>
 - 타락등급 몬스터, 루시퍼를 사냥할 수 있습니다<br>
+- 전당화면에 모든 유저가 표시됩니다<br>
 </div>
 `;
         // 업데이트
