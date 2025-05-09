@@ -235,7 +235,7 @@ app.post("/attack-normal", async (req, res) => {
     }).eq("유저UID", 새유저.유저UID);
 
     let 레어몬스터이름 = null;
-    if (Math.random() < 1 / 7000) 레어몬스터이름 = "타락";
+    if (Math.random() < 1 / 1) 레어몬스터이름 = "루시퍼";
     else if (Math.random() < 1 / 1800) 레어몬스터이름 = "바론";
     else if (Math.random() < 1 / 900) 레어몬스터이름 = "사탄";
     else if (Math.random() < 1 / 300) 레어몬스터이름 = "벨제부브";
@@ -443,7 +443,7 @@ app.post("/attack-rare", async (req, res) => {
 
     // ✅ 레어몬스터 등장 확률 추가
     let 새로운레어몬스터이름 = null;
-    if (Math.random() < 1 / 7000) 새로운레어몬스터이름 = "타락";
+    if (Math.random() < 1 / 1) 새로운레어몬스터이름 = "루시퍼";
     else if (Math.random() < 1 / 1800) 새로운레어몬스터이름 = "바론";
     else if (Math.random() < 1 / 900) 새로운레어몬스터이름 = "사탄";
     else if (Math.random() < 1 / 300) 새로운레어몬스터이름 = "벨제부브";
