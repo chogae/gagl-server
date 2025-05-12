@@ -36,67 +36,67 @@ app.post("/get-user", async (req, res) => {
         return res.status(404).json({ 오류: "유저 정보 없음" });
     }
 
-    // ⭐ 장비목록에서 공격력 총합 계산
-    let 총공격력 = 0;
-    if (Array.isArray(data.장비목록)) {
-        for (const 장비 of data.장비목록) {
-            총공격력 += 장비.공격력 || 0;
-        }
-    }
+    // // ⭐ 장비목록에서 공격력 총합 계산
+    // let 총공격력 = 0;
+    // if (Array.isArray(data.장비목록)) {
+    //     for (const 장비 of data.장비목록) {
+    //         총공격력 += 장비.공격력 || 0;
+    //     }
+    // }
 
-    // ⭐ 전직정보에서 값이 1인 항목 개수 세기
-    let 전직카운트 = 1;
-    if (data.전직정보 && typeof data.전직정보 === "object") {
-        for (const key in data.전직정보) {
-            if (data.전직정보[key] === 1) {
-                전직카운트++;
-            }
-        }
-    }
+    // // ⭐ 전직정보에서 값이 1인 항목 개수 세기
+    // let 전직카운트 = 1;
+    // if (data.전직정보 && typeof data.전직정보 === "object") {
+    //     for (const key in data.전직정보) {
+    //         if (data.전직정보[key] === 1) {
+    //             전직카운트++;
+    //         }
+    //     }
+    // }
 
-    // ⭐ DB 업데이트 필요 여부 체크
-    let 업데이트필요 = false;
-    const 업데이트값 = {};
+    // // ⭐ DB 업데이트 필요 여부 체크
+    // let 업데이트필요 = false;
+    // const 업데이트값 = {};
 
-    if (data.레벨공격력 !== 10) {
-        업데이트필요 = true;
-        업데이트값.레벨공격력 = 10;
-        data.레벨공격력 = 10;
-    }
+    // if (data.레벨공격력 !== 10) {
+    //     업데이트필요 = true;
+    //     업데이트값.레벨공격력 = 10;
+    //     data.레벨공격력 = 10;
+    // }
 
-    // 장비공격력
-    if (data.장비공격력 !== 총공격력) {
-        업데이트필요 = true;
-        업데이트값.장비공격력 = 총공격력;
-        data.장비공격력 = 총공격력; // 최신값 반영
-    }
+    // // 장비공격력
+    // if (data.장비공격력 !== 총공격력) {
+    //     업데이트필요 = true;
+    //     업데이트값.장비공격력 = 총공격력;
+    //     data.장비공격력 = 총공격력; // 최신값 반영
+    // }
 
-    // 전직공격력
-    if (data.전직공격력 !== 전직카운트) {
-        업데이트필요 = true;
-        업데이트값.전직공격력 = 전직카운트;
-        data.전직공격력 = 전직카운트; // 최신값 반영
-    }
+    // // 전직공격력
+    // if (data.전직공격력 !== 전직카운트) {
+    //     업데이트필요 = true;
+    //     업데이트값.전직공격력 = 전직카운트;
+    //     data.전직공격력 = 전직카운트; // 최신값 반영
+    // }
 
-    const 최종공격력 = 최종공격력계산(data);
+    // const 최종공격력 = 최종공격력계산(data);
 
-    if (data.최종공격력 !== 최종공격력) {
-        업데이트필요 = true;
-        업데이트값.최종공격력 = 최종공격력;
-        data.최종공격력 = 최종공격력; // 최신값 반영
-    }
+    // if (data.최종공격력 !== 최종공격력) {
+    //     업데이트필요 = true;
+    //     업데이트값.최종공격력 = 최종공격력;
+    //     data.최종공격력 = 최종공격력; // 최신값 반영
+    // }
 
-    if (업데이트필요) {
-        const { error: 업데이트오류 } = await supabaseAdmin
-            .from("users")
-            .update(업데이트값)
-            .eq("유저UID", 유저UID);
+    // if (업데이트필요) {
+    //     const { error: 업데이트오류 } = await supabaseAdmin
+    //         .from("users")
+    //         .update(업데이트값)
+    //         .eq("유저UID", 유저UID);
 
-        if (업데이트오류) {
-            console.error("DB 업데이트 실패:", 업데이트오류);
-            // 오류 있어도 조회는 계속 진행
-        }
-    }
+    //     if (업데이트오류) {
+    //         console.error("DB 업데이트 실패:", 업데이트오류);
+    //         // 오류 있어도 조회는 계속 진행
+    //     }
+    // }
 
     return res.json({ 유저데이터: data });
 });
@@ -1864,14 +1864,6 @@ function 최대체력계산(유저) {
 function 레어몬스터등장판정(유저) {
     const 고스트개수 = 유저.유물목록?.["고스트"] || 0;
     const 보정 = 1 + 0.01 * 고스트개수; // 고스트 1개당 1% 증가
-
-    // if (Math.random() < 보정 * (1 / 7000)) return "루시퍼";
-    // else if (Math.random() < 보정 * (1 / 1800)) return "바론";
-    // else if (Math.random() < 보정 * (1 / 900)) return "사탄";
-    // else if (Math.random() < 보정 * (1 / 300)) return "벨제부브";
-    // else if (Math.random() < 보정 * (1 / 90)) return "레비아탄";
-    // else if (Math.random() < 보정 * (1 / 45)) return "숙고블린";
-    // else if ((유저.경험치 ?? 0) % 11 === 0 && 유저.경험치 !== 0) return "황금고블린";
 
     if (Math.random() < 보정 * (1 / 6400)) return "루시퍼";
     else if (Math.random() < 보정 * (1 / 3200)) return "바론";
