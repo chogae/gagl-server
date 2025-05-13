@@ -58,6 +58,7 @@ app.post("/get-user", async (req, res) => {
     // let 업데이트필요 = false;
     // const 업데이트값 = {};
 
+    // 레벨공격력이 10이 아닐때인거 수정해야함 적용할거면
     // if (data.레벨공격력 !== 10) {
     //     업데이트필요 = true;
     //     업데이트값.레벨공격력 = 10;
@@ -1236,6 +1237,26 @@ app.post("/gamble", async (req, res) => {
         return res.status(500).json({ 오류: "서버 오류: " + e.message });
     }
 });
+
+app.post("/boss-ranking", async (req, res) => {
+    try {
+        const { data: 유저들, error } = await supabaseAdmin
+            .from("users")
+            .select("유저아이디, 보스누적데미지")
+            .gt("보스누적데미지", 0) // 👈 0 초과만 필터링
+            .order("보스누적데미지", { ascending: false })
+            .limit(100);
+
+        if (error) {
+            return res.status(500).json({ 오류: "보스 누적 데미지 조회 실패", 상세: error.message });
+        }
+
+        res.json({ 순위: 유저들 });
+    } catch (e) {
+        res.status(500).json({ 오류: "서버 내부 오류", 상세: e.message });
+    }
+});
+
 
 app.listen(3000, () => {
     console.log("서버 실행 중: http://localhost:3000");
