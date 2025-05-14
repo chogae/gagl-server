@@ -1603,19 +1603,19 @@
 
                     if (결과.드랍유물) {
                         const 유물드랍박스 = document.getElementById("유물드랍박스");
-                        const 등급외테두리 = document.getElementById("등급외테두리");
+                        const 사냥결과1 = document.getElementById("사냥결과1");
 
                         if (유물드랍박스) {
                             유물드랍박스.innerText = `유물 [${결과.드랍유물}]을(를) 획득했다!`;
                             유물드랍박스.style.display = "block";
 
                             // 위치 조정용 부모 변경
-                            if (등급외테두리) {
+                            if (사냥결과1) {
                                 // 등급외테두리에 위치 기준 설정
-                                등급외테두리.style.position = "relative";
+                                사냥결과1.style.position = "relative";
 
                                 // 유물드랍박스를 등급외테두리 내부로 이동
-                                등급외테두리.appendChild(유물드랍박스);
+                                사냥결과1.appendChild(유물드랍박스);
 
                                 // 전투화면용 위치 조정
                                 Object.assign(유물드랍박스.style, {
@@ -1882,19 +1882,19 @@
 
                     if (결과.드랍유물) {
                         const 유물드랍박스 = document.getElementById("유물드랍박스");
-                        const 등급외테두리 = document.getElementById("등급외테두리");
+                        const 등급외테두리 = document.getElementById("사냥결과1");
 
                         if (유물드랍박스) {
                             유물드랍박스.innerText = `유물 [${결과.드랍유물}]을(를) 획득했다!`;
                             유물드랍박스.style.display = "block";
 
                             // 위치 조정용 부모 변경
-                            if (등급외테두리) {
-                                // 등급외테두리에 위치 기준 설정
-                                등급외테두리.style.position = "relative";
+                            if (사냥결과1) {
+                                // 사냥결과1에 위치 기준 설정
+                                사냥결과1.style.position = "relative";
 
-                                // 유물드랍박스를 등급외테두리 내부로 이동
-                                등급외테두리.appendChild(유물드랍박스);
+                                // 유물드랍박스를 사냥결과1 내부로 이동
+                                사냥결과1.appendChild(유물드랍박스);
 
                                 // 전투화면용 위치 조정
                                 Object.assign(유물드랍박스.style, {
@@ -2937,6 +2937,9 @@ style="margin-right: 2px;">
         // 보스화면보여주기
         document.getElementById("보스").addEventListener("click", () => {
             if (!유저데이터) return;
+            const 보스화면 = document.getElementById("보스");
+
+            return 메시지표시(보스화면, "", "구현중입니다", "");
 
             모든화면숨기기();
             document.getElementById("에너지박스").style.display = "block";
@@ -3013,6 +3016,19 @@ style="margin-right: 2px;">
 
 
 
+        });
+
+        document.getElementById("보스몬스터").addEventListener("click", async () => {
+            화면잠금();
+
+            try {
+
+
+            } catch (e) {
+                메시지표시(스킬화면, "", "서버 오류: " + e.message, "#ef4444");
+            } finally {
+                화면해제();
+            }
         });
 
         document.getElementById("타이틀을아이디로").addEventListener("click", async function 아이디변경시작() {
@@ -3146,10 +3162,11 @@ style="margin-right: 2px;">
                 "공허": 640000,
                 "타락": 1280000
             };
+            const 도박창 = document.getElementById("도박창");
 
             const 비용 = 비용맵[등급];
             if (유저데이터.골드 < 비용) {
-                메시지표시(메시지표시박스, "", "골드 부족!", "#ef4444");
+                메시지표시(도박창, "", "골드 부족!", "#ef4444");
                 return;
             }
 
@@ -3167,18 +3184,15 @@ style="margin-right: 2px;">
                     })
                 });
 
+
                 const 결과 = await 응답.json();
                 if (!응답.ok || 결과.오류) {
-                    메시지표시(메시지표시박스, "", 결과.오류 || "도박 실패", "#ef4444");
+                    메시지표시(도박창, "", 결과.오류 || "도박 실패", "#ef4444");
                     return;
                 }
 
                 유저데이터 = 결과.유저데이터;
                 if (결과.결과 === "성공" && 결과.장비) {
-
-
-                    // 메시지표시(메시지표시박스, "", `도파민 폭발! 획득!`, 색상맵[결과.장비.등급]);
-
                     const 네온박스 = document.getElementById("네온박스");
                     const 등급외테두리 = document.getElementById("등급외테두리");
 
@@ -3211,12 +3225,12 @@ style="margin-right: 2px;">
 
 
                 } else if (결과.결과 === "실패") {
-                    메시지표시(메시지표시박스, "", "도박에 실패했습니다!", "#ef4444");
+                    메시지표시(도박창, "", "도박에 실패했습니다!", "#ef4444");
                 }
 
                 document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
             } catch (e) {
-                메시지표시(메시지표시박스, "", "도박 중 오류: " + e.message, "#ef4444");
+                메시지표시(도박창, "", "도박 중 오류: " + e.message, "#ef4444");
             } finally {
                 화면해제();
             }
@@ -3378,7 +3392,7 @@ style="margin-right: 2px;">
         };
 
 
-        document.getElementById("버전표시").innerText = "v6";
+        document.getElementById("버전표시").innerText = "v7";
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // npm install -g nodemon
         // nodemon index.js
@@ -3408,6 +3422,7 @@ style="margin-right: 2px;">
 - 최상단 아이디를 클릭하시면 아이디 변경이 가능합니다<br>
 - 전투화면의 경험치를 클릭하시면 전직창이 열립니다<br>
 - 전투화면의 보유골드를 클릭하시면 도박창이 열립니다<br>
+- 전투화면의 숙련도를 클릭하시면 스킬창이 열립니다<br>
 - 도박은 등급당 10번 실패시 11번 째 확정드랍됩니다<br>
 - 전당화면에서 유저를 클릭하면 해당 유저의 장비열람 가능합니다<br>
 - 단축키 Alt + A 로 레어몬스터를 우선 공격하는 풀자동 사냥이 가능합니다<br>
@@ -3424,9 +3439,7 @@ style="margin-right: 2px;">
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
 <br>
 gagl 패치노트<br>
-- 전투화면에도 마법의팔레트가 적용됩니다<br>
-- 스킬화면진입방식이 전투화면 - 숙련도 클릭으로 변경되었습니다<br>
-- 보스화면은 구현중입니다^^<br>
+- 유물드랍 메시지 위치를 변경하였습니다<br>
 </div>
 `;
         // 업데이트
