@@ -495,6 +495,7 @@ app.post("/attack-rare", async (req, res) => {
 
 app.post("/refresh-stamina", async (req, res) => {
     const { 유저UID } = req.body;
+
     if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
 
     const { data: 유저, error } = await supabaseAdmin
@@ -505,45 +506,43 @@ app.post("/refresh-stamina", async (req, res) => {
 
     if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
 
+    // ✅ 한국 시간 (UTC+9) 계산
     const now = new Date();
     const kstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
 
-    const 오늘9시 = new Date(kstNow.getFullYear(), kstNow.getMonth(), kstNow.getDate(), 9, 0, 0, 0);
-    const 오늘18시 = new Date(kstNow.getFullYear(), kstNow.getMonth(), kstNow.getDate(), 18, 0, 0, 0);
+    // ✅ 오늘 오전 9시 (KST 기준)
+    const today9am = new Date(
+        kstNow.getFullYear(),
+        kstNow.getMonth(),
+        kstNow.getDate(),
+        9, 0, 0, 0
+    );
 
-    const 현재스태미너 = 유저.현재스태미너 ?? 1000;
-    const 최대스태미너 = 유저.최대스태미너 ?? 1000;
-    const 마지막갱신 = 유저.스태미너갱신시각 ? new Date(유저.스태미너갱신시각) : null;
+    let 현재스태미너 = 유저.현재스태미너 ?? 1000;
+    let 최대스태미너 = 유저.최대스태미너 ?? 1000;
+    let 갱신시각 = 유저.스태미너갱신시각 ? new Date(유저.스태미너갱신시각) : null;
 
-    let 갱신된스태미너 = 현재스태미너;
-    let 갱신시각 = 마지막갱신;
-
-    const 오전갱신필요 = !마지막갱신 || (마지막갱신 < 오늘9시 && kstNow >= 오늘9시);
-    if (오전갱신필요) {
-        갱신된스태미너 = 최대스태미너;
-        갱신시각 = kstNow;
-    }
-
-    // ✅ 오후 6시 보너스 조건
-    const 오후보너스필요 = !마지막갱신 || (마지막갱신 < 오늘18시 && kstNow >= 오늘18시);
-    if (오후보너스필요) {
-        갱신된스태미너 = Math.min(갱신된스태미너 + 300, 최대스태미너);
-        갱신시각 = kstNow;
+    // ✅ (갱신시각이 오늘 9시 이전이고) && (현재 시간이 오늘 9시 이후일 때)만 갱신
+    if ((!갱신시각 || 갱신시각 < today9am) && kstNow >= today9am) {
+        현재스태미너 = 최대스태미너;
+        갱신시각 = kstNow; // ✅ 갱신 시각을 현재 시각으로 기록
     }
 
     await supabaseAdmin.from("users").update({
-        현재스태미너: 갱신된스태미너,
-        스태미너갱신시각: 갱신시각?.toISOString() ?? null
-    }).eq("유저UID", 유저UID);
+        현재스태미너,
+        스태미너갱신시각: 갱신시각 ? 갱신시각.toISOString() : null
+    }).eq("유저UID", 유저.유저UID);
 
     return res.json({
         유저데이터: {
             ...유저,
-            현재스태미너: 갱신된스태미너,
-            스태미너갱신시각: 갱신시각?.toISOString() ?? null
+            현재스태미너,
+            스태미너갱신시각: 갱신시각 ? 갱신시각.toISOString() : null
         }
     });
 });
+
+
 
 app.post("/upgrade-item", async (req, res) => {
     const { 유저UID, 이름, 등급 } = req.body;
