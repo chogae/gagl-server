@@ -495,9 +495,19 @@ app.post("/attack-rare", async (req, res) => {
 
 app.post("/refresh-stamina", async (req, res) => {
     const { 유저UID } = req.body;
-
     if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
 
+    // ✅ 현재 한국 시각의 '시간 정수' 계산 (0~23)
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat("ko-KR", {
+        hour: "numeric",
+        hour12: false,
+        timeZone: "Asia/Seoul"
+    });
+    const parts = formatter.formatToParts(now);
+    const 현재시간정수 = Number(parts.find(p => p.type === "hour")?.value);
+
+    // ✅ 유저 정보 조회
     const { data: 유저, error } = await supabaseAdmin
         .from("users")
         .select("*")
@@ -506,43 +516,33 @@ app.post("/refresh-stamina", async (req, res) => {
 
     if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
 
-    // ✅ 한국 시간 (UTC+9) 계산
-    const now = new Date();
-    const kstNow = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-
-    // ✅ 오늘 오전 9시 (KST 기준)
-    const today9am = new Date(
-        kstNow.getFullYear(),
-        kstNow.getMonth(),
-        kstNow.getDate(),
-        9, 0, 0, 0
-    );
-
+    const 저장된시간 = 유저.스태미너갱신시간 ?? 현재시간정수;
     let 현재스태미너 = 유저.현재스태미너 ?? 1000;
-    let 최대스태미너 = 유저.최대스태미너 ?? 1000;
-    let 갱신시각 = 유저.스태미너갱신시각 ? new Date(유저.스태미너갱신시각) : null;
+    const 최대스태미너 = 유저.최대스태미너 ?? 1000;
 
-    // ✅ (갱신시각이 오늘 9시 이전이고) && (현재 시간이 오늘 9시 이후일 때)만 갱신
-    if ((!갱신시각 || 갱신시각 < today9am) && kstNow >= today9am) {
-        현재스태미너 = 최대스태미너;
-        갱신시각 = kstNow; // ✅ 갱신 시각을 현재 시각으로 기록
-    }
+    // ✅ 시간 차이 계산 (자정 넘을 경우 보정)
+    let 시간차이 = 현재시간정수 - 저장된시간;
+    if (시간차이 < 0) 시간차이 += 24;
 
+    // ✅ 스태미너 회복량 계산 및 적용
+    const 회복량 = 시간차이 * 60;
+    현재스태미너 = Math.min(현재스태미너 + 회복량, 최대스태미너);
+
+    // ✅ DB에 반영
     await supabaseAdmin.from("users").update({
         현재스태미너,
-        스태미너갱신시각: 갱신시각 ? 갱신시각.toISOString() : null
-    }).eq("유저UID", 유저.유저UID);
+        스태미너갱신시간: 현재시간정수
+    }).eq("유저UID", 유저UID);
 
+    // ✅ 응답 반환
     return res.json({
         유저데이터: {
             ...유저,
             현재스태미너,
-            스태미너갱신시각: 갱신시각 ? 갱신시각.toISOString() : null
+            스태미너갱신시간: 현재시간정수
         }
     });
 });
-
-
 
 app.post("/upgrade-item", async (req, res) => {
     const { 유저UID, 이름, 등급 } = req.body;
@@ -809,6 +809,16 @@ app.post("/register-user", async (req, res) => {
     if (!유저UID || !유저아이디 || !기기ID) {
         return res.status(400).json({ 오류: "입력값 누락" });
     }
+
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat("ko-KR", {
+        hour: "numeric",
+        hour12: false,
+        timeZone: "Asia/Seoul"
+    });
+    const parts = formatter.formatToParts(now);
+    const 현재시간 = Number(parts.find(p => p.type === "hour")?.value);
+
     //신규유저
     const 삽입값 = {
         유저UID,
@@ -836,7 +846,7 @@ app.post("/register-user", async (req, res) => {
         버전업: 5,
         현재스태미너: 1000,
         최대스태미너: 1000,
-        스태미너갱신시각: new Date().toISOString(),
+        스태미너갱신시간: 현재시간,
         전직정보: {
             "백인장": 0,
             "오백인장": 0,

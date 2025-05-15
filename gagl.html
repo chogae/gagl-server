@@ -1867,19 +1867,19 @@
                     if (결과.드랍장비) {
                         const 장비 = 결과.드랍장비;
                         const 네온박스 = document.getElementById("네온박스");
-                        const 등급외테두리 = document.getElementById("등급외테두리");
+                        const 유저테두리안표시 = document.getElementById("유저테두리안표시");
 
                         if (네온박스) {
                             네온박스.innerText = `${장비.이름}을(를) 획득했다!`;
                             네온박스.style.display = "block";
 
                             // 위치 조정용 부모 변경
-                            if (등급외테두리) {
-                                // 등급외테두리에 위치 기준 설정
-                                등급외테두리.style.position = "relative";
+                            if (유저테두리안표시) {
+                                // 유저테두리안표시에 위치 기준 설정
+                                유저테두리안표시.style.position = "relative";
 
-                                // 네온박스를 등급외테두리 내부로 이동
-                                등급외테두리.appendChild(네온박스);
+                                // 네온박스를 유저테두리안표시 내부로 이동
+                                유저테두리안표시.appendChild(네온박스);
 
                                 // 전투화면용 위치 조정
                                 Object.assign(네온박스.style, {
@@ -1899,7 +1899,7 @@
 
                     if (결과.드랍유물) {
                         const 유물드랍박스 = document.getElementById("유물드랍박스");
-                        const 등급외테두리 = document.getElementById("사냥결과1");
+                        const 사냥결과1 = document.getElementById("사냥결과1");
 
                         if (유물드랍박스) {
                             유물드랍박스.innerText = `유물 [${결과.드랍유물}]을(를) 획득했다!`;
@@ -3422,7 +3422,7 @@ style="margin-right: 2px;">
         };
 
 
-        document.getElementById("버전표시").innerText = "v7";
+        document.getElementById("버전표시").innerText = "v8";
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // npm install -g nodemon
         // nodemon index.js
@@ -3447,8 +3447,7 @@ style="margin-right: 2px;">
   <div>
 - gagl은 자동사냥 게임입니다. 악마성을 클릭하세요<br>
 - https://open.kakao.com/o/gbnmdWvh 톡방에 오셔서 정보를 공유하세요<br>
-- 매일 아침 9시에 스태미너가 최대치로 회복됩니다<br>
-- 매일 저녁 6시에 스태미너 보너스가 지급됩니다<br>
+- 스태미너는 시간당 60씩 회복됩니다<br>
 - 최상단 아이디를 클릭하시면 아이디 변경이 가능합니다<br>
 - 전투화면의 경험치를 클릭하시면 전직창이 열립니다<br>
 - 전투화면의 보유골드를 클릭하시면 도박창이 열립니다<br>
@@ -3469,7 +3468,8 @@ style="margin-right: 2px;">
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
 <br>
 gagl 패치노트<br>
-- 유물드랍 메시지 위치를 변경하였습니다<br>
+- 스태미너 로직을 개선했습니다. 지금부턴 시간당 60의 스태미너가 회복됩니다<br>
+- 장비획득 메시지 위치를 옮겼습니다<br>
 </div>
 `;
         // 업데이트
@@ -3553,7 +3553,6 @@ gagl 패치노트<br>
                         const 결과 = await 응답.json();
                         if (응답.ok && 결과.유저데이터) {
                             유저정보.현재스태미너 = 결과.유저데이터.현재스태미너;
-                            유저정보.스태미너갱신시각 = 결과.유저데이터.스태미너갱신시각;
                         }
                     } catch (e) {
                         console.warn("스태미너 갱신 실패", e);
