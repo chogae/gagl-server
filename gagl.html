@@ -277,7 +277,7 @@
 
         .네온박스 {
             position: fixed;
-            top: 50%;
+            top: 30%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 9999;
@@ -925,16 +925,19 @@
     pointer-events: none;
 "></div>
 
-    <!-- 기존 도박창 div -->
+    <!-- 🟢 도박창 -->
     <div id="도박창" class="기본테두리 세로정렬" style="
   display: none;
-  position: absolute;
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background: black;
   color: white;
   z-index: 9998;
   padding: 20px;
   text-align: center;
-  width: auto;
+  width:auto;
 ">
         <div id="도박타이틀" style="font-size: 20px; font-weight: bold;"></div>
         <div style="margin-top: 15px;">
@@ -2125,7 +2128,6 @@
                     장비.공격력 = 결과.무기공격력;
                 }
 
-                유저데이터.공격력 = 결과.공격력;
                 유저데이터.장비공격력 = 결과.장비공격력;
                 유저데이터.최종공격력 = 결과.최종공격력;
                 유저데이터.골드 = 결과.골드;
@@ -3465,7 +3467,7 @@ gagl 패치노트<br>
 - 획득메시지 위치를 조정했습니다<br>
 </div>
 `;
-        document.getElementById("버전표시").innerText = "v9";
+        document.getElementById("버전표시").innerText = "v10";
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // npm install -g nodemon
         // nodemon index.js
