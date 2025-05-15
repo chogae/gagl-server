@@ -3510,7 +3510,7 @@ gagl 패치노트<br>
             const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
 
             if (인증오류) {
-                메시지표시(메시지표시박스, "", "유저 인증 확인 실패", "#ef4444");
+                // 메시지표시(메시지표시박스, "", "유저 인증 확인 실패", "#ef4444");
                 return;
             }
 
