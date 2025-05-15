@@ -1618,24 +1618,24 @@
 
                     if (결과.드랍유물) {
                         const 유물드랍박스 = document.getElementById("유물드랍박스");
-                        const 사냥결과1 = document.getElementById("사냥결과1");
+                        const 유저테두리안표시 = document.getElementById("유저테두리안표시");
 
                         if (유물드랍박스) {
                             유물드랍박스.innerText = `유물 [${결과.드랍유물}]을(를) 획득했다!`;
                             유물드랍박스.style.display = "block";
 
                             // 위치 조정용 부모 변경
-                            if (사냥결과1) {
+                            if (유저테두리안표시) {
                                 // 등급외테두리에 위치 기준 설정
-                                사냥결과1.style.position = "relative";
+                                유저테두리안표시.style.position = "relative";
 
                                 // 유물드랍박스를 등급외테두리 내부로 이동
-                                사냥결과1.appendChild(유물드랍박스);
+                                유저테두리안표시.appendChild(유물드랍박스);
 
                                 // 전투화면용 위치 조정
                                 Object.assign(유물드랍박스.style, {
                                     position: "absolute",
-                                    top: "20%",
+                                    top: "50%",
                                     left: "50%",
                                     transform: "translate(-50%, -50%)",
                                     zIndex: "100"
@@ -1899,24 +1899,24 @@
 
                     if (결과.드랍유물) {
                         const 유물드랍박스 = document.getElementById("유물드랍박스");
-                        const 사냥결과1 = document.getElementById("사냥결과1");
+                        const 유저테두리안표시 = document.getElementById("유저테두리안표시");
 
                         if (유물드랍박스) {
                             유물드랍박스.innerText = `유물 [${결과.드랍유물}]을(를) 획득했다!`;
                             유물드랍박스.style.display = "block";
 
                             // 위치 조정용 부모 변경
-                            if (사냥결과1) {
-                                // 사냥결과1에 위치 기준 설정
-                                사냥결과1.style.position = "relative";
+                            if (유저테두리안표시) {
+                                // 유저테두리안표시에 위치 기준 설정
+                                유저테두리안표시.style.position = "relative";
 
-                                // 유물드랍박스를 사냥결과1 내부로 이동
-                                사냥결과1.appendChild(유물드랍박스);
+                                // 유물드랍박스를 유저테두리안표시 내부로 이동
+                                유저테두리안표시.appendChild(유물드랍박스);
 
                                 // 전투화면용 위치 조정
                                 Object.assign(유물드랍박스.style, {
                                     position: "absolute",
-                                    top: "20%",
+                                    top: "50%",
                                     left: "50%",
                                     transform: "translate(-50%, -50%)",
                                     zIndex: "100"
@@ -2951,7 +2951,7 @@ style="margin-right: 2px;">
             }
         });
 
-        const 현재보스이름 ="그루트"; // 이 줄만 수정하면 전부 연동됨
+        const 현재보스이름 = "그루트"; // 이 줄만 수정하면 전부 연동됨
 
         // 보스화면보여주기
         document.getElementById("보스").addEventListener("click", () => {
@@ -3422,10 +3422,6 @@ style="margin-right: 2px;">
         };
 
 
-        document.getElementById("버전표시").innerText = "v8";
-        // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-        // npm install -g nodemon
-        // nodemon index.js
 
         const 버전버튼 = document.getElementById("버전표시");
         버전버튼.style.cursor = "pointer";
@@ -3469,10 +3465,13 @@ style="margin-right: 2px;">
 <br>
 gagl 패치노트<br>
 - 스태미너 로직을 개선했습니다. 지금부턴 시간당 60의 스태미너가 회복됩니다<br>
-- 장비획득 메시지 위치를 옮겼습니다<br>
+- 획득메시지 위치를 조정했습니다<br>
 </div>
 `;
-        // 업데이트
+        document.getElementById("버전표시").innerText = "v9";
+        // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
+        // npm install -g nodemon
+        // nodemon index.js
 
         document.body.appendChild(메뉴얼창);
 
