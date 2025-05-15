@@ -887,7 +887,7 @@ app.post("/ranking", async (req, res) => {
         // 1. 상위 100명 조회
         const { data: 유저들, error } = await supabaseAdmin
             .from("users")
-            .select("*")
+            .select("유저UID, 로그인이메일, 유저아이디, 레벨, 최종공격력, 현재층, 장비목록, 합성기록, 전직정보, 마법의팔레트")
             .eq("버전업", 5)
             .not("최종공격력", "is", null)
             .order("최종공격력", { ascending: false })
@@ -937,10 +937,10 @@ app.post("/ranking", async (req, res) => {
                     break;
             }
 
-            if (팔레트값) {
+            if (팔레트값 && 유저.마법의팔레트 !== 팔레트값) {
                 await supabaseAdmin
                     .from("users")
-                    .update({ 마법의팔레트: JSON.parse(JSON.stringify(팔레트값)) }) // ✅ 핵심!
+                    .update({ 마법의팔레트: 팔레트값 })
                     .eq("유저UID", 유저.유저UID);
             }
 
