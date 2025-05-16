@@ -62,18 +62,20 @@ app.post("/get-user", async (req, res) => {
             }
         }
     }
+    유저.장비공격력 = 장비목록.reduce((합, j) => 합 + (j.공격력 || 0), 0);
 
+    유저.최종공격력 = 최종공격력계산(유저);
     // 업데이트
     const { error: 업데이트에러 } = await supabaseAdmin
         .from("users")
-        .update({ 장비목록 })
+        .update({ 장비목록, 장비공격력: 유저.장비공격력, 최종공격력: 유저.최종공격력 })
         .eq("유저UID", 유저UID);
 
     if (업데이트에러) {
         return res.status(500).json({ 오류: "장비목록 업데이트 실패" });
     }
 
-    return res.json({ 유저데이터: { ...유저, 장비목록 } });
+    return res.json({ 유저데이터: { ...유저 } });
 });
 
 

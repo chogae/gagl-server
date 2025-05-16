@@ -3469,39 +3469,6 @@ gagl 패치노트<br>
         // npm install -g nodemon
         // nodemon index.js
 
-        document.body.appendChild(메뉴얼창);
-
-        버전버튼.addEventListener("click", () => {
-            메뉴얼창.style.display = (메뉴얼창.style.display === "none") ? "block" : "none";
-        });
-
-        document.addEventListener("click", (e) => {
-            const target = e.target;
-
-            switch (target.id) {
-                // case "객체아이디":
-                //     실행함수();
-                //     break;
-
-            }
-
-            if (
-                메뉴얼창.style.display === "block" &&
-                !메뉴얼창.contains(e.target) &&
-                !버전버튼.contains(e.target)
-            ) {
-                메뉴얼창.style.display = "none";
-            }
-
-            if (
-                target.matches("#총경험치")
-            ) {
-                모든화면숨기기();
-                document.getElementById("전직화면").style.display = "block";
-                전직화면보여주기();
-            }
-        });
-
         document.addEventListener("DOMContentLoaded", async () => {
             const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
 
@@ -3564,6 +3531,38 @@ gagl 패치노트<br>
 
         });
 
+        document.body.appendChild(메뉴얼창);
+
+        버전버튼.addEventListener("click", () => {
+            메뉴얼창.style.display = (메뉴얼창.style.display === "none") ? "block" : "none";
+        });
+
+        document.addEventListener("click", (e) => {
+            const target = e.target;
+
+            switch (target.id) {
+                // case "객체아이디":
+                //     실행함수();
+                //     break;
+
+            }
+
+            if (
+                메뉴얼창.style.display === "block" &&
+                !메뉴얼창.contains(e.target) &&
+                !버전버튼.contains(e.target)
+            ) {
+                메뉴얼창.style.display = "none";
+            }
+
+            if (
+                target.matches("#총경험치")
+            ) {
+                모든화면숨기기();
+                document.getElementById("전직화면").style.display = "block";
+                전직화면보여주기();
+            }
+        });
 
         function 모든화면숨기기() {
             const 화면ID들 = [
