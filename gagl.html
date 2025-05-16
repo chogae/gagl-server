@@ -1433,8 +1433,6 @@
             return 마지막직위;
         }
 
-
-        // 풀자동사냥 구현중
         let 자동사냥허용 = false;
         let 풀자동사냥허용 = false;  // 기본값 false
 
@@ -2955,7 +2953,7 @@ style="margin-right: 2px;">
             if (!유저데이터) return;
             const 보스버튼 = document.getElementById("보스");
 
-            return 메시지표시(보스버튼, "", "구현중입니다", "");
+            // return 메시지표시(보스버튼, "", "구현중입니다", "");
 
             모든화면숨기기();
             document.getElementById("에너지박스").style.display = "block";
@@ -3026,7 +3024,7 @@ style="margin-right: 2px;">
                     유저들.forEach((유저, index) => {
                         if (index >= 10) return; // 10명까지만 표시
                         const div = document.createElement("div");
-                        div.innerText = `${index + 1}. ${유저.보스누적데미지} [${유저.유저아이디}]`;
+                        div.innerText = `${index + 1}. ${유저.보스누적데미지.toLocaleString()} [${유저.유저아이디}]`;
                         누적데미지순위.appendChild(div);
                     });
                 })
@@ -3034,11 +3032,15 @@ style="margin-right: 2px;">
                     console.error("보스 순위 조회 실패", err);
                 });
 
+            const 보스사냥컨테이너 = document.getElementById("보스사냥컨테이너");
+
+            return 메시지표시(보스사냥컨테이너, "", "보스전에는 스태미너 5가 소모됩니다", "");
 
 
         });
 
         document.getElementById("보스몬스터").addEventListener("click", async () => {
+            if (!유저데이터) return;
             공격버튼잠금();
 
             try {
@@ -3047,12 +3049,99 @@ style="margin-right: 2px;">
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         유저데이터,
-                        보스이름: 현재보스이름  // ✅ 서버가 이름으로 보스정보 결정
+                        보스이름: 현재보스이름  // ✅ 서버에서 이름으로 보스 결정
                     })
                 });
 
+                const 결과 = await 응답.json();
+                const 등급외테두리 = document.getElementById("등급외테두리");
+                const 보스사냥컨테이너 = document.getElementById("보스사냥컨테이너");
+
+                if (결과.결과 === "불가") {
+                    메시지표시(보스사냥컨테이너, 실패아이콘, 결과.메시지 || "스태미너 부족", "#ef4444");
+                    return;
+                }
+
+                유저데이터 = 결과.유저데이터;
+
+                // 기존 로그 제거
+                document.querySelectorAll(".전투로그컨테이너").forEach(e => e.remove());
+
+                // 전투 로그 출력
+                if (Array.isArray(결과.전투로그)) {
+                    결과.전투로그.slice().reverse().forEach(로그 => {
+                        const 로그컨테이너 = document.createElement("div");
+                        로그컨테이너.className = "전투로그컨테이너";
+                        로그컨테이너.style.marginTop = "15px";
+                        로그컨테이너.style.border = "0.2px solid #4b4b4b";
+                        로그컨테이너.style.borderRadius = "10px";
+                        로그컨테이너.style.padding = "15px";
+
+                        const 아이콘HTML = (로그.아이콘 || []).map(이름 => 아이콘맵[이름] || "").join(" ");
+
+                        let 데미지텍스트 = "";
+                        let 회복텍스트 = "";
+
+                        if (로그.타입 === "공격") {
+                            데미지텍스트 = `<span><span style="color: #f63b3b;">${로그.몬스터이름}</span>에게 ${로그.효과} 피해를 입혔다!</span>`;
+                        } else if (로그.타입 === "회복") {
+                            회복텍스트 = `<span><span style="color: #3b82f6;">${로그.유저아이디}</span> 체력 ${로그.효과} 회복</span>`;
+                        }
+
+                        로그컨테이너.innerHTML = `
+                    <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                        <strong>Turn ${로그.턴}</strong>
+                    </div>
+                    <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
+                        ${아이콘HTML}
+                        ${로그.타입 === "공격" ? 데미지텍스트 : ""}
+                        ${로그.타입 === "회복" ? 회복텍스트 : ""}
+                    </div>
+                    <div class="가로정렬" style="margin-top: 10px; justify-content: space-between; align-items: center; gap: 12px;">
+                        <div style="border: 0.2px solid #3b82f6; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
+                            <div>${로그.유저아이디}</div>
+                            <div>
+                                <div>공격력 ${로그.유저최종공격력}</div>
+                                <div>체력 ${로그.유저체력}/${로그.유저최대체력}</div>
+                            </div>
+                        </div>
+                        <div style="border: 0.2px solid #f63b3b; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
+                            <div>${로그.몬스터이름}</div>
+                            <div>
+                                <div>체력 ???</div>
+                                <div>방어력 ???</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                        const 타겟 = document.getElementById("보스사냥컨테이너");
+                        if (타겟 && 타겟.parentNode) {
+                            타겟.parentNode.insertBefore(로그컨테이너, 타겟.nextSibling);
+                        }
+                    });
+                }
+
+                // 체력, 스태미너, 누적데미지 UI 업데이트
+                document.getElementById("악마이름").innerText = 결과.유저데이터?.보스이름 || 현재보스이름;
+                document.getElementById("악마체력").innerText = `체력 ???`;  // 보스는 체력 없음
+                document.getElementById("악마방어력").innerText = `방어력 0`;
+                document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}/${유저데이터.최대체력}`;
+                document.getElementById("최종데미지").innerText = `총피해량 : ${결과.누적데미지.toLocaleString()}`;
+
+                const 스태미너표시 = document.getElementById("스태미너표시");
+                const 에너지바 = document.querySelector(".에너지바");
+                if (스태미너표시 && 에너지바) {
+                    const 최대 = 유저데이터.최대스태미너 ?? 100;
+                    const 현재 = 유저데이터.현재스태미너 ?? 0;
+                    스태미너표시.innerText = `${현재}/${최대}`;
+                    에너지바.style.width = `${(현재 / 최대) * 100}%`;
+                }
+
+                document.getElementById("승리패배로그").innerText = "보스전 완료";
+                document.getElementById("승리패배로그").style.color = "#ffa500";
             } catch (e) {
-                메시지표시(스킬화면, "", "서버 오류: " + e.message, "#ef4444");
+                메시지표시(메시지표시박스, "", "보스전 오류: " + e.message, "#ef4444");
             } finally {
                 공격버튼잠금해제();
             }
@@ -3407,7 +3496,7 @@ style="margin-right: 2px;">
             "모래시계": { 설명: "스태미너 소모를 무시합니다" }, //완료
             // "모루": { 설명: "장비 강화확률을 증가시킵니다" }, //완료
             // "표창": { 설명: "추가로 공격합니다" },
-            // "암포라": { 설명: "숙련도 소모량을 감소시킵니다" },
+            "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다" },
             // "엑스": { 설명: "최종 데미지를 증가시킵니다" },
             // "퍼즐": { 설명: "미정" },
             // "로켓": { 설명: "미정" },
@@ -3417,6 +3506,7 @@ style="margin-right: 2px;">
             // "가을": { 설명: "미정" },
             // "겨울": { 설명: "미정" }
         };
+
 
 
 
@@ -3461,10 +3551,11 @@ style="margin-right: 2px;">
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
 <br>
 gagl 패치노트<br>
-- 장비 합성 공격력이 정상화됩니다<br>
+- 레어맵 등장시 스태미너가 0이라면, 보너스 스태미너 1이 회복됩니다<br>
+- 보스화면을 잠시 오픈했습니다, 구경하세요<br>
 </div>
 `;
-        document.getElementById("버전표시").innerText = "v13";
+        document.getElementById("버전표시").innerText = "v14";
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // npm install -g nodemon
         // nodemon index.js
@@ -3502,7 +3593,7 @@ gagl 패치노트<br>
                     }
 
                     유저데이터 = 유저정보;
-                    메시지표시(메시지표시박스, "", "V13. 패치노트를 반드시 확인하세요", "#00c851");
+                    메시지표시(메시지표시박스, "", "V14. 패치노트를 반드시 확인하세요", "#00c851");
 
                     // ✅ 스태미너 갱신 요청
                     try {

@@ -78,6 +78,93 @@ app.post("/get-user", async (req, res) => {
     return res.json({ 유저데이터: { ...유저 } });
 });
 
+app.post("/boss-ranking", async (req, res) => {
+    try {
+        const { data: 유저들, error } = await supabaseAdmin
+            .from("users")
+            .select("유저아이디, 보스누적데미지")
+            .gt("보스누적데미지", 0) // 👈 0 초과만 필터링
+            .order("보스누적데미지", { ascending: false })
+            .limit(100);
+
+        if (error) {
+            return res.status(500).json({ 오류: "보스 누적 데미지 조회 실패", 상세: error.message });
+        }
+
+        res.json({ 순위: 유저들 });
+    } catch (e) {
+        res.status(500).json({ 오류: "서버 내부 오류", 상세: e.message });
+    }
+});
+
+app.post("/attack-boss", async (req, res) => {
+    const { 유저데이터, 보스이름 } = req.body;  // ✅ 보스이름 구조분해
+    const { 유저UID } = 유저데이터;
+    const 전투로그 = [];
+
+    if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("*")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
+
+    let 현재스태미너 = 유저.현재스태미너 ?? 0;
+    if (현재스태미너 < 5) {
+        return res.json({ 결과: "불가", 메시지: "스태미너 부족" });
+    }
+
+    const 암포라 = 유저.유물목록?.["암포라"] || 0;
+    const 발동확률 = 암포라 * 0.01;
+
+    const 스태미너감소량 = Math.random() < 발동확률 ? 4 : 5;
+    현재스태미너 -= 스태미너감소량;
+
+    유저.스태미너소모총량 = (유저.스태미너소모총량 || 0) + 5;
+
+    // 유저 체력 회복
+    유저.남은체력 = 유저.최대체력;
+    let 현재턴 = 1;
+
+    // ✅ 보스 이름 반영
+    const 보스 = {
+        이름: 보스이름 || "BOSS",
+        체력: 9999999,
+        방어력: 0
+    };
+
+    // ✅ 전투시뮬레이션 단 한 번만 호출
+    const 전투결과 = 전투시뮬레이션(유저, 보스, 전투로그, 현재턴, true); // 보스전: true
+
+    const 누적데미지 = 전투로그.reduce((합, 로그) => {
+        return 로그.타입 === "공격" ? 합 + Number(로그.효과) : 합;
+    }, 0);
+
+    유저.보스누적데미지 += 누적데미지;
+    유저.남은체력 = 유저.최대체력;
+    // 누적 데미지 저장
+    await supabaseAdmin.from("users").update({
+        현재스태미너,
+        남은체력: 유저.최대체력,
+        스태미너소모총량: 유저.스태미너소모총량,
+        보스누적데미지: 유저.보스누적데미지
+    }).eq("유저UID", 유저UID);
+
+    return res.json({
+        결과: "완료",
+        누적데미지,
+        유저데이터: {
+            ...유저,
+            현재스태미너,
+            남은체력: 유저.최대체력,
+            보스누적데미지: 유저.보스누적데미지
+        },
+        전투로그
+    });
+});
 
 app.post("/attack-normal", async (req, res) => {
     const { 유저데이터 } = req.body;
@@ -208,6 +295,12 @@ app.post("/attack-normal", async (req, res) => {
     const 최대체력 = 최대체력계산(새유저);
     새유저.최대체력 = 최대체력;
 
+    let 레어몬스터이름 = 레어몬스터등장판정(유저);
+
+    if (레어몬스터이름 && 현재스태미너 === 0) {
+        현재스태미너 = 1;
+    }
+
     await supabaseAdmin.from("users").update({
         레벨: 새유저.레벨,
         레벨공격력: 새유저.레벨공격력,
@@ -225,7 +318,6 @@ app.post("/attack-normal", async (req, res) => {
         스태미너소모총량: 유저.스태미너소모총량,
     }).eq("유저UID", 새유저.유저UID);
 
-    let 레어몬스터이름 = 레어몬스터등장판정(유저);
 
     return res.json({
         결과: "승리",
@@ -417,6 +509,10 @@ app.post("/attack-rare", async (req, res) => {
     const 최대체력 = 최대체력계산(새유저);
     새유저.최대체력 = 최대체력;
 
+    let 새로운레어몬스터이름 = 레어몬스터등장판정(유저);
+    if (새로운레어몬스터이름 && 현재스태미너 === 0) {
+        현재스태미너 = 1;
+    }
 
     await supabaseAdmin.from("users").update({
         레벨: 새유저.레벨,
@@ -438,7 +534,6 @@ app.post("/attack-rare", async (req, res) => {
         스태미너소모총량: 유저.스태미너소모총량,
     }).eq("유저UID", 유저UID);
 
-    let 새로운레어몬스터이름 = 레어몬스터등장판정(유저);
 
     return res.json({
         결과: "승리",
@@ -1217,26 +1312,6 @@ app.post("/gamble", async (req, res) => {
     }
 });
 
-app.post("/boss-ranking", async (req, res) => {
-    try {
-        const { data: 유저들, error } = await supabaseAdmin
-            .from("users")
-            .select("유저아이디, 보스누적데미지")
-            .gt("보스누적데미지", 0) // 👈 0 초과만 필터링
-            .order("보스누적데미지", { ascending: false })
-            .limit(100);
-
-        if (error) {
-            return res.status(500).json({ 오류: "보스 누적 데미지 조회 실패", 상세: error.message });
-        }
-
-        res.json({ 순위: 유저들 });
-    } catch (e) {
-        res.status(500).json({ 오류: "서버 내부 오류", 상세: e.message });
-    }
-});
-
-
 app.listen(3000, () => {
     console.log("서버 실행 중: http://localhost:3000");
 });
@@ -1425,17 +1500,17 @@ function 데미지계산(유저, 몬스터, 스킬결과) {
     return 최종데미지;
 }
 
-function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴) {
+function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴, 보스전 = false) {
     let 유저HP = 유저.남은체력;
 
-    //하트마이너스
     const 하트마이너스 = 유저.유물목록?.["하트마이너스"] || 0;
     const 보정 = 1 - 0.001 * 하트마이너스;
     몬스터.체력 = Math.floor(몬스터.체력 * 보정);
     let 몬스터HP = 몬스터.체력;
     let 현재턴 = 시작턴;
 
-    while (유저HP > 0 && 몬스터HP > 0) {
+    // 🔥 보스전일 경우 몬스터 죽지 않도록 조건 제거
+    while (유저HP > 0 && (보스전 || 몬스터HP > 0)) {
         몬스터HP = Math.max(0, 몬스터HP);
         유저HP = Math.max(0, 유저HP);
 
@@ -1444,8 +1519,10 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴) {
         const 데미지 = 데미지계산(유저, 몬스터, 스킬);
         유저HP -= 스킬.체력소모;
 
-        몬스터HP -= 데미지;
-        몬스터HP = Math.max(0, 몬스터HP); // 🔥 여기서 즉시 보정
+        if (!보스전) {
+            몬스터HP -= 데미지;
+            몬스터HP = Math.max(0, 몬스터HP);
+        }
 
         const 발동아이콘 = [];
         if (스킬.크리티컬배율 > 1) 발동아이콘.push("크리티컬아이콘");
@@ -1454,11 +1531,11 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴) {
         if (스킬.방어무시율 > 0) 발동아이콘.push("브로큰아이콘");
 
         const 쉴드밴개수 = 유저.유물목록?.["쉴드밴"] || 0;
-        const 보정 = 1 - 0.01 * 쉴드밴개수;
+        const 방어보정 = 1 - 0.01 * 쉴드밴개수;
 
         const 몬스터방어력계산 = (스킬.방어무시율 > 0)
-            ? Math.floor((몬스터.방어력 || 0) * (1 - 스킬.방어무시율) * 보정)
-            : Math.floor((몬스터.방어력 || 0) * 보정);
+            ? Math.floor((몬스터.방어력 || 0) * (1 - 스킬.방어무시율) * 방어보정)
+            : Math.floor((몬스터.방어력 || 0) * 방어보정);
 
         전투로그.push({
             턴: 현재턴,
@@ -1469,7 +1546,7 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴) {
             유저체력: 유저HP,
             유저최대체력: 유저.최대체력,
             몬스터이름: 몬스터.이름,
-            몬스터체력: 몬스터HP,
+            몬스터체력: 보스전 ? 몬스터.체력 : 몬스터HP,  // 체력 변화 없게
             몬스터최대체력: 몬스터.체력,
             몬스터방어력: 몬스터방어력계산,
             아이콘: 발동아이콘,
@@ -1483,9 +1560,9 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴) {
         결과: 유저HP <= 0 ? "패배" : "승리",
         유저남은체력: 유저HP,
         몬스터남은체력: 몬스터HP
-        // 전투로그는 따로 반환 안 해도 됨 (이미 외부 배열에 누적됨)
     };
 }
+
 
 function 장비드랍판정(몬스터, 유저) {
     // if (몬스터.타입 === "일반") return null;
@@ -1888,7 +1965,7 @@ const 유물데이터 = {
     "모래시계": { 설명: "스태미너 소모를 무시합니다" }, //완료
     // "모루": { 설명: "장비 강화확률을 증가시킵니다" }, //완료
     // "표창": { 설명: "추가로 공격합니다" },
-    // "암포라": { 설명: "숙련도 소모량을 감소시킵니다" },
+    "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다" },
     // "엑스": { 설명: "최종 데미지를 증가시킵니다" },
     // "퍼즐": { 설명: "미정" },
     // "로켓": { 설명: "미정" },
