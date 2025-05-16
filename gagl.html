@@ -1156,11 +1156,11 @@
             el.style.fontWeight = "bold";
             el.style.zIndex = 9999;
             el.style.pointerEvents = "none";
-            el.style.animation = "fadeOut 2s ease-out forwards";
+            el.style.animation = "fadeOut 3s ease-out forwards";
             el.style.whiteSpace = "nowrap";
 
             document.body.appendChild(el);
-            setTimeout(() => el.remove(), 2000);
+            setTimeout(() => el.remove(), 3000);
         }
 
         async function 회원가입() {
@@ -3461,11 +3461,10 @@ style="margin-right: 2px;">
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
 <br>
 gagl 패치노트<br>
-- 스태미너 로직을 개선했습니다. 지금부턴 시간당 60의 스태미너가 회복됩니다<br>
-- 획득메시지 위치를 조정했습니다<br>
+- 도박으로 획득되는 장비의 공격력 누락을 패치했습니다<br>
 </div>
 `;
-        document.getElementById("버전표시").innerText = "v10";
+        document.getElementById("버전표시").innerText = "v11";
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // npm install -g nodemon
         // nodemon index.js
@@ -3536,7 +3535,7 @@ gagl 패치노트<br>
                     }
 
                     유저데이터 = 유저정보;
-                    메시지표시(메시지표시박스, "✅", "자동 로그인 완료", "#00c851");
+                    메시지표시(메시지표시박스, "", "V11. 패치노트를 반드시 확인하세요", "#00c851");
 
                     // ✅ 스태미너 갱신 요청
                     try {
