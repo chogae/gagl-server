@@ -26,81 +26,56 @@ app.post("/get-user", async (req, res) => {
         return res.status(400).json({ 오류: "유저UID 누락" });
     }
 
-    const { data, error } = await supabaseAdmin
+    const { data: 유저, error } = await supabaseAdmin
         .from("users")
         .select("*")
         .eq("유저UID", 유저UID)
         .single();
 
-    if (error || !data) {
+    if (error || !유저) {
         return res.status(404).json({ 오류: "유저 정보 없음" });
     }
 
-    // // ⭐ 장비목록에서 공격력 총합 계산
-    // let 총공격력 = 0;
-    // if (Array.isArray(data.장비목록)) {
-    //     for (const 장비 of data.장비목록) {
-    //         총공격력 += 장비.공격력 || 0;
-    //     }
-    // }
+    const 장비맵 = {
+        "일반": { 이름: "릴리트의 독니", 공격력: 30 },
+        "레어": { 이름: "디아블로의 뿔", 공격력: 63 },
+        "신화": { 이름: "레비아탄의 비늘", 공격력: 132 },
+        "고대": { 이름: "벨제부브의 꼬리", 공격력: 276 },
+        "태초": { 이름: "사탄의 날개", 공격력: 576 },
+        "공허": { 이름: "바론의 촉수", 공격력: 1200 },
+        "타락": { 이름: "루시퍼의 심장", 공격력: 2496 },
+    };
 
-    // // ⭐ 전직정보에서 값이 1인 항목 개수 세기
-    // let 전직카운트 = 1;
-    // if (data.전직정보 && typeof data.전직정보 === "object") {
-    //     for (const key in data.전직정보) {
-    //         if (data.전직정보[key] === 1) {
-    //             전직카운트++;
-    //         }
-    //     }
-    // }
+    const 기록 = 유저.합성기록 || {};
+    const 장비목록 = 유저.장비목록 || [];
 
-    // // ⭐ DB 업데이트 필요 여부 체크
-    // let 업데이트필요 = false;
-    // const 업데이트값 = {};
+    for (const [등급, { 이름, 공격력 }] of Object.entries(장비맵)) {
+        const 키 = `${이름}|${등급}`;
+        const 합성수 = 기록[키];
 
-    // 레벨공격력이 10이 아닐때인거 수정해야함 적용할거면
-    // if (data.레벨공격력 !== 10) {
-    //     업데이트필요 = true;
-    //     업데이트값.레벨공격력 = 10;
-    //     data.레벨공격력 = 10;
-    // }
+        if (합성수 !== undefined) {
+            const 누적공격력 = (합성수 + 1) * 공격력;
 
-    // // 장비공격력
-    // if (data.장비공격력 !== 총공격력) {
-    //     업데이트필요 = true;
-    //     업데이트값.장비공격력 = 총공격력;
-    //     data.장비공격력 = 총공격력; // 최신값 반영
-    // }
+            const 장비 = 장비목록.find(j => j.이름 === 이름 && j.등급 === 등급);
+            if (장비) {
+                장비.공격력 = 누적공격력;
+            }
+        }
+    }
 
-    // // 전직공격력
-    // if (data.전직공격력 !== 전직카운트) {
-    //     업데이트필요 = true;
-    //     업데이트값.전직공격력 = 전직카운트;
-    //     data.전직공격력 = 전직카운트; // 최신값 반영
-    // }
+    // 업데이트
+    const { error: 업데이트에러 } = await supabaseAdmin
+        .from("users")
+        .update({ 장비목록 })
+        .eq("유저UID", 유저UID);
 
-    // const 최종공격력 = 최종공격력계산(data);
+    if (업데이트에러) {
+        return res.status(500).json({ 오류: "장비목록 업데이트 실패" });
+    }
 
-    // if (data.최종공격력 !== 최종공격력) {
-    //     업데이트필요 = true;
-    //     업데이트값.최종공격력 = 최종공격력;
-    //     data.최종공격력 = 최종공격력; // 최신값 반영
-    // }
-
-    // if (업데이트필요) {
-    //     const { error: 업데이트오류 } = await supabaseAdmin
-    //         .from("users")
-    //         .update(업데이트값)
-    //         .eq("유저UID", 유저UID);
-
-    //     if (업데이트오류) {
-    //         console.error("DB 업데이트 실패:", 업데이트오류);
-    //         // 오류 있어도 조회는 계속 진행
-    //     }
-    // }
-
-    return res.json({ 유저데이터: data });
+    return res.json({ 유저데이터: { ...유저, 장비목록 } });
 });
+
 
 app.post("/attack-normal", async (req, res) => {
     const { 유저데이터 } = req.body;
@@ -1201,7 +1176,7 @@ app.post("/gamble", async (req, res) => {
             장비목록.push({ 이름: 드랍장비.이름, 등급, 공격력: 드랍장비.공격력, 강화: 0 });
             기록[키] = 0;
         }
-        
+
         공격력증가량 = 드랍장비.공격력;
         유저.장비공격력 += 공격력증가량;
 
