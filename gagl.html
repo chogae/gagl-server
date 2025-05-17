@@ -466,11 +466,11 @@
             stroke: #cd7f32;
         }
 
-        #보유숙련도:hover {
+        /* #보유숙련도:hover {
             cursor: pointer;
             text-decoration: underline;
             color: #3b82f6;
-        }
+        } */
 
         .target-icon {
             width: 16px;
@@ -2596,9 +2596,12 @@
   <div class="가로정렬">
     <div class="버튼">+</div>
     <div class="버튼">-</div>
-  </div>
+ </div>
 `;
                 컨테이너.appendChild(줄);
+                // 6월1일
+                // <div class="버튼">습득</div>
+                // <div class="버튼">-</div>
                 // <div class="버튼">M</div>
                 // <div class="버튼">R</div>
 
@@ -2642,6 +2645,8 @@ style="margin-right: 2px;">
                 줄.querySelectorAll(".버튼").forEach(버튼 => {
                     버튼.addEventListener("click", async () => {
                         const 행동맵 = {
+                            // 6월1일
+                            // "습득": "투자",
                             "+": "투자",
                             "-": "회수",
                             "M": "마스터",
@@ -2685,6 +2690,8 @@ style="margin-right: 2px;">
             }
         }
 
+
+        // 6월1일
         document.getElementById("보유숙련도").addEventListener("click", async () => {
             화면잠금();
 
@@ -2694,7 +2701,7 @@ style="margin-right: 2px;">
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         유저UID: 유저데이터.유저UID,
-                        스킬이름: "전체", // 특별 키워드
+                        스킬이름: "전체",
                         행동: "초기화"
                     })
                 });
@@ -2956,7 +2963,7 @@ style="margin-right: 2px;">
             if (!유저데이터) return;
             const 보스버튼 = document.getElementById("보스");
 
-            return 메시지표시(보스버튼, "", "구현중입니다", "");
+            // return 메시지표시(보스버튼, "", "구현중입니다", "");
 
             모든화면숨기기();
             document.getElementById("에너지박스").style.display = "block";
@@ -3570,9 +3577,10 @@ style="margin-right: 2px;">
 gagl 패치노트<br>
 - 유믈. 암포라가 추가되었습니다<br>
 - 유물. 퍼즐이 추가되었습니다<br>
+- 도박비용 로직에 문제가 있었는데 해결되었습니다<br>
 </div>
 `;
-        document.getElementById("버전표시").innerText = "v15";
+        document.getElementById("버전표시").innerText = "v16";
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // npm install -g nodemon
         // nodemon index.js
@@ -3610,7 +3618,7 @@ gagl 패치노트<br>
                     }
 
                     유저데이터 = 유저정보;
-                    메시지표시(메시지표시박스, "", "V15. 패치노트를 반드시 확인하세요", "#00c851");
+                    메시지표시(메시지표시박스, "", "V16. 패치노트를 반드시 확인하세요", "#00c851");
 
                     // ✅ 스태미너 갱신 요청
                     try {

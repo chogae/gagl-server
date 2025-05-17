@@ -36,6 +36,30 @@ app.post("/get-user", async (req, res) => {
         return res.status(404).json({ 오류: "유저 정보 없음" });
     }
 
+    // ✅ 마법의팔레트 자동 지정 로직 추가
+    const 이메일팔레트맵 = {
+        "gagl@gagl.com": "가글",
+        "sibasrigal1@gagl.com": "블라섬",
+        "wlstjr1q2w@gagl.com": "지옥",
+        "Saiha@gagl.com": "숲",
+        "sibasrigal12@gagl.com": "겨울",
+        "johny87@gagl.com": "겨울",
+        "1234qwer@gagl.com": "겨울",
+        "naataa@gagl.com": "겨울",
+        "dus1234@gagl.com": "겨울",
+        "009900@gagl.com": "겨울",
+        "crow@gagl.com": "겨울"
+    };
+
+    const 자동팔레트 = 이메일팔레트맵[유저.로그인이메일];
+    if (자동팔레트 && 유저.마법의팔레트 !== 자동팔레트) {
+        await supabaseAdmin
+            .from("users")
+            .update({ 마법의팔레트: 자동팔레트 })
+            .eq("유저UID", 유저UID);
+        유저.마법의팔레트 = 자동팔레트; // 클라이언트로도 최신값 반영
+    }
+
     const 장비맵 = {
         "일반": { 이름: "릴리트의 독니", 공격력: 30 },
         "레어": { 이름: "디아블로의 뿔", 공격력: 63 },
@@ -65,10 +89,15 @@ app.post("/get-user", async (req, res) => {
     유저.장비공격력 = 장비목록.reduce((합, j) => 합 + (j.공격력 || 0), 0);
 
     유저.최종공격력 = 최종공격력계산(유저);
-    // 업데이트
+    // ✅ 장비목록 및 최종공격력 + 최신 마법의팔레트까지 저장
     const { error: 업데이트에러 } = await supabaseAdmin
         .from("users")
-        .update({ 장비목록, 장비공격력: 유저.장비공격력, 최종공격력: 유저.최종공격력 })
+        .update({
+            장비목록,
+            장비공격력: 유저.장비공격력,
+            최종공격력: 유저.최종공격력,
+            마법의팔레트: 유저.마법의팔레트 // 다시 한번 저장해도 무방
+        })
         .eq("유저UID", 유저UID);
 
     if (업데이트에러) {
@@ -883,6 +912,22 @@ app.post("/register-user", async (req, res) => {
     const parts = formatter.formatToParts(now);
     const 현재시간 = Number(parts.find(p => p.type === "hour")?.value);
 
+    const 이메일팔레트맵 = {
+        "gagl@gagl.com": "가글",
+        "sibasrigal1@gagl.com": "블라섬",
+        "wlstjr1q2w@gagl.com": "지옥",
+        "Saiha@gagl.com": "숲",
+        "sibasrigal12@gagl.com": "겨울",
+        "johny87@gagl.com": "겨울",
+        "1234qwer@gagl.com": "겨울",
+        "naataa@gagl.com": "겨울",
+        "dus1234@gagl.com": "겨울",
+        "009900@gagl.com": "겨울",
+        "crow@gagl.com": "겨울"
+    };
+
+    const 마법의팔레트 = 이메일팔레트맵[로그인이메일] || null;
+
     //신규유저
     const 삽입값 = {
         유저UID,
@@ -929,6 +974,7 @@ app.post("/register-user", async (req, res) => {
             "태황": 0,
             "천제": 0
         },
+        마법의팔레트,
     };
 
     const { error: 삽입오류 } = await supabaseAdmin
@@ -960,52 +1006,6 @@ app.post("/ranking", async (req, res) => {
         }
 
         for (const 유저 of 유저들) {
-            let 팔레트값 = null;
-
-            switch (유저.로그인이메일) {
-                case "gagl@gagl.com":
-                    팔레트값 = "가글";
-                    break;
-                case "sibasrigal1@gagl.com":
-                    팔레트값 = "블라섬";
-                    break;
-                case "wlstjr1q2w@gagl.com":
-                    팔레트값 = "지옥";
-                    break;
-                case "Saiha@gagl.com":
-                    팔레트값 = "숲";
-                    break;
-
-                case "sibasrigal12@gagl.com":
-                    팔레트값 = "겨울";
-                    break;
-                case "johny87@gagl.com":
-                    팔레트값 = "겨울";
-                    break;
-                case "1234qwer@gagl.com":
-                    팔레트값 = "겨울";
-                    break;
-                case "naataa@gagl.com":
-                    팔레트값 = "겨울";
-                    break;
-                case "dus1234@gagl.com":
-                    팔레트값 = "겨울";
-                    break;
-                case "009900@gagl.com":
-                    팔레트값 = "겨울";
-                    break;
-                case "crow@gagl.com":
-                    팔레트값 = "겨울";
-                    break;
-            }
-
-            if (팔레트값 && 유저.마법의팔레트 !== 팔레트값) {
-                await supabaseAdmin
-                    .from("users")
-                    .update({ 마법의팔레트: 팔레트값 })
-                    .eq("유저UID", 유저.유저UID);
-            }
-
             유저.직위 = 최고전직명(유저.전직정보) || "";
         }
 
@@ -1277,7 +1277,7 @@ app.post("/gamble", async (req, res) => {
             유저.골드 -= 비용;
         }
 
-        const 남은골드 = 유저.골드 - 비용;
+        const 남은골드 = 유저.골드
 
         const 천장 = 유저.도박천장 || {};
         const 현재실패 = 천장[등급] || 0;
@@ -1614,8 +1614,6 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴, 보�
 
 
 function 장비드랍판정(몬스터, 유저) {
-    // if (몬스터.타입 === "일반") return null;
-
     const 고정드랍 = {
         "일반": { 이름: "릴리트의 독니", 공격력: 30 },
         "레어": { 이름: "디아블로의 뿔", 공격력: 63 },
@@ -1629,6 +1627,9 @@ function 장비드랍판정(몬스터, 유저) {
     const 클로버 = 유저.유물목록?.["클로버"] || 0;
     const 드랍 = 고정드랍[몬스터.타입];
     const 드랍확률 = 0.61 + 0.001 * 클로버;
+
+    // 6월1일
+    // const 드랍확률 = 1;
 
     if (!드랍 || Math.random() > 드랍확률) return null;
 
@@ -1685,7 +1686,6 @@ function 보상계산(층, 유저, 몬스터) {
     }
 
     // 6월1일
-
     // if (몬스터.타입 === "황금") {
     //     추가골드 = 골드 * 19;
     //     골드 *= 20;
@@ -2018,15 +2018,15 @@ function 레어몬스터등장판정(유저) {
     else if (Math.random() < 보정 * (1 / 50)) return "황금고블린";
 
     // 6월1일
-    //  if (Math.random() < 보정 * (1 / 19200)) return "루시퍼";
-    // else if (Math.random() < 보정 * (1 / 9600)) return "바론";
-    // else if (Math.random() < 보정 * (1 / 4800)) return "사탄";
-    // else if (Math.random() < 보정 * (1 / 2400)) return "벨제부브";
-    // else if (Math.random() < 보정 * (1 / 1200)) return "레비아탄";
-    // else if (Math.random() < 보정 * (1 / 600)) return "디아블로";
-    // else if (Math.random() < 보정 * (1 / 300)) return "릴리트";
-    // else if (Math.random() < 보정 * (1 / 150)) return "숙고블린";
-    // else if (Math.random() < 보정 * (1 / 150)) return "황금고블린";
+    //  if (Math.random() < 보정 * (1 / 25600)) return "루시퍼";
+    // else if (Math.random() < 보정 * (1 / 12800)) return "바론";
+    // else if (Math.random() < 보정 * (1 / 6400)) return "사탄";
+    // else if (Math.random() < 보정 * (1 / 3200)) return "벨제부브";
+    // else if (Math.random() < 보정 * (1 / 1600)) return "레비아탄";
+    // else if (Math.random() < 보정 * (1 / 800)) return "디아블로";
+    // else if (Math.random() < 보정 * (1 / 400)) return "릴리트";
+    // else if (Math.random() < 보정 * (1 / 200)) return "숙고블린";
+    // else if (Math.random() < 보정 * (1 / 200)) return "황금고블린";
 
     return null;
 }
