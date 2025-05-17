@@ -1263,7 +1263,6 @@ app.post("/gamble", async (req, res) => {
         }
 
         const 퍼즐 = 유저.유물목록?.["퍼즐"] || 0;
-        const 보정 = 1 + 0.01 * 퍼즐;
 
         // ✅ 퍼즐 발동 여부 판단 (퍼즐 개수당 0.1% 확률)
         const 퍼즐발동 = Math.random() < 0.001 * 퍼즐;
@@ -1282,7 +1281,8 @@ app.post("/gamble", async (req, res) => {
         const 천장 = 유저.도박천장 || {};
         const 현재실패 = 천장[등급] || 0;
 
-        const 천장성공 = 현재실패 >= 100;
+        // const 천장성공 = 현재실패 >= 100;
+        const 천장성공 = 현재실패 >= 10;
         const 성공 = 천장성공 || (Math.random() < 확률);
 
         if (!성공) {
@@ -1354,7 +1354,8 @@ app.post("/gamble", async (req, res) => {
         return res.json({
             유저데이터,
             장비: { ...드랍장비, 등급 },
-            결과: "성공"
+            결과: "성공",
+            퍼즐발동
         });
 
     } catch (e) {
