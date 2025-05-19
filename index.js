@@ -36,30 +36,6 @@ app.post("/get-user", async (req, res) => {
         return res.status(404).json({ 오류: "유저 정보 없음" });
     }
 
-    // ✅ 마법의팔레트 자동 지정 로직 추가
-    const 이메일팔레트맵 = {
-        "gagl@gagl.com": "가글",
-        "sibasrigal1@gagl.com": "블라섬",
-        "wlstjr1q2w@gagl.com": "지옥",
-        "Saiha@gagl.com": "숲",
-        "sibasrigal12@gagl.com": "겨울",
-        "johny87@gagl.com": "겨울",
-        "1234qwer@gagl.com": "겨울",
-        "naataa@gagl.com": "겨울",
-        "dus1234@gagl.com": "겨울",
-        "009900@gagl.com": "겨울",
-        "crow@gagl.com": "겨울"
-    };
-
-    const 자동팔레트 = 이메일팔레트맵[유저.로그인이메일];
-    if (자동팔레트 && 유저.마법의팔레트 !== 자동팔레트) {
-        await supabaseAdmin
-            .from("users")
-            .update({ 마법의팔레트: 자동팔레트 })
-            .eq("유저UID", 유저UID);
-        유저.마법의팔레트 = 자동팔레트; // 클라이언트로도 최신값 반영
-    }
-
     const 장비맵 = {
         "일반": { 이름: "릴리트의 독니", 공격력: 30 },
         "레어": { 이름: "디아블로의 뿔", 공격력: 63 },
@@ -89,15 +65,10 @@ app.post("/get-user", async (req, res) => {
     유저.장비공격력 = 장비목록.reduce((합, j) => 합 + (j.공격력 || 0), 0);
 
     유저.최종공격력 = 최종공격력계산(유저);
-    // ✅ 장비목록 및 최종공격력 + 최신 마법의팔레트까지 저장
+    // 업데이트
     const { error: 업데이트에러 } = await supabaseAdmin
         .from("users")
-        .update({
-            장비목록,
-            장비공격력: 유저.장비공격력,
-            최종공격력: 유저.최종공격력,
-            마법의팔레트: 유저.마법의팔레트 // 다시 한번 저장해도 무방
-        })
+        .update({ 장비목록, 장비공격력: 유저.장비공격력, 최종공격력: 유저.최종공격력 })
         .eq("유저UID", 유저UID);
 
     if (업데이트에러) {
@@ -819,11 +790,11 @@ app.post("/update-skill", async (req, res) => {
     const 현재레벨 = 스킬[스킬이름] || 0;
     const 총투자 = Object.values(스킬).reduce((a, b) => a + b, 0);
 
-    if (행동 === "습득") {
+    if (행동 === "투자") {
         if (현재레벨 >= 최대레벨) return res.status(400).json({ 오류: "최종단계입니다" });
 
         const 투자 = 총투자;
-        const 필요한숙련도 = (4 * 투자 + 31) * 5; // 👉 정확한 계산식
+        const 필요한숙련도 = (2 * 투자 + 11) * 5; // 👉 정확한 계산식
 
         if (숙련도 < 필요한숙련도) return res.status(400).json({ 오류: "숙련도 부족" });
 
@@ -912,22 +883,6 @@ app.post("/register-user", async (req, res) => {
     const parts = formatter.formatToParts(now);
     const 현재시간 = Number(parts.find(p => p.type === "hour")?.value);
 
-    const 이메일팔레트맵 = {
-        "gagl@gagl.com": "가글",
-        "sibasrigal1@gagl.com": "블라섬",
-        "wlstjr1q2w@gagl.com": "지옥",
-        "Saiha@gagl.com": "숲",
-        "sibasrigal12@gagl.com": "겨울",
-        "johny87@gagl.com": "겨울",
-        "1234qwer@gagl.com": "겨울",
-        "naataa@gagl.com": "겨울",
-        "dus1234@gagl.com": "겨울",
-        "009900@gagl.com": "겨울",
-        "crow@gagl.com": "겨울"
-    };
-
-    const 마법의팔레트 = 이메일팔레트맵[로그인이메일] || null;
-
     //신규유저
     const 삽입값 = {
         유저UID,
@@ -974,7 +929,6 @@ app.post("/register-user", async (req, res) => {
             "태황": 0,
             "천제": 0
         },
-        마법의팔레트,
     };
 
     const { error: 삽입오류 } = await supabaseAdmin
@@ -1006,6 +960,52 @@ app.post("/ranking", async (req, res) => {
         }
 
         for (const 유저 of 유저들) {
+            let 팔레트값 = null;
+
+            switch (유저.로그인이메일) {
+                case "gagl@gagl.com":
+                    팔레트값 = "가글";
+                    break;
+                case "sibasrigal1@gagl.com":
+                    팔레트값 = "블라섬";
+                    break;
+                case "wlstjr1q2w@gagl.com":
+                    팔레트값 = "지옥";
+                    break;
+                case "Saiha@gagl.com":
+                    팔레트값 = "숲";
+                    break;
+
+                case "sibasrigal12@gagl.com":
+                    팔레트값 = "겨울";
+                    break;
+                case "johny87@gagl.com":
+                    팔레트값 = "겨울";
+                    break;
+                case "1234qwer@gagl.com":
+                    팔레트값 = "겨울";
+                    break;
+                case "naataa@gagl.com":
+                    팔레트값 = "겨울";
+                    break;
+                case "dus1234@gagl.com":
+                    팔레트값 = "겨울";
+                    break;
+                case "009900@gagl.com":
+                    팔레트값 = "겨울";
+                    break;
+                case "crow@gagl.com":
+                    팔레트값 = "겨울";
+                    break;
+            }
+
+            if (팔레트값 && 유저.마법의팔레트 !== 팔레트값) {
+                await supabaseAdmin
+                    .from("users")
+                    .update({ 마법의팔레트: 팔레트값 })
+                    .eq("유저UID", 유저.유저UID);
+            }
+
             유저.직위 = 최고전직명(유저.전직정보) || "";
         }
 
@@ -1014,6 +1014,7 @@ app.post("/ranking", async (req, res) => {
         return res.status(500).json({ 오류: e.message });
     }
 });
+
 
 app.post("/delete-user", async (req, res) => {
     const { 유저UID } = req.body;
@@ -1154,29 +1155,6 @@ app.post("/promote-job", async (req, res) => {
         전직공격력: 완료전직갯수 + 2  // ✅ 추가됨
     };
 
-
-    // 6월1일
-    // 전직정보[직위] = 1;
-
-    // const 새완료전직갯수 = 완료전직갯수 + 1;
-    // 유저.전직공격력 = 1 + 새완료전직갯수 * 0.2;
-
-    // const 새레벨 = Math.floor((경험치 - 비용) / 1000) + 1;
-    // const 새레벨공격력 = 10 + (새레벨 - 1) * 5;
-    // 유저.레벨공격력 = 새레벨공격력;
-
-    // const 최종공격력 = 최종공격력계산(유저);
-    // 유저.최종공격력 = 최종공격력;
-
-    // const 업데이트 = {
-    //     레벨공격력: 새레벨공격력,
-    //     최종공격력: 최종공격력,
-    //     경험치: 경험치 - 비용,
-    //     레벨: 새레벨,
-    //     전직정보,
-    //     전직공격력: 유저.전직공격력 // ← ✅ 여기도 반영
-    // };
-
     const { error: 업데이트오류 } = await supabaseAdmin
         .from("users")
         .update(업데이트)
@@ -1204,8 +1182,17 @@ function 최고전직명(전직정보) {
 }
 
 app.post("/gamble", async (req, res) => {
-    const { 유저UID } = req.body;
-    const 비용 = 500000;
+    const { 유저UID, 등급 } = req.body;
+
+    const 비용맵 = {
+        "일반": 20000,
+        "레어": 40000,
+        "신화": 80000,
+        "고대": 160000,
+        "태초": 320000,
+        "공허": 640000,
+        "타락": 1280000
+    };
 
     const 장비맵 = {
         "일반": { 이름: "릴리트의 독니", 공격력: 30 },
@@ -1214,18 +1201,16 @@ app.post("/gamble", async (req, res) => {
         "고대": { 이름: "벨제부브의 꼬리", 공격력: 276 },
         "태초": { 이름: "사탄의 날개", 공격력: 576 },
         "공허": { 이름: "바론의 촉수", 공격력: 1200 },
-        "타락": { 이름: "루시퍼의 심장", 공격력: 2496 }
+        "타락": { 이름: "루시퍼의 심장", 공격력: 2496 },
     };
 
-    const 확률표 = [
-        { 등급: "타락", 확률: 1 - Math.pow(1 - 1 / 25600, 500) },  // 루시퍼
-        { 등급: "공허", 확률: 1 - Math.pow(1 - 1 / 12800, 500) },  // 바론
-        { 등급: "태초", 확률: 1 - Math.pow(1 - 1 / 6400, 500) },   // 사탄
-        { 등급: "고대", 확률: 1 - Math.pow(1 - 1 / 3200, 500) },   // 벨제부브
-        { 등급: "신화", 확률: 1 - Math.pow(1 - 1 / 1600, 500) },   // 레비아탄
-        { 등급: "레어", 확률: 1 - Math.pow(1 - 1 / 800, 500) },    // 디아블로
-        { 등급: "일반", 확률: 1 - Math.pow(1 - 1 / 400, 500) }     // 릴리트
-    ];
+    const 비용 = 비용맵[등급];
+    const 드랍장비 = 장비맵[등급];
+    const 확률 = 0.07;
+
+    if (!비용 || !드랍장비) {
+        return res.status(400).json({ 오류: "잘못된 등급" });
+    }
 
     try {
         const { data: 유저, error } = await supabaseAdmin
@@ -1234,89 +1219,66 @@ app.post("/gamble", async (req, res) => {
             .eq("유저UID", 유저UID)
             .single();
 
-        if (error || !유저) return res.status(400).json({ 오류: "유저 정보 없음" });
+        if (error || !유저) {
+            return res.status(400).json({ 오류: "유저 정보 없음" });
+        }
 
-        const 퍼즐 = 유저.유물목록?.["퍼즐"] || 0;
-        const 퍼즐발동 = Math.random() < 0.001 * 퍼즐;
-
-        if (!퍼즐발동 && 유저.골드 < 비용) {
+        if (유저.골드 < 비용) {
             return res.status(400).json({ 오류: "골드 부족" });
         }
 
-        if (!퍼즐발동) 유저.골드 -= 비용;
-        const 남은골드 = 유저.골드;
+        const 남은골드 = 유저.골드 - 비용;
 
         const 천장 = 유저.도박천장 || {};
+        const 현재실패 = 천장[등급] || 0;
 
-        // ✅ 꽝 확률 자동 추가 (순서 영향 없이 정규화 보장)
-        const 총합 = 확률표.reduce((합, 항목) => 합 + 항목.확률, 0);
-        확률표.push({ 등급: "꽝", 확률: Math.max(0, 1 - 총합) });
+        const 천장성공 = 현재실패 >= 10;
+        const 성공 = 천장성공 || (Math.random() < 확률);
 
-        // ✅ 등급 선택 (천장 포함)
-        let r = Math.random();
-        let 누적 = 0;
-        let 뽑힌등급 = "꽝";
-
-        for (const 항목 of 확률표) {
-            const 등급 = 항목.등급;
-            const 실패카운트 = 천장[등급] || 0;
-            const 천장보정 = 실패카운트 >= 100;
-            const 최종확률 = 천장보정 ? 1 : 항목.확률;
-
-            누적 += 최종확률;
-            if (r < 누적) {
-                뽑힌등급 = 등급;
-                break;
-            }
-        }
-
-        // ✅ 꽝 처리
-        if (뽑힌등급 === "꽝") {
-            for (const 항목 of 확률표) {
-                const 등급 = 항목.등급;
-                if (등급 !== "꽝") {
-                    천장[등급] = (천장[등급] || 0) + 1;
-                }
-            }
+        if (!성공) {
+            천장[등급] = 현재실패 + 1;
 
             await supabaseAdmin
                 .from("users")
                 .update({
-                    골드: 남은골드,
-                    도박천장: 천장
+                    골드: Math.max(0, 남은골드),
+                    도박천장: 천장  // ✅ 실패 시에도 천장 기록을 저장!
                 })
                 .eq("유저UID", 유저UID);
 
             return res.json({
                 유저데이터: { ...유저, 골드: 남은골드, 도박천장: 천장 },
-                결과: "실패",
                 장비: null,
-                퍼즐발동
+                결과: "실패"
             });
         }
 
-        // ✅ 장비 지급
-        const 드랍장비 = 장비맵[뽑힌등급];
-        천장[뽑힌등급] = 0;
 
+        천장[등급] = 0;
+        // 성공 시: 장비 지급 로직
         const 장비목록 = 유저.장비목록 || [];
+        const 키 = `${드랍장비.이름}|${등급}`;
         const 기록 = 유저.합성기록 || {};
-        const 키 = `${드랍장비.이름}|${뽑힌등급}`;
-        let 기존 = 장비목록.find(j => j.이름 === 드랍장비.이름 && j.등급 === 뽑힌등급);
+
+        let 기존 = 장비목록.find(j => j.이름 === 드랍장비.이름 && j.등급 === 등급);
         let 체력증가량 = 0;
-        let 공격력증가량 = 드랍장비.공격력;
+
+        let 공격력증가량 = 0;
 
         if (기존) {
-            기존.공격력 += 드랍장비.공격력;
             기록[키] = (기록[키] || 0) + 1;
             체력증가량 = 1;
+            기존.공격력 += 드랍장비.공격력;
         } else {
-            장비목록.push({ 이름: 드랍장비.이름, 등급: 뽑힌등급, 공격력: 드랍장비.공격력, 강화: 0 });
+            장비목록.push({ 이름: 드랍장비.이름, 등급, 공격력: 드랍장비.공격력, 강화: 0 });
             기록[키] = 0;
         }
 
+        공격력증가량 = 드랍장비.공격력;
         유저.장비공격력 += 공격력증가량;
-        유저.최종공격력 = 최종공격력계산(유저);
+
+        const 최종공격력 = 최종공격력계산(유저);
+        유저.최종공격력 = 최종공격력;
 
         const 업데이트 = {
             골드: 남은골드,
@@ -1324,29 +1286,31 @@ app.post("/gamble", async (req, res) => {
             합성기록: 기록,
             최대체력: 유저.최대체력 + 체력증가량,
             장비공격력: 유저.장비공격력,
-            최종공격력: 유저.최종공격력,
-            도박천장: 천장
+            최종공격력: 최종공격력,
+            도박천장: 천장,
         };
 
-        await supabaseAdmin
+        const { error: 업데이트에러 } = await supabaseAdmin
             .from("users")
             .update(업데이트)
             .eq("유저UID", 유저UID);
+
+        if (업데이트에러) {
+            return res.status(500).json({ 오류: "장비 저장 실패" });
+        }
 
         const 유저데이터 = { ...유저, ...업데이트 };
 
         return res.json({
             유저데이터,
-            장비: { ...드랍장비, 등급: 뽑힌등급 },
-            결과: "성공",
-            퍼즐발동
+            장비: { ...드랍장비, 등급 },
+            결과: "성공"
         });
 
     } catch (e) {
         return res.status(500).json({ 오류: "서버 오류: " + e.message });
     }
 });
-
 
 app.listen(3000, () => {
     console.log("서버 실행 중: http://localhost:3000");
@@ -1545,6 +1509,7 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴, 보�
     let 몬스터HP = 몬스터.체력;
     let 현재턴 = 시작턴;
 
+    // 🔥 보스전일 경우 몬스터 죽지 않도록 조건 제거
     while (유저HP > 0 && (보스전 || 몬스터HP > 0)) {
         몬스터HP = Math.max(0, 몬스터HP);
         유저HP = Math.max(0, 유저HP);
@@ -1600,6 +1565,8 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴, 보�
 
 
 function 장비드랍판정(몬스터, 유저) {
+    // if (몬스터.타입 === "일반") return null;
+
     const 고정드랍 = {
         "일반": { 이름: "릴리트의 독니", 공격력: 30 },
         "레어": { 이름: "디아블로의 뿔", 공격력: 63 },
@@ -1612,10 +1579,7 @@ function 장비드랍판정(몬스터, 유저) {
 
     const 클로버 = 유저.유물목록?.["클로버"] || 0;
     const 드랍 = 고정드랍[몬스터.타입];
-    // const 드랍확률 = 0.61 + 0.001 * 클로버;
-
-    // 6월1일
-    const 드랍확률 = 1;
+    const 드랍확률 = 0.61 + 0.001 * 클로버;
 
     if (!드랍 || Math.random() > 드랍확률) return null;
 
@@ -1661,25 +1625,14 @@ function 보상계산(층, 유저, 몬스터) {
     let 추가골드 = 0;
     let 추가숙련도 = 0;
 
-    // if (몬스터.타입 === "황금") {
-    //     추가골드 = 골드 * 49;
-    //     골드 *= 50;
-    // }
-
-    // if (몬스터.타입 === "계시") {
-    //     추가숙련도 = 숙련도 * 49;
-    //     숙련도 *= 50;
-    // }
-
-    // 6월1일
     if (몬스터.타입 === "황금") {
-        추가골드 = 골드 * 19;
-        골드 *= 20;
+        추가골드 = 골드 * 49;
+        골드 *= 50;
     }
 
     if (몬스터.타입 === "계시") {
-        추가숙련도 = 숙련도 * 19;
-        숙련도 *= 20;
+        추가숙련도 = 숙련도 * 49;
+        숙련도 *= 50;
     }
 
     return { 경험치, 골드, 숙련도, 추가골드, 추가숙련도 };
@@ -1972,10 +1925,7 @@ function 최종공격력계산(유저) {
     const 전직공격력 = 유저.전직공격력 || 1;
     const 소드개수 = 유저.유물목록?.["소드"] || 0;
 
-    // const 최종공격력 = (레벨공격력 + 장비공격력) * 전직공격력 * (1 + 0.01 * 소드개수);
-
-    const 최종공격력 = (레벨공격력 + 장비공격력) * (전직공격력 * 0.1 + 0.9) * (1 + 0.01 * 소드개수);
-
+    const 최종공격력 = (레벨공격력 + 장비공격력) * 전직공격력 * (1 + 0.01 * 소드개수);
     return Math.round(최종공격력);
 }
 
@@ -1990,17 +1940,17 @@ function 최대체력계산(유저) {
 
 function 레어몬스터등장판정(유저) {
     const 고스트개수 = 유저.유물목록?.["고스트"] || 0;
-    const 보정 = 1 + 0.01 * 고스트개수;
+    const 보정 = 1 + 0.01 * 고스트개수; // 고스트 1개당 1% 증가
 
-    if (Math.random() < 보정 * (1 / 25600)) return "루시퍼";
-    else if (Math.random() < 보정 * (1 / 12800)) return "바론";
-    else if (Math.random() < 보정 * (1 / 6400)) return "사탄";
-    else if (Math.random() < 보정 * (1 / 3200)) return "벨제부브";
-    else if (Math.random() < 보정 * (1 / 1600)) return "레비아탄";
-    else if (Math.random() < 보정 * (1 / 800)) return "디아블로";
-    else if (Math.random() < 보정 * (1 / 400)) return "릴리트";
-    else if (Math.random() < 보정 * (1 / 200)) return "숙고블린";
-    else if (Math.random() < 보정 * (1 / 200)) return "황금고블린";
+    if (Math.random() < 보정 * (1 / 6400)) return "루시퍼";
+    else if (Math.random() < 보정 * (1 / 3200)) return "바론";
+    else if (Math.random() < 보정 * (1 / 1600)) return "사탄";
+    else if (Math.random() < 보정 * (1 / 800)) return "벨제부브";
+    else if (Math.random() < 보정 * (1 / 400)) return "레비아탄";
+    else if (Math.random() < 보정 * (1 / 200)) return "디아블로";
+    else if (Math.random() < 보정 * (1 / 100)) return "릴리트";
+    else if (Math.random() < 보정 * (1 / 50)) return "숙고블린";
+    else if (Math.random() < 보정 * (1 / 50)) return "황금고블린";
 
     return null;
 }
@@ -2017,7 +1967,7 @@ const 유물데이터 = {
     // "표창": { 설명: "추가로 공격합니다" },
     "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다" },
     // "엑스": { 설명: "최종 데미지를 증가시킵니다" },
-    "퍼즐": { 설명: "도박비용을 무시합니다" },
+    // "퍼즐": { 설명: "미정" },
     // "로켓": { 설명: "미정" },
     // "플라워": { 설명: "미정" },
     // "봄": { 설명: "미정" },
