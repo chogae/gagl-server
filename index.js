@@ -116,13 +116,23 @@ app.post("/boss-ranking", async (req, res) => {
         const parts = formatter.formatToParts(now);
         const 요일 = parts.find(p => p.type === "weekday")?.value;
 
-        //오픈
-        // if (요일 === "토" || 요일 === "일") {
-        //     return res.status(403).json({ 오류: "주말은 정산 기간입니다. 보스전은 월~금에만 참여 가능합니다." });
+        // if (요일 === "일") {
+        //     // ✅ 펫단계 계산
+        //     let 펫단계 = 0;
+        //     if (누적데미지총합 >= 99999999) {
+        //         펫단계 = 3;
+        //     } else if (누적데미지총합 >= 9999999) {
+        //         펫단계 = 2;
+        //     } else if (누적데미지총합 >= 999999) {
+        //         펫단계 = 1;
+        //     }
+
+        //     // ✅ 모든 유저의 펫단계 일괄 갱신
+        //     await supabaseAdmin
+        //         .from("users")
+        //         .update({ 펫단계 })
+        //         .neq("펫단계", 펫단계); // 불필요한 업데이트 방지 (다른 값일 때만)
         // }
-        if (요일 === "일") {
-            return res.status(403).json({ 오류: "주말은 정산 기간입니다. 보스전은 월~금에만 참여 가능합니다." });
-        }
 
         // ✅ 모든 유저의 누적 데미지 합산
         const { data: 전체합, error: 합계에러 } = await supabaseAdmin
@@ -136,22 +146,6 @@ app.post("/boss-ranking", async (req, res) => {
         const 누적데미지총합 = 전체합
             .filter(u => u.보스누적데미지 > 0)
             .reduce((합, u) => 합 + Number(u.보스누적데미지), 0);
-
-        // // ✅ 펫단계 계산
-        // let 펫단계 = 0;
-        // if (누적데미지총합 >= 99999999) {
-        //     펫단계 = 3;
-        // } else if (누적데미지총합 >= 9999999) {
-        //     펫단계 = 2;
-        // } else if (누적데미지총합 >= 999999) {
-        //     펫단계 = 1;
-        // }
-
-        // // ✅ 모든 유저의 펫단계 일괄 갱신
-        // await supabaseAdmin
-        //     .from("users")
-        //     .update({ 펫단계 })
-        //     .neq("펫단계", 펫단계); // 불필요한 업데이트 방지 (다른 값일 때만)
 
         // ✅ 상위 10명 조회
         const { data: 유저들, error: 유저에러 } = await supabaseAdmin
@@ -187,6 +181,25 @@ app.post("/attack-boss", async (req, res) => {
     const 전투로그 = [];
 
     if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
+
+
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat("ko-KR", {
+        weekday: "short",
+        timeZone: "Asia/Seoul"
+    });
+    const parts = formatter.formatToParts(now);
+    const 요일 = parts.find(p => p.type === "weekday")?.value;
+
+    // if (요일 === "월" || 요일 === "화" || 요일 === "수" || 요일 === "목" || 요일 === "금" || 요일 === "토" || 요일 === "일") {
+    //     return res.status(403).json({ 오류: "주말은 정산 기간입니다. 보스전은 월~금에만 참여 가능합니다." });
+    // }
+    // if (요일 === "토" || 요일 === "일") {
+    //     return res.status(403).json({ 오류: "주말은 정산 기간입니다. 보스전은 월~금에만 참여 가능합니다." });
+    // }
+    if (요일 === "일") {
+        return res.status(403).json({ 오류: "주말은 정산 기간입니다. 보스전은 월~금에만 참여 가능합니다." });
+    }
 
     const { data: 유저, error } = await supabaseAdmin
         .from("users")
