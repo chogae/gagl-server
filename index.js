@@ -39,14 +39,14 @@ app.post("/get-user", async (req, res) => {
     // ✅ 마법의팔레트 자동 지정 로직 추가
     const 이메일팔레트맵 = {
         "gagl@gagl.com": "가글",
-        "johny87@gagl.com":"네온사인",
-        "Main@gagl.com":"핑크오션",
-        "1234qwer@gagl.com":"황혼하늘",
-        "saiha@gagl.com":"에메랄드숲",
-        "009900@gagl.com":"겨울",
-        "naataa@gagl.com":"민초",
-        "sibasrigal1@gagl.com":"블라섬",
-        "wlstjr1q2w@gagl.com":"지옥",
+        "johny87@gagl.com": "네온사인",
+        "Main@gagl.com": "핑크오션",
+        "1234qwer@gagl.com": "황혼하늘",
+        "saiha@gagl.com": "에메랄드숲",
+        "009900@gagl.com": "겨울",
+        "naataa@gagl.com": "민초",
+        "sibasrigal1@gagl.com": "블라섬",
+        "wlstjr1q2w@gagl.com": "지옥",
     };
 
     const 자동팔레트 = 이메일팔레트맵[유저.로그인이메일];
@@ -374,7 +374,7 @@ app.post("/attack-normal", async (req, res) => {
     let 레어몬스터이름 = 레어몬스터등장판정(유저);
 
     if (레어몬스터이름 && 현재스태미너 === 0) {
-        현재스태미너 ++;
+        현재스태미너++;
     }
 
     await supabaseAdmin.from("users").update({
@@ -586,7 +586,7 @@ app.post("/attack-rare", async (req, res) => {
 
     let 새로운레어몬스터이름 = 레어몬스터등장판정(유저);
     if (새로운레어몬스터이름 && 현재스태미너 === 0) {
-        현재스태미너 ++;
+        현재스태미너++;
     }
 
     await supabaseAdmin.from("users").update({
@@ -932,16 +932,14 @@ app.post("/register-user", async (req, res) => {
 
     const 이메일팔레트맵 = {
         "gagl@gagl.com": "가글",
+        "johny87@gagl.com": "네온사인",
+        "Main@gagl.com": "핑크오션",
+        "1234qwer@gagl.com": "황혼하늘",
+        "saiha@gagl.com": "에메랄드숲",
+        "009900@gagl.com": "겨울",
+        "naataa@gagl.com": "민초",
         "sibasrigal1@gagl.com": "블라섬",
         "wlstjr1q2w@gagl.com": "지옥",
-        "Saiha@gagl.com": "숲",
-        "sibasrigal12@gagl.com": "겨울",
-        "johny87@gagl.com": "겨울",
-        "1234qwer@gagl.com": "겨울",
-        "naataa@gagl.com": "겨울",
-        "dus1234@gagl.com": "겨울",
-        "009900@gagl.com": "겨울",
-        "crow@gagl.com": "겨울"
     };
 
     const 마법의팔레트 = 이메일팔레트맵[로그인이메일] || null;
@@ -1768,7 +1766,7 @@ function 레어몬스터등장판정(유저) {
         { 이름: "숙고블린", 확률: 보정 * (1 / 200) },
         { 이름: "황금고블린", 확률: 보정 * (1 / 200) },
     ];
- 
+
 
     // ⛔️ 모든 확률 합계
     const 총합 = 후보.reduce((합, 항목) => 합 + 항목.확률, 0);
