@@ -277,7 +277,7 @@
 
         .네온박스 {
             position: fixed;
-            top: 30%;
+            top: 20%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 9999;
@@ -466,11 +466,11 @@
             stroke: #cd7f32;
         }
 
-        #보유숙련도:hover {
+        /* #보유숙련도:hover {
             cursor: pointer;
             text-decoration: underline;
             color: #3b82f6;
-        }
+        } */
 
         .target-icon {
             width: 16px;
@@ -589,7 +589,7 @@
             animation: 무지개흐름 3s linear infinite;
         }
 
-        .마법의팔레트숲 {
+        .마법의팔레트민초 {
             background: linear-gradient(90deg, #1e9f8d, #08e0c7, #52d1c2, #a6e5de, #21a58f);
             background-size: 200% auto;
             background-clip: text;
@@ -611,6 +611,49 @@
             animation: 무지개흐름 3s linear infinite;
         }
 
+        .마법의팔레트핑크오션 {
+            background: linear-gradient(90deg, #ff9a9e, #fad0c4, #fad0c4, #ff9a9e);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            animation: 무지개흐름 3s linear infinite;
+        }
+
+        .마법의팔레트네온사인 {
+            background: linear-gradient(90deg, #00f260, #0575e6, #00f260);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            animation: 무지개흐름 2.5s linear infinite;
+        }
+
+        .마법의팔레트에메랄드숲 {
+            background: linear-gradient(90deg, #11998e, #38ef7d, #11998e);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            animation: 무지개흐름 3s linear infinite;
+        }
+
+        .마법의팔레트황혼하늘 {
+            background: linear-gradient(90deg, #f7971e, #ffd200, #f7971e);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            animation: 무지개흐름 3.5s linear infinite;
+        }
 
         #유물컨테이너 {
             display: flex;
@@ -626,16 +669,6 @@
 </head>
 
 <body>
-    <div style="position: fixed; top: 6px; left: 10px; display: flex; align-items: center; z-index: 9999;">
-        <div id="버전표시" style="color: #bebebe; font-size: 20px; opacity: 0.8; cursor: pointer;">
-        </div>
-        <span id="메뉴얼힌트" style="margin-left: 8px; color: #bebebe; font-size: 14px; animation: 깜빡임 1.2s infinite;">
-            &lt;&lt; 클릭 시 메뉴얼 오픈
-        </span>
-    </div>
-    <div class="네온박스" id="네온박스">
-        gagl에 찾아와주셔서 감사합니다
-    </div>
     <div class="유물드랍박스" id="유물드랍박스" style="display: none;">
 
     </div>
@@ -648,12 +681,13 @@
 
                 <div id="전투스킬설정버튼" style="display: none;">
                     <div class="가로정렬">
+                        <!-- <div class="마법의팔레트지옥 버튼">마법의팔레트</div> -->
                         <div class="버튼" id="전투">전투</div>
                         <div class="버튼" id="장비">장비</div>
                         <div class="버튼" id="유물">유물</div>
                         <div class="버튼" id="보스">보스</div>
                         <div class="버튼" id="전당">전당</div>
-                        <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
+                        <div class="버튼" id="정보">정보</div>
                     </div>
                 </div>
             </div>
@@ -680,6 +714,12 @@
     </div>
 
 
+
+    <div id="메뉴얼화면" style="display: none;">
+        <div class="사백픽셀테두리 세로정렬" id="메뉴얼컨테이너">
+
+        </div>
+    </div>
 
     <div id="유물화면" style="display: none;">
         <div class="사백픽셀테두리" id="유물컨테이너">
@@ -722,17 +762,15 @@
         </div>
     </div>
 
-
-
-
     <div id="인증화면" class="사백픽셀테두리 세로정렬">
         <input id="이메일입력" type="text" placeholder="한글x, 영문아이디 입력" autocomplete="off" />
         <input id="비번입력" type="password" placeholder="비밀번호 입력" autocomplete="off" />
         <button onclick="회원가입()">회원가입</button>
         <button onclick="로그인()">로그인</button>
+        <div class="네온박스" id="네온박스">
+            gagl에 찾아와주셔서 감사합니다
+        </div>
     </div>
-
-
 
     <div id="전투화면" style="display: none;">
         <div class="사백픽셀테두리 가로정렬" id="층조절">
@@ -872,14 +910,9 @@
 "></div>
 
     <div id="장비화면" style="display: none;">
-        <div class="밑줄 양쪽정렬">
-            <div>강림카운트</div>
-            <div style="flex: 1; display: flex; justify-content: flex-end;">
-                <div id="장비목록"></div>
-            </div>
-        </div>
+        <div id="장비골드표시" style="color: #f5c400; margin-top: 10px;">
 
-        <div id="장비골드표시" style="color: #f5c400;">0 Gold</div>
+        </div>
 
         <div class="사백픽셀테두리 세로정렬" id="장비컨테이너">
         </div>
@@ -941,25 +974,28 @@
 ">
         <div id="도박타이틀" style="font-size: 20px; font-weight: bold;"></div>
         <div style="margin-top: 15px;">
-            <!-- <div class="버튼" onclick="도박시도('일반')">일반 (2만)</div>
-            <div class="버튼" onclick="도박시도('레어')">레어 (4만)</div>
-            <div class="버튼" onclick="도박시도('신화')">신화 (8만)</div> -->
-            <div class="버튼" onclick="도박시도('고대')">고대 (16만)</div>
-            <div class="버튼" onclick="도박시도('태초')">태초 (32만)</div>
-            <div class="버튼" onclick="도박시도('공허')">공허 (64만)</div>
-            <div class="버튼" onclick="도박시도('타락')">타락 (128만)</div>
+            <div class="버튼" onclick="장비도박시도()">장비도박 (10만)</div>
+            <div class="버튼" onclick="유물도박시도()">유물도박 (5만)</div>
         </div>
     </div>
 
-
+    <div id="펫컨테이너" style="
+  position: fixed;
+  top: 200px;
+  left: 200px;
+  pointer-events: none;
+  z-index: 99999;
+  transform: scale(0.1);
+  background: transparent;
+">
+    </div>
     <!-- 객체추가 -->
 
     <script>
-        // 최초 접속 시 기기ID를 localStorage에 저장
         let 기기ID = localStorage.getItem("기기ID");
 
         if (!기기ID) {
-            기기ID = crypto.randomUUID();  // 브라우저 내장 UUID 생성기
+            기기ID = crypto.randomUUID();
             localStorage.setItem("기기ID", 기기ID);
         }
 
@@ -975,8 +1011,9 @@
             "신화": "#0000ff",
             "고대": "#c8c800",
             "태초": "#800080",
-            "공허": "#ff0000",
-            "타락": "#CD7F32",
+            "타락": "#ff0000",
+            // "공허": "#ff0000",
+            // "공허": "#CD7F32",
 
             "빨": "#ff0000",
             "주": "#ff8000",
@@ -994,7 +1031,17 @@
             "남보": "#851bb1"
         };
 
-        //루시드아이콘콘
+        //잡아이콘
+        const 서클체크아이콘 = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big-icon lucide-circle-check-big"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>'
+        const 머니아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-coins-icon lucide-coins"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>`;
+        const 성공아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-party-popper-icon lucide-party-popper"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg>`;
+        const 실패아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>`;
+        const 마스터아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap-icon lucide-graduation-cap"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>`;
+        const 도박아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dices-icon lucide-dices"><rect width="12" height="12" x="2" y="10" rx="2" ry="2"/><path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6"/><path d="M6 18h.01"/><path d="M10 14h.01"/><path d="M15 6h.01"/><path d="M18 9h.01"/></svg>`;
+        const 공격력아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-swords-icon lucide-swords"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"/><line x1="5" x2="9" y1="14" y2="18"/><line x1="7" x2="4" y1="17" y2="20"/><line x1="3" x2="5" y1="19" y2="21"/></svg>`;
+        const 체력아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-icon lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
+
+        //루시드아이콘
         const 크리티컬아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-axe-icon lucide-axe"><path d="m14 12-8.5 8.5a2.12 2.12 0 1 1-3-3L11 9"/><path d="M15 13 9 7l4-4 6 6h3a8 8 0 0 1-7 7z"/></svg>`;
         const 버서커아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flame-icon lucide-flame"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`;
         const 드레인아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-droplet-icon lucide-droplet"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>`;
@@ -1002,17 +1049,14 @@
         const 아이언바디아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-biceps-flexed-icon lucide-biceps-flexed"><path d="M12.409 13.017A5 5 0 0 1 22 15c0 3.866-4 7-9 7-4.077 0-8.153-.82-10.371-2.462-.426-.316-.631-.832-.62-1.362C2.118 12.723 2.627 2 10 2a3 3 0 0 1 3 3 2 2 0 0 1-2 2c-1.105 0-1.64-.444-2-1"/><path d="M15 14a5 5 0 0 0-7.584 2"/><path d="M9.964 6.825C8.019 7.977 9.5 13 8 15"/></svg>`;
         const 퀵니스아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history-icon lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>`;
         const 발굴아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem-icon lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>`;
-        const 머니아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-coins-icon lucide-coins"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>`;
-        const 성공아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-party-popper-icon lucide-party-popper"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg>`;
-        const 실패아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>`;
-        const 마스터아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap-icon lucide-graduation-cap"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>`;
         const 버닝아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-battery-charging-icon lucide-battery-charging"><path d="M15 7h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><path d="M6 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h1"/><path d="m11 7-3 5h4l-3 5"/><line x1="22" x2="22" y1="11" y2="13"/></svg>`;
-        const 도박아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dices-icon lucide-dices"><rect width="12" height="12" x="2" y="10" rx="2" ry="2"/><path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6"/><path d="M6 18h.01"/><path d="M10 14h.01"/><path d="M15 6h.01"/><path d="M18 9h.01"/></svg>`;
         const 인텔리전스아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy-plus-icon lucide-copy-plus"><line x1="15" x2="15" y1="12" y2="18"/><line x1="12" x2="18" y1="15" y2="15"/><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
         const 브로큰아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-off-icon lucide-shield-off"><path d="m2 2 20 20"/><path d="M5 5a1 1 0 0 0-1 1v7c0 5 3.5 7.5 7.67 8.94a1 1 0 0 0 .67.01c2.35-.82 4.48-1.97 5.9-3.71"/><path d="M9.309 3.652A12.252 12.252 0 0 0 11.24 2.28a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1v7a9.784 9.784 0 0 1-.08 1.264"/></svg>`;
-        const 공격력아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-swords-icon lucide-swords"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"/><line x1="5" x2="9" y1="14" y2="18"/><line x1="7" x2="4" y1="17" y2="20"/><line x1="3" x2="5" y1="19" y2="21"/></svg>`;
-        const 체력아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-icon lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
         const 즉사아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-skull-icon lucide-skull"><path d="m12.5 17-.5-1-.5 1h1z"/><path d="M15 22a1 1 0 0 0 1-1v-1a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20v1a1 1 0 0 0 1 1z"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="12" r="1"/></svg>`;
+        const 봄아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flower2-icon lucide-flower-2"><path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v1M9 8a3 3 0 1 0 3 3M9 8h1m5 0a3 3 0 1 1-3 3m3-3h-1m-2 3v-1"/><circle cx="12" cy="8" r="2"/><path d="M12 10v12"/><path d="M12 22c4.2 0 7-1.667 7-5-4.2 0-7 1.667-7 5Z"/><path d="M12 22c-4.2 0-7-1.667-7-5 4.2 0 7 1.667 7 5Z"/></svg>`;
+        const 여름아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun-icon lucide-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
+        const 가을아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-leaf-icon lucide-leaf"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>`;
+        const 겨울아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-snowflake-icon lucide-snowflake"><path d="m10 20-1.25-2.5L6 18"/><path d="M10 4 8.75 6.5 6 6"/><path d="m14 20 1.25-2.5L18 18"/><path d="m14 4 1.25 2.5L18 6"/><path d="m17 21-3-6h-4"/><path d="m17 3-3 6 1.5 3"/><path d="M2 12h6.5L10 9"/><path d="m20 10-1.5 2 1.5 2"/><path d="M22 12h-6.5L14 15"/><path d="m4 10 1.5 2L4 14"/><path d="m7 21 3-6-1.5-3"/><path d="m7 3 3 6h4"/></svg>`;
 
         //유물아이콘
         const 소드아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sword-icon lucide-sword"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/></svg>`;
@@ -1029,15 +1073,15 @@
         const 퍼즐아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-puzzle-icon lucide-puzzle"><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z"/></svg>`;
         const 로켓아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rocket-icon lucide-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>`;
         const 표창아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-fan-icon lucide-fan"><path d="M10.827 16.379a6.082 6.082 0 0 1-8.618-7.002l5.412 1.45a6.082 6.082 0 0 1 7.002-8.618l-1.45 5.412a6.082 6.082 0 0 1 8.618 7.002l-5.412-1.45a6.082 6.082 0 0 1-7.002 8.618l1.45-5.412Z"/><path d="M12 12v.01"/></svg>`;
-        const 봄아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flower2-icon lucide-flower-2"><path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v1M9 8a3 3 0 1 0 3 3M9 8h1m5 0a3 3 0 1 1-3 3m3-3h-1m-2 3v-1"/><circle cx="12" cy="8" r="2"/><path d="M12 10v12"/><path d="M12 22c4.2 0 7-1.667 7-5-4.2 0-7 1.667-7 5Z"/><path d="M12 22c-4.2 0-7-1.667-7-5 4.2 0 7 1.667 7 5Z"/></svg>`;
-        const 여름아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun-icon lucide-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
-        const 가을아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-leaf-icon lucide-leaf"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>`;
-        const 겨울아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-snowflake-icon lucide-snowflake"><path d="m10 20-1.25-2.5L6 18"/><path d="M10 4 8.75 6.5 6 6"/><path d="m14 20 1.25-2.5L18 18"/><path d="m14 4 1.25 2.5L18 6"/><path d="m17 21-3-6h-4"/><path d="m17 3-3 6 1.5 3"/><path d="M2 12h6.5L10 9"/><path d="m20 10-1.5 2 1.5 2"/><path d="M22 12h-6.5L14 15"/><path d="m4 10 1.5 2L4 14"/><path d="m7 21 3-6-1.5-3"/><path d="m7 3 3 6h4"/></svg>`;
-        const 다이노아이콘 = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="height: 200; width: 200px;"><path d="M0 0h512v512H0z" fill="#000" fill-opacity="1"></path><g class="" transform="translate(0,0)" style=""><path d="m236.375 34.5-18.53 2.406 5.06 39.407c-9.114 1.973-18.22 4.657-27.28 8.062l-9.5-40.156-18.188 4.31 10.25 43.345a218.543 218.543 0 0 0-25.093 14.344l-17.28-42.876L118.5 70.31l19.03 47.22a206.258 206.258 0 0 0-14.25 12.468L89.47 89.625l-14.345 12 35.22 42.063a195.014 195.014 0 0 0-12.97 16.78L53.47 133.5l-9.782 15.938 43.874 26.906a193.797 193.797 0 0 0-9.812 20.53l-47.53-12.81-4.845 18.06L71.5 214.532a200.305 200.305 0 0 0-7.344 36.345l-39.656-2.25-1.03 18.688 39.56 2.218a207.24 207.24 0 0 0 2.47 35.19L31.375 311l3.375 18.375 34.47-6.344c2.885 11.524 6.74 22.782 11.56 33.595l-26.31 11.97 7.75 17 27-12.283A192.58 192.58 0 0 0 110 403.126l-20.53 16.813 11.843 14.468 21.5-17.625a184.811 184.811 0 0 0 29.406 23.126L141.53 456l15.564 10.344 11.437-17.22c11.12 5.558 23.014 10.1 35.626 13.47l3.563-17.72c-10.315-2.77-20.055-6.39-29.19-10.812l7.47-11.25-15.563-10.343-8.28 12.467c-9.12-5.807-17.506-12.456-25.157-19.78l13.906-11.407-11.844-14.438-14.843 12.157a177.534 177.534 0 0 1-18-25.908l22.5-10.25-7.75-17-23.19 10.563a188.384 188.384 0 0 1-10.218-29.22l32.313-5.967-3.375-18.375-32.72 6.03a188.112 188.112 0 0 1-2.25-30.78l40.032 2.25 1.063-18.657-39.97-2.25c.73-6.54 1.805-13.07 3.25-19.53 4.226.572 9.16 1.176 15.064 1.843 14.326 1.616 32.835 3.446 51.155 5.186 29.98 2.848 49.638 4.533 59.375 5.375l-33.063 72.345-5.78 12.656 1.343.064L234.563 365l9.406-16.156-29.94-17.375 51.782 2.092.75-18.687-49.343-2 33.593-13.22-6.844-17.405-35.407 13.938L234 240.53l5.5-12.06-13.22-1.126s-35.88-3.062-72.405-6.53c-18.263-1.736-36.696-3.565-50.813-5.158-4.618-.52-8.52-1.014-12.03-1.47 9.83-29.017 27.474-56.23 53.812-78.5l20.937 52 17.345-7-22.875-56.75c.296-.202.578-.42.875-.624a207.016 207.016 0 0 1 21.47-12.812l18.874 79.906 18.186-4.28-19.72-83.5c8.432-3.326 16.87-5.95 25.314-7.876l11.78 91.75 18.532-2.375-11.875-92.53c8.964-1.012 17.896-1.247 26.75-.814l3 96.19 18.688-.595-.344-11.25 34.22 39.28-37.28 17.064 7.78 17 32.313-14.782-15.688 32.343 16.813 8.19L353.344 226l2.72-5.563-4.064-4.656-41.375-47.468 50.53-47.843c23.78 15.006 45.428 35.18 63.533 59.343-23.814 6.14-44.022 24.153-50.688 53.718l47 103.064 16.875-2.406-26.938-68.625 17.407-6.844 28.562 72.75 34.813-5-8.408-138.626c-11.76-6.55-24.637-9.992-37.312-10.375a280.675 280.675 0 0 0-14.47-19.19l18.564-18.686-13.25-13.156-17.72 17.812a260.514 260.514 0 0 0-15.78-15.28l18.125-27.314-15.595-10.312-17 25.656a238.895 238.895 0 0 0-18.656-12.906l10.56-31.844-17.75-5.875-9.374 28.28a216.306 216.306 0 0 0-21.906-9.75l3.156-33.686-18.625-1.75-2.75 29.5a195.525 195.525 0 0 0-24.905-5.126l-.938-30.188L269 44.22l.875 27.936c-1.664-.064-3.33-.105-5-.125-1.19-.013-2.37-.007-3.563 0-6.633.05-13.29.455-19.968 1.22l-4.97-38.75zm52.844 58.22a179.002 179.002 0 0 1 22.53 5.155l-4.438 47.406.407.032-16.376 15.5-2.125-68.093zm40.717 11.56a198.143 198.143 0 0 1 14.25 6.532l-16.312 15.438 2.063-21.97zM441.5 195.5c.786-.023 1.572.006 2.375.063 12.852.9 22.34 11.843 21.438 24.687-.902 12.84-11.836 22.34-24.688 21.438-12.852-.902-22.34-11.848-21.438-24.688.845-12.037 10.52-21.152 22.313-21.5zM328.25 439.563a292.03 292.03 0 0 1-15.625 4.28l4 18.282c5.63-1.356 11.322-2.9 17.094-4.656l-5.47-17.908zm-33.906 8.093a238.418 238.418 0 0 1-20.97 2.656l.376 18.532a250.825 250.825 0 0 0 24.563-2.938l-3.97-18.25zM226 448.75l-3.594 17.78c10.464 1.76 21.356 2.75 32.656 2.876l-.375-18.344c-9.96-.06-19.515-.87-28.687-2.312z" fill="#fff" fill-opacity="1"></path></g></svg>'
-        const 그루트아이콘 = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="height: 512px; width: 512px;"><path d="M0 0h512v512H0z" fill="#000" fill-opacity="1"></path><g class="" transform="translate(0,0)" style=""><path d="m125.5 24.44-15.2 9.64c4.7 7.36 4.1 9.89 2.6 12.91-8.4 11.18-22.25 15.83-32.31 23.89-6.38 5.2-12.53 13.64-10.92 23.76 2.17 13.46 12.66 22.56 23.15 29.76 12.38-.5 25.48.6 36.18.6l.2-.4c-11-5.5-39.08-21.1-41.75-32.85C97.5 75.04 120.3 71.43 128.9 55.13c4.3-8.5 3.4-19.93-3.4-30.69zm92.8.3c-1.8 17.62-4.3 32.04-7.1 44.98l28.3 17.12-33.5 5.31c-3.3 12.75-5.7 22.95-8.4 34.55-10.5 5-22.1 9.4-32.2 12 12.6 6.5 25.2 14.8 30.5 28.1 3.6 8.8 2.1 17.9-.9 25.7-2.9 7.7-7.3 14.8-11.2 21.4-3.9 6.6-7.2 12.7-8.5 17.3.4 23 31.4 26.9 47.4 22.7 1.1-6.6 5.6-13 9.8-17.2-7.4-2.6-14.7-6.3-20.1-12.9-5.9-7.2-7.8-18.4-3.2-29.1 3.7-6.6 11.1-10.7 17.6-11.7 11.5-.9 22.3 1.4 32.8 4.3.8-6.9 2.2-14 4.9-20.3 2.1-4.9 5.5-9.9 10.4-12.9l-11-10.8-17.5 16.5-17.6-17.5-16.8 13 7.3-44.6 14.1 14.7 10.2-15.1 9.1 21.1 18.2-26.5 7.7 47.4c2.7-1 5.3-1.3 7.9-1.3 8.1.5 14.9 5.5 19.3 11.3 5 7.3 8.5 15.4 10.7 22.7 1.4-.8 2.7-1.5 4.1-2.3 6.3-3.3 12.8-6.4 19.5-8-23.2-6.9-27.4-26-28.1-48.7-9.4-.8-16.4-.6-25.6-.4-2-11.2-3.6-23.2-4.8-33.07l-33.8-5.33 30.8-18.68c-1.9-13.34-4.4-26.41-8.9-39.3-14.4 3.78-33 3.98-51.4-4.48zm165.1 22.69s-37.8 20.36-34.6 36.93c1 5.29 5.3 10.28 10.7 13.98-2.5 6.06-3.5 12.06-3.9 18.16 5.9 1.8 11.6 3.8 17.2 5.9-.8-6.3-1.2-12.6-.6-18.8 5.2 1.1 10.3.6 14.1-1.9 15-10.11-2.9-54.27-2.9-54.27zm-53.2 81.07c2.2 14.8 2.2 27.2 17.4 29.4 14.6 3.3 29.9-2.2 42.2 1.2-2.1-4.2-4.2-8.5-6.1-12.8-17.3-7.4-34.3-14.1-53.5-17.8zm-226.1 13.9c-6.18 13.7-12.41 27.3-18.42 40.9-3.84-3-8.01-5.6-12.87-7.5 1.19-6.5.56-13.1-2.54-17.5-3.33-4.7-10.35-6.3-18.12-6.3-14.84-.1-32.45 5.5-32.45 5.5s19.21 43.5 36.96 39.9c4.45-1 8.29-4.3 11.18-8.8 3.97 3.1 7.5 6.8 10.82 10.8-9.36 22-17.81 44-24.12 66.5 21.79 2 39.71 9.7 55.46 19.4 8-32.7 15.2-60.4 30.3-84.9l29.1 2.4c4.3-8.4 13.5-19.9 9.9-29.2-13.1-16.5-29.9-23.6-49.1-30.5-9.2 0-17.7-.5-26.1-.7zm177 31.7c-1.4 3.3-2.6 8.2-3.3 13.4 3.5-1.1 7.2-1.7 11-1.7 3.3 0 6.4.4 9.4 1.2-1.9-5.5-4.3-10.6-6.7-13.8-5-6.6-8.2-4.2-10.4.9zm78.4 2.4c2.5 1.5 4.8 3.8 6.3 6.5 5.2 9.2 2.5 20-2.7 27.5-.8 1.1-1.6 2.3-2.5 3.3l40.2 68.1c1.7-8.8 3.5-20.4 4.7-33 2.4-26.1.2-55.5-9.3-67.2-9.6-8.6-24.9-5.6-36.7-5.2zm-13.4 15.3c-4.2.7-10.7 3.4-16.9 6.8-1.8 1-3.6 2-5.2 3 5.9 2.6 11.3 5.4 15.5 7.9 3.7-3.2 6.9-6.4 8.8-9.2 3.2-5.6 4.2-9.7-2.2-8.5zm-120.3 10c-4.2 3.5-1.8 7.8.5 10.6 2.3 2.7 7.6 5.9 14 8 3.9 1.2 8.1 2.2 11.9 2.9.1-6.5 1.6-13.3 4.2-18.2-7.9-2.2-25-6.2-30.6-3.3zm63 2c-10.5 0-18.6 8-18.6 17.8s8.1 17.8 18.6 17.8c10.5 0 18.6-8 18.6-17.8s-8.1-17.8-18.6-17.8zm135.7 9.9c.8 12.3 0 25-1.1 36.9-1.3 13.6-3.3 26-5.1 35.3 16.2-8.2 28.3-19.6 37.2-33.9-10.8-12.5-21.2-25.2-31-38.3zm-97.8 9.3c-3.3 6.4-4.3 13.9-8 19.1 3.4 3.1 7.5 6.5 12.3 10 5.3 3.8 10.9 7 14.8 8.3 7.2 3.3 9.8-7.3 8.6-11.6-1-3.9-4.8-9-10-13.6-6.1-5.4-12.6-9.3-17.7-12.2zM258 240.8c-6.3 4-14.7 7.6-17.4 15.1-1.1 6.1 5.7 14.7 12.2 13.2 8-3.6 12.7-10 16.8-17.1-4.7-2.8-8.6-6.6-11.6-11.2zm46.8 13c-4.7 2.2-10 3.5-15.5 3.6 1.7 10.3 4.1 29.9 11.4 35 8.7.7 9.9-33.4 4.1-38.6zm-136.2 4.9c-3.4 16.9-6.8 34-10.4 51 10.9 7.3 22.5 16.2 30.5 25 6.9 7.7 12.5 16.4 13.5 26.7.8 8.9-3.4 16.6-8.5 22.1s-11.1 9.8-16.7 13.9-10.7 7.9-13.6 11.2c-2.9 3.4-3.5 5.1-3 7.6 1.9 3.8 8.6 5.1 12.6 6.4 4.4 1.3 9.3 2.7 14.2 5.2 4.9 2.4 10.1 6.4 12.6 12.9v.1c6.9-48 12.3-90.5 27.5-128.5l51.8-1.4c3.9 14.9 7.9 30.8 11.3 43.7 9.1 13 18.4 25.9 30.7 35.2 6 4.4 11.2 6.3 14.9 6.1 5-10.9 8-25.1 19.8-27.9 5.2-1.1 10.3-1 15.3.1-4.3-10.6-8.4-21.1-12.4-31.7-8.4 3.9-18 7.5-28.3 4.7-12.6-3.4-21-13.3-27.7-24.2-1.3-2.2-2.6-4.4-3.8-6.7-7.5-.8-12.9-6.1-16.5-11.7-4-7.5-6.6-15.3-8.2-22.6-4.6 4.8-10.2 9.1-17.4 10.8-13.5.3-24.3-5.2-30.3-15.2-7.6 2-14.9 2.9-21.8 2.6-14.1-.6-26.4-6.2-36.1-15.4zm301.7 3.6c-3.4 5.4-7.2 10.4-11.5 15.1l10.9 3.7 4.8 30.4 17.8-2.8-6.6-41.2zm-145.8 7.2c-.1 8-.8 16.2-3.4 23.7-1.2 3.6-2.8 7-5.4 10 4.5 7.7 11.1 18.1 19.3 20.5 1.9.5 9.9-1.2 17.2-4.2-5.5-14.7-11-29.2-16.6-43.8-3.9-1.7-7.6-3.8-11.1-6.2zm-277.31 14-23.9 46.8 16.04 8.2 26.85-52.6c-5.92-1.4-12.22-2.2-18.99-2.4zm25.07 3.9-14.89 39.2-6.19 35.3 17.72 3.2 5.91-33.7L89.03 294c-5.33-2.6-10.88-4.8-16.77-6.6zm372.14 3.3c-4.7 3.6-9.7 6.8-15 9.8l29.2 48.9 15.4-9.2zm-349.93 6.2 2.64 39.7-14.34 18.6 14.26 11 18.47-24-2.2-33.1c-6.2-4.5-13-9-18.83-12.2zm324.03 8.9c-6.4 2.7-11.3 4.3-17.6 6.3l1.3 18.5 22.3 17.1 11-14.2-15.9-12.3zm-264.4 22.9c-3 14-6.1 27.9-9.4 41.9-14 22.5-35.4 46.8-53.15 56.4-9.69 5.3-17.05 6.2-22.71 3.4-5.67-2.8-12.14-10.9-16.34-29.5l-17.56 4c4.82 21.4 13.3 35.4 25.9 41.6 12.6 6.3 26.8 3.2 39.36-3.7 11.6-6.4 22.9-16.1 33.2-27.3-5.7 21.3-11.9 42.6-18.8 64 18.1 11.4 40.3 7.7 63 2.5 5-13.4 7.7-28.9 5.4-34.9-.4-.9-1.2-1.9-3.9-3.3-2.7-1.3-6.8-2.6-11.4-4-4.5-1.4-9.4-2.8-14.2-5.6-4.7-2.9-9.6-8-10.9-14.8-1.5-8.9 2.4-16.9 7.2-22.6 4.9-5.6 11-9.9 16.6-14 5.6-4.1 10.8-8 14-11.4 3.2-3.5 4.1-5.7 3.8-8.3v-.1c-.4-4.2-3.5-10.2-8.9-16.3-5.5-6.1-13-12.3-20.6-17.6-.2-.1-.4-.3-.6-.4zm202 65.6c-2.9 9.2-8.7 18.5-17.9 19.6-10.4 1-19.7-3.6-27.8-9.6-3-2.3-6-4.8-8.8-7.4 8.1 28.7 17.4 56.9 30.1 84.2 39.8 9.8 69.2 6.5 98 2.5-12.4-19-23.1-38.3-32.8-57.7 6.3-1.1 12.5-2.7 18.6-6 4.2 5 9.6 8.7 15 9.1 16.7 1.4 33-38.3 33-38.3s-17.9-5.1-33.4-5c-9.3 0-17.8 1.9-20.9 7.9-2.2 4-2 9.2-.4 14.2-6.5 1.4-13.2 1.6-19.9 1.4-2.6-5.5-5.1-11.1-7.5-16.6-14.3-9.3-20.2-13.7-25.3 1.7z" fill="#fff" fill-opacity="1"></path></g></svg>'
-        const 락골렘아이콘 = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="height: 512px; width: 512px;"><path d="M0 0h512v512H0z" fill="#000" fill-opacity="1"></path><g class="" transform="translate(0,0)" style=""><path d="m227.7 25-57.9 57.96L183.4 151h145.2l13.6-68.04-32.8-32.84L282.5 64l16.3-24.53L284.3 25h-56.6zM195 88.44 240 111l-4 17h-41V88.44zm122 0V128h-41l-4-17 32-16.05 13-6.51zM154 109.1l-22 11 10.6 17.1-24.1-10.4L73 149.6v16l91.8-13.1-10.8-43.4zm204 0-10.8 43.4 91.8 13.1v-16l-81-40.5zm-152.4 60.1-63.3 4.7-6.6 1-9.2 62.3 50.2 25.1 44.5-14.8 5.6 17-51.5 17.2-44.4-22.2 20.4 84.5 95.7 13.6V196.8l-41.4-27.6zm100.8 0L265 196.8v160.8l95.7-13.6 20.4-84.5-23.8 11.9-19.6 38.6-18.8-34.2-33.7-11.3 5.6-17 44.5 14.8 50.2-25.1-9.2-62.3-6.6-1-63.3-4.7zm-189.6 8.4-61.32 8.7-30.04 40.1 3.64 25.5 25.38 10.4L33.09 280l6.47 45.3L103 312.7v-57.4l13.8-77.7zm278.4 0 13.8 77.6v57.4l52 10.4 13.7-13.7 11.9-82.9-30.1-40.1-28-4-4.2 17.9-9.9-19.9-19.2-2.7zM104.1 330.8 42.78 343l28 126 47.42-11.8-14.1-126.4zm303.8 0-14.1 126.4 22.6 5.6 7.9-25.8 17.8 28.1L469.2 343l-61.3-12.2zm-256 31.4L138.1 487h80.3l37.6-75.1 37.6 75.1h30.8l11.6-23 11.5 23h26.4l-13.8-124.8L256 377.1l-41.9-6-6.1 34.4-15.3-37.5-40.8-5.8z" fill="#fff" fill-opacity="1"></path></g></svg>'
-        const 미노타우르스아이콘 = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="height: 512px; width: 512px;"><path d="M0 0h512v512H0z" fill="#000" fill-opacity="1"></path><g class="" transform="translate(0,0)" style=""><path d="M110 18.906c-3.766 9.014-2.938 15.91-2.938 28.032 0 26.995 24.076 48.413 52.563 52.562 19.28 2.807 39.315 4.758 59.594 5.813-8.56 7.39-13.907 18.092-13.907 35.124 0 17.576 6.436 37.856 16.562 52.97 10.126 15.112 23.233 24.374 36.03 24.374 12.8 0 25.906-9.26 36.033-24.374 10.126-15.113 16.562-35.392 16.562-52.97 0-17.186-5.43-27.946-14.125-35.342 19.053-1.09 37.854-2.952 56-5.594 28.487-4.147 51.47-23.72 52.563-52.563.368-9.723-1.637-18.74-2.938-28.03-2.943 27.71-26.205 45.69-54.313 49.656-59.833 8.443-123.54 8.443-183.375 0-28.107-3.966-51.37-21.945-54.312-49.657zm79.78 99.313c-248.928 7.213-200.628 194.293-22.124 242.5 40.812-39.456-6.55-101.937-43.72-57.033-23.22-43.474-20.674-82.77 4.5-95.03 48.72 27.067 83.566 88.52 86.126 148.405-33.595 23.148-59.625 63.032-59.625 63.032l26.344 38.78-41.31 23.5h82.124c-40.513-40.52-11.77-86.093 36.22-86.093 48.645 0 74.12 48.22 36.248 86.095h81.282l-40.47-23.5 26.345-38.78s-26.458-40.502-60.44-63.564c2.744-59.716 37.52-120.887 86.095-147.874 25.176 12.262 27.722 51.557 4.5 95.03-37.168-44.903-84.53 17.578-43.72 57.033 178.5-48.206 226.788-235.28-22.124-242.5 2.054 6.73 3.158 14.17 3.158 22.218 0 21.95-7.423 45.024-19.72 63.375-12.295 18.35-30.17 32.656-51.562 32.656-21.392 0-39.266-14.306-51.562-32.657-12.296-18.352-19.72-41.426-19.72-63.375 0-8.048 1.105-15.488 3.157-22.22z" fill="#fff" fill-opacity="1"></path></g></svg>'
-        const 서클체크아이콘 = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big-icon lucide-circle-check-big"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>'
+        const 소생아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="height: 24px; width: 24px;"></path><g class="" transform="translate(0,0)" style=""><path d="m192 17.65 16 34h96l16-34zm-9 53v51.95h32v22.2c-19.3-9-42.6-8.2-55-8.2-50.5 0-82.1 21.9-99.5 48-17.4 26.1-21.5 55.5-21.5 73 0 52.5 38.6 94.4 83.3 131C167 425.1 219 457.3 249.6 488l6.4 6.3 6.4-6.3c30.6-30.7 82.6-62.9 127.3-99.4 44.7-36.6 83.3-78.5 83.3-131 0-17.5-4.1-46.9-21.5-73s-49-48-99.5-48c-12.4 0-35.7-.8-55 8.2v-22.2h32V70.65zm18 18h110v15.95H201zm32 33.95h46v60.7l15.4-15.3c11.7-11.8 41.6-13.4 57.6-13.4 45.5 0 69.9 18.1 84.5 40 14.6 21.9 18.5 48.5 18.5 63 0 43.5-33.4 81.7-76.7 117-40.7 33.4-89 63.5-122.3 94.7-33.3-31.2-81.6-61.3-122.3-94.7-43.3-35.3-76.7-73.5-76.7-117 0-14.5 3.9-41.1 18.5-63s39-40 84.5-40c16 0 45.9 1.6 57.6 13.4l15.4 15.3zm-41 71c-64 0-80 48-80 80 0 64 80 96 144 144 64-48 144-80 144-144 0-32-16-80-80-80-32 0-48 0-64 48-16-48-32-48-64-48zm125.7 14.6c3.6-.1 5.9.3 5.8.6-16.5 7.3-33.9 24.4-44.6 41.7 0 0-3.2-17.7 9.9-31.9 7.4-8.1 21.1-10.3 28.9-10.4zM192 209.6c-24 21.5-41.3 58.2-47.2 90.4 0 0-19.5-23.7-7.7-53.4 9.8-24.5 50.1-36.5 54.9-37z" fill="#fff" fill-opacity="1"></path></g></svg>`;
+
+        //보스아이콘
+        const 그루트아이콘 = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="height: 512px; width: 512px;"></path><g class="" transform="translate(0,0)" style=""><path d="m125.5 24.44-15.2 9.64c4.7 7.36 4.1 9.89 2.6 12.91-8.4 11.18-22.25 15.83-32.31 23.89-6.38 5.2-12.53 13.64-10.92 23.76 2.17 13.46 12.66 22.56 23.15 29.76 12.38-.5 25.48.6 36.18.6l.2-.4c-11-5.5-39.08-21.1-41.75-32.85C97.5 75.04 120.3 71.43 128.9 55.13c4.3-8.5 3.4-19.93-3.4-30.69zm92.8.3c-1.8 17.62-4.3 32.04-7.1 44.98l28.3 17.12-33.5 5.31c-3.3 12.75-5.7 22.95-8.4 34.55-10.5 5-22.1 9.4-32.2 12 12.6 6.5 25.2 14.8 30.5 28.1 3.6 8.8 2.1 17.9-.9 25.7-2.9 7.7-7.3 14.8-11.2 21.4-3.9 6.6-7.2 12.7-8.5 17.3.4 23 31.4 26.9 47.4 22.7 1.1-6.6 5.6-13 9.8-17.2-7.4-2.6-14.7-6.3-20.1-12.9-5.9-7.2-7.8-18.4-3.2-29.1 3.7-6.6 11.1-10.7 17.6-11.7 11.5-.9 22.3 1.4 32.8 4.3.8-6.9 2.2-14 4.9-20.3 2.1-4.9 5.5-9.9 10.4-12.9l-11-10.8-17.5 16.5-17.6-17.5-16.8 13 7.3-44.6 14.1 14.7 10.2-15.1 9.1 21.1 18.2-26.5 7.7 47.4c2.7-1 5.3-1.3 7.9-1.3 8.1.5 14.9 5.5 19.3 11.3 5 7.3 8.5 15.4 10.7 22.7 1.4-.8 2.7-1.5 4.1-2.3 6.3-3.3 12.8-6.4 19.5-8-23.2-6.9-27.4-26-28.1-48.7-9.4-.8-16.4-.6-25.6-.4-2-11.2-3.6-23.2-4.8-33.07l-33.8-5.33 30.8-18.68c-1.9-13.34-4.4-26.41-8.9-39.3-14.4 3.78-33 3.98-51.4-4.48zm165.1 22.69s-37.8 20.36-34.6 36.93c1 5.29 5.3 10.28 10.7 13.98-2.5 6.06-3.5 12.06-3.9 18.16 5.9 1.8 11.6 3.8 17.2 5.9-.8-6.3-1.2-12.6-.6-18.8 5.2 1.1 10.3.6 14.1-1.9 15-10.11-2.9-54.27-2.9-54.27zm-53.2 81.07c2.2 14.8 2.2 27.2 17.4 29.4 14.6 3.3 29.9-2.2 42.2 1.2-2.1-4.2-4.2-8.5-6.1-12.8-17.3-7.4-34.3-14.1-53.5-17.8zm-226.1 13.9c-6.18 13.7-12.41 27.3-18.42 40.9-3.84-3-8.01-5.6-12.87-7.5 1.19-6.5.56-13.1-2.54-17.5-3.33-4.7-10.35-6.3-18.12-6.3-14.84-.1-32.45 5.5-32.45 5.5s19.21 43.5 36.96 39.9c4.45-1 8.29-4.3 11.18-8.8 3.97 3.1 7.5 6.8 10.82 10.8-9.36 22-17.81 44-24.12 66.5 21.79 2 39.71 9.7 55.46 19.4 8-32.7 15.2-60.4 30.3-84.9l29.1 2.4c4.3-8.4 13.5-19.9 9.9-29.2-13.1-16.5-29.9-23.6-49.1-30.5-9.2 0-17.7-.5-26.1-.7zm177 31.7c-1.4 3.3-2.6 8.2-3.3 13.4 3.5-1.1 7.2-1.7 11-1.7 3.3 0 6.4.4 9.4 1.2-1.9-5.5-4.3-10.6-6.7-13.8-5-6.6-8.2-4.2-10.4.9zm78.4 2.4c2.5 1.5 4.8 3.8 6.3 6.5 5.2 9.2 2.5 20-2.7 27.5-.8 1.1-1.6 2.3-2.5 3.3l40.2 68.1c1.7-8.8 3.5-20.4 4.7-33 2.4-26.1.2-55.5-9.3-67.2-9.6-8.6-24.9-5.6-36.7-5.2zm-13.4 15.3c-4.2.7-10.7 3.4-16.9 6.8-1.8 1-3.6 2-5.2 3 5.9 2.6 11.3 5.4 15.5 7.9 3.7-3.2 6.9-6.4 8.8-9.2 3.2-5.6 4.2-9.7-2.2-8.5zm-120.3 10c-4.2 3.5-1.8 7.8.5 10.6 2.3 2.7 7.6 5.9 14 8 3.9 1.2 8.1 2.2 11.9 2.9.1-6.5 1.6-13.3 4.2-18.2-7.9-2.2-25-6.2-30.6-3.3zm63 2c-10.5 0-18.6 8-18.6 17.8s8.1 17.8 18.6 17.8c10.5 0 18.6-8 18.6-17.8s-8.1-17.8-18.6-17.8zm135.7 9.9c.8 12.3 0 25-1.1 36.9-1.3 13.6-3.3 26-5.1 35.3 16.2-8.2 28.3-19.6 37.2-33.9-10.8-12.5-21.2-25.2-31-38.3zm-97.8 9.3c-3.3 6.4-4.3 13.9-8 19.1 3.4 3.1 7.5 6.5 12.3 10 5.3 3.8 10.9 7 14.8 8.3 7.2 3.3 9.8-7.3 8.6-11.6-1-3.9-4.8-9-10-13.6-6.1-5.4-12.6-9.3-17.7-12.2zM258 240.8c-6.3 4-14.7 7.6-17.4 15.1-1.1 6.1 5.7 14.7 12.2 13.2 8-3.6 12.7-10 16.8-17.1-4.7-2.8-8.6-6.6-11.6-11.2zm46.8 13c-4.7 2.2-10 3.5-15.5 3.6 1.7 10.3 4.1 29.9 11.4 35 8.7.7 9.9-33.4 4.1-38.6zm-136.2 4.9c-3.4 16.9-6.8 34-10.4 51 10.9 7.3 22.5 16.2 30.5 25 6.9 7.7 12.5 16.4 13.5 26.7.8 8.9-3.4 16.6-8.5 22.1s-11.1 9.8-16.7 13.9-10.7 7.9-13.6 11.2c-2.9 3.4-3.5 5.1-3 7.6 1.9 3.8 8.6 5.1 12.6 6.4 4.4 1.3 9.3 2.7 14.2 5.2 4.9 2.4 10.1 6.4 12.6 12.9v.1c6.9-48 12.3-90.5 27.5-128.5l51.8-1.4c3.9 14.9 7.9 30.8 11.3 43.7 9.1 13 18.4 25.9 30.7 35.2 6 4.4 11.2 6.3 14.9 6.1 5-10.9 8-25.1 19.8-27.9 5.2-1.1 10.3-1 15.3.1-4.3-10.6-8.4-21.1-12.4-31.7-8.4 3.9-18 7.5-28.3 4.7-12.6-3.4-21-13.3-27.7-24.2-1.3-2.2-2.6-4.4-3.8-6.7-7.5-.8-12.9-6.1-16.5-11.7-4-7.5-6.6-15.3-8.2-22.6-4.6 4.8-10.2 9.1-17.4 10.8-13.5.3-24.3-5.2-30.3-15.2-7.6 2-14.9 2.9-21.8 2.6-14.1-.6-26.4-6.2-36.1-15.4zm301.7 3.6c-3.4 5.4-7.2 10.4-11.5 15.1l10.9 3.7 4.8 30.4 17.8-2.8-6.6-41.2zm-145.8 7.2c-.1 8-.8 16.2-3.4 23.7-1.2 3.6-2.8 7-5.4 10 4.5 7.7 11.1 18.1 19.3 20.5 1.9.5 9.9-1.2 17.2-4.2-5.5-14.7-11-29.2-16.6-43.8-3.9-1.7-7.6-3.8-11.1-6.2zm-277.31 14-23.9 46.8 16.04 8.2 26.85-52.6c-5.92-1.4-12.22-2.2-18.99-2.4zm25.07 3.9-14.89 39.2-6.19 35.3 17.72 3.2 5.91-33.7L89.03 294c-5.33-2.6-10.88-4.8-16.77-6.6zm372.14 3.3c-4.7 3.6-9.7 6.8-15 9.8l29.2 48.9 15.4-9.2zm-349.93 6.2 2.64 39.7-14.34 18.6 14.26 11 18.47-24-2.2-33.1c-6.2-4.5-13-9-18.83-12.2zm324.03 8.9c-6.4 2.7-11.3 4.3-17.6 6.3l1.3 18.5 22.3 17.1 11-14.2-15.9-12.3zm-264.4 22.9c-3 14-6.1 27.9-9.4 41.9-14 22.5-35.4 46.8-53.15 56.4-9.69 5.3-17.05 6.2-22.71 3.4-5.67-2.8-12.14-10.9-16.34-29.5l-17.56 4c4.82 21.4 13.3 35.4 25.9 41.6 12.6 6.3 26.8 3.2 39.36-3.7 11.6-6.4 22.9-16.1 33.2-27.3-5.7 21.3-11.9 42.6-18.8 64 18.1 11.4 40.3 7.7 63 2.5 5-13.4 7.7-28.9 5.4-34.9-.4-.9-1.2-1.9-3.9-3.3-2.7-1.3-6.8-2.6-11.4-4-4.5-1.4-9.4-2.8-14.2-5.6-4.7-2.9-9.6-8-10.9-14.8-1.5-8.9 2.4-16.9 7.2-22.6 4.9-5.6 11-9.9 16.6-14 5.6-4.1 10.8-8 14-11.4 3.2-3.5 4.1-5.7 3.8-8.3v-.1c-.4-4.2-3.5-10.2-8.9-16.3-5.5-6.1-13-12.3-20.6-17.6-.2-.1-.4-.3-.6-.4zm202 65.6c-2.9 9.2-8.7 18.5-17.9 19.6-10.4 1-19.7-3.6-27.8-9.6-3-2.3-6-4.8-8.8-7.4 8.1 28.7 17.4 56.9 30.1 84.2 39.8 9.8 69.2 6.5 98 2.5-12.4-19-23.1-38.3-32.8-57.7 6.3-1.1 12.5-2.7 18.6-6 4.2 5 9.6 8.7 15 9.1 16.7 1.4 33-38.3 33-38.3s-17.9-5.1-33.4-5c-9.3 0-17.8 1.9-20.9 7.9-2.2 4-2 9.2-.4 14.2-6.5 1.4-13.2 1.6-19.9 1.4-2.6-5.5-5.1-11.1-7.5-16.6-14.3-9.3-20.2-13.7-25.3 1.7z" fill="#fff" fill-opacity="1"></path></g></svg>'
+        const 락골렘아이콘 = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="height: 512px; width: 512px;"></path><g class="" transform="translate(0,0)" style=""><path d="m227.7 25-57.9 57.96L183.4 151h145.2l13.6-68.04-32.8-32.84L282.5 64l16.3-24.53L284.3 25h-56.6zM195 88.44 240 111l-4 17h-41V88.44zm122 0V128h-41l-4-17 32-16.05 13-6.51zM154 109.1l-22 11 10.6 17.1-24.1-10.4L73 149.6v16l91.8-13.1-10.8-43.4zm204 0-10.8 43.4 91.8 13.1v-16l-81-40.5zm-152.4 60.1-63.3 4.7-6.6 1-9.2 62.3 50.2 25.1 44.5-14.8 5.6 17-51.5 17.2-44.4-22.2 20.4 84.5 95.7 13.6V196.8l-41.4-27.6zm100.8 0L265 196.8v160.8l95.7-13.6 20.4-84.5-23.8 11.9-19.6 38.6-18.8-34.2-33.7-11.3 5.6-17 44.5 14.8 50.2-25.1-9.2-62.3-6.6-1-63.3-4.7zm-189.6 8.4-61.32 8.7-30.04 40.1 3.64 25.5 25.38 10.4L33.09 280l6.47 45.3L103 312.7v-57.4l13.8-77.7zm278.4 0 13.8 77.6v57.4l52 10.4 13.7-13.7 11.9-82.9-30.1-40.1-28-4-4.2 17.9-9.9-19.9-19.2-2.7zM104.1 330.8 42.78 343l28 126 47.42-11.8-14.1-126.4zm303.8 0-14.1 126.4 22.6 5.6 7.9-25.8 17.8 28.1L469.2 343l-61.3-12.2zm-256 31.4L138.1 487h80.3l37.6-75.1 37.6 75.1h30.8l11.6-23 11.5 23h26.4l-13.8-124.8L256 377.1l-41.9-6-6.1 34.4-15.3-37.5-40.8-5.8z" fill="#fff" fill-opacity="1"></path></g></svg>'
+        const 미노타우르스아이콘 = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="height: 512px; width: 512px;"></path><g class="" transform="translate(0,0)" style=""><path d="M110 18.906c-3.766 9.014-2.938 15.91-2.938 28.032 0 26.995 24.076 48.413 52.563 52.562 19.28 2.807 39.315 4.758 59.594 5.813-8.56 7.39-13.907 18.092-13.907 35.124 0 17.576 6.436 37.856 16.562 52.97 10.126 15.112 23.233 24.374 36.03 24.374 12.8 0 25.906-9.26 36.033-24.374 10.126-15.113 16.562-35.392 16.562-52.97 0-17.186-5.43-27.946-14.125-35.342 19.053-1.09 37.854-2.952 56-5.594 28.487-4.147 51.47-23.72 52.563-52.563.368-9.723-1.637-18.74-2.938-28.03-2.943 27.71-26.205 45.69-54.313 49.656-59.833 8.443-123.54 8.443-183.375 0-28.107-3.966-51.37-21.945-54.312-49.657zm79.78 99.313c-248.928 7.213-200.628 194.293-22.124 242.5 40.812-39.456-6.55-101.937-43.72-57.033-23.22-43.474-20.674-82.77 4.5-95.03 48.72 27.067 83.566 88.52 86.126 148.405-33.595 23.148-59.625 63.032-59.625 63.032l26.344 38.78-41.31 23.5h82.124c-40.513-40.52-11.77-86.093 36.22-86.093 48.645 0 74.12 48.22 36.248 86.095h81.282l-40.47-23.5 26.345-38.78s-26.458-40.502-60.44-63.564c2.744-59.716 37.52-120.887 86.095-147.874 25.176 12.262 27.722 51.557 4.5 95.03-37.168-44.903-84.53 17.578-43.72 57.033 178.5-48.206 226.788-235.28-22.124-242.5 2.054 6.73 3.158 14.17 3.158 22.218 0 21.95-7.423 45.024-19.72 63.375-12.295 18.35-30.17 32.656-51.562 32.656-21.392 0-39.266-14.306-51.562-32.657-12.296-18.352-19.72-41.426-19.72-63.375 0-8.048 1.105-15.488 3.157-22.22z" fill="#fff" fill-opacity="1"></path></g></svg>'
+        const 가고일아이콘 = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="height: 512px; width: 512px;"></path><g class="" transform="translate(0,0)" style=""><path d="m136.6 28.1 45.9 57.31c.4.42.5.48.9.5 14.3-4.99 24.8-22.15 29.8-35.94zm238.8 0-76.6 21.87c4.1 10.62 17.6 34.33 29.8 35.94.4 0 .5-.1.9-.5zM97.27 44.18C82.9 68.72 65.8 84.24 39 98.2 25 127.7 21.2 165 24.9 198.7c3 26.9 11.1 51.3 20.8 67.2.7-2.4 1.4-4.5 2-7.2 2.1-9.2 3.8-19.3 6.7-27.8 1.5-4.2 3.1-8.2 6.6-11.7 3.5-3.6 10.5-5.6 15.8-3.7 5.4 1.9 9.1 5.5 13.3 10.7 1 1.3 2.18 3 3.28 4.6 6.72-17.9 14.22-29.3 24.02-35.7 6.3-4.1 13.9-5.4 20.7-3.9 5.1 1 9.6 3.4 13.8 6.5 10.2-7.1 23-11.3 36.1-14-7-8.6-13.9-17-21.6-24.9l3.9-23.4c-17.4-9.2-34.8-19.4-52.6-30.8 1.8 7.2 3.1 14.6 3.3 22.3.5 16.4-4.2 33.9-18.1 50.6l-13.8-11.6c11.3-13.5 14.3-25.6 13.9-38.4-.2-8.6-2.3-17.6-5.1-26.9-13.18 13.1-33.69 31.7-49.9 32.1v-18c19.88-6.2 33.53-23.24 47.63-37.36l5.27-5.22 6.1 4.09c23.2 15.46 44.8 28.99 66.4 40.49l2.6-15.5c-29.7-14.7-58.8-33.46-78.73-57.02zm317.43 0c-19.9 23.56-49 42.32-78.7 57.02l2.6 15.5c21.6-11.5 43.2-25.02 66.4-40.49l6.1-4.09 5.3 5.22c10.2 9.63 34.1 36.76 47.6 37.36v18c-21.7-2.9-36.1-18.3-49.9-32.1-2.8 9.3-4.9 18.3-5.1 26.9-.4 12.8 2.6 24.9 13.9 38.4l-13.8 11.6c-13.9-16.6-18.6-34.2-18.1-50.6.2-7.7 1.5-15.1 3.3-22.3-17.8 11.4-35.2 21.6-52.6 30.8l3.9 23.4c-8.1 8.2-15.6 17.5-21.6 24.9 13.1 2.7 25.9 6.9 36.1 14 4.2-3.1 8.7-5.5 13.8-6.5 6.8-1.5 14.4-.2 20.7 4 9.8 6.3 17.3 17.7 24 35.6 1.1-1.6 2.3-3.3 3.3-4.6 4.2-5.2 7.9-8.8 13.2-10.7 5.4-1.9 12.4.1 15.9 3.7 3.5 3.5 5.1 7.5 6.6 11.7 2.9 8.5 4.6 18.6 6.7 27.8.6 2.7 1.3 4.8 2 7.2 9.7-15.9 17.8-40.3 20.8-67.2 3.7-33.7-.1-71-14.1-100.5-26.8-13.96-43.9-29.48-58.3-54.02zM247 55.23l-18.1 4.51c-4.3 9.23-10.2 18.75-16 25.72-5.5 6.58-11.5 12.34-18.7 15.84l-8.6 51.6c12.4 13.7 22 27 33 39.2l17.1-21.4H247v-11.9c-15.7-3.5-28.7-8.9-43.1-16.1l8.2-16c12.6 6.3 29 14.7 43.9 15 16.2-2.4 29.3-7.7 43.9-15l8.2 16c-14.1 6.4-28 13.3-43.1 16.1v11.9h11.3l17.1 21.4c11.5-12.4 22.2-27.2 33-39.2l-8.6-51.6c-7.2-3.5-13.2-9.26-18.7-15.84-6.8-8.5-11.9-16.85-16-25.72L265 55.23V91.7h-18zm-2.7 133.47-13 16.3c2.2 2.4 6.6 4.6 8.7 5.7h32c4.1-2.6 5.6-3.1 8.7-5.7l-13-16.3zm-43.1 10.9c-15.7 3.1-40.3 10.5-48.1 22.4 4.7 33.5 17.6 65.7 31.4 90.6l33.2 132.8-19.7 29.5 28-9.4 21 18.4v-39.1l-32-128c-3.2-19.9-1.3-45.6-13.4-58.7l12.8-12.8c17 17.1 18.6 43.8 18.6 61.4h46c0-17.6 1.6-44.3 18.6-61.4l12.8 12.8c-11.4 16.7-13.4 39-13.4 58.7l-32 128v39.1l21-18.4 28 9.4-19.7-29.5 33.2-132.8c12.5-30.5 30.1-62 31.4-90.6-13.7-14.7-31.9-19.8-48.1-22.4-6.2 7.2-12.3 13.9-18.4 19.2-6.1 5.2-11.9 9.9-20.4 9.9h-32c-8.5 0-14.3-4.7-20.4-9.9-6.1-5.3-12.2-12-18.4-19.2zM148 277.3c-10.1 6.9-29.1 16.4-28.9 26.4 7.9 47.7 33.3 87.6 47.3 101.6l9.6 9.7-52.7 21.1 32.2 1-9.8 22.8 29.6-8.3 9.8 10.2 13.2-19.8-30.8-123.2c-6.8-13.6-13.8-27.4-19.5-41.5zm216 0c-5.7 14.1-12.7 27.9-19.5 41.5L313.7 442l13.2 19.8 9.8-10.2 29.6 8.3-9.8-22.8 32.2-1L336 415l9.6-9.7c14-14 39.4-53.9 47.3-101.6-3-12-18.4-21.5-28.9-26.4zm-128.5 47.4 20.5 81.9 20.5-81.9z" fill="#fff" fill-opacity="1"></path></g></svg>'
+        const 와이번아이콘 = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="height: 512px; width: 512px;"></path><g class="" transform="translate(0,0)" style=""><path d="M324.97 17.54c.03.034.057.07.087.106l-34.924 32.428 36.904-3.752-15.396 30.12 38.048-16.075c26.147 69.965.623 154.277-52.555 166.262-6.554-25.37-34.13-37.945-36.055-57.382.303.093.604.187.912.27a27.113 27.113 0 0 0 14.274-.07l25.138 22.89 20.653-16.377c-7.363 2.836-28.588-1.402-33.25-13.923a27.114 27.114 0 0 0 6.793-11.922c.485-1.813.757-3.635.86-5.445l11.524 22.777 5.22-16.94c7.625 5.575 12.474 13.605 11.49 21.136l16.673-29.4-72.14-29.56-58.057-48.03 17.1 31.25-48.206-19.753 35.14 31.237c-40.602 28.158-22.085 85.04-1.796 119.29-57.5-9.685-103.128-77.435-95.763-145.03l49.21-21.366-31.08-5.14 29.207-33.417-32.015 11.54c.037-.067.07-.135.107-.202-168.36 66.33-116.413 367-63.728 417.99-.19-1.317-.364-2.58-.54-3.855-14.922-56.244-20.375-125.624-17.5-190.53 3.02-68.237 14.834-131.16 36.794-169.522l16.22 9.283c-18.894 33.008-31.4 94.563-34.345 161.064-1.942 43.86.106 90.022 6.275 132.082 6.124 1.892 15.046 9.615 27.295 23.24-4.818-13.35-6.78-26.5-6.482-38.28 20.286 41.665 67.34 69.234 104.633 62.308 22.444-4.17 41.803-12.73 57.81-24.475l7.31 15.418c-20.068 5.036-22.807 32.635-14.737 55.112 1.748-19.882 11.36-29.794 21.73-32.303-6.598 15.867-4.698 30.623-3.117 44.158 10.15-12.147 21.47-23.793 23.628-39.354 8.738 7.332 12.317 21.49 1.194 39.057 26.32-15.473 31.565-41.994 7.978-57.685l-32.07-34.297c5.918-5.55 11.24-11.6 15.947-18.066l39.28 15.776c-3.942 13.69 5.833 31.512 19.77 43.31-8.055-17.288-4.826-30.08 2.562-37.103 1.63 17.39 10.64 29.193 18.733 40.064 2.73-15.665 6.79-31.493-.213-45.987 11.016 1.56 21.2 11.568 20.338 31.877 14.362-25.313 6.11-49.702-20.742-51.52l-71.135-9.892c12.757-22.982 18.676-49.823 17.015-77.475 14.188-34.708 50.058-11.816 54.523 49.16C394.924 262.27 434.58 304 426.324 367.13c11.808-23.38 21.835-35.013 29.862-36.247-10.772-91.925-40.458-191.57-77.637-250.748l15.823-9.942c50.328 80.106 85.112 220.65 84.88 331.547 42.403-115.912-2.347-356.61-154.282-384.2zm-29.458 476.913-.026.016-.015.05c.015-.02.027-.044.042-.067zm26.543-318.492h.01v-.007l-.01.008zm-53.348-41.716a9.127 9.127 0 0 1 2.652.313c4.774 1.28 7.467 5.945 6.187 10.72-1.28 4.776-5.943 7.47-10.72 6.19-4.775-1.28-7.468-5.943-6.188-10.72.96-3.584 3.823-5.993 7.21-6.435a8.66 8.66 0 0 1 .857-.068zM204.904 297.13c11.878-.2 22.637 6.756 26.172 22.487-.008 35.88-9.557 68.823-42.137 77.412-27.624 7.283-69.725-11.398-84.12-53.663 12.28-21.078 37.362-21.986 62.838 22.592-12.583-41.596 14.386-68.444 37.246-68.83z" fill="#fff" fill-opacity="1"></path></g></svg>'
+        const 아이스골렘아이콘 = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="height: 512px; width: 512px;"></path><g class="" transform="translate(0,0)" style=""><path d="M64.086 26.254c-6.237 39.87-10.003 32.572-38.703 36.922 26.282 3.712 39.417 8.81 38.193 37.176 2.659-19.972.836-30.862 36.156-36.666-15.822-6.064-33.712 4.317-35.646-37.432zm171.064.41L204.6 74.125l20.066 14.436 35.813-1.82 22.677-15.118-25.306-43.582-22.7-1.377zm58.313 26.863 34.135 58.787-3.514 4.756c-8.857 11.988-15.901 23.926-26.307 34.877l26.118 38.395-4.485-31.547 42.602-93.592-68.55-11.676zm-102.906 9.159-56.166 16.63 10.02 19.877-18.005 28.631 31.244-2.363 16.258 32.252 5.51 83.332 34.289 33 14.793-60.986 46.986 66.673 55.434-39.97-1.518-10.672-.629.428-44.134-64.881-7.352 74.902-80.46-78.674.273-.281a85.007 85.007 0 0 1-6.385-8.314c-10.292-15.21-16.606-32.339-23.592-43.815l-2.93-4.812 26.364-40.957zm182.916 20.789-27.828 61.136 31.628 21.692 31.745 93.63c-14.946-3.888-30.64 2.536-32.446-36.415-6.236 39.87-10.003 32.57-38.703 36.92 26.282 3.712 39.42 8.81 38.195 37.175 2.589-19.446.944-30.28 33.457-36.195l7.372 21.74 7.736-70.28 46.723 27.222-24.922-83.52-31.106 7.588-4.265-17.488 58.337-14.227c-7.958-4.17-10.582-5.507-21.425-11.27-10.758-5.716-21.643-11.558-30.147-16.253-4.252-2.348-7.9-4.404-10.703-6.053-.857-.505-1.495-.91-2.2-1.344l-31.448-14.058zm-81.262 3.744-23.477 15.65v10.342h-18v-7.953l-16.56.842.754 8.283L217 116.012l-1.049-11.547-21.107-15.184-9.56 14.854c7.03 12.719 12.763 26.851 20.34 38.049 8.34 12.328 17.659 20.674 34.343 21.978 21.412-5.759 33.462-13.368 42.847-22.656 8.386-8.3 15.088-18.692 23.342-30.272L292.211 87.22zm-171.633 4.687L72.611 106.41l-3.324 38.537 13.43 8.631c-48.664 60.418-1.867.866-47.516 60.793l75.274-56.168 9.484 15.299L63.822 208.3l-5.527 64.074 41.072-28.842 11.117 25.617 31.87-102.539 10.503-10.666-5.859-11.627-54.834 4.149 31.596-50.25-3.182-6.31zm123.963 30.412c1.995.03 3.956.157 5.863.368 13.566 1.499 24.743 5.851 31.79 13.085l-12.895 12.56c-1.294-1.33-11.018-6.666-20.871-7.755-9.853-1.089-19.496.729-26.295 8.057l-13.196-12.242c8.706-9.383 20.047-13.244 30.897-13.955a58.083 58.083 0 0 1 4.707-.118zm21.063 51.987c-6.368 2.817-13.521 5.33-21.64 7.478l19.075 18.65 2.565-26.128zM439.49 242.37l-8.05 73.15c.82-.779 1.713-1.807 2.726-3.195 4.278-5.86 9.527-17.238 18.947-30.896l3.041-4.409 5.325.569c7.072.756 12.796 2.553 17.478 4.494l-10-22.545-29.467-17.168zm-201.03 16.067-2.494.204-12.156 50.109-24.1-23.193 26.346 42.152 41.062-19.115 15.66 27.707 44.032-9.846 6.101-37.865-3.775-25.35-57.881 41.737-32.795-46.54zm-146.662 12.87-.93.19-41.486 29.132-5.75 22.115 38.984-22.586 25.756 23.113.512-12.597-17.086-39.367zm82.078 6.879-45.77 107.558 9.182 41.313 17.697-53.094 16.582 47.125 10.842-13.99 7.696-19.975c38.884 7.55 31.602 11.181 34.92 39.856 4.635-26.136 10.192-39.084 38.497-36.862-19.866-3.36-30.814-1.923-35.37-37.426-6.58 15.513 2.999 33.633-37.993 34.29l19.72-51.19-36.003-57.605zm176.457 15.433-7.691 47.74-39.034 8.729 32.791 19.484 5.99 49.994 22.903-34.087 29.022 44.11 7.892-66.1-51.873-69.87zm99.283 12.774c-6.236 39.87-10.003 32.57-38.703 36.92 26.282 3.712 39.417 8.81 38.193 37.175 2.659-19.972.838-30.861 36.159-36.666-15.823-6.063-33.714 4.32-35.649-37.43zm-84.48 111.597-24.555 36.547-2.822 33.858 127.039 1.876 19.959-44.076-35.29 19.82-11.573-21.216-14.118 12.605-14.498-1.318-2.931 24.545-41.211-62.64zm-173.678 6.819-25.904 33.421-10.108-28.724-20.05 60.15h57.01c-2.998-20.407-2.653-42.363-.948-64.847zm-111.969 4.84-12.275 60.007h65.545l-7.776-34.988-23.048 10.477-22.446-35.497z" fill="#fff" fill-opacity="1"></path></g></svg>'
 
         const 아이콘맵 = {
             크리티컬아이콘,
@@ -1075,10 +1119,13 @@
             가을아이콘,
             겨울아이콘,
             서클체크아이콘,
-            다이노아이콘,
             그루트아이콘,
             락골렘아이콘,
             미노타우르스아이콘,
+            가고일아이콘,
+            와이번아이콘,
+            아이스골렘아이콘,
+
         };
 
         function 화면잠금() {
@@ -1102,17 +1149,17 @@
 
             if (공격버튼) {
                 공격버튼.style.pointerEvents = "none";
-                공격버튼.style.opacity = "0.5"; // 시각적 효과
+                공격버튼.style.opacity = "0.5";
             }
 
             if (레어몬스터) {
                 레어몬스터.style.pointerEvents = "none";
-                레어몬스터.style.opacity = "0.5"; // 시각적 효과
+                레어몬스터.style.opacity = "0.5";
             }
 
             if (보스몬스터) {
                 보스몬스터.style.pointerEvents = "none";
-                보스몬스터.style.opacity = "0.5"; // 시각적 효과
+                보스몬스터.style.opacity = "0.5";
             }
         }
 
@@ -1138,7 +1185,6 @@
         }
 
         function 메시지표시(대상, 아이콘HTML, 텍스트, 글자색) {
-            // const 대상 = document.getElementById("층조절");
             const rect = 대상.getBoundingClientRect();
 
             const el = document.createElement("div");
@@ -1149,10 +1195,8 @@
             el.style.left = `${rect.left + Math.random() * rect.width}px`;
             el.style.top = `${rect.top + Math.random() * rect.height}px`;
             el.style.color = 글자색;
-            // el.style.background = ;
             el.style.padding = "8px 12px";
             el.style.borderRadius = "8px";
-            // el.style.background = "rgba(0,0,0,0.7)";
             el.style.fontWeight = "bold";
             el.style.zIndex = 9999;
             el.style.pointerEvents = "none";
@@ -1173,13 +1217,6 @@
             const 기기ID = localStorage.getItem("기기ID") || crypto.randomUUID();
 
             localStorage.setItem("기기ID", 기기ID);
-            // const 허용기기ID = "010d9bbb-58ba-4f19-b12b-d0a7850d94bd";
-
-            // if (기기ID !== 허용기기ID) {
-            //     메시지표시(메시지표시박스, "❌", "회원가입이 제한된 상태입니다", "#ef4444");
-            //     화면해제();
-            //     return;
-            // }
 
             const 아이디패턴 = /^[a-zA-Z0-9_]{3,12}$/;
             if (!아이디패턴.test(아이디)) {
@@ -1200,7 +1237,6 @@
                     return;
                 }
 
-                // ✅ 세션 초기화 후 로그인
                 await supabase.auth.signOut();
                 await supabase.auth.signInWithPassword({ email: 이메일형식, password: 비번 });
 
@@ -1230,7 +1266,6 @@
                 메시지표시(메시지표시박스, "✅", "회원가입 성공! 자동 로그인 완료", "#00c851");
                 유저데이터 = 결과.유저데이터;
 
-                // ✅ DOM이 완전히 준비된 이후 안전하게 화면 표시
                 if (document.readyState === "complete" || document.readyState === "interactive") {
                     전투화면보여주기(유저데이터);
                 } else {
@@ -1296,7 +1331,7 @@
                 유저데이터 = {
                     ...유저정보,
                     스킬: 유저정보.스킬 || {},
-                    조우기록: 유저정보.조우기록 || { 일반: 0, 레어: 0, 신화: 0, 고대: 0, 태초: 0, 공허: 0, 타락: 0 },
+                    조우기록: 유저정보.조우기록 || { 일반: 0, 레어: 0, 신화: 0, 고대: 0, 태초: 0, 타락: 0 },
                     합성기록: 유저정보.합성기록 || {},
                     장비목록: 유저정보.장비목록 || [],
                 };
@@ -1312,8 +1347,8 @@
         }
 
         async function 회원탈퇴() {
-            const 확인 = confirm("돌이킬 수 없는 판단을 하시겠습니까?");
-            if (!확인) return; // ❗ 확인 안 하면 탈퇴 중단
+            const 확인 = confirm("돌이킬 수 없는 실수를 하시겠습니까?");
+            if (!확인) return;
 
             화면잠금();
 
@@ -1350,6 +1385,7 @@
             }
         }
 
+
         document.getElementById("전투").addEventListener("click", () => {
             if (!유저데이터) return;
             전투화면보여주기(유저데이터);
@@ -1381,8 +1417,8 @@
             let 닉네임표시 = 유저.유저아이디;
 
             const 팔레트 = 유저.마법의팔레트;
-            if (팔레트 === "숲") {
-                닉네임표시 = `<span class="마법의팔레트숲">${닉네임표시}</span>`;
+            if (팔레트 === "민초") {
+                닉네임표시 = `<span class="마법의팔레트민초">${닉네임표시}</span>`;
             } else if (팔레트 === "지옥") {
                 닉네임표시 = `<span class="마법의팔레트지옥">${닉네임표시}</span>`;
             } else if (팔레트 === "블라섬") {
@@ -1391,6 +1427,14 @@
                 닉네임표시 = `<span class="마법의팔레트가글">${닉네임표시}</span>`;
             } else if (팔레트 === "겨울") {
                 닉네임표시 = `<span class="마법의팔레트겨울">${닉네임표시}</span>`;
+            } else if (팔레트 === "네온사인") {
+                닉네임표시 = `<span class="마법의팔레트네온사인">${닉네임표시}</span>`;
+            } else if (팔레트 === "핑크오션") {
+                닉네임표시 = `<span class="마법의팔레트핑크오션">${닉네임표시}</span>`;
+            } else if (팔레트 === "황혼하늘") {
+                닉네임표시 = `<span class="마법의팔레트황혼하늘">${닉네임표시}</span>`;
+            } else if (팔레트 === "에메랄드숲") {
+                닉네임표시 = `<span class="마법의팔레트에메랄드숲">${닉네임표시}</span>`;
             }
 
             document.getElementById("타이틀을아이디로").innerHTML = `${닉네임표시}`;
@@ -1437,16 +1481,29 @@
         let 풀자동사냥허용 = false;  // 기본값 false
 
         document.addEventListener("keydown", (e) => {
-            if (e.altKey && e.key.toLowerCase() === "a") {
+            const 스페이스바 = e.code === "Space";
+            const 알트A = e.altKey && e.key.toLowerCase() === "a";
+
+            if (알트A || 스페이스바) {
+                if (스페이스바) e.preventDefault();
+
                 풀자동사냥허용 = !풀자동사냥허용;
 
                 if (풀자동사냥허용) {
-                    자동사냥허용 = false;  // 기존 자동사냥 플래그는 끄기
-                    document.getElementById("공격버튼").click(); // 시작 신호
+                    자동사냥허용 = false;
+
+                    // ✅ 우선순위: 레어몬스터 → 일반 공격
+                    const 레어버튼 = document.getElementById("레어몬스터");
+                    const 일반버튼 = document.getElementById("공격버튼");
+
+                    if (레어버튼 && 레어버튼.style.display !== "none") {
+                        레어버튼.click();
+                    } else if (일반버튼 && 일반버튼.style.display !== "none") {
+                        일반버튼.click();
+                    }
                 }
             }
         });
-
 
         document.getElementById("공격버튼").addEventListener("click", async () => {
             if (!유저데이터) return;
@@ -1859,6 +1916,36 @@
                         document.getElementById("레벨업표시").style.color = "#3f84ec";
                     } else document.getElementById("레벨업표시").innerText = "";
 
+                    if (결과.드랍유물) {
+                        const 유물드랍박스 = document.getElementById("유물드랍박스");
+                        const 유저테두리안표시 = document.getElementById("유저테두리안표시");
+
+                        if (유물드랍박스) {
+                            유물드랍박스.innerText = `유물 [${결과.드랍유물}]을(를) 획득했다!`;
+                            유물드랍박스.style.display = "block";
+
+                            // 위치 조정용 부모 변경
+                            if (유저테두리안표시) {
+                                // 유저테두리안표시에 위치 기준 설정
+                                유저테두리안표시.style.position = "relative";
+
+                                // 유물드랍박스를 유저테두리안표시 내부로 이동
+                                유저테두리안표시.appendChild(유물드랍박스);
+
+                                // 전투화면용 위치 조정
+                                Object.assign(유물드랍박스.style, {
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    zIndex: "100"
+                                });
+                            }
+                        }
+                        setTimeout(() => {
+                            유물드랍박스.style.display = "none";
+                        }, 3000);
+                    }
 
                     if (결과.드랍장비) {
                         const 장비 = 결과.드랍장비;
@@ -1893,36 +1980,6 @@
 
                     }
 
-                    if (결과.드랍유물) {
-                        const 유물드랍박스 = document.getElementById("유물드랍박스");
-                        const 유저테두리안표시 = document.getElementById("유저테두리안표시");
-
-                        if (유물드랍박스) {
-                            유물드랍박스.innerText = `유물 [${결과.드랍유물}]을(를) 획득했다!`;
-                            유물드랍박스.style.display = "block";
-
-                            // 위치 조정용 부모 변경
-                            if (유저테두리안표시) {
-                                // 유저테두리안표시에 위치 기준 설정
-                                유저테두리안표시.style.position = "relative";
-
-                                // 유물드랍박스를 유저테두리안표시 내부로 이동
-                                유저테두리안표시.appendChild(유물드랍박스);
-
-                                // 전투화면용 위치 조정
-                                Object.assign(유물드랍박스.style, {
-                                    position: "absolute",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                    zIndex: "100"
-                                });
-                            }
-                        }
-                        setTimeout(() => {
-                            유물드랍박스.style.display = "none";
-                        }, 3000);
-                    }
 
                     document.getElementById("승리패배로그").innerText = "승리";
                     document.getElementById("승리패배로그").style.color = "#00c851";
@@ -1984,11 +2041,6 @@
             document.getElementById("추가획득로그").innerText = "";
             document.getElementById("레벨업표시").innerText = "";
 
-            // 📌 조우 기록 표시
-            const 기록 = 유저데이터.조우기록 || { 일반: 0, 레어: 0, 신화: 0, 고대: 0, 태초: 0, 공허: 0, 타락: 0 };
-            document.getElementById("장비목록").innerText =
-                `일반:${기록.일반} 레어:${기록.레어} 신화:${기록.신화} 고대:${기록.고대} 태초:${기록.태초} 공허:${기록.공허} 타락:${기록.타락}`;
-
             // 📌 골드/공격력/체력 표시
             document.getElementById("장비골드표시").innerHTML =
                 `${머니아이콘} ${유저데이터.골드.toLocaleString()} Gold | ${공격력아이콘} 공격력 ${유저데이터.최종공격력} | ${체력아이콘} 최대체력 ${유저데이터.최대체력}`;
@@ -2010,8 +2062,7 @@
                 "신화": 3,
                 "고대": 4,
                 "태초": 5,
-                "공허": 6,
-                "타락": 7,
+                "타락": 6,
             };
 
             장비목록.sort((a, b) => {
@@ -2080,8 +2131,7 @@
                 "신화": 100000,
                 "고대": 200000,
                 "태초": 300000,
-                "공허": 400000,
-                "타락": 1000000,
+                "타락": 400000,
             }[등급];
 
             const 비용 = 강화비용;
@@ -2154,58 +2204,112 @@
                         "쎄타 인텔리전스",
                         "아이오타 인텔리전스",
                         "카파 인텔리전스",
-                        // "람다 인텔리전스",
-                        // "뮤 인텔리전스",
-                        // "뉴 인텔리전스",
-                        // "크사이 인텔리전스",
-                        // "오미크론 인텔리전스",
-                        // "파이 인텔리전스",
-                        // "로 인텔리전스",
-                        // "시그마 인텔리전스",
-                        // "타우 인텔리전스",
-                        // "윕실론 인텔리전스",
-                        // "카이 인텔리전스",
-                        // "프사이 인텔리전스",
-                        // "오메가 인텔리전스"
+                        "람다 인텔리전스",
+                        "뮤 인텔리전스",
+                        "뉴 인텔리전스",
+                        "크사이 인텔리전스",
+                        "오미크론 인텔리전스",
+                        "파이 인텔리전스",
+                        "로 인텔리전스",
+                        "시그마 인텔리전스",
+                        "타우 인텔리전스",
+                        "윕실론 인텔리전스",
+                        "카이 인텔리전스",
+                        "프사이 인텔리전스",
+                        "오메가 인텔리전스"
                     ],
-                    설명: ["경험치 +5%",
+                    설명: [
                         "경험치 +10%",
-                        "경험치 +15%",
                         "경험치 +20%",
-                        "경험치 +25%",
                         "경험치 +30%",
-                        "경험치 +35%",
                         "경험치 +40%",
-                        "경험치 +45%",
-                        "경험치 +50%"
-                        // "경험치 +55%",
-                        // "경험치 +60%",
-                        // "경험치 +65%",
-                        // "경험치 +70%",
-                        // "경험치 +75%",
-                        // "경험치 +80%",
-                        // "경험치 +85%",
-                        // "경험치 +90%",
-                        // "경험치 +95%",
-                        // "경험치 +100%",
-                        // "경험치 +105%",
-                        // "경험치 +110%",
-                        // "경험치 +115%"
+                        "경험치 +50%",
+                        "경험치 +60%",
+                        "경험치 +70%",
+                        "경험치 +80%",
+                        "경험치 +90%",
+                        "경험치 +100%",
+                        "경험치 +110%",
+                        "경험치 +120%",
+                        "경험치 +130%",
+                        "경험치 +140%",
+                        "경험치 +150%",
+                        "경험치 +160%",
+                        "경험치 +170%",
+                        "경험치 +180%",
+                        "경험치 +190%",
+                        "경험치 +200%",
+                        "경험치 +210%",
+                        "경험치 +220%",
+                        "경험치 +230%"
                     ],
                     아이콘: 인텔리전스아이콘
                 },
 
                 발굴: {
-                    단계: ["루비 발굴", "사파이어 발굴", "에메랄드 발굴", "다이아몬드 발굴", "토파즈 발굴"],
-                    설명: ["골드획득 1.2배", "골드획득 1.4배", "골드획득 1.6배", "골드획득 1.8배", "골드획득 2.0배"],
+                    단계: [
+                        "알파 발굴",
+                        "베타 발굴",
+                        "감마 발굴",
+                        "델타 발굴",
+                        "엡실론 발굴",
+                        "제타 발굴",
+                        "에타 발굴",
+                        "쎄타 발굴",
+                        "아이오타 발굴",
+                        "카파 발굴",
+                        "람다 발굴",
+                        "뮤 발굴",
+                        "뉴 발굴",
+                        "크사이 발굴",
+                        "오미크론 발굴",
+                        "파이 발굴",
+                        "로 발굴",
+                        "시그마 발굴",
+                        "타우 발굴",
+                        "윕실론 발굴",
+                        "카이 발굴",
+                        "프사이 발굴",
+                        "오메가 발굴"
+                    ],
+                    설명: [
+                        "골드 획득 +10%",
+                        "골드 획득 +20%",
+                        "골드 획득 +30%",
+                        "골드 획득 +40%",
+                        "골드 획득 +50%",
+                        "골드 획득 +60%",
+                        "골드 획득 +70%",
+                        "골드 획득 +80%",
+                        "골드 획득 +90%",
+                        "골드 획득 +100%",
+                        "골드 획득 +110%",
+                        "골드 획득 +120%",
+                        "골드 획득 +130%",
+                        "골드 획득 +140%",
+                        "골드 획득 +150%",
+                        "골드 획득 +160%",
+                        "골드 획득 +170%",
+                        "골드 획득 +180%",
+                        "골드 획득 +190%",
+                        "골드 획득 +200%",
+                        "골드 획득 +210%",
+                        "골드 획득 +220%",
+                        "골드 획득 +230%"
+                    ],
                     아이콘: 발굴아이콘
                 },
 
                 인사이트: {
-                    단계: ["마이크로 인사이트", "나노 인사이트"],
-                    설명: ["숙련도 + 1", "숙련도 + 2"],
+                    단계: ["알파 인사이트"],
+                    설명: ["숙련도 + 1"],
                     아이콘: 인사이트아이콘
                 },
+                // 인사이트: {
+                //     단계: ["마이크로 인사이트", "나노 인사이트"],
+                //     설명: ["숙련도 + 1", "숙련도 + 2"],
+                //     아이콘: 인사이트아이콘
+                // },
 
                 아이언바디: {
                     단계: ["알파 아이언바디",
@@ -2233,28 +2337,28 @@
                         "오메가 아이언바디"],
                     설명: [
                         "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1",
-                        "공격전 체력회복 +1"
+                        "공격전 체력회복 +2",
+                        "공격전 체력회복 +3",
+                        "공격전 체력회복 +4",
+                        "공격전 체력회복 +5",
+                        "공격전 체력회복 +6",
+                        "공격전 체력회복 +7",
+                        "공격전 체력회복 +8",
+                        "공격전 체력회복 +9",
+                        "공격전 체력회복 +10",
+                        "공격전 체력회복 +11",
+                        "공격전 체력회복 +12",
+                        "공격전 체력회복 +13",
+                        "공격전 체력회복 +14",
+                        "공격전 체력회복 +15",
+                        "공격전 체력회복 +16",
+                        "공격전 체력회복 +17",
+                        "공격전 체력회복 +18",
+                        "공격전 체력회복 +19",
+                        "공격전 체력회복 +20",
+                        "공격전 체력회복 +21",
+                        "공격전 체력회복 +22",
+                        "공격전 체력회복 +23"
                     ],
                     아이콘: 아이언바디아이콘
                 },
@@ -2284,28 +2388,28 @@
                         "오메가 드레인"],
                     설명: [
                         "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1",
-                        "처치 후 체력회복 +1"
+                        "처치 후 체력회복 +2",
+                        "처치 후 체력회복 +3",
+                        "처치 후 체력회복 +4",
+                        "처치 후 체력회복 +5",
+                        "처치 후 체력회복 +6",
+                        "처치 후 체력회복 +7",
+                        "처치 후 체력회복 +8",
+                        "처치 후 체력회복 +9",
+                        "처치 후 체력회복 +10",
+                        "처치 후 체력회복 +11",
+                        "처치 후 체력회복 +12",
+                        "처치 후 체력회복 +13",
+                        "처치 후 체력회복 +14",
+                        "처치 후 체력회복 +15",
+                        "처치 후 체력회복 +16",
+                        "처치 후 체력회복 +17",
+                        "처치 후 체력회복 +18",
+                        "처치 후 체력회복 +19",
+                        "처치 후 체력회복 +20",
+                        "처치 후 체력회복 +21",
+                        "처치 후 체력회복 +22",
+                        "처치 후 체력회복 +23"
                     ],
                     아이콘: 드레인아이콘
                 },
@@ -2337,29 +2441,29 @@
                         "오메가 크리티컬"
                     ],
                     설명: [
-                        "최종데미지 1.1배",
-                        "최종데미지 1.2배",
-                        "최종데미지 1.3배",
-                        "최종데미지 1.4배",
-                        "최종데미지 1.5배",
-                        "최종데미지 1.6배",
-                        "최종데미지 1.7배",
-                        "최종데미지 1.8배",
-                        "최종데미지 1.9배",
-                        "최종데미지 2.0배",
-                        "최종데미지 2.1배",
-                        "최종데미지 2.2배",
-                        "최종데미지 2.3배",
-                        "최종데미지 2.4배",
-                        "최종데미지 2.5배",
-                        "최종데미지 2.6배",
-                        "최종데미지 2.7배",
-                        "최종데미지 2.8배",
-                        "최종데미지 2.9배",
-                        "최종데미지 3.0배",
-                        "최종데미지 3.1배",
-                        "최종데미지 3.2배",
-                        "최종데미지 3.3배"
+                        "최종데미지 +10%",
+                        "최종데미지 +20%",
+                        "최종데미지 +30%",
+                        "최종데미지 +40%",
+                        "최종데미지 +50%",
+                        "최종데미지 +60%",
+                        "최종데미지 +70%",
+                        "최종데미지 +80%",
+                        "최종데미지 +90%",
+                        "최종데미지 +100%",
+                        "최종데미지 +110%",
+                        "최종데미지 +120%",
+                        "최종데미지 +130%",
+                        "최종데미지 +140%",
+                        "최종데미지 +150%",
+                        "최종데미지 +160%",
+                        "최종데미지 +170%",
+                        "최종데미지 +180%",
+                        "최종데미지 +190%",
+                        "최종데미지 +200%",
+                        "최종데미지 +210%",
+                        "최종데미지 +220%",
+                        "최종데미지 +230%"
                     ],
                     아이콘: 크리티컬아이콘
                 },
@@ -2389,29 +2493,29 @@
                         "프사이 버서커",
                         "오메가 버서커"],
                     설명: [
-                        "턴당 체력-1, 데미지 1.2배",
-                        "턴당 체력-1, 데미지 1.4배",
-                        "턴당 체력-1, 데미지 1.6배",
-                        "턴당 체력-1, 데미지 1.8배",
-                        "턴당 체력-1, 데미지 2.0배",
-                        "턴당 체력-1, 데미지 2.2배",
-                        "턴당 체력-1, 데미지 2.4배",
-                        "턴당 체력-1, 데미지 2.6배",
-                        "턴당 체력-1, 데미지 2.8배",
-                        "턴당 체력-1, 데미지 3.0배",
-                        "턴당 체력-1, 데미지 3.2배",
-                        "턴당 체력-1, 데미지 3.4배",
-                        "턴당 체력-1, 데미지 3.6배",
-                        "턴당 체력-1, 데미지 3.8배",
-                        "턴당 체력-1, 데미지 4.0배",
-                        "턴당 체력-1, 데미지 4.2배",
-                        "턴당 체력-1, 데미지 4.4배",
-                        "턴당 체력-1, 데미지 4.6배",
-                        "턴당 체력-1, 데미지 4.8배",
-                        "턴당 체력-1, 데미지 5.0배",
-                        "턴당 체력-1, 데미지 5.2배",
-                        "턴당 체력-1, 데미지 5.4배",
-                        "턴당 체력-1, 데미지 5.6배"
+                        "턴당 체력 -1, 최종데미지 +120%",
+                        "턴당 체력 -2, 최종데미지 +230%",
+                        "턴당 체력 -3, 최종데미지 +340%",
+                        "턴당 체력 -4, 최종데미지 +450%",
+                        "턴당 체력 -5, 최종데미지 +560%",
+                        "턴당 체력 -6, 최종데미지 +670%",
+                        "턴당 체력 -7, 최종데미지 +780%",
+                        "턴당 체력 -8, 최종데미지 +890%",
+                        "턴당 체력 -9, 최종데미지 +1000%",
+                        "턴당 체력 -10, 최종데미지 +1110%",
+                        "턴당 체력 -11, 최종데미지 +1220%",
+                        "턴당 체력 -12, 최종데미지 +1330%",
+                        "턴당 체력 -13, 최종데미지 +1440%",
+                        "턴당 체력 -14, 최종데미지 +1550%",
+                        "턴당 체력 -15, 최종데미지 +1660%",
+                        "턴당 체력 -16, 최종데미지 +1770%",
+                        "턴당 체력 -17, 최종데미지 +1880%",
+                        "턴당 체력 -18, 최종데미지 +1990%",
+                        "턴당 체력 -19, 최종데미지 +2100%",
+                        "턴당 체력 -20, 최종데미지 +2210%",
+                        "턴당 체력 -21, 최종데미지 +2320%",
+                        "턴당 체력 -22, 최종데미지 +2430%",
+                        "턴당 체력 -23, 최종데미지 +2540%"
                     ],
                     아이콘: 버서커아이콘
                 },
@@ -2441,29 +2545,29 @@
                         "프사이 버닝",
                         "오메가 버닝"],
                     설명: [
-                        "체력50%이하 데미지1.2배",
-                        "체력50%이하 데미지1.4배",
-                        "체력50%이하 데미지1.6배",
-                        "체력50%이하 데미지1.8배",
-                        "체력50%이하 데미지2.0배",
-                        "체력50%이하 데미지2.2배",
-                        "체력50%이하 데미지2.4배",
-                        "체력50%이하 데미지2.6배",
-                        "체력50%이하 데미지2.8배",
-                        "체력50%이하 데미지3.0배",
-                        "체력50%이하 데미지3.2배",
-                        "체력50%이하 데미지3.4배",
-                        "체력50%이하 데미지3.6배",
-                        "체력50%이하 데미지3.8배",
-                        "체력50%이하 데미지4.0배",
-                        "체력50%이하 데미지4.2배",
-                        "체력50%이하 데미지4.4배",
-                        "체력50%이하 데미지4.6배",
-                        "체력50%이하 데미지4.8배",
-                        "체력50%이하 데미지5.0배",
-                        "체력50%이하 데미지5.2배",
-                        "체력50%이하 데미지5.4배",
-                        "체력50%이하 데미지5.6배"
+                        "체력 50% 이하일 때, 최종데미지 +20%",
+                        "체력 50% 이하일 때, 최종데미지 +40%",
+                        "체력 50% 이하일 때, 최종데미지 +60%",
+                        "체력 50% 이하일 때, 최종데미지 +80%",
+                        "체력 50% 이하일 때, 최종데미지 +100%",
+                        "체력 50% 이하일 때, 최종데미지 +120%",
+                        "체력 50% 이하일 때, 최종데미지 +140%",
+                        "체력 50% 이하일 때, 최종데미지 +160%",
+                        "체력 50% 이하일 때, 최종데미지 +180%",
+                        "체력 50% 이하일 때, 최종데미지 +200%",
+                        "체력 50% 이하일 때, 최종데미지 +220%",
+                        "체력 50% 이하일 때, 최종데미지 +240%",
+                        "체력 50% 이하일 때, 최종데미지 +260%",
+                        "체력 50% 이하일 때, 최종데미지 +280%",
+                        "체력 50% 이하일 때, 최종데미지 +300%",
+                        "체력 50% 이하일 때, 최종데미지 +320%",
+                        "체력 50% 이하일 때, 최종데미지 +340%",
+                        "체력 50% 이하일 때, 최종데미지 +360%",
+                        "체력 50% 이하일 때, 최종데미지 +380%",
+                        "체력 50% 이하일 때, 최종데미지 +400%",
+                        "체력 50% 이하일 때, 최종데미지 +420%",
+                        "체력 50% 이하일 때, 최종데미지 +440%",
+                        "체력 50% 이하일 때, 최종데미지 +460%"
                     ],
                     아이콘: 버닝아이콘
                 },
@@ -2494,29 +2598,29 @@
                         "오메가 브로큰"
                     ],
                     설명: [
-                        "방어력 무시 1%",
-                        "방어력 무시 1.25%",
-                        "방어력 무시 1.5%",
-                        "방어력 무시 1.75%",
-                        "방어력 무시 2%",
-                        "방어력 무시 2.25%",
-                        "방어력 무시 2.5%",
-                        "방어력 무시 2.75%",
-                        "방어력 무시 3%",
-                        "방어력 무시 3.25%",
-                        "방어력 무시 3.5%",
-                        "방어력 무시 3.75%",
                         "방어력 무시 4%",
-                        "방어력 무시 4.25%",
-                        "방어력 무시 4.5%",
-                        "방어력 무시 4.75%",
-                        "방어력 무시 5%",
-                        "방어력 무시 5.25%",
-                        "방어력 무시 5.5%",
-                        "방어력 무시 5.75%",
-                        "방어력 무시 6%",
-                        "방어력 무시 6.25%",
-                        "방어력 무시 6.5%"
+                        "방어력 무시 8%",
+                        "방어력 무시 12%",
+                        "방어력 무시 16%",
+                        "방어력 무시 20%",
+                        "방어력 무시 24%",
+                        "방어력 무시 28%",
+                        "방어력 무시 32%",
+                        "방어력 무시 36%",
+                        "방어력 무시 40%",
+                        "방어력 무시 44%",
+                        "방어력 무시 48%",
+                        "방어력 무시 52%",
+                        "방어력 무시 56%",
+                        "방어력 무시 60%",
+                        "방어력 무시 64%",
+                        "방어력 무시 68%",
+                        "방어력 무시 72%",
+                        "방어력 무시 76%",
+                        "방어력 무시 80%",
+                        "방어력 무시 84%",
+                        "방어력 무시 88%",
+                        "방어력 무시 92%"
                     ],
                     아이콘: 브로큰아이콘
                 },
@@ -2537,83 +2641,47 @@
             document.getElementById("레벨업표시").innerText = "";
             document.getElementById("보유숙련도").innerText = "보유 숙련도 " + 유저데이터.숙련도;
 
-            const 총투자 = Object.values(유저데이터.스킬 || {}).reduce((a, b) => a + b, 0);
-            const 다음필요숙련도 = (2 * 총투자 + 11) * 5;
-            document.getElementById("필요숙련도").innerText = "필요숙련도 " + 다음필요숙련도;
-
             const 컨테이너 = document.getElementById("스킬컨테이너");
             컨테이너.innerHTML = "";
 
+            const 총투자 = Object.values(유저데이터.스킬 || {}).reduce((a, b) => a + b, 0);
+            const 다음필요숙련도 = (총투자 + 1) * 500;
+            document.getElementById("필요숙련도").innerText = "필요숙련도 " + 다음필요숙련도;
+
             const 스킬정보 = 스킬정보불러오기();
 
-            for (const 키 in 스킬정보) {
-                const 설정 = 스킬정보[키];
-                const 전체레벨 = 유저데이터.스킬?.[키] || 0;
-                const 단계수 = 설정.단계.length;
-                const 단계당레벨 = 10;
-                const 현재단계 = Math.min(Math.floor(전체레벨 / 단계당레벨), 단계수 - 1);
-
-                let 단계레벨 = 전체레벨 % 단계당레벨;
-                if (단계레벨 === 0 && 전체레벨 > 0 && 전체레벨 % 단계당레벨 === 0) {
-                    단계레벨 = 단계당레벨;
-                }
-                const 발동확률 = 단계레벨 * 10;
-                const 아이콘 = 설정.아이콘; // ✅ 함수가 아니라 문자열이므로 그대로 사용
-
-                let 이름, 설명, 발동표시;
-
-                if (전체레벨 >= 단계수 * 단계당레벨) {
-                    // 💎 최종단계까지 마스터했을 때 (예: 뉴 크리티컬 +10, 확률 100%)
-                    이름 = 설정.단계[단계수 - 1];
-                    설명 = 설정.설명[단계수 - 1];
-                    발동표시 = `<span style="color: #3b82f6;">발동확률(100%)</span>`;
-                    단계레벨 = 10;
-                } else if (단계레벨 === 10) {
-                    이름 = 설정.단계[현재단계];
-                    설명 = 설정.설명[현재단계];
-                    발동표시 = `<span style="color: #3b82f6;">발동확률(0%)</span>`;
-                    단계레벨 = 0;
-                } else {
-                    // ⚙️ 일반 상태
-                    이름 = 설정.단계[현재단계];
-                    설명 = 설정.설명[현재단계];
-                    발동표시 = `<span style="color: #3b82f6;">발동확률(${발동확률}%)</span>`;
-                }
-
-                // const 설명표시 = `<div style="font-size: 12px; color: #888; margin-top: 2px;">${설명} ${발동표시}</div>`;
-                const 설명표시 = `<div style="font-size: 12px; color: #888; margin-top: 2px;">${설명}</div>`;
-
-                const 줄 = document.createElement("div");
-                줄.className = "양쪽정렬 기본테두리";
-                //   <div>${아이콘} ${이름} +${단계레벨}${설명표시}</div>
-
-                줄.innerHTML = `
-  <div>${아이콘} ${이름} ${설명표시}</div>
-
-  <div class="가로정렬">
-    <div class="버튼">+</div>
-    <div class="버튼">-</div>
-  </div>
-`;
-                컨테이너.appendChild(줄);
-                // <div class="버튼">M</div>
-                // <div class="버튼">R</div>
-
-                줄.style.position = "relative"; // ⭐ 절대 위치를 위해 추가
-
-                // ⭐ 마스터한 단계 수 계산
-                const 마스터단계수 = Math.floor(전체레벨 / 단계당레벨);
-
-                // ⭐ 아이콘 SVG 정의
-                const 루시드아이콘SVG = `
-<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+            const 루시드아이콘SVG = `
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-stroke-linejoin="round" class="lucide lucide-star-icon lucide-star"
-style="margin-right: 2px;">
+stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>
 </svg>`;
 
-                if (마스터단계수 > 0) {
+            for (const 계열명 in 스킬정보) {
+                const { 단계, 설명, 아이콘 } = 스킬정보[계열명];
+
+                const 배운레벨 = 유저데이터.스킬?.[계열명] || 0;
+                const 현재단계 = Math.min(배운레벨, 단계.length - 1);
+                const 스킬이름 = 단계[현재단계];
+                const 스킬설명 = 설명[현재단계];
+
+                const 줄 = document.createElement("div");
+                줄.className = "양쪽정렬 기본테두리";
+                줄.style.position = "relative";
+
+                줄.innerHTML = `
+  <div>
+    ${아이콘} ${스킬이름}
+    <div style="font-size: 12px; color: #888; margin-top: 2px;">${스킬설명}</div>
+  </div>
+  <div class="가로정렬">
+    <div class="버튼">습득</div>
+  </div>
+`;
+                // <div class="버튼">회수</div>
+
+                // 별 개수 표시
+                if (배운레벨 > 0) {
                     const 아이콘박스 = document.createElement("div");
                     아이콘박스.style.position = "absolute";
                     아이콘박스.style.top = "-10px";
@@ -2621,33 +2689,21 @@ style="margin-right: 2px;">
                     아이콘박스.style.zIndex = "10";
                     아이콘박스.style.display = "flex";
 
-                    const 황금색 = "#facc15";
-                    const 전부마스터 = 마스터단계수 === 단계수;
-
-                    for (let i = 0; i < 마스터단계수; i++) {
-                        const 아이콘 = document.createElement("div");
-                        아이콘.innerHTML = 루시드아이콘SVG;
-                        if (전부마스터) {
-                            아이콘.style.color = 황금색; // ⭐ 전부 마스터 시 황금색
-                        }
-                        아이콘박스.appendChild(아이콘);
+                    for (let i = 0; i < 배운레벨; i++) {
+                        const 아이콘별 = document.createElement("div");
+                        아이콘별.innerHTML = 루시드아이콘SVG;
+                        아이콘별.style.color = 배운레벨 === 단계.length ? "#facc15" : "#ffffff";
+                        아이콘박스.appendChild(아이콘별);
                     }
 
                     줄.appendChild(아이콘박스);
                 }
 
+                컨테이너.appendChild(줄);
+
                 줄.querySelectorAll(".버튼").forEach(버튼 => {
                     버튼.addEventListener("click", async () => {
-                        const 행동맵 = {
-                            "+": "투자",
-                            "-": "회수",
-                            "M": "마스터",
-                            "R": "초기화"
-                        };
-
-                        const 행동 = 행동맵[버튼.innerText];
-                        if (!행동) return;
-
+                        const 행동 = 버튼.innerText.trim(); // "습득" 또는 "회수"
                         화면잠금();
                         try {
                             const 응답 = await fetch("/update-skill", {
@@ -2655,7 +2711,7 @@ style="margin-right: 2px;">
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify({
                                     유저UID: 유저데이터.유저UID,
-                                    스킬이름: 키,
+                                    스킬이름: 계열명,
                                     행동
                                 })
                             });
@@ -2669,9 +2725,13 @@ style="margin-right: 2px;">
 
                             유저데이터.스킬 = 결과.스킬;
                             유저데이터.숙련도 = 결과.숙련도;
-                            메시지표시(줄, "✅", `${행동} 완료`, "#00c851");
 
-                            스킬화면보여주기();
+                            const 색 = 행동 === "습득" ? "#00c851" : "#3b82f6";
+                            const 메세지 = 행동 + " 완료";
+                            const 아이콘 = 행동 === "습득" ? "✅" : "↩️";
+
+                            메시지표시(줄, 아이콘, 메세지, 색);
+                            스킬화면보여주기(); // 갱신
                         } catch (e) {
                             메시지표시(줄, "", "서버 오류: " + e.message, "#ef4444");
                         } finally {
@@ -2683,6 +2743,9 @@ style="margin-right: 2px;">
         }
 
         document.getElementById("보유숙련도").addEventListener("click", async () => {
+            const 확인 = window.confirm("스킬 초기화에는 플라워 유물 1개가 소모됩니다.\n진행하시겠습니까?");
+            if (!확인) return;
+
             화면잠금();
 
             try {
@@ -2691,7 +2754,7 @@ style="margin-right: 2px;">
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         유저UID: 유저데이터.유저UID,
-                        스킬이름: "전체", // 특별 키워드
+                        스킬이름: "전체",
                         행동: "초기화"
                     })
                 });
@@ -2699,12 +2762,13 @@ style="margin-right: 2px;">
                 const 결과 = await 응답.json();
 
                 if (!응답.ok || 결과.오류) {
-                    메시지표시(스킬화면, "", 결과.오류 || "초기화 실패", "#ef4444");
+                    메시지표시(보유숙련도, "", 결과.오류 || "초기화 실패", "#ef4444");
                     return;
                 }
 
                 유저데이터.숙련도 = 결과.숙련도;
                 유저데이터.스킬 = 결과.스킬;
+                유저데이터.유물목록 = 결과.유물목록;
 
                 메시지표시(스킬화면, "🔁", "모든 스킬 초기화 완료", "#3b82f6");
                 스킬화면보여주기();
@@ -2714,136 +2778,6 @@ style="margin-right: 2px;">
                 화면해제();
             }
         });
-
-        document.getElementById("전당").addEventListener("click", () => {
-            if (!유저데이터) return;
-            전당화면보여주기();
-        });
-
-        async function 전당화면보여주기() {
-            화면잠금();
-            모든화면숨기기();
-            document.getElementById("전당화면").style.display = "block";
-
-            document.getElementById("획득로그").innerText = "";
-            document.getElementById("추가획득로그").innerText = "";
-            document.getElementById("레벨업표시").innerText = "";
-
-            const 컨테이너 = document.getElementById("전당컨테이너");
-            컨테이너.innerHTML = "";
-
-            const 응답 = await fetch("/ranking", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-            });
-
-            const 결과 = await 응답.json();
-            const 유저들 = 결과.유저들 || [];
-            // const 내순위 = 결과.내순위;
-
-            유저들.forEach((유저, index) => {
-                const 줄 = document.createElement("div");
-                줄.className = "밑줄 양쪽정렬";
-                줄.style.display = "flex";
-                줄.style.justifyContent = "space-between";
-                줄.style.width = "100%";
-
-                if (유저.유저아이디 === 유저데이터.유저아이디) 줄.classList.add("내아이디강조");
-
-                let 왼쪽표시;
-                if (index === 0) {
-                    왼쪽표시 = `<svg class="lucide lucide-crown" style="color: gold;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
-                } else if (index === 1) {
-                    왼쪽표시 = `<svg class="lucide lucide-crown" style="color: silver;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
-                } else if (index === 2) {
-                    왼쪽표시 = `<svg class="lucide lucide-crown" style="color: peru;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
-                } else {
-                    왼쪽표시 = `<span style="width:24px; display:inline-block;">${index + 1}</span>`;
-                }
-
-                // 왼쪽 div (순위/왕관)
-                const 왼쪽 = document.createElement("div");
-                왼쪽.innerHTML = 왼쪽표시;
-                왼쪽.style.flex = "0 0 auto";
-
-                // 오른쪽 div (유저정보)
-                const 오른쪽 = document.createElement("div");
-
-                let 닉네임표시 = 유저.유저아이디;
-
-                const 팔레트 = 유저.마법의팔레트;
-                if (팔레트 === "숲") {
-                    닉네임표시 = `<span class="마법의팔레트숲">${닉네임표시}</span>`;
-                } else if (팔레트 === "지옥") {
-                    닉네임표시 = `<span class="마법의팔레트지옥">${닉네임표시}</span>`;
-                } else if (팔레트 === "블라섬") {
-                    닉네임표시 = `<span class="마법의팔레트블라섬">${닉네임표시}</span>`;
-                } else if (팔레트 === "가글") {
-                    닉네임표시 = `<span class="마법의팔레트가글">${닉네임표시}</span>`;
-                } else if (팔레트 === "겨울") {
-                    닉네임표시 = `<span class="마법의팔레트겨울">${닉네임표시}</span>`;
-                }
-
-                오른쪽.innerHTML = `${유저.직위 ? `[${유저.직위}] ` : ""}${닉네임표시} (lv.${유저.레벨 || 1}) - 공격력 ${유저.최종공격력} / ${유저.현재층}층`;
-                오른쪽.style.flex = "1";
-                오른쪽.style.textAlign = "right";
-
-                줄.appendChild(왼쪽);
-                줄.appendChild(오른쪽);
-
-                줄.addEventListener("click", (e) => {
-                    e.stopPropagation();
-
-                    const 창 = document.getElementById("미니장비창");
-                    창.style.display = "block";
-                    창.innerHTML = `<div style="font-weight:bold; margin-bottom:8px;">🔍 ${유저.유저아이디} 장비</div>`;
-
-                    const 장비들 = 유저.장비목록 || [];
-                    const 기록 = 유저.합성기록 || {};
-
-                    if (장비들.length === 0) {
-                        창.innerHTML += "장비 없음";
-                        return;
-                    }
-
-                    const 등급순서 = {
-                        "일반": 1,
-                        "레어": 2,
-                        "신화": 3,
-                        "고대": 4,
-                        "태초": 5,
-                        "공허": 6,
-                        "타락": 7,
-                    };
-
-                    장비들.sort((a, b) => {
-                        const 순서A = 등급순서[a.등급] ?? 99;
-                        const 순서B = 등급순서[b.등급] ?? 99;
-                        return 순서A - 순서B;
-                    });
-
-                    for (const 장비 of 장비들) {
-                        const 키 = `${장비.이름}|${장비.등급}`;
-                        const 합성수 = 기록[키] ?? 0;
-                        const 강화표시 = 장비.강화 ? ` +${장비.강화}` : "";
-                        const 이름표시 = `${장비.이름} (${합성수})${강화표시}`;
-
-                        const 박스 = document.createElement("div");
-                        박스.className = "기본테두리";
-                        박스.style.marginBottom = "6px";
-                        박스.style.color = 색상맵[장비.등급] || "#fff";
-                        박스.style.fontWeight = "bold";
-
-                        박스.innerHTML = `[${장비.등급}] ${이름표시} - 🗡 ${장비.공격력}`;
-                        창.appendChild(박스);
-                    }
-                });
-
-                컨테이너.appendChild(줄);
-            });
-            화면해제();
-        }
 
         // ✅ 장비창 내부 클릭 시 document에 이벤트 안 퍼지도록 막기
         document.getElementById("미니장비창").addEventListener("click", (e) => {
@@ -2946,83 +2880,967 @@ style="margin-right: 2px;">
             }
         });
 
-        const 현재보스이름 = "그루트"; // 이 줄만 수정하면 전부 연동됨
+
+        document.getElementById("타이틀을아이디로").addEventListener("click", async function 아이디변경시작() {
+            if (!유저데이터) return;
+
+            const 기존표시 = document.getElementById("타이틀을아이디로");
+            const 원래아이디 = 유저데이터.유저아이디;
+
+            // 입력창 생성
+            const 입력창 = document.createElement("input");
+            입력창.type = "text";
+            입력창.maxLength = 8;
+            입력창.placeholder = "새 아이디 입력";
+            입력창.style.background = "white";
+            입력창.style.color = "black";
+            입력창.style.border = "none";
+            입력창.style.fontSize = "14px";
+            입력창.size = 8;
+            입력창.style.outline = "none";
+            입력창.value = "";
+            기존표시.replaceWith(입력창);
+            입력창.focus();
+
+            // 외부 클릭 감지 핸들러
+            const 외부클릭취소 = (e) => {
+                if (!입력창.contains(e.target)) {
+                    const 복원 = document.createElement("div");
+                    복원.id = "타이틀을아이디로";
+                    복원.className = "커서호버";
+                    복원.innerText = 원래아이디;
+                    입력창.replaceWith(복원);
+                    복원.addEventListener("click", 아이디변경시작);
+                    document.removeEventListener("click", 외부클릭취소);
+                }
+            };
+
+            // 입력창 클릭 제외하고 바깥 클릭 시 취소
+            setTimeout(() => {
+                document.addEventListener("click", 외부클릭취소);
+            }, 0);
+
+            입력창.addEventListener("keydown", async (e) => {
+                if (e.key !== "Enter") return;
+
+                const 새아이디 = 입력창.value.trim();
+                if (!새아이디 || 새아이디.length > 6) {
+                    메시지표시(메시지표시박스, "⚠️", "1~6자 이내로 입력하세요", "#ef4444");
+                    return;
+                }
+
+                화면잠금();
+
+                try {
+                    const 응답 = await fetch("/update-username", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            유저UID: 유저데이터.유저UID,
+                            새아이디
+                        })
+                    });
+
+                    const 결과 = await 응답.json();
+
+                    if (!응답.ok) {
+                        메시지표시(메시지표시박스, "", 결과.오류 || "아이디 변경 실패", "#ef4444");
+                        화면해제();
+                        return;
+                    }
+
+                    유저데이터.유저아이디 = 새아이디;
+
+                    const 복원 = document.createElement("div");
+                    복원.id = "타이틀을아이디로";
+                    복원.className = "커서호버";
+                    복원.innerText = 새아이디;
+                    입력창.replaceWith(복원);
+                    복원.addEventListener("click", 아이디변경시작);
+
+                    document.getElementById("유저아이디").innerText = 새아이디;
+                    메시지표시(메시지표시박스, "✅", "아이디 변경 완료", "#00c851");
+
+                    document.removeEventListener("click", 외부클릭취소);
+                } catch (e) {
+                    메시지표시(메시지표시박스, "", "네트워크 오류", "#ef4444");
+                } finally {
+                    화면해제();
+                }
+            });
+        });
+
+        // 🟡 무지개 타이틀 애니메이션
+        let 색상인덱스 = 0;
+        const 무지개색들 = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff", "#4b0082", "#9400d3"];
+        setInterval(() => {
+            const 타이틀 = document.getElementById("도박타이틀");
+            // 타이틀.style.display = "flex";
+            // 타이틀.style.alignItems = "center";
+            // 타이틀.style.gap = "6px";
+            타이틀.innerHTML = `${도박아이콘} 도박장`;
+            if (타이틀) {
+                타이틀.style.color = 무지개색들[색상인덱스 % 무지개색들.length];
+                색상인덱스++;
+            }
+        }, 250);
+
+        // 🟢 도박창 외부 클릭 시 닫기
+        document.addEventListener("click", (e) => {
+            const 도박창 = document.getElementById("도박창");
+            if (도박창.style.display === "none") return;
+            if (!도박창.contains(e.target) && e.target.id !== "총골드") {
+                도박창.style.display = "none";
+            }
+        });
+
+        // 🟢 총골드 클릭 시 도박창 표시
+        document.getElementById("총골드").addEventListener("click", () => {
+            if (!유저데이터) return;
+            const 도박창 = document.getElementById("도박창");
+            도박창.style.display = "block";
+        });
+
+        async function 장비도박시도() {
+            const 도박창 = document.getElementById("도박창");
+            const 비용 = 100000;
+
+            if (유저데이터.골드 < 비용) {
+                메시지표시(도박창, "", "골드 부족!", "#ef4444");
+                return;
+            }
+
+            const 확인 = confirm(`장비도박을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`);
+            if (!확인) return;
+
+            화면잠금();
+            try {
+                const 응답 = await fetch("/gamble-Equipment", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        유저UID: 유저데이터.유저UID
+                    })
+                });
+
+                const 결과 = await 응답.json();
+                if (!응답.ok || 결과.오류) {
+                    메시지표시(도박창, "", 결과.오류 || "", "#ef4444");
+                    return;
+                }
+
+                유저데이터 = 결과.유저데이터;
+                if (결과.결과 === "성공" && 결과.장비) {
+                    if (결과.퍼즐발동) {
+                        메시지표시(도박창, 퍼즐아이콘, "", "");
+                    }
+
+                    const 네온박스 = document.getElementById("네온박스");
+                    const 등급외테두리 = document.getElementById("등급외테두리");
+
+                    if (네온박스) {
+                        네온박스.innerText = `${결과.장비.이름}을(를) 획득했다!`;
+                        네온박스.style.display = "block";
+
+                        if (등급외테두리) {
+                            등급외테두리.style.position = "relative";
+                            등급외테두리.appendChild(네온박스);
+                            Object.assign(네온박스.style, {
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                zIndex: "100"
+                            });
+                        }
+                    }
+
+                    setTimeout(() => {
+                        네온박스.style.display = "none";
+                    }, 3000);
+
+
+                } else if (결과.결과 === "실패") {
+                    메시지표시(도박창, 결과.퍼즐발동 ? 퍼즐아이콘 : "", "도박에 실패했습니다!", "#ef4444");
+                }
+
+                document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
+            } catch (e) {
+                메시지표시(도박창, "", "도박 중 오류: " + e.message, "#ef4444");
+            } finally {
+                화면해제();
+            }
+        }
+
+        async function 유물도박시도() {
+            const 도박창 = document.getElementById("도박창");
+            const 비용 = 50000;
+
+            if (유저데이터.골드 < 비용) {
+                메시지표시(도박창, "", "골드 부족!", "#ef4444");
+                return;
+            }
+
+            const 확인 = confirm(`유물도박을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`);
+            if (!확인) return;
+
+            화면잠금();
+            try {
+                const 응답 = await fetch("/gamble-Relic", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                });
+
+                const 결과 = await 응답.json();
+
+                if (!응답.ok || 결과.오류) {
+                    메시지표시(도박창, "", 결과.오류 || "", "#ef4444");
+                    return;
+                }
+
+                유저데이터 = 결과.유저데이터;
+
+                if (결과.결과 === "성공" && 결과.유물이름) {
+                    const 유물드랍박스 = document.getElementById("유물드랍박스");
+                    const 유저테두리안표시 = document.getElementById("유저테두리안표시");
+
+                    if (유물드랍박스) {
+                        유물드랍박스.innerText = `유물 [${결과.유물이름}]을(를) 획득했다!`;
+                        유물드랍박스.style.display = "block";
+
+                        // 위치 조정용 부모 변경
+                        if (유저테두리안표시) {
+                            // 등급외테두리에 위치 기준 설정
+                            유저테두리안표시.style.position = "relative";
+
+                            // 유물드랍박스를 등급외테두리 내부로 이동
+                            유저테두리안표시.appendChild(유물드랍박스);
+
+                            // 전투화면용 위치 조정
+                            Object.assign(유물드랍박스.style, {
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                zIndex: "100"
+                            });
+                        }
+                    }
+                    setTimeout(() => {
+                        유물드랍박스.style.display = "none";
+                    }, 3000);
+                } else {
+                    메시지표시(도박창, "", "도박에 실패했습니다!", "#ef4444");
+                }
+
+                document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
+            } catch (e) {
+                메시지표시(도박창, "", "도박 중 오류: " + e.message, "#ef4444");
+            } finally {
+                화면해제();
+            }
+        }
+
+        document.getElementById("아래층으로").addEventListener("click", async () => {
+            if (!유저데이터) return;
+            if (유저데이터.현재층 <= 1) return 메시지표시(층조절, "", "지하로 내려갈 수 없습니다", "#ef4444");
+
+            유저데이터.현재층--;
+            document.getElementById("현재층").innerText = `${유저데이터.현재층}층`;
+        });
+
+        document.getElementById("위층으로").addEventListener("click", async () => {
+            if (!유저데이터) return;
+
+            유저데이터.현재층++;
+            document.getElementById("현재층").innerText = `${유저데이터.현재층}층`;
+        });
+
+
+        async function 전직화면보여주기() {
+            화면잠금();
+            const 응답 = await fetch("/get-job-info", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+            });
+
+            const 결과 = await 응답.json();
+            if (!응답.ok) {
+                메시지표시(메시지표시박스, "", "전직정보 조회 실패: " + 결과.오류, "");
+                화면해제();
+                return;
+            }
+
+            const 전직정보 = 결과.전직정보;
+            const 경험치 = 결과.경험치 ?? 0;
+
+            const 전직순서 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
+
+            const container = document.getElementById("전직컨테이너");
+
+            // 🔷 기존 전직 항목만 삭제 (타이틀/경험치 영역은 유지)
+            document.querySelectorAll(".전직항목").forEach(e => e.remove());
+
+            // 🔷 경험치 표시 갱신
+            const 경험치div = document.getElementById("경험치와포인트");
+            경험치div.innerHTML = `
+        <div>경험치</div>
+        <div>${경험치.toLocaleString()} 포인트</div>
+    `;
+
+            // 🔷 전직 리스트 추가
+            for (let i = 0; i < 전직순서.length; i++) {
+                const 직위 = 전직순서[i];
+                const 완료여부 = 전직정보[직위] ?? 0;
+
+                // 완료된 직위는 건너뜀
+                if (완료여부 === 1) continue;
+
+                // 첫 번째 안 배운 직위만 표시하고, 이후는 표시하지 않음
+                const div = document.createElement("div");
+                div.className = "사백픽셀테두리 양쪽정렬 전직항목";
+                div.style.marginTop = "5px";
+
+                const 왼쪽 = document.createElement("div");
+                왼쪽.style.display = "flex";
+                왼쪽.style.flexDirection = "column";  // 세로로 쌓기
+                왼쪽.style.fontWeight = "bold";
+
+                const 직위텍스트 = document.createElement("div");
+                직위텍스트.textContent = 직위;
+
+                // 🔶 효과 설명 추가
+                const 효과텍스트 = document.createElement("div");
+                효과텍스트.textContent = `최종공격력 x${(1.1 + i * 0.1).toFixed(1)}`;
+                효과텍스트.style.fontSize = "12px";
+                효과텍스트.style.color = "gray";
+                효과텍스트.style.marginTop = "3px";
+
+                왼쪽.appendChild(직위텍스트);
+                왼쪽.appendChild(효과텍스트);
+
+                const 오른쪽 = document.createElement("div");
+                오른쪽.style.borderRadius = "7px";
+                오른쪽.style.padding = "7px";
+                오른쪽.style.paddingLeft = "10px";
+                오른쪽.style.paddingRight = "10px";
+                오른쪽.style.fontSize = "13px";
+
+                const 비용 = (i + 1) * 50000;
+                오른쪽.textContent = `전직(${비용.toLocaleString()}p)`;
+                오른쪽.style.backgroundColor = "white";
+                오른쪽.style.color = "black";
+                오른쪽.style.cursor = "pointer";
+
+                오른쪽.onclick = () => {
+                    전직하기(직위, 왼쪽);
+                };
+
+                div.appendChild(왼쪽);
+                div.appendChild(오른쪽);
+                container.appendChild(div);
+
+                break;  // 첫 번째 미완료 항목만 보여줌
+            }
+            화면해제();
+        }
+
+        async function 전직하기(직위, 위치참조) {
+            화면잠금();
+
+            const 응답 = await fetch("/promote-job", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    유저UID: 유저데이터.유저UID,
+                    직위: 직위
+                })
+            });
+
+            const 결과 = await 응답.json();
+
+            if (!응답.ok) {
+                메시지표시(위치참조, "", "전직 실패: " + 결과.오류, "");
+                화면해제();
+                return;
+            }
+            유저데이터.레벨 = 결과.레벨;
+            유저데이터.경험치 = 결과.경험치;
+            유저데이터.최종공격력 = 결과.최종공격력;
+
+            // 성공하면 화면 갱신
+            메시지표시(위치참조, "", 직위 + " 전직 성공!", "");
+            전직화면보여주기();
+        }
+
+        const 유물데이터 = {
+            "소드": { 설명: "공격력이 증가합니다" }, //완료
+            "하트플러스": { 설명: "체력이 증가합니다" }, //완료
+            "고스트": { 설명: "히든몬스터 등장률이 증가합니다" }, //완료
+            "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다" }, //완료
+            "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다" }, //완료
+            "클로버": { 설명: "장비 드랍율을 증가시킵니다" }, //완료
+            "모래시계": { 설명: "스태미너 소모를 무시합니다" }, //완료
+            // "모루": { 설명: "장비 강화확률을 증가시킵니다" }, //완료
+            // "표창": { 설명: "추가로 공격합니다" },
+            "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다" },
+            // "엑스": { 설명: "최종 데미지를 증가시킵니다" },
+            "퍼즐": { 설명: "도박비용을 무시합니다" },
+            // "로켓": { 설명: "미정" },
+            "플라워": { 설명: "스킬을 초기화합니다" },
+            // "봄": { 설명: "미정" },
+            // "여름": { 설명: "미정" },
+            // "가을": { 설명: "미정" },
+            // "겨울": { 설명: "미정" }
+        };
+
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
+
+            if (인증오류) {
+                // 메시지표시(메시지표시박스, "", "유저 인증 확인 실패", "#ef4444");
+                return;
+            }
+
+            if (user && user.id) {
+                try {
+                    const 응답 = await fetch("/get-user", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ 유저UID: user.id })
+                    });
+                    const 결과 = await 응답.json();
+                    const 유저정보 = 결과.유저데이터;
+
+                    if (!유저정보 || 유저정보.버전업 !== 6) {
+                        await fetch("/delete-user", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ 유저UID: user.id })
+                        });
+
+                        await supabase.auth.signOut();
+                        alert("드락실 벨고르 마하 투라크... 에이라스 노 크살. 메테오!");
+                        location.reload();
+                        alert("메테오를 맞고 새로 태어납니다.");
+                        return;
+                    }
+
+                    유저데이터 = 유저정보;
+                    메시지표시(메시지표시박스, "", "자동 로그인되었습니다. 항상 메뉴얼의 패치노트를 확인하세요", "#00c851");
+
+                    const 아이콘 = 아이콘맵[현재보스이름 + "아이콘"];
+
+                    if (유저데이터.펫단계 >= 1) {
+                        let 색상코드;
+                        if (유저데이터.펫단계 === 1) 색상코드 = "#cd7f32"; // 동색
+                        else if (유저데이터.펫단계 === 2) 색상코드 = "#c0c0c0"; // 은색
+                        else 색상코드 = "#ffd700"; // 금색
+
+                        펫아이콘보이기(아이콘, 색상코드);
+                    }
+
+                    // ✅ 스태미너 갱신 요청
+                    try {
+                        const 응답 = await fetch("/refresh-stamina", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ 유저UID: 유저정보.유저UID })
+                        });
+
+                        const 결과 = await 응답.json();
+                        if (응답.ok && 결과.유저데이터) {
+                            유저정보.현재스태미너 = 결과.유저데이터.현재스태미너;
+                        }
+                    } catch (e) {
+                        console.warn("스태미너 갱신 실패", e);
+                    }
+
+                    전투화면보여주기(유저데이터);
+
+                } catch (e) {
+                    메시지표시(메시지표시박스, "", "자동 로그인 오류: " + e.message, "#ef4444");
+                }
+            } else {
+                메시지표시(메시지표시박스, "🔒", "로그인된 유저 없음", "#aaa");
+            }
+
+        });
+
+        document.addEventListener("click", (e) => {
+            const target = e.target;
+
+            switch (target.id) {
+                // case "객체아이디":
+                //     실행함수();
+                //     break;
+
+            }
+
+            if (
+                target.matches("#총경험치")
+            ) {
+                모든화면숨기기();
+                document.getElementById("전직화면").style.display = "block";
+                전직화면보여주기();
+            }
+        });
+
+        function 모든화면숨기기() {
+            const 화면ID들 = [
+                "전투화면", "장비화면", "스킬화면", "전당화면",
+                "유물화면", "전직화면", "보스화면", "에너지박스",
+                "메뉴얼화면",
+            ];
+            화면ID들.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = "none";
+            });
+        }
+
+        const 정보버튼 = document.getElementById("정보");
+
+        const 정보툴팁 = document.createElement("div");
+        정보툴팁.id = "정보툴팁";
+        정보툴팁.style.position = "absolute";
+        정보툴팁.style.zIndex = "99999";
+        정보툴팁.style.display = "flex";
+        정보툴팁.style.flexDirection = "column";
+        정보툴팁.style.gap = "4px";
+        정보툴팁.style.background = "black";
+        정보툴팁.style.width = "fit-content";
+        정보툴팁.style.border = "0.2px solid #4b4b4b";
+        정보툴팁.style.borderRadius = "10px";
+        정보툴팁.style.boxSizing = "border-box";
+        정보툴팁.style.padding = "5px";
+
+        정보툴팁.innerHTML = `
+  <div style="display: flex; flex-direction: column; gap: 10px;">
+    <div class="버튼" id="메뉴얼">메뉴얼</div>
+    <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
+  </div>
+`;
+
+
+        document.body.appendChild(정보툴팁);
+
+        정보버튼.addEventListener("mouseenter", () => {
+            const rect = 정보버튼.getBoundingClientRect();
+
+            // 먼저 보여줘야 offsetWidth를 읽을 수 있음
+            정보툴팁.style.display = "block";
+
+            const 툴팁너비 = 정보툴팁.offsetWidth;
+            정보툴팁.style.left = (rect.right - 툴팁너비) + "px";
+            정보툴팁.style.top = rect.bottom + "px";
+        });
+
+        // 마우스가 정보버튼과 정보툴팁 외부로 나가면 닫기
+        document.addEventListener("mouseover", (e) => {
+            if (
+                !정보툴팁.contains(e.target) &&
+                !정보버튼.contains(e.target)
+            ) {
+                정보툴팁.style.display = "none";
+            }
+        });
+
+        document.getElementById("메뉴얼").addEventListener("click", () => {
+            if (!유저데이터) return;
+
+            모든화면숨기기();
+            document.getElementById("메뉴얼화면").style.display = "block";
+
+            const 컨테이너 = document.getElementById("메뉴얼컨테이너");
+            컨테이너.innerHTML = "";
+
+            const 문장들 = [
+                `${봄아이콘}`,
+                "25.05.23 신규유저 이벤트 10만골드 도박 가즈ㅏㅏ",
+                "25.05.23 3시 10분 5월 26일 오픈 전 마지막 cbt 초기화 진행",
+                "25.05.22 보스 펫 보상 로직 변경",
+                "25.05.22 유물도박 업데이트",
+                "25.05.22 마법의팔레트 추가",
+                "25.05.21 보스컨텐츠 대충 구현 완료",
+                "25.05.21 보스컨텐츠 공통보상 '펫'구현 시작",
+                "25.05.21 정보 버튼에서 전당 분리",
+                "25.05.20 메뉴얼, 전당, 탈퇴 버튼을 정보 버튼으로 통합",
+                "25.05.20 스킬초기화 안되게할랬찌만, 유물 소모로 구현",
+                "25.05.20 패치노트 기록하기로 결심",
+                "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
+                `${여름아이콘}`,
+                "가글(gagl)에 찾아와 주셔서 감사합니다",
+                "가글은 한 달 반여의 기간만에 서비스를 종료한",
+                "마글(magl)이란 게임의 팬게임으로 제작을 시작한 게임입니다",
+                "저는 코딩을 모르는 평범한 아재이며, 가글의 제작은",
+                "100% 챗지피티로 제작되고 있는 점 알아주시면 감사하겠습니다",
+                "최대한 노력하겠지만, 게임의 수명은 장담할 수 없는 점",
+                "심심한 이해를 부탁드립니다",
+                "주인장이 운영중인 오픈톡이 존재하지만, 귀찮으신분들은",
+                "오픈톡에 '가글주인장'을 검색하시면 제 프로필이 나옵니다",
+                "1:1채팅으로 문의를 주시면 최대한 빠르게 조치해드리도록",
+                "하겠습니다",
+                "최초버그를 제보해주시면, 소소한 스태미너 보상을 드리겠습니다",
+                "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
+                `${가을아이콘}`,
+                "화면 최상단 아이디를 클릭하시면, 아이디 변경이 가능합니다",
+                "모든 팝업창은 외부를 클릭 시 닫힙니다",
+                "스태미너는 시간당 60씩 회복됩니다",
+                "가글은 기본적으로 자동사냥이 지원되며, 레어몬스터 등장 시",
+                "자동사냥이 멈추게 됩니다",
+                "스페이스바를 한번만 치시면 레어몬스터를 우선 공격하는",
+                "풀 자동사냥이 가능합니다",
+                "누르고 계시면 안됩니다",
+                "레벨업당 5의 공격력이 증가합니다",
+                "전투화면에서 경험치를 클릭하시면 전직화면으로 이동합니다",
+                "전직시 레벨이 초기화되며, 최종공격력이 곱연산으로 증가합니다",
+                "전투화면에서 골드를 클릭하시면 도박을 진행할 수 있습니다",
+                "도박은 최소 일반장비가 드랍됩니다",
+                "전투화면에서 숙련도를 클릭하시면 스킬화면으로 이동합니다",
+                "모든 스킬은 단계가 존재하며, 습득한 스킬 효과만 적용됩니다",
+                "알파 크리티컬을 습득하게되면, 최종공격력이 1.1배가됩니다",
+                "감마 크리티컬을 습득하게되면, 최종공격력이 1.3배가 됩니다",
+                "스킬화면의 상단 보유숙련도를 클릭해서, 스킬초기화가 가능합니다",
+                "전투로그의 아이콘으로 스킬의 발동여부를 확인하실 수 있습니다",
+                "유물의 효과는 대부분 개당 1%의 효과가 곱연산이지만,",
+                "밸런스상 예외로 0.1%거나 합연산, 소모성 유물도 존재합니다",
+                "문의주시면 상세한 로직을 안내드리겠습니다",
+                "장비는 중복 드랍할수록 합성횟수가 증가하게되고,",
+                "합성횟수당 유저의 최대체력 1과 공격력이 누적됩니다",
+                "전당화면에서 유저를 클릭하면 해당 유저의 장비열람이 가능합니다",
+                "보스화면은 매 주 월요일부터 금요일까지 이용 가능합니다",
+                "토요일과 일요일에는 주인장이 보상을 정산하는 기간입니다",
+                "누적데미지 목표달성 전유저 공통보상은 펫입니다",
+                "목표달성에 따라 최종공격력을 10%, 20%, 30% 증가시켜주는",
+                "펫을 획득할 수 있으며, 다음 보스가 등장하기 전까지 가글의",
+                "모든 화면에 펫이 떠다니게됩니다",
+                "목표달성 공통보상과 별개로, 누적데미지 순위 상위 세 분에게는",
+                "고등급 장비를 차등지급하려 했으나, 지피티와의 소통 부재로",
+                "도박자금으로 대체하겠습니다",
+
+            ];
+
+            for (const 문장 of 문장들) {
+                const 줄 = document.createElement("div");
+                줄.innerHTML = 문장;
+                줄.style.margin = "5px 0"; // 줄 간격
+                컨테이너.appendChild(줄);
+            }
+
+        });
+
+        // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
+        // npm install -g nodemon
+        // nodemon index.js
+
+        document.getElementById("전당").addEventListener("click", () => {
+            if (!유저데이터) return;
+            전당화면보여주기();
+        });
+
+        async function 전당화면보여주기() {
+            화면잠금();
+            모든화면숨기기();
+            document.getElementById("전당화면").style.display = "block";
+
+            document.getElementById("획득로그").innerText = "";
+            document.getElementById("추가획득로그").innerText = "";
+            document.getElementById("레벨업표시").innerText = "";
+
+            const 컨테이너 = document.getElementById("전당컨테이너");
+            컨테이너.innerHTML = "";
+
+            const 응답 = await fetch("/ranking", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+            });
+
+            const 결과 = await 응답.json();
+            const 유저들 = 결과.유저들 || [];
+            // const 내순위 = 결과.내순위;
+
+            유저들.forEach((유저, index) => {
+                const 줄 = document.createElement("div");
+                줄.className = "밑줄 양쪽정렬";
+                줄.style.display = "flex";
+                줄.style.justifyContent = "space-between";
+                줄.style.width = "100%";
+
+                if (유저.유저아이디 === 유저데이터.유저아이디) 줄.classList.add("내아이디강조");
+
+                let 왼쪽표시;
+                if (index === 0) {
+                    왼쪽표시 = `<svg class="lucide lucide-crown" style="color: gold;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
+                } else if (index === 1) {
+                    왼쪽표시 = `<svg class="lucide lucide-crown" style="color: silver;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
+                } else if (index === 2) {
+                    왼쪽표시 = `<svg class="lucide lucide-crown" style="color: peru;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
+                } else {
+                    왼쪽표시 = `<span style="width:24px; display:inline-block;">${index + 1}</span>`;
+                }
+
+                const 왼쪽 = document.createElement("div");
+                왼쪽.innerHTML = 왼쪽표시;
+                왼쪽.style.flex = "0 0 auto";
+
+                const 오른쪽 = document.createElement("div");
+
+                let 닉네임표시 = 유저.유저아이디;
+
+                const 팔레트 = 유저.마법의팔레트;
+                if (팔레트 === "민초") {
+                    닉네임표시 = `<span class="마법의팔레트민초">${닉네임표시}</span>`;
+                } else if (팔레트 === "지옥") {
+                    닉네임표시 = `<span class="마법의팔레트지옥">${닉네임표시}</span>`;
+                } else if (팔레트 === "블라섬") {
+                    닉네임표시 = `<span class="마법의팔레트블라섬">${닉네임표시}</span>`;
+                } else if (팔레트 === "가글") {
+                    닉네임표시 = `<span class="마법의팔레트가글">${닉네임표시}</span>`;
+                } else if (팔레트 === "겨울") {
+                    닉네임표시 = `<span class="마법의팔레트겨울">${닉네임표시}</span>`;
+                } else if (팔레트 === "네온사인") {
+                    닉네임표시 = `<span class="마법의팔레트네온사인">${닉네임표시}</span>`;
+                } else if (팔레트 === "핑크오션") {
+                    닉네임표시 = `<span class="마법의팔레트핑크오션">${닉네임표시}</span>`;
+                } else if (팔레트 === "황혼하늘") {
+                    닉네임표시 = `<span class="마법의팔레트황혼하늘">${닉네임표시}</span>`;
+                } else if (팔레트 === "에메랄드숲") {
+                    닉네임표시 = `<span class="마법의팔레트에메랄드숲">${닉네임표시}</span>`;
+                }
+
+                오른쪽.innerHTML = `${유저.직위 ? `[${유저.직위}] ` : ""}${닉네임표시} (lv.${유저.레벨 || 1}) - 공격력 ${유저.최종공격력} / ${유저.현재층}층`;
+                오른쪽.style.flex = "1";
+                오른쪽.style.textAlign = "right";
+
+                줄.appendChild(왼쪽);
+                줄.appendChild(오른쪽);
+
+                줄.addEventListener("click", (e) => {
+                    e.stopPropagation();
+
+                    const 창 = document.getElementById("미니장비창");
+                    창.style.display = "block";
+                    창.innerHTML = `<div style="font-weight:bold; margin-bottom:8px;">🔍 ${유저.유저아이디} 장비</div>`;
+
+                    const 장비들 = 유저.장비목록 || [];
+                    const 기록 = 유저.합성기록 || {};
+
+                    if (장비들.length === 0) {
+                        창.innerHTML += "장비 없음";
+                        return;
+                    }
+
+                    const 등급순서 = {
+                        "일반": 1,
+                        "레어": 2,
+                        "신화": 3,
+                        "고대": 4,
+                        "태초": 5,
+                        "타락": 6,
+                    };
+
+                    장비들.sort((a, b) => {
+                        const 순서A = 등급순서[a.등급] ?? 99;
+                        const 순서B = 등급순서[b.등급] ?? 99;
+                        return 순서A - 순서B;
+                    });
+
+                    for (const 장비 of 장비들) {
+                        const 키 = `${장비.이름}|${장비.등급}`;
+                        const 합성수 = 기록[키] ?? 0;
+                        const 강화표시 = 장비.강화 ? ` +${장비.강화}` : "";
+                        const 이름표시 = `${장비.이름} (${합성수})${강화표시}`;
+
+                        const 박스 = document.createElement("div");
+                        박스.className = "기본테두리";
+                        박스.style.marginBottom = "6px";
+                        박스.style.color = 색상맵[장비.등급] || "#fff";
+                        박스.style.fontWeight = "bold";
+
+                        박스.innerHTML = `[${장비.등급}] ${이름표시} - 🗡 ${장비.공격력}`;
+                        창.appendChild(박스);
+                    }
+                });
+
+                컨테이너.appendChild(줄);
+            });
+            화면해제();
+        }
+
+        function 펫아이콘보이기(아이콘HTML, 색상코드 = "#ffffff") {
+            const 펫 = document.getElementById("펫컨테이너");
+            펫.innerHTML = 아이콘HTML;
+            펫.style.display = "block";
+            펫.style.position = "fixed";
+            펫.style.transform = "scale(0.1)";
+            펫.style.pointerEvents = "none";
+            펫.style.zIndex = "9999";
+            펫.style.background = "transparent";
+
+            // ✅ 전달받은 색상코드로 path 채우기
+            const paths = 펫.querySelectorAll("path");
+            paths.forEach(p => p.setAttribute("fill", 색상코드));
+
+            const 중심X = window.innerWidth / 2;
+            const 최소X = 중심X - 500;
+            const 최대X = 중심X + 0;
+            const 최소Y = 0;
+            const 최대Y = 400;
+
+            let x = 중심X;
+            let y = 최대Y / 2;
+            let vx = (Math.random() - 0.5) * 2;
+            let vy = (Math.random() - 0.5) * 2;
+
+            function update() {
+                x += vx;
+                y += vy;
+
+                if (x < 최소X || x > 최대X) vx *= -1;
+                if (y < 최소Y || y > 최대Y) vy *= -1;
+
+                vx += (Math.random() - 0.5) * 0.1;
+                vy += (Math.random() - 0.5) * 0.1;
+
+                const 속도 = Math.sqrt(vx * vx + vy * vy);
+                const 최대속도 = 1.5;
+                if (속도 > 최대속도) {
+                    vx *= 최대속도 / 속도;
+                    vy *= 최대속도 / 속도;
+                }
+
+                펫.style.left = `${x}px`;
+                펫.style.top = `${y}px`;
+
+                requestAnimationFrame(update);
+            }
+
+            update();
+        }
+
+        const 현재보스이름 = "아이스골렘"; // 이 줄만 수정하면 전부 연동됨
 
         // 보스화면보여주기
         document.getElementById("보스").addEventListener("click", () => {
             if (!유저데이터) return;
             const 보스버튼 = document.getElementById("보스");
-
-            // return 메시지표시(보스버튼, "", "구현중입니다", "");
-
-            모든화면숨기기();
-            document.getElementById("에너지박스").style.display = "block";
-            document.getElementById("보스화면").style.display = "block";
-
-            // 보스화면보여주기 내부에서
-            const 보스컨테이너 = document.getElementById("보스컨테이너");
-            보스컨테이너.style.marginTop = "15px";
-            보스컨테이너.style.width = "400px";
-            보스컨테이너.style.border = "0.2px solid #4b4b4b";
-            보스컨테이너.style.borderRadius = "10px";
-            보스컨테이너.style.padding = "15px";
-            보스컨테이너.style.display = "flex";
-            보스컨테이너.style.alignItems = "center";
-            보스컨테이너.style.justifyContent = "flex-start";
-            보스컨테이너.style.gap = "10px";
-
-            // 보스아이콘만 따로 바꾸기
-            const 보스아이콘 = document.getElementById("보스아이콘");
-            보스아이콘.innerHTML = `
-    <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-        <div style="width: 200px; height: 200px;">
-            ${아이콘맵[현재보스이름 + "아이콘"]
-                    .replace(/height:\s*\d+px/, 'height: 200px')
-                    .replace(/width:\s*\d+px/, 'width: 200px')}
-        </div>
-    </div>
-`;
-
-            const 보스몬스터 = document.getElementById("보스몬스터");
-            보스몬스터.innerText = 현재보스이름;
-
-
-            const 누적데미지순위 = document.getElementById("누적데미지순위");
-            누적데미지순위.innerHTML = "";
-            누적데미지순위.style.display = "flex";
-            누적데미지순위.style.flexDirection = "column";
-            누적데미지순위.style.alignItems = "flex-start";
-            누적데미지순위.style.justifyContent = "flex-start";
-            누적데미지순위.style.gap = "10px";
-            누적데미지순위.style.textAlign = "left";
-
-
-
-            // 누적데미지순위.innerHTML = "";
-            // 누적데미지순위.style.textAlign = "left"; // 👈 왼쪽 정렬
-
-            // 👇 제목 줄 추가
-            const 제목 = document.createElement("div");
-            제목.innerText = "누적데미지 순위";
-            누적데미지순위.appendChild(제목);
-
-
-            // for (let i = 0; i < 9; i++) {
-            //     const 줄 = document.createElement("div");
-            //     줄.id = `순위줄${i}`; // id로 접근하기 쉽게
-            //     줄.innerText = `${i + 1}.`; // 일단 등수만 표시
-            //     누적데미지순위.appendChild(줄);
-            // }
-
             fetch("/boss-ranking", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" }
             })
                 .then(res => res.json())
                 .then(결과 => {
+                    if (결과.오류) {
+                        return 메시지표시(보스, "", 결과.오류, "");
+                    }
+
+                    document.querySelectorAll(".전투로그컨테이너").forEach(e => e.remove());
+                    document.getElementById("최종데미지").innerText = "";
+
+                    모든화면숨기기();
+                    document.getElementById("에너지박스").style.display = "block";
+                    document.getElementById("보스화면").style.display = "block";
+
+                    const 보스컨테이너 = document.getElementById("보스컨테이너");
+                    보스컨테이너.style.marginTop = "15px";
+                    보스컨테이너.style.width = "400px";
+                    보스컨테이너.style.border = "0.2px solid #4b4b4b";
+                    보스컨테이너.style.borderRadius = "10px";
+                    보스컨테이너.style.padding = "15px";
+                    보스컨테이너.style.display = "flex";
+                    보스컨테이너.style.alignItems = "center";
+                    보스컨테이너.style.justifyContent = "flex-start";
+                    보스컨테이너.style.gap = "10px";
+
+                    const 보스아이콘 = document.getElementById("보스아이콘");
+                    보스아이콘.innerHTML = `
+    <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+        <div style="width: 200px; height: 200px;">
+            ${아이콘맵[현재보스이름 + "아이콘"]
+                            .replace(/height:\s*\d+px/, 'height: 200px')
+                            .replace(/width:\s*\d+px/, 'width: 200px')}
+        </div>
+    </div>
+`;
+
+                    const 목표1 = 999999;
+                    const 목표2 = 9999999;
+                    const 목표3 = 99999999;
+                    const 누적 = 결과.누적데미지총합 || 0;
+
+                    function 만들기단계라인(id, 현재값, 목표값) {
+                        const div = document.createElement("div");
+                        div.id = id;
+                        div.style.border = "0.2px solid #4b4b4b";
+                        div.style.display = "flex";
+                        div.style.alignItems = "center";
+                        div.style.justifyContent = "space-between";
+                        div.style.borderRadius = "6px";
+                        div.style.padding = "8px";
+
+                        // ✅ 달성한 경우, 현재값을 목표값으로 강제 표기
+                        const 표시값 = 현재값 >= 목표값 ? 목표값 : 현재값;
+
+                        const 숫자표시 = `${표시값.toLocaleString()}/${목표값.toLocaleString()}`;
+                        const 아이콘HTML = 현재값 >= 목표값 ? 아이콘맵["서클체크아이콘"] : "";
+
+                        div.innerHTML = `
+        <span>${숫자표시}</span>
+        <span>${아이콘HTML}</span>
+    `;
+                        return div;
+                    }
+
+                    // 단계별 줄 생성
+                    const 단계1 = 만들기단계라인("단계1", 누적, 목표1);
+                    const 단계2 = 만들기단계라인("단계2", 누적, 목표2);
+                    const 단계3 = 만들기단계라인("단계3", 누적, 목표3);
+
+                    // 화면에 추가할 박스 준비
+                    const 총합박스 = document.createElement("div");
+                    총합박스.id = "단계박스";
+                    총합박스.style.display = "flex";
+                    총합박스.style.flexDirection = "column";
+                    총합박스.style.gap = "10px";
+                    총합박스.style.marginTop = "10px";
+
+                    // 조건에 따라 단계별로 추가
+                    총합박스.appendChild(단계1);
+
+                    if (누적 >= 목표1) {
+                        총합박스.appendChild(단계2);
+                    }
+                    if (누적 >= 목표2) {
+                        총합박스.appendChild(단계3);
+                    }
+
+                    보스아이콘.appendChild(총합박스);
+
+                    const 보스몬스터 = document.getElementById("보스몬스터");
+                    보스몬스터.innerText = 현재보스이름;
+
+                    const 누적데미지순위 = document.getElementById("누적데미지순위");
+                    누적데미지순위.innerHTML = "";
+                    누적데미지순위.style.display = "flex";
+                    누적데미지순위.style.flexDirection = "column";
+                    누적데미지순위.style.alignItems = "flex-start";
+                    누적데미지순위.style.justifyContent = "flex-start";
+                    누적데미지순위.style.gap = "10px";
+                    누적데미지순위.style.textAlign = "left";
+
+                    const 제목 = document.createElement("div");
+                    제목.innerText = "누적데미지 순위";
+                    누적데미지순위.appendChild(제목);
+
+                    메시지표시(보스, "", "보스전에는 스태미너 5가 소모됩니다", "");
+
                     const 유저들 = 결과.순위 || [];
                     유저들.forEach((유저, index) => {
-                        if (index >= 10) return; // 10명까지만 표시
+                        if (index >= 10) return;
                         const div = document.createElement("div");
                         div.innerText = `${index + 1}. ${유저.보스누적데미지.toLocaleString()} [${유저.유저아이디}]`;
                         누적데미지순위.appendChild(div);
@@ -3031,12 +3849,6 @@ style="margin-right: 2px;">
                 .catch(err => {
                     console.error("보스 순위 조회 실패", err);
                 });
-
-            const 보스사냥컨테이너 = document.getElementById("보스사냥컨테이너");
-
-            return 메시지표시(보스사냥컨테이너, "", "보스전에는 스태미너 5가 소모됩니다", "");
-
-
         });
 
         document.getElementById("보스몬스터").addEventListener("click", async () => {
@@ -3147,532 +3959,8 @@ style="margin-right: 2px;">
             }
         });
 
-        document.getElementById("타이틀을아이디로").addEventListener("click", async function 아이디변경시작() {
-            if (!유저데이터) return;
 
-            const 기존표시 = document.getElementById("타이틀을아이디로");
-            const 원래아이디 = 유저데이터.유저아이디;
 
-            // 입력창 생성
-            const 입력창 = document.createElement("input");
-            입력창.type = "text";
-            입력창.maxLength = 8;
-            입력창.placeholder = "새 아이디 입력";
-            입력창.style.background = "white";
-            입력창.style.color = "black";
-            입력창.style.border = "none";
-            입력창.style.fontSize = "14px";
-            입력창.size = 6;
-            입력창.style.outline = "none";
-            입력창.value = "";
-            기존표시.replaceWith(입력창);
-            입력창.focus();
-
-            // 외부 클릭 감지 핸들러
-            const 외부클릭취소 = (e) => {
-                if (!입력창.contains(e.target)) {
-                    const 복원 = document.createElement("div");
-                    복원.id = "타이틀을아이디로";
-                    복원.className = "커서호버";
-                    복원.innerText = 원래아이디;
-                    입력창.replaceWith(복원);
-                    복원.addEventListener("click", 아이디변경시작);
-                    document.removeEventListener("click", 외부클릭취소);
-                }
-            };
-
-            // 입력창 클릭 제외하고 바깥 클릭 시 취소
-            setTimeout(() => {
-                document.addEventListener("click", 외부클릭취소);
-            }, 0);
-
-            입력창.addEventListener("keydown", async (e) => {
-                if (e.key !== "Enter") return;
-
-                const 새아이디 = 입력창.value.trim();
-                if (!새아이디 || 새아이디.length > 6) {
-                    메시지표시(메시지표시박스, "⚠️", "1~6자 이내로 입력하세요", "#ef4444");
-                    return;
-                }
-
-                화면잠금();
-
-                try {
-                    const 응답 = await fetch("/update-username", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            유저UID: 유저데이터.유저UID,
-                            새아이디
-                        })
-                    });
-
-                    const 결과 = await 응답.json();
-
-                    if (!응답.ok) {
-                        메시지표시(메시지표시박스, "", 결과.오류 || "아이디 변경 실패", "#ef4444");
-                        화면해제();
-                        return;
-                    }
-
-                    유저데이터.유저아이디 = 새아이디;
-
-                    const 복원 = document.createElement("div");
-                    복원.id = "타이틀을아이디로";
-                    복원.className = "커서호버";
-                    복원.innerText = 새아이디;
-                    입력창.replaceWith(복원);
-                    복원.addEventListener("click", 아이디변경시작);
-
-                    document.getElementById("유저아이디").innerText = 새아이디;
-                    메시지표시(메시지표시박스, "✅", "아이디 변경 완료", "#00c851");
-
-                    document.removeEventListener("click", 외부클릭취소);
-                } catch (e) {
-                    메시지표시(메시지표시박스, "", "네트워크 오류", "#ef4444");
-                } finally {
-                    화면해제();
-                }
-            });
-        });
-
-        // 🟡 무지개 타이틀 애니메이션
-        let 색상인덱스 = 0;
-        const 무지개색들 = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff", "#4b0082", "#9400d3"];
-        setInterval(() => {
-            const 타이틀 = document.getElementById("도박타이틀");
-            // 타이틀.style.display = "flex";
-            // 타이틀.style.alignItems = "center";
-            // 타이틀.style.gap = "6px";
-            타이틀.innerHTML = `${도박아이콘} 도박장`;
-            if (타이틀) {
-                타이틀.style.color = 무지개색들[색상인덱스 % 무지개색들.length];
-                색상인덱스++;
-            }
-        }, 250);
-
-        // 🟢 도박창 외부 클릭 시 닫기
-        document.addEventListener("click", (e) => {
-            const 도박창 = document.getElementById("도박창");
-            if (도박창.style.display === "none") return;
-            if (!도박창.contains(e.target) && e.target.id !== "총골드") {
-                도박창.style.display = "none";
-            }
-        });
-
-        // 🟢 총골드 클릭 시 도박창 표시
-        document.getElementById("총골드").addEventListener("click", () => {
-            if (!유저데이터) return;
-            const 도박창 = document.getElementById("도박창");
-            도박창.style.display = "block";
-        });
-
-        // 🟡 도박 시도
-        async function 도박시도(등급) {
-            const 비용맵 = {
-                "일반": 20000,
-                "레어": 40000,
-                "신화": 80000,
-                "고대": 160000,
-                "태초": 320000,
-                "공허": 640000,
-                "타락": 1280000
-            };
-            const 도박창 = document.getElementById("도박창");
-
-            const 비용 = 비용맵[등급];
-            if (유저데이터.골드 < 비용) {
-                메시지표시(도박창, "", "골드 부족!", "#ef4444");
-                return;
-            }
-
-            const 확인 = confirm(`[${등급}] 장비 도박을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`);
-            if (!확인) return;
-
-            화면잠금();
-            try {
-                const 응답 = await fetch("/gamble", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        유저UID: 유저데이터.유저UID,
-                        등급
-                    })
-                });
-
-
-                const 결과 = await 응답.json();
-                if (!응답.ok || 결과.오류) {
-                    메시지표시(도박창, "", 결과.오류 || "도박 실패", "#ef4444");
-                    return;
-                }
-
-                유저데이터 = 결과.유저데이터;
-                if (결과.결과 === "성공" && 결과.장비) {
-                    const 네온박스 = document.getElementById("네온박스");
-                    const 등급외테두리 = document.getElementById("등급외테두리");
-
-                    if (네온박스) {
-                        네온박스.innerText = `도파민 폭발! ${결과.장비.이름} 도박성공!`;
-                        네온박스.style.display = "block";
-
-                        // 위치 조정용 부모 변경
-                        if (등급외테두리) {
-                            // 등급외테두리에 위치 기준 설정
-                            등급외테두리.style.position = "relative";
-
-                            // 네온박스를 등급외테두리 내부로 이동
-                            등급외테두리.appendChild(네온박스);
-
-                            // 전투화면용 위치 조정
-                            Object.assign(네온박스.style, {
-                                position: "absolute",
-                                top: "50%",
-                                left: "50%",
-                                transform: "translate(-50%, -50%)",
-                                zIndex: "100"
-                            });
-                        }
-                    }
-                    setTimeout(() => {
-                        네온박스.style.display = "none";
-                    }, 3000);
-
-
-
-                } else if (결과.결과 === "실패") {
-                    메시지표시(도박창, "", "도박에 실패했습니다!", "#ef4444");
-                }
-
-                document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
-            } catch (e) {
-                메시지표시(도박창, "", "도박 중 오류: " + e.message, "#ef4444");
-            } finally {
-                화면해제();
-            }
-        }
-
-
-        document.getElementById("아래층으로").addEventListener("click", async () => {
-            if (!유저데이터) return;
-            if (유저데이터.현재층 <= 1) return 메시지표시(층조절, "", "지하로 내려갈 수 없습니다", "#ef4444");
-
-            유저데이터.현재층--;
-            document.getElementById("현재층").innerText = `${유저데이터.현재층}층`;
-        });
-
-        document.getElementById("위층으로").addEventListener("click", async () => {
-            if (!유저데이터) return;
-
-            유저데이터.현재층++;
-            document.getElementById("현재층").innerText = `${유저데이터.현재층}층`;
-        });
-
-
-        async function 전직화면보여주기() {
-            화면잠금();
-            const 응답 = await fetch("/get-job-info", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-            });
-
-            const 결과 = await 응답.json();
-            if (!응답.ok) {
-                메시지표시(메시지표시박스, "", "전직정보 조회 실패: " + 결과.오류, "");
-                화면해제();
-                return;
-            }
-
-            const 전직정보 = 결과.전직정보;
-            const 경험치 = 결과.경험치 ?? 0;
-
-            const 전직순서 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
-
-            const container = document.getElementById("전직컨테이너");
-
-            // 🔷 기존 전직 항목만 삭제 (타이틀/경험치 영역은 유지)
-            document.querySelectorAll(".전직항목").forEach(e => e.remove());
-
-            // 🔷 경험치 표시 갱신
-            const 경험치div = document.getElementById("경험치와포인트");
-            경험치div.innerHTML = `
-        <div>경험치</div>
-        <div>${경험치.toLocaleString()} 포인트</div>
-    `;
-
-            // 🔷 전직 리스트 추가
-            for (let i = 0; i < 전직순서.length; i++) {
-                const 직위 = 전직순서[i];
-                const 완료여부 = 전직정보[직위] ?? 0;
-
-                // 완료된 직위는 건너뜀
-                if (완료여부 === 1) continue;
-
-                // 첫 번째 안 배운 직위만 표시하고, 이후는 표시하지 않음
-                const div = document.createElement("div");
-                div.className = "사백픽셀테두리 양쪽정렬 전직항목";
-                div.style.marginTop = "5px";
-
-                const 왼쪽 = document.createElement("div");
-                왼쪽.style.display = "flex";
-                왼쪽.style.flexDirection = "column";  // 세로로 쌓기
-                왼쪽.style.fontWeight = "bold";
-
-                const 직위텍스트 = document.createElement("div");
-                직위텍스트.textContent = 직위;
-
-                // 🔶 효과 설명 추가
-                const 효과텍스트 = document.createElement("div");
-                효과텍스트.textContent = `최종공격력 x${2 + i}`;  // 2배부터 시작
-                효과텍스트.style.fontSize = "12px";
-                효과텍스트.style.color = "gray";
-                효과텍스트.style.marginTop = "3px";
-
-                왼쪽.appendChild(직위텍스트);
-                왼쪽.appendChild(효과텍스트);
-
-                const 오른쪽 = document.createElement("div");
-                오른쪽.style.borderRadius = "7px";
-                오른쪽.style.padding = "7px";
-                오른쪽.style.paddingLeft = "10px";
-                오른쪽.style.paddingRight = "10px";
-                오른쪽.style.fontSize = "13px";
-
-                const 비용 = (i + 1) * 50000;
-                오른쪽.textContent = `전직(${비용.toLocaleString()}p)`;
-                오른쪽.style.backgroundColor = "white";
-                오른쪽.style.color = "black";
-                오른쪽.style.cursor = "pointer";
-
-                오른쪽.onclick = () => {
-                    전직하기(직위, 왼쪽);
-                };
-
-                div.appendChild(왼쪽);
-                div.appendChild(오른쪽);
-                container.appendChild(div);
-
-                break;  // 첫 번째 미완료 항목만 보여줌
-            }
-            화면해제();
-        }
-
-        async function 전직하기(직위, 위치참조) {
-            화면잠금();
-
-            const 응답 = await fetch("/promote-job", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    유저UID: 유저데이터.유저UID,
-                    직위: 직위
-                })
-            });
-
-            const 결과 = await 응답.json();
-
-            if (!응답.ok) {
-                메시지표시(위치참조, "", "전직 실패: " + 결과.오류, "");
-                화면해제();
-                return;
-            }
-            유저데이터.레벨 = 결과.레벨;
-            유저데이터.경험치 = 결과.경험치;
-            유저데이터.최종공격력 = 결과.최종공격력;
-
-            // 성공하면 화면 갱신
-            메시지표시(위치참조, "", 직위 + " 전직 성공!", "");
-            전직화면보여주기();
-        }
-
-        const 유물데이터 = {
-            "소드": { 설명: "공격력이 증가합니다" }, //완료
-            "하트플러스": { 설명: "체력이 증가합니다" }, //완료
-            "고스트": { 설명: "히든몬스터 등장률이 증가합니다" }, //완료
-            "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다" }, //완료
-            "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다" }, //완료
-            "클로버": { 설명: "장비 드랍율을 증가시킵니다" }, //완료
-            "모래시계": { 설명: "스태미너 소모를 무시합니다" }, //완료
-            // "모루": { 설명: "장비 강화확률을 증가시킵니다" }, //완료
-            // "표창": { 설명: "추가로 공격합니다" },
-            "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다" },
-            // "엑스": { 설명: "최종 데미지를 증가시킵니다" },
-            // "퍼즐": { 설명: "미정" },
-            // "로켓": { 설명: "미정" },
-            // "플라워": { 설명: "미정" },
-            // "봄": { 설명: "미정" },
-            // "여름": { 설명: "미정" },
-            // "가을": { 설명: "미정" },
-            // "겨울": { 설명: "미정" }
-        };
-
-
-
-
-        const 버전버튼 = document.getElementById("버전표시");
-        버전버튼.style.cursor = "pointer";
-
-        const 메뉴얼창 = document.createElement("div");
-        메뉴얼창.id = "메뉴얼창";
-        메뉴얼창.className = "사백픽셀테두리";
-        메뉴얼창.style.position = "fixed";
-        메뉴얼창.style.top = "40px";
-        메뉴얼창.style.left = "10px";
-        메뉴얼창.style.background = "#000";
-        메뉴얼창.style.color = "white";
-        메뉴얼창.style.zIndex = "9999";
-        메뉴얼창.style.width = "fit-content";
-        // 메뉴얼창.style.whiteSpace = "nowrap";
-        메뉴얼창.style.display = "none";
-        메뉴얼창.innerHTML = `
-  <div style="font-weight: bold; margin-bottom: 10px;">📘 gagl 메뉴얼</div>
-  <div>
-- gagl은 자동사냥 게임입니다. 악마성을 클릭하세요<br>
-- https://open.kakao.com/o/gbnmdWvh 톡방에 오셔서 정보를 공유하세요<br>
-- 스태미너는 시간당 60씩 회복됩니다<br>
-- 최상단 아이디를 클릭하시면 아이디 변경이 가능합니다<br>
-- 전투화면의 경험치를 클릭하시면 전직창이 열립니다<br>
-- 전투화면의 보유골드를 클릭하시면 도박창이 열립니다<br>
-- 전투화면의 숙련도를 클릭하시면 스킬창이 열립니다<br>
-- 도박은 등급당 10번 실패시 11번 째 확정드랍됩니다<br>
-- 전당화면에서 유저를 클릭하면 해당 유저의 장비열람 가능합니다<br>
-- 단축키 Alt + A 로 레어몬스터를 우선 공격하는 풀자동 사냥이 가능합니다<br>
-☆누르고 계시면 안되고, 알트에이 딸깍 한번만 실행하시면 됩니다☆<br>
-- 스킬화면의 보유숙련도를 클릭하시면 투자된 모든 숙련도가 회수됩니다<br>
-- 모든팝업창은 외부를 클릭 시 닫힙니다<br>
-- 오픈 전 마지막 버전입니다. 6월 1일 전까지 충분히 즐겨주세요<br>
-- 6월 1일에 모든 데이터는 초기화됩니다<br>
-- 오픈톡에 오셔서 피드백 부탁드리겠습니다<br>
-
-<br>
-행운을 빕니다<br>
-<br>
-ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ<br>
-<br>
-gagl 패치노트<br>
-- 레어맵 등장시 스태미너가 0이라면, 보너스 스태미너 1이 회복됩니다<br>
-- 보스화면을 잠시 오픈했습니다, 구경하세요<br>
-</div>
-`;
-        document.getElementById("버전표시").innerText = "v14";
-        // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-        // npm install -g nodemon
-        // nodemon index.js
-
-        document.addEventListener("DOMContentLoaded", async () => {
-            const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
-
-            if (인증오류) {
-                // 메시지표시(메시지표시박스, "", "유저 인증 확인 실패", "#ef4444");
-                return;
-            }
-
-            if (user && user.id) {
-                try {
-                    const 응답 = await fetch("/get-user", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ 유저UID: user.id })
-                    });
-                    const 결과 = await 응답.json();
-                    const 유저정보 = 결과.유저데이터;
-
-                    if (!유저정보 || 유저정보.버전업 !== 5) {
-                        await fetch("/delete-user", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ 유저UID: user.id })
-                        });
-
-                        await supabase.auth.signOut();
-                        alert("드락실 벨고르 마하 투라크... 에이라스 노 크살. 메테오!");
-                        location.reload();
-                        alert("메테오를 맞고 새로 태어납니다.");
-                        return;
-                    }
-
-                    유저데이터 = 유저정보;
-                    메시지표시(메시지표시박스, "", "V14. 패치노트를 반드시 확인하세요", "#00c851");
-
-                    // ✅ 스태미너 갱신 요청
-                    try {
-                        const 응답 = await fetch("/refresh-stamina", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ 유저UID: 유저정보.유저UID })
-                        });
-
-                        const 결과 = await 응답.json();
-                        if (응답.ok && 결과.유저데이터) {
-                            유저정보.현재스태미너 = 결과.유저데이터.현재스태미너;
-                        }
-                    } catch (e) {
-                        console.warn("스태미너 갱신 실패", e);
-                    }
-
-                    전투화면보여주기(유저데이터);
-
-                } catch (e) {
-                    메시지표시(메시지표시박스, "", "자동 로그인 오류: " + e.message, "#ef4444");
-                }
-            } else {
-                메시지표시(메시지표시박스, "🔒", "로그인된 유저 없음", "#aaa");
-            }
-
-        });
-
-        document.body.appendChild(메뉴얼창);
-
-        버전버튼.addEventListener("click", () => {
-            메뉴얼창.style.display = (메뉴얼창.style.display === "none") ? "block" : "none";
-        });
-
-        document.addEventListener("click", (e) => {
-            const target = e.target;
-
-            switch (target.id) {
-                // case "객체아이디":
-                //     실행함수();
-                //     break;
-
-            }
-
-            if (
-                메뉴얼창.style.display === "block" &&
-                !메뉴얼창.contains(e.target) &&
-                !버전버튼.contains(e.target)
-            ) {
-                메뉴얼창.style.display = "none";
-            }
-
-            if (
-                target.matches("#총경험치")
-            ) {
-                모든화면숨기기();
-                document.getElementById("전직화면").style.display = "block";
-                전직화면보여주기();
-            }
-        });
-
-        function 모든화면숨기기() {
-            const 화면ID들 = [
-                "전투화면", "장비화면", "스킬화면", "전당화면",
-                "유물화면", "전직화면", "보스화면", "에너지박스",
-
-            ];
-            화면ID들.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.style.display = "none";
-            });
-        }
-
-        //장비도박
-        //장비드랍
-        //장비강화
-        //스킬
-        //악마전투
-        //레어악마전투
 
 
     </script>
