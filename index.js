@@ -37,10 +37,10 @@ app.post("/get-user", async (req, res) => {
     }
 
     // ✅ 마법의팔레트 자동 지정 로직 추가
-    const 이메일팔레트맵 = {
+      const 이메일팔레트맵 = {
         "gagl@gagl.com": "가글",
         "johny87@gagl.com": "네온사인",
-        "Main@gagl.com": "핑크오션",
+        "pink@gagl.com": "핑크오션",
         "1234qwer@gagl.com": "황혼하늘",
         "saiha@gagl.com": "에메랄드숲",
         "009900@gagl.com": "겨울",
@@ -933,7 +933,7 @@ app.post("/register-user", async (req, res) => {
     const 이메일팔레트맵 = {
         "gagl@gagl.com": "가글",
         "johny87@gagl.com": "네온사인",
-        "Main@gagl.com": "핑크오션",
+        "pink@gagl.com": "핑크오션",
         "1234qwer@gagl.com": "황혼하늘",
         "saiha@gagl.com": "에메랄드숲",
         "009900@gagl.com": "겨울",
