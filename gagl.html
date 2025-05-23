@@ -3281,7 +3281,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             "고스트": { 설명: "히든몬스터 등장률이 증가합니다" }, //완료
             "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다" }, //완료
             "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다" }, //완료
-            "클로버": { 설명: "장비 드랍율을 증가시킵니다" }, //완료
+            "클로버": { 설명: "도박확률이 증가합니다" }, //완료
             "모래시계": { 설명: "스태미너 소모를 무시합니다" }, //완료
             // "모루": { 설명: "장비 강화확률을 증가시킵니다" }, //완료
             // "표창": { 설명: "추가로 공격합니다" },
@@ -3290,12 +3290,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             "퍼즐": { 설명: "도박비용을 무시합니다" },
             // "로켓": { 설명: "미정" },
             "플라워": { 설명: "스킬을 초기화합니다" },
-            // "봄": { 설명: "미정" },
-            // "여름": { 설명: "미정" },
-            // "가을": { 설명: "미정" },
-            // "겨울": { 설명: "미정" }
         };
-
 
         document.addEventListener("DOMContentLoaded", async () => {
             const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
@@ -3459,6 +3454,8 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             const 문장들 = [
                 `${봄아이콘}`,
+                "25.05.23 보스화면 내 순위 별도 표시",
+                "25.05.23 클로버 유물효과 도박확률증가로 변경",
                 "25.05.23 신규유저 이벤트 10만골드 도박 가즈ㅏㅏ",
                 "25.05.23 3시 10분 5월 26일 오픈 전 마지막 cbt 초기화 진행",
                 "25.05.22 보스 펫 보상 로직 변경",
@@ -3730,7 +3727,8 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 보스버튼 = document.getElementById("보스");
             fetch("/boss-ranking", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" }
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })  // ✅ 이 줄 필수
             })
                 .then(res => res.json())
                 .then(결과 => {
@@ -3840,11 +3838,19 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
                     const 유저들 = 결과.순위 || [];
                     유저들.forEach((유저, index) => {
-                        if (index >= 10) return;
+                        if (index >= 9) return;
                         const div = document.createElement("div");
                         div.innerText = `${index + 1}. ${유저.보스누적데미지.toLocaleString()} [${유저.유저아이디}]`;
                         누적데미지순위.appendChild(div);
                     });
+
+                    if (결과.내정보) {
+                        const div = document.createElement("div");
+                        div.innerText = `${결과.내정보.순위}. ${결과.내정보.보스누적데미지.toLocaleString()} [${결과.내정보.유저아이디}]`;
+                        div.style.marginTop = "8px"; 
+                        div.style.backgroundColor = "#505050"; 
+                        누적데미지순위.appendChild(div);
+                    }
                 })
                 .catch(err => {
                     console.error("보스 순위 조회 실패", err);
