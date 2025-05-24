@@ -2047,7 +2047,6 @@
         });
 
         function 장비화면보여주기() {
-            화면잠금();
             모든화면숨기기();
             document.getElementById("장비화면").style.display = "block";
             document.getElementById("획득로그").innerText = "";
@@ -2110,7 +2109,6 @@
 
                 장비컨테이너.appendChild(박스);
             });
-            화면해제();
         }
 
         async function 장비강화(이름, 등급, 박스) {
