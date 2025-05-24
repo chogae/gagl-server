@@ -104,35 +104,36 @@ app.post("/get-user", async (req, res) => {
     return res.json({ 유저데이터: { ...유저 } });
 });
 
+
+// 업데이트
+// const now = new Date();
+// const formatter = new Intl.DateTimeFormat("ko-KR", {
+//     weekday: "short",
+//     timeZone: "Asia/Seoul"
+// });
+// const parts = formatter.formatToParts(now);
+// const 요일 = parts.find(p => p.type === "weekday")?.value;
+
+// if (요일 === "토") {
+//     // ✅ 펫단계 계산
+//     let 펫단계 = 0;
+//     if (누적데미지총합 >= 99999999) {
+//         펫단계 = 3;
+//     } else if (누적데미지총합 >= 9999999) {
+//         펫단계 = 2;
+//     } else if (누적데미지총합 >= 999999) {
+//         펫단계 = 1;
+//     }
+
+//     // ✅ 모든 유저의 펫단계 일괄 갱신
+//     await supabaseAdmin
+//         .from("users")
+//         .update({ 펫단계 })
+//         .neq("펫단계", 펫단계); // 불필요한 업데이트 방지 (다른 값일 때만)
+// }
 app.post("/boss-ranking", async (req, res) => {
     try {
         const { 유저UID } = req.body;
-
-        const now = new Date();
-        const formatter = new Intl.DateTimeFormat("ko-KR", {
-            weekday: "short",
-            timeZone: "Asia/Seoul"
-        });
-        const parts = formatter.formatToParts(now);
-        const 요일 = parts.find(p => p.type === "weekday")?.value;
-
-        // if (요일 === "일") {
-        //     // ✅ 펫단계 계산
-        //     let 펫단계 = 0;
-        //     if (누적데미지총합 >= 99999999) {
-        //         펫단계 = 3;
-        //     } else if (누적데미지총합 >= 9999999) {
-        //         펫단계 = 2;
-        //     } else if (누적데미지총합 >= 999999) {
-        //         펫단계 = 1;
-        //     }
-
-        //     // ✅ 모든 유저의 펫단계 일괄 갱신
-        //     await supabaseAdmin
-        //         .from("users")
-        //         .update({ 펫단계 })
-        //         .neq("펫단계", 펫단계); // 불필요한 업데이트 방지 (다른 값일 때만)
-        // }
 
         // ✅ 모든 유저의 누적 데미지 합산
         const { data: 전체합, error: 합계에러 } = await supabaseAdmin
@@ -198,7 +199,7 @@ app.post("/attack-boss", async (req, res) => {
     //     return res.status(403).json({ 오류: "주말은 정산 기간입니다. 보스전은 월~금에만 참여 가능합니다." });
     // }
     if (요일 === "일") {
-        return res.status(403).json({ 오류: "주말은 정산 기간입니다. 보스전은 월~금에만 참여 가능합니다." });
+        return res.status(403).json({ 오류: "새로운 보스가 강림중입니다. 주간을 대비하세요" });
     }
 
     const { data: 유저, error } = await supabaseAdmin
@@ -1035,7 +1036,6 @@ app.post("/ranking", async (req, res) => {
     const { 유저UID } = req.body;
 
     try {
-        // 1. 상위 100명 조회
         const { data: 유저들, error } = await supabaseAdmin
             .from("users")
             .select("유저UID, 로그인이메일, 유저아이디, 레벨, 최종공격력, 현재층, 장비목록, 합성기록, 전직정보, 마법의팔레트")
@@ -1246,9 +1246,8 @@ function 최고전직명(전직정보) {
 }
 
 app.post("/gamble-Equipment", async (req, res) => {
-    const { 유저UID } = req.body;
+    const { 유저UID, 종류 } = req.body;
     const 비용 = 100000;
-
 
     try {
         const { data: 유저, error } = await supabaseAdmin
@@ -1258,6 +1257,15 @@ app.post("/gamble-Equipment", async (req, res) => {
             .single();
 
         if (error || !유저) return res.status(400).json({ 오류: "유저 정보 없음" });
+
+
+        if (종류 === "고급") {
+            const 티켓 = 유저.유물목록?.["티켓"] || 0;
+            if (티켓 < 1) {
+                return res.status(400).json({ 오류: "티켓이 부족합니다" });
+            }
+            유저.유물목록["티켓"] = 티켓 - 1;
+        }
 
         const 장비맵 = {
             "일반": { 이름: "릴리트의 독니", 공격력: 30 },
@@ -1272,15 +1280,25 @@ app.post("/gamble-Equipment", async (req, res) => {
         const 클로버 = 유저.유물목록?.["클로버"] || 0;
         const 보정 = 1 + 0.001 * 클로버;
 
-        // 수정된 확률표
-        const 확률표 = [
-            { 등급: "타락", 확률: 보정 * (1 - Math.pow(1 - 1 / 12800, 500)) },
-            { 등급: "태초", 확률: 보정 * (1 - Math.pow(1 - 1 / 6400, 500)) },
-            { 등급: "고대", 확률: 보정 * (1 - Math.pow(1 - 1 / 3200, 500)) },
-            { 등급: "신화", 확률: 보정 * (1 - Math.pow(1 - 1 / 1600, 500)) },
-            { 등급: "레어", 확률: 보정 * (1 - Math.pow(1 - 1 / 800, 500)) },
-            { 등급: "일반", 확률: 보정 * (1 - Math.pow(1 - 1 / 400, 500)) }
-        ];
+        let 확률표;
+
+        if (종류 === "고급") {
+            확률표 = [
+                { 등급: "타락", 확률: 보정 * (1 - Math.pow(1 - 1 / 12800, 500)) },
+                { 등급: "태초", 확률: 보정 * (1 - Math.pow(1 - 1 / 6400, 500)) },
+                { 등급: "고대", 확률: 보정 * (1 - Math.pow(1 - 1 / 3200, 500)) },
+                { 등급: "신화", 확률: 보정 * (1 - Math.pow(1 - 1 / 1600, 500)) },
+                { 등급: "레어", 확률: 보정 * (1 - Math.pow(1 - 1 / 800, 500)) },
+                { 등급: "일반", 확률: 보정 * (1 - Math.pow(1 - 1 / 400, 500)) }
+            ];
+        } else {
+            확률표 = [
+                { 등급: "고대", 확률: 보정 * (1 - Math.pow(1 - 1 / 3200, 500)) },
+                { 등급: "신화", 확률: 보정 * (1 - Math.pow(1 - 1 / 1600, 500)) },
+                { 등급: "레어", 확률: 보정 * (1 - Math.pow(1 - 1 / 800, 500)) },
+                { 등급: "일반", 확률: 보정 * (1 - Math.pow(1 - 1 / 400, 500)) }
+            ];
+        }
 
         const 퍼즐 = 유저.유물목록?.["퍼즐"] || 0;
         const 퍼즐발동 = Math.random() < 0.001 * 퍼즐;
@@ -1295,7 +1313,7 @@ app.post("/gamble-Equipment", async (req, res) => {
 
         let r = Math.random();
         let 누적 = 0;
-        let 뽑힌등급 = "일반"; // 기본값도 꽝 대신 가장 낮은 등급으로 바꿔줌
+        let 뽑힌등급 = "일반";
 
         for (const 항목 of 확률표) {
             const 최종확률 = 항목.확률;
@@ -1306,8 +1324,6 @@ app.post("/gamble-Equipment", async (req, res) => {
             }
         }
 
-
-        // ✅ 장비 지급
         const 드랍장비 = 장비맵[뽑힌등급];
 
         const 장비목록 = 유저.장비목록 || [];
@@ -1320,7 +1336,9 @@ app.post("/gamble-Equipment", async (req, res) => {
         if (기존) {
             기존.공격력 += 드랍장비.공격력;
             기록[키] = (기록[키] || 0) + 1;
-            체력증가량 = 1;
+            if (뽑힌등급 === "태초" || 뽑힌등급 === "타락") {
+                체력증가량 = 1;
+            }
         } else {
             장비목록.push({ 이름: 드랍장비.이름, 등급: 뽑힌등급, 공격력: 드랍장비.공격력, 강화: 0 });
             기록[키] = 0;
@@ -1336,6 +1354,7 @@ app.post("/gamble-Equipment", async (req, res) => {
             최대체력: 유저.최대체력 + 체력증가량,
             장비공격력: 유저.장비공격력,
             최종공격력: 유저.최종공격력,
+            ...(종류 === "고급" ? { 유물목록: 유저.유물목록 } : {}),
         };
 
         await supabaseAdmin
@@ -1372,7 +1391,7 @@ app.post("/gamble-Relic", async (req, res) => {
             return res.status(400).json({ 오류: "유저 정보 없음" });
         }
 
-        const 후보 = Object.keys(유물데이터).filter(이름 => {
+        const 후보 = Object.keys(레어유물데이터).filter(이름 => {
             const 보유 = 유저.유물목록?.[이름] || 0;
             return 보유 < 99;
         });
@@ -1583,7 +1602,7 @@ function 장비드랍판정(몬스터, 유저) {
 
 function 유물드랍판정(몬스터, 유저) {
     // 최대갯수 99개 초과한 유물은 드랍 후보에서 제외
-    const 후보유물 = Object.keys(유물데이터).filter(유물이름 => {
+    const 후보유물 = Object.keys(일반유물데이터).filter(유물이름 => {
         const 보유량 = (유저.유물목록?.[유물이름] || 0);
         return 보유량 < 99;
     });
@@ -1811,7 +1830,7 @@ function 레어몬스터등장판정(유저) {
     return null;
 }
 
-const 유물데이터 = {
+const 일반유물데이터 = {
     "소드": { 설명: "공격력이 증가합니다" }, //완료
     "하트플러스": { 설명: "체력이 증가합니다" }, //완료
     "고스트": { 설명: "히든몬스터 등장률이 증가합니다" }, //완료
@@ -1819,13 +1838,21 @@ const 유물데이터 = {
     "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다" }, //완료
     "클로버": { 설명: "도박확률이 증가합니다" }, //완료
     "모래시계": { 설명: "스태미너 소모를 무시합니다" }, //완료
-    // "모루": { 설명: "장비 강화확률을 증가시킵니다" }, //완료
-    // "표창": { 설명: "추가로 공격합니다" },
     "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다" },
-    // "엑스": { 설명: "최종 데미지를 증가시킵니다" },
     "퍼즐": { 설명: "도박비용을 무시합니다" },
-    // "로켓": { 설명: "미정" },
+};
+const 레어유물데이터 = {
+    "소드": { 설명: "공격력이 증가합니다" }, //완료
+    "하트플러스": { 설명: "체력이 증가합니다" }, //완료
+    "고스트": { 설명: "히든몬스터 등장률이 증가합니다" }, //완료
+    "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다" }, //완료
+    "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다" }, //완료
+    "클로버": { 설명: "도박확률이 증가합니다" }, //완료
+    "모래시계": { 설명: "스태미너 소모를 무시합니다" }, //완료
+    "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다" },
+    "퍼즐": { 설명: "도박비용을 무시합니다" },
     "플라워": { 설명: "스킬을 초기화합니다" },
+    "티켓": { 설명: "고급장비뽑기에 사용됩니다" },
 };
 
 // 🟡 정적 파일 경로 설정

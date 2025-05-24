@@ -980,7 +980,8 @@
 ">
         <div id="도박타이틀" style="font-size: 20px; font-weight: bold;"></div>
         <div style="margin-top: 15px;">
-            <div class="버튼" onclick="장비도박시도()">장비도박 (10만)</div>
+            <div class="버튼" onclick="장비도박시도('일반')">일반장비도박 (10만)</div>
+            <div class="버튼" onclick="장비도박시도('고급')">고급장비도박 (티켓)</div>
             <div class="버튼" onclick="유물도박시도()">유물도박 (5만)</div>
         </div>
     </div>
@@ -1075,6 +1076,7 @@
         const 모루아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-anvil-icon lucide-anvil"><path d="M7 10H6a4 4 0 0 1-4-4 1 1 0 0 1 1-1h4"/><path d="M7 5a1 1 0 0 1 1-1h13a1 1 0 0 1 1 1 7 7 0 0 1-7 7H8a1 1 0 0 1-1-1z"/><path d="M9 12v5"/><path d="M15 12v5"/><path d="M5 20a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3 1 1 0 0 1-1 1H6a1 1 0 0 1-1-1"/></svg>`;
         const 클로버아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clover-icon lucide-clover"><path d="M16.17 7.83 2 22"/><path d="M4.02 12a2.827 2.827 0 1 1 3.81-4.17A2.827 2.827 0 1 1 12 4.02a2.827 2.827 0 1 1 4.17 3.81A2.827 2.827 0 1 1 19.98 12a2.827 2.827 0 1 1-3.81 4.17A2.827 2.827 0 1 1 12 19.98a2.827 2.827 0 1 1-4.17-3.81A1 1 0 1 1 4 12"/><path d="m7.83 7.83 8.34 8.34"/></svg>`;
         const 플라워아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flower-icon lucide-flower"><circle cx="12" cy="12" r="3"/><path d="M12 16.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 1 1 12 7.5a4.5 4.5 0 1 1 4.5 4.5 4.5 4.5 0 1 1-4.5 4.5"/><path d="M12 7.5V9"/><path d="M7.5 12H9"/><path d="M16.5 12H15"/><path d="M12 16.5V15"/><path d="m8 8 1.88 1.88"/><path d="M14.12 9.88 16 8"/><path d="m8 16 1.88-1.88"/><path d="M14.12 14.12 16 16"/></svg>`;
+        const 티켓아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ticket-icon lucide-ticket"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>`;
         const 모래시계아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hourglass-icon lucide-hourglass"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>`;
         const 퍼즐아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-puzzle-icon lucide-puzzle"><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z"/></svg>`;
         const 로켓아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rocket-icon lucide-rocket"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>`;
@@ -1116,6 +1118,7 @@
             모루아이콘,
             클로버아이콘,
             플라워아이콘,
+            티켓아이콘,
             모래시계아이콘,
             퍼즐아이콘,
             로켓아이콘,
@@ -2048,7 +2051,9 @@
             document.getElementById("추가획득로그").innerText = "";
             document.getElementById("레벨업표시").innerText = "";
 
-            document.getElementById("화면설명").innerText = "일반 < 레어 < 신화 < 고대 < 태초 < 타락";
+            document.getElementById("화면설명").innerHTML =
+                "일반 &lt; 레어 &lt; 신화 &lt; 고대 &lt; 태초 &lt; 타락<br>태초 장비부터 유저의 최대체력이 1 증가합니다";
+            document.getElementById("화면설명").style.textAlign = "center";
 
             // 📌 골드/공격력/체력 표시
             document.getElementById("장비골드표시").innerHTML =
@@ -2855,7 +2860,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     const 기존설명 = div.querySelector(".유물설명");
                     if (기존설명) 기존설명.remove();
 
-                    const 데이터 = 유물데이터[유물이름];
+                    const 데이터 = 레어유물데이터[유물이름];
 
                     const 설명div = document.createElement("div");
                     설명div.className = "유물설명";
@@ -3013,16 +3018,28 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             도박창.style.display = "block";
         });
 
-        async function 장비도박시도() {
+        async function 장비도박시도(종류 = "일반") {
             const 도박창 = document.getElementById("도박창");
             const 비용 = 100000;
 
-            if (유저데이터.골드 < 비용) {
-                메시지표시(도박창, "", "골드 부족!", "#ef4444");
-                return;
+            if (종류 === "일반") {
+                if (유저데이터.골드 < 비용) {
+                    메시지표시(도박창, "", "골드 부족!", "#ef4444");
+                    return;
+                }
+            } else if (종류 === "고급") {
+                const 티켓 = 유저데이터.유물목록?.["티켓"] || 0;
+                if (티켓 < 1) {
+                    메시지표시(도박창, "", "유물. 티켓이 부족합니다!", "#ef4444");
+                    return;
+                }
             }
 
-            const 확인 = confirm(`장비도박을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`);
+            const 확인 = confirm(
+                종류 === "일반"
+                    ? `일반장비도박을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`
+                    : "고급장비도박을 티켓 1장으로 진행할까요?"
+            );
             if (!확인) return;
 
             화면잠금();
@@ -3031,7 +3048,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        유저UID: 유저데이터.유저UID
+                        유저UID: 유저데이터.유저UID, 종류
                     })
                 });
 
@@ -3288,7 +3305,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             전직화면보여주기();
         }
 
-        const 유물데이터 = {
+        const 일반유물데이터 = {
             "소드": { 설명: "공격력이 증가합니다" }, //완료
             "하트플러스": { 설명: "체력이 증가합니다" }, //완료
             "고스트": { 설명: "히든몬스터 등장률이 증가합니다" }, //완료
@@ -3296,13 +3313,21 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다" }, //완료
             "클로버": { 설명: "도박확률이 증가합니다" }, //완료
             "모래시계": { 설명: "스태미너 소모를 무시합니다" }, //완료
-            // "모루": { 설명: "장비 강화확률을 증가시킵니다" }, //완료
-            // "표창": { 설명: "추가로 공격합니다" },
             "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다" },
-            // "엑스": { 설명: "최종 데미지를 증가시킵니다" },
             "퍼즐": { 설명: "도박비용을 무시합니다" },
-            // "로켓": { 설명: "미정" },
+        };
+        const 레어유물데이터 = {
+            "소드": { 설명: "공격력이 증가합니다" }, //완료
+            "하트플러스": { 설명: "체력이 증가합니다" }, //완료
+            "고스트": { 설명: "히든몬스터 등장률이 증가합니다" }, //완료
+            "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다" }, //완료
+            "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다" }, //완료
+            "클로버": { 설명: "도박확률이 증가합니다" }, //완료
+            "모래시계": { 설명: "스태미너 소모를 무시합니다" }, //완료
+            "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다" },
+            "퍼즐": { 설명: "도박비용을 무시합니다" },
             "플라워": { 설명: "스킬을 초기화합니다" },
+            "티켓": { 설명: "고급장비도박에 사용됩니다" },
         };
 
         document.addEventListener("DOMContentLoaded", async () => {
@@ -3467,6 +3492,9 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             const 문장들 = [
                 `${봄아이콘}`,
+                "25.05.25 유저의 최대HP가 고등급 장비(태초,타락)로만 증가합니다",
+                "25.05.25 유물. 티켓(고급장비뽑)이 유물도박으로만 등장합니다",
+                "25.05.24 유물. 플라워(스킬초기화)가 유물도박으로만 등장합니다",
                 "25.05.23 각 화면에 대한 설명을 표시",
                 "25.05.23 보스화면 내 순위 별도 표시",
                 "25.05.23 클로버 유물효과 도박확률증가로 변경",
@@ -3506,32 +3534,17 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 "풀 자동사냥이 가능합니다",
                 "누르고 계시면 안됩니다",
                 "레벨업당 5의 공격력이 증가합니다",
-                "전투화면에서 경험치를 클릭하시면 전직화면으로 이동합니다",
-                "전직시 레벨이 초기화되며, 최종공격력이 곱연산으로 증가합니다",
-                "전투화면에서 골드를 클릭하시면 도박을 진행할 수 있습니다",
                 "도박은 최소 일반장비가 드랍됩니다",
-                "전투화면에서 숙련도를 클릭하시면 스킬화면으로 이동합니다",
                 "모든 스킬은 단계가 존재하며, 습득한 스킬 효과만 적용됩니다",
-                "알파 크리티컬을 습득하게되면, 최종공격력이 1.1배가됩니다",
-                "감마 크리티컬을 습득하게되면, 최종공격력이 1.3배가 됩니다",
-                "스킬화면의 상단 보유숙련도를 클릭해서, 스킬초기화가 가능합니다",
                 "전투로그의 아이콘으로 스킬의 발동여부를 확인하실 수 있습니다",
                 "유물의 효과는 대부분 개당 1%의 효과가 곱연산이지만,",
                 "밸런스상 예외로 0.1%거나 합연산, 소모성 유물도 존재합니다",
-                "문의주시면 상세한 로직을 안내드리겠습니다",
                 "장비는 중복 드랍할수록 합성횟수가 증가하게되고,",
                 "합성횟수당 유저의 최대체력 1과 공격력이 누적됩니다",
-                "전당화면에서 유저를 클릭하면 해당 유저의 장비열람이 가능합니다",
-                "보스화면은 매 주 월요일부터 금요일까지 이용 가능합니다",
-                "토요일과 일요일에는 주인장이 보상을 정산하는 기간입니다",
-                "누적데미지 목표달성 전유저 공통보상은 펫입니다",
+                "보스 누적데미지 목표달성 전유저 공통보상은 펫입니다",
                 "목표달성에 따라 최종공격력을 10%, 20%, 30% 증가시켜주는",
                 "펫을 획득할 수 있으며, 다음 보스가 등장하기 전까지 가글의",
                 "모든 화면에 펫이 떠다니게됩니다",
-                "목표달성 공통보상과 별개로, 누적데미지 순위 상위 세 분에게는",
-                "고등급 장비를 차등지급하려 했으나, 지피티와의 소통 부재로",
-                "도박자금으로 대체하겠습니다",
-
             ];
 
             for (const 문장 of 문장들) {
