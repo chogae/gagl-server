@@ -1293,6 +1293,7 @@ app.post("/gamble-Equipment", async (req, res) => {
             ];
         } else {
             확률표 = [
+                { 등급: "태초", 확률: 보정 * (1 - Math.pow(1 - 1 / 6400, 500)) },
                 { 등급: "고대", 확률: 보정 * (1 - Math.pow(1 - 1 / 3200, 500)) },
                 { 등급: "신화", 확률: 보정 * (1 - Math.pow(1 - 1 / 1600, 500)) },
                 { 등급: "레어", 확률: 보정 * (1 - Math.pow(1 - 1 / 800, 500)) },
@@ -1378,7 +1379,7 @@ app.post("/gamble-Equipment", async (req, res) => {
 
 app.post("/gamble-Relic", async (req, res) => {
     const { 유저UID } = req.body;
-    const 비용 = 50000;
+    const 비용 = 100000;
 
     try {
         const { data: 유저, error } = await supabaseAdmin

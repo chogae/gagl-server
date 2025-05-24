@@ -982,7 +982,7 @@
         <div style="margin-top: 15px;">
             <div class="버튼" onclick="장비도박시도('일반')">일반장비도박 (10만)</div>
             <div class="버튼" onclick="장비도박시도('고급')">고급장비도박 (티켓)</div>
-            <div class="버튼" onclick="유물도박시도()">유물도박 (5만)</div>
+            <div class="버튼" onclick="유물도박시도()">유물도박 (10만)</div>
         </div>
     </div>
 
@@ -2090,39 +2090,13 @@
                 const 박스 = document.createElement("div");
                 박스.className = "기본테두리 양쪽정렬";
                 박스.style.marginBottom = "8px";
-                // 박스.style.border = `0.2px solid white`;
                 박스.style.color = 색상맵[장비.등급] || "#fff";
                 박스.style.fontWeight = "bold";
-
-                // 박스.style.border = `0.2px solid ${색상맵[장비.등급] || "#fff"}`;
-                // if (장비.등급 === "타락") {
-                //     박스.classList.add("타락텍스트");
-                // } else {
-                //     // 박스.style.border = `0.2px solid ${색상맵[장비.등급] || "#fff"}`;
-                //     박스.style.color = 색상맵[장비.등급] || "#fff";
-                //     박스.style.fontWeight = "bold";
-                // }
 
                 const 키 = `${장비.이름}|${장비.등급}`;
                 const 합성수 = 유저데이터.합성기록?.[키] ?? 0;
                 const 강화표시 = 장비.강화 ? `+${장비.강화}` : "";
                 const 이름표시 = `${장비.이름} (${합성수}) ${강화표시}`;
-
-                //         박스.innerHTML = `
-                //     <div>[${장비.등급}] ${이름표시}</div>
-                //     <div>
-                //         <svg onclick="장비강화('${장비.이름}', '${장비.등급}', this.closest('.기본테두리'))"
-                //             xmlns="http://www.w3.org/2000/svg"
-                //             width="16" height="16" viewBox="0 0 24 24" fill="none"
-                //             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                //             style="cursor:pointer; margin-right: 4px;">
-                //             <path d="m15 12-8.373 8.373a1 1 0 1 1-3-3L12 9"/>
-                //             <path d="m18 15 4-4"/>
-                //             <path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172V7l-2.26-2.26a6 6 0 0 0-4.202-1.756L9 2.96l.92.82A6.18 6.18 0 0 1 12 8.4V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"/>
-                //         </svg>
-                //         공격력 +${장비.공격력}
-                //     </div>
-                // `;
 
                 박스.innerHTML = `
     <div>[${장비.등급}] ${이름표시}</div>
@@ -2130,7 +2104,6 @@
         공격력 +${장비.공격력}
     </div>
 `;
-
 
                 장비컨테이너.appendChild(박스);
             });
@@ -3103,7 +3076,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
         async function 유물도박시도() {
             const 도박창 = document.getElementById("도박창");
-            const 비용 = 50000;
+            const 비용 = 100000;
 
             if (유저데이터.골드 < 비용) {
                 메시지표시(도박창, "", "골드 부족!", "#ef4444");
@@ -3456,7 +3429,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
     <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
   </div>
 `;
-
+        정보툴팁.style.display = "none";
         document.body.appendChild(정보툴팁);
 
         정보버튼.addEventListener("mouseenter", () => {
@@ -3492,8 +3465,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             const 문장들 = [
                 `${봄아이콘}`,
-                "25.05.25 유저의 최대HP가 고등급 장비(태초,타락)로만 증가합니다",
-                "25.05.25 유물. 티켓(고급장비뽑)이 유물도박으로만 등장합니다",
+                "25.05.24 고급장비도박은 일반부터 타락까지 드랍됩니다",
+                "25.05.24 일반장비도박은 일반부터 태초까지 드랍됩니다",
+                "25.05.24 유저의 최대체력은 고등급 장비(태초,타락)로만 증가합니다",
+                "25.05.24 유물. 티켓(고급장비뽑)이 유물도박으로만 등장합니다",
                 "25.05.24 유물. 플라워(스킬초기화)가 유물도박으로만 등장합니다",
                 "25.05.23 각 화면에 대한 설명을 표시",
                 "25.05.23 보스화면 내 순위 별도 표시",
@@ -3649,6 +3624,14 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
                     const 창 = document.getElementById("미니장비창");
                     창.style.display = "block";
+
+                    // 줄의 뷰포트 내 위치 가져오기 (스크롤 무시됨)
+                    const rect = 줄.getBoundingClientRect();
+
+                    // ✅ position: fixed → scrollY 보정 필요 없음
+                    창.style.left = `${rect.left}px`;
+                    창.style.top = `${rect.bottom + 6}px`; // 살짝 아래로 여유
+
                     창.innerHTML = `<div style="font-weight:bold; margin-bottom:8px;">🔍 ${유저.유저아이디} 장비</div>`;
 
                     const 장비들 = 유저.장비목록 || [];
