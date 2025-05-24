@@ -3465,6 +3465,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             const 문장들 = [
                 `${봄아이콘}`,
+                "25.05.24 보스전 스태미너 소모가 10으로 너프되었습니다",
                 "25.05.24 고급장비도박은 일반부터 타락까지 드랍됩니다",
                 "25.05.24 일반장비도박은 일반부터 태초까지 드랍됩니다",
                 "25.05.24 유저의 최대체력은 고등급 장비(태초,타락)로만 증가합니다",
@@ -3740,7 +3741,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             fetch("/boss-ranking", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })  // ✅ 이 줄 필수
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID }) 
             })
                 .then(res => res.json())
                 .then(결과 => {
@@ -3846,7 +3847,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     제목.innerText = "누적데미지 순위";
                     누적데미지순위.appendChild(제목);
 
-                    메시지표시(보스, "", "보스전에는 스태미너 5가 소모됩니다", "");
+                    메시지표시(보스, "", "보스전에는 스태미너 10이 소모됩니다", "");
 
                     const 유저들 = 결과.순위 || [];
                     유저들.forEach((유저, index) => {
