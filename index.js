@@ -1316,16 +1316,16 @@ app.post("/gamble-Equipment", async (req, res) => {
 
         let r = Math.random();
         let 누적 = 0;
-        let 뽑힌등급 = "일반";
+        let 뽑힌등급 = 확률표[확률표.length - 1].등급;
 
         for (const 항목 of 확률표) {
-            const 최종확률 = 항목.확률;
-            누적 += 최종확률;
+            누적 += 항목.확률;
             if (r < 누적) {
                 뽑힌등급 = 항목.등급;
                 break;
             }
         }
+
 
         const 드랍장비 = 장비맵[뽑힌등급];
 
