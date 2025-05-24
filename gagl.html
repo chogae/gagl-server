@@ -1401,6 +1401,7 @@
         });
 
         async function 전투화면보여주기(유저) {
+            화면잠금();
             모든화면숨기기();
             document.getElementById("전투화면").style.display = "block";
             document.getElementById("에너지박스").style.display = "block";
@@ -1471,6 +1472,7 @@
             if (!유저.현재층) 유저.현재층 = 1;
 
             document.getElementById("현재층").innerText = `${유저.현재층}층`;
+            화면해제();
         }
 
         function 최고전직명(전직정보) {
@@ -2045,6 +2047,7 @@
         });
 
         function 장비화면보여주기() {
+            화면잠금();
             모든화면숨기기();
             document.getElementById("장비화면").style.display = "block";
             document.getElementById("획득로그").innerText = "";
@@ -2107,6 +2110,7 @@
 
                 장비컨테이너.appendChild(박스);
             });
+            화면해제();
         }
 
         async function 장비강화(이름, 등급, 박스) {
@@ -2620,6 +2624,7 @@
         }
 
         function 스킬화면보여주기() {
+            화면잠금();
             모든화면숨기기();
             document.getElementById("화면설명").innerText = "보유숙련도 클릭 시 스킬초기화 가능합니다";
 
@@ -2729,6 +2734,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     });
                 });
             }
+            화면해제();
         }
 
         document.getElementById("보유숙련도").addEventListener("click", async () => {
@@ -2788,6 +2794,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
         document.getElementById("유물").addEventListener("click", () => {
             if (!유저데이터) return;
 
+            화면잠금();
             모든화면숨기기();
             document.getElementById("화면설명").innerText = "유물당 최대 개수는 99개입니다";
 
@@ -2799,6 +2806,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 유물목록 = 유저데이터.유물목록 || {};
             if (Object.keys(유물목록).length === 0) {
                 컨테이너.innerText = "획득한 유물이 없습니다";
+                화면해제();
                 return;
             }
 
@@ -2868,6 +2876,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
                 컨테이너.appendChild(div);
             }
+            화면해제();
         });
 
 
@@ -3521,6 +3530,11 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 "목표달성에 따라 최종공격력을 10%, 20%, 30% 증가시켜주는",
                 "펫을 획득할 수 있으며, 다음 보스가 등장하기 전까지 가글의",
                 "모든 화면에 펫이 떠다니게됩니다",
+                "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
+                `${겨울아이콘}`,
+                "앞으로의 방향",
+                "신규스킬개발",
+                "보스별디버프구현",
             ];
 
             for (const 문장 of 문장들) {
@@ -3736,12 +3750,13 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
         // 보스화면보여주기
         document.getElementById("보스").addEventListener("click", () => {
             if (!유저데이터) return;
+            화면잠금();
             document.getElementById("화면설명").innerText = "누적데미지 랭킹보상 1등부터 9등까지 50만골부터 차등지급";
             const 보스버튼 = document.getElementById("보스");
             fetch("/boss-ranking", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 유저UID: 유저데이터.유저UID }) 
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
             })
                 .then(res => res.json())
                 .then(결과 => {
@@ -3864,9 +3879,12 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                         div.style.backgroundColor = "#505050";
                         누적데미지순위.appendChild(div);
                     }
+                    화면해제();
+
                 })
                 .catch(err => {
                     console.error("보스 순위 조회 실패", err);
+                    화면해제();
                 });
         });
 
