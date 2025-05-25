@@ -695,7 +695,7 @@
 
     <div class="사백픽셀 밑줄">
         <div id="화면설명" style="text-align: center;">
-           할일이 아무 것도 없는 것은 즐겁지 않다<br>할 일이 많은데 안 하고 있는 것이 즐거운 것이다
+            신규유저 회원가입 이벤트<br>유물화면에서 [샐러드]를 확인하세요
         </div>
 
     </div>
@@ -1240,7 +1240,7 @@
 
             const 아이디패턴 = /^[a-zA-Z0-9_]{3,12}$/;
             if (!아이디패턴.test(아이디)) {
-                메시지표시(메시지표시박스, "❌", "아이디는 영문/숫자/밑줄 포함 3~12자여야 합니다", "#ef4444");
+                메시지표시(메시지표시박스, "", "아이디는 영문/숫자/밑줄 포함 3~12자여야 합니다", "");
                 화면해제();
                 return;
             }
@@ -1252,7 +1252,7 @@
                 });
 
                 if (error || !data.user) {
-                    메시지표시(메시지표시박스, "❌", "회원가입 실패: " + error.message, "#ef4444");
+                    메시지표시(메시지표시박스, "", "회원가입 실패: " + error.message, "");
                     화면해제();
                     return;
                 }
@@ -1262,7 +1262,7 @@
 
                 const { data: { user }, error: 로그인오류 } = await supabase.auth.getUser();
                 if (로그인오류 || !user) {
-                    메시지표시(메시지표시박스, "❌", "재로그인 실패", "#ef4444");
+                    메시지표시(메시지표시박스, "", "재로그인 실패", "");
                     화면해제();
                     return;
                 }
@@ -1278,7 +1278,7 @@
                 const 결과 = await 응답.json();
 
                 if (!응답.ok) {
-                    메시지표시(메시지표시박스, "❌", 결과.오류 || "서버 오류", "#ef4444");
+                    메시지표시(메시지표시박스, "", 결과.오류 || "서버 오류", "");
                     화면해제();
                     return;
                 }
@@ -1295,7 +1295,7 @@
                 }
 
             } catch (e) {
-                메시지표시(메시지표시박스, "❌", "예외 오류 발생: " + e.message, "#ef4444");
+                메시지표시(메시지표시박스, "", "예외 오류 발생: " + e.message, "");
             }
 
             화면해제();
@@ -1309,7 +1309,7 @@
             const 이메일형식 = `${아이디}@gagl.com`;
 
             if (!아이디 || !비번) {
-                메시지표시(메시지표시박스, "⚠️", "아이디와 비밀번호를 입력하세요", "#ef4444");
+                메시지표시(메시지표시박스, "", "아이디와 비밀번호를 입력하세요", "");
                 화면해제();
                 return;
             }
@@ -1321,14 +1321,14 @@
                 });
 
                 if (로그인오류) {
-                    메시지표시(메시지표시박스, "", "로그인 실패: " + 로그인오류.message, "#ef4444");
+                    메시지표시(메시지표시박스, "", "로그인 실패: " + 로그인오류.message, "");
                     화면해제();
                     return;
                 }
 
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user || !user.id) {
-                    메시지표시(메시지표시박스, "", "유저 인증 정보 없음", "#ef4444");
+                    메시지표시(메시지표시박스, "", "유저 인증 정보 없음", "");
                     화면해제();
                     return;
                 }
@@ -1343,7 +1343,7 @@
                 const 유저정보 = 결과.유저데이터;
 
                 if (!유저정보) {
-                    메시지표시(메시지표시박스, "⚠️", "유저 정보가 존재하지 않습니다", "#ef4444");
+                    메시지표시(메시지표시박스, "", "유저 정보가 존재하지 않습니다", "");
                     화면해제();
                     return;
                 }
@@ -1360,7 +1360,7 @@
                 전투화면보여주기(유저데이터);
 
             } catch (e) {
-                메시지표시(메시지표시박스, "", "오류 발생: " + e.message, "#ef4444");
+                메시지표시(메시지표시박스, "", "오류 발생: " + e.message, "");
             } finally {
                 화면해제();
             }
@@ -1378,7 +1378,7 @@
                 } = await supabase.auth.getUser();
 
                 if (!user) {
-                    메시지표시(메시지표시박스, "", "로그인 정보 없음", "#ef4444");
+                    메시지표시(메시지표시박스, "", "로그인 정보 없음", "");
                     return;
                 }
 
@@ -1392,14 +1392,14 @@
                     console.warn("auth 삭제 실패", await 응답.text());
                 }
 
-                메시지표시(메시지표시박스, "✅", "탈퇴가 완료되었습니다.", "#00c851");
+                메시지표시(메시지표시박스, "✅", "탈퇴가 완료되었습니다.", "");
 
                 await supabase.auth.signOut(); // 세션 삭제
                 localStorage.removeItem("기기ID"); // UUID 삭제
                 location.reload(); // 로그인 화면으로 새로고침
 
             } catch (e) {
-                메시지표시(메시지표시박스, "", "탈퇴 중 오류 발생: " + e.message, "#ef4444");
+                메시지표시(메시지표시박스, "", "탈퇴 중 오류 발생: " + e.message, "");
             } finally {
                 화면해제();
             }
@@ -1558,7 +1558,7 @@
 
                 // ✅ 스태미너 부족 시 처리
                 if (결과.결과 === "불가") {
-                    메시지표시(등급외테두리, 실패아이콘, 결과.메시지 || "스태미너 부족", "#ef4444");
+                    메시지표시(등급외테두리, "", 결과.메시지 || "스태미너 부족", "");
                     화면해제();
                     자동사냥허용 = false;
                     풀자동사냥허용 = false;
@@ -1759,7 +1759,7 @@
                     에너지바.style.width = `${(현재 / 최대) * 100}%`;
                 }
             } catch (e) {
-                메시지표시(메시지표시박스, "", "전투 중 오류: " + e.message, "#ef4444");
+                메시지표시(메시지표시박스, "", "전투 중 오류: " + e.message, "");
                 자동사냥허용 = false;
             } finally {
                 if (레어몬스터등장) {
@@ -1809,7 +1809,7 @@
 
                 // ✅ 스태미너 부족 시 처리
                 if (결과.결과 === "불가") {
-                    메시지표시(등급외테두리, 실패아이콘, 결과.메시지 || "스태미너 부족", "#ef4444");
+                    메시지표시(등급외테두리, "", 결과.메시지 || "스태미너 부족", "");
                     화면해제();
                     자동사냥허용 = false;
                     풀자동사냥허용 = false;
@@ -2054,7 +2054,7 @@
                 }
 
             } catch (e) {
-                메시지표시(메시지표시박스, "", "레어 전투 오류: " + e.message, "#ef4444");
+                메시지표시(메시지표시박스, "", "레어 전투 오류: " + e.message, "");
             } finally {
                 if (레어몬스터등장) {
                     await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
@@ -2159,7 +2159,7 @@
             const 비용 = 강화비용;
 
             if ((유저데이터.골드 || 0) < 비용) {
-                메시지표시(메시지표시박스, "", `골드 부족: ${비용.toLocaleString()} 필요`, "#ef4444");
+                메시지표시(메시지표시박스, "", `골드 부족: ${비용.toLocaleString()} 필요`, "");
                 return;
             }
 
@@ -2182,7 +2182,7 @@
                 const 결과 = await 응답.json();
 
                 if (!응답.ok || 결과.오류) {
-                    메시지표시(메시지표시박스, "", 결과.오류 || "강화 실패..", "#ef4444");
+                    메시지표시(메시지표시박스, "", 결과.오류 || "강화 실패..", "");
                     return;
                 }
 
@@ -2742,7 +2742,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                             const 결과 = await 응답.json();
 
                             if (!응답.ok || 결과.오류) {
-                                메시지표시(줄, "", 결과.오류 || "실패", "#ef4444");
+                                메시지표시(줄, "", 결과.오류 || "실패", "");
                                 return;
                             }
 
@@ -2756,7 +2756,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                             메시지표시(줄, 아이콘, 메세지, 색);
                             스킬화면보여주기(); // 갱신
                         } catch (e) {
-                            메시지표시(줄, "", "서버 오류: " + e.message, "#ef4444");
+                            메시지표시(줄, "", "서버 오류: " + e.message, "");
                         } finally {
                             화면해제();
                         }
@@ -2786,7 +2786,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 const 결과 = await 응답.json();
 
                 if (!응답.ok || 결과.오류) {
-                    메시지표시(보유숙련도, "", 결과.오류 || "초기화 실패", "#ef4444");
+                    메시지표시(보유숙련도, "", 결과.오류 || "초기화 실패", "");
                     return;
                 }
 
@@ -2795,10 +2795,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 유저데이터.스킬 = 결과.스킬;
                 유저데이터.유물목록 = 결과.유물목록;
 
-                메시지표시(스킬화면, "🔁", "모든 스킬 초기화 완료", "#3b82f6");
+                메시지표시(스킬화면, "", "모든 스킬 초기화 완료", "");
                 스킬화면보여주기();
             } catch (e) {
-                메시지표시(스킬화면, "", "서버 오류: " + e.message, "#ef4444");
+                메시지표시(스킬화면, "", "서버 오류: " + e.message, "");
             } finally {
                 화면해제();
             }
@@ -2983,7 +2983,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
                 const 새아이디 = 입력창.value.trim();
                 if (!새아이디 || 새아이디.length > 6) {
-                    메시지표시(메시지표시박스, "⚠️", "1~6자 이내로 입력하세요", "#ef4444");
+                    메시지표시(메시지표시박스, "", "1~6자 이내로 입력하세요", "");
                     return;
                 }
 
@@ -3002,7 +3002,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     const 결과 = await 응답.json();
 
                     if (!응답.ok) {
-                        메시지표시(메시지표시박스, "", 결과.오류 || "아이디 변경 실패", "#ef4444");
+                        메시지표시(메시지표시박스, "", 결과.오류 || "아이디 변경 실패", "");
                         화면해제();
                         return;
                     }
@@ -3021,7 +3021,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
                     document.removeEventListener("click", 외부클릭취소);
                 } catch (e) {
-                    메시지표시(메시지표시박스, "", "네트워크 오류", "#ef4444");
+                    메시지표시(메시지표시박스, "", "네트워크 오류", "");
                 } finally {
                     화면해제();
                 }
@@ -3065,13 +3065,13 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             if (종류 === "일반") {
                 if (유저데이터.골드 < 비용) {
-                    메시지표시(도박창, "", "골드 부족!", "#ef4444");
+                    메시지표시(도박창, "", "골드 부족!", "");
                     return;
                 }
             } else if (종류 === "고급") {
                 const 티켓 = 유저데이터.유물목록?.["티켓"] || 0;
                 if (티켓 < 1) {
-                    메시지표시(도박창, "", "유물. 티켓이 부족합니다!", "#ef4444");
+                    메시지표시(도박창, "", "유물. 티켓이 부족합니다!", "");
                     return;
                 }
             }
@@ -3095,7 +3095,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
                 const 결과 = await 응답.json();
                 if (!응답.ok || 결과.오류) {
-                    메시지표시(도박창, "", 결과.오류 || "", "#ef4444");
+                    메시지표시(도박창, "", 결과.오류 || "", "");
                     return;
                 }
 
@@ -3137,12 +3137,12 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
 
                 } else if (결과.결과 === "실패") {
-                    메시지표시(도박창, 결과.퍼즐발동 ? 퍼즐아이콘 : "", "도박에 실패했습니다!", "#ef4444");
+                    메시지표시(도박창, 결과.퍼즐발동 ? 퍼즐아이콘 : "", "도박에 실패했습니다!", "");
                 }
 
                 document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
             } catch (e) {
-                메시지표시(도박창, "", "도박 중 오류: " + e.message, "#ef4444");
+                메시지표시(도박창, "", "도박 중 오류: " + e.message, "");
             } finally {
                 화면해제();
             }
@@ -3153,7 +3153,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 비용 = 100000;
 
             if (유저데이터.골드 < 비용) {
-                메시지표시(도박창, "", "골드 부족!", "#ef4444");
+                메시지표시(도박창, "", "골드 부족!", "");
                 return;
             }
 
@@ -3171,7 +3171,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 const 결과 = await 응답.json();
 
                 if (!응답.ok || 결과.오류) {
-                    메시지표시(도박창, "", 결과.오류 || "", "#ef4444");
+                    메시지표시(도박창, "", 결과.오류 || "", "");
                     return;
                 }
 
@@ -3214,12 +3214,12 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                         유물드랍박스.style.display = "none";
                     }, 3000);
                 } else {
-                    메시지표시(도박창, "", "도박에 실패했습니다!", "#ef4444");
+                    메시지표시(도박창, "", "도박에 실패했습니다!", "");
                 }
 
                 document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
             } catch (e) {
-                메시지표시(도박창, "", "도박 중 오류: " + e.message, "#ef4444");
+                메시지표시(도박창, "", "도박 중 오류: " + e.message, "");
             } finally {
                 화면해제();
             }
@@ -3227,7 +3227,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
         document.getElementById("아래층으로").addEventListener("click", async () => {
             if (!유저데이터) return;
-            if (유저데이터.현재층 <= 1) return 메시지표시(아래층으로, "", "지하로 내려갈 수 없습니다", "#");
+            if (유저데이터.현재층 <= 1) return 메시지표시(아래층으로, "", "지하로 내려갈 수 없습니다", "");
 
             유저데이터.현재층--;
             document.getElementById("현재층").innerText = `${유저데이터.현재층}층`;
@@ -3393,7 +3393,6 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
 
             if (인증오류) {
-                // 메시지표시(메시지표시박스, "", "유저 인증 확인 실패", "#ef4444");
                 return;
             }
 
@@ -3458,10 +3457,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     전투화면보여주기(유저데이터);
 
                 } catch (e) {
-                    메시지표시(메시지표시박스, "", "자동 로그인 오류: " + e.message, "#ef4444");
+                    메시지표시(메시지표시박스, "", "자동 로그인 오류: " + e.message, "");
                 }
             } else {
-                메시지표시(메시지표시박스, "🔒", "로그인된 유저 없음", "#aaa");
+                메시지표시(메시지표시박스, "", "로그인된 유저 없음", "");
             }
 
         });
@@ -3545,7 +3544,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
         document.getElementById("메뉴얼").addEventListener("click", () => {
             if (!유저데이터) return;
-            document.getElementById("화면설명").innerText = "패치노트";
+            document.getElementById("화면설명").innerHTML = "새로고침(F5)을 생활화하세요";
 
             모든화면숨기기();
             document.getElementById("메뉴얼화면").style.display = "block";
@@ -3555,6 +3554,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             const 문장들 = [
                 `${봄아이콘}`,
+                "25.05.25 신규유저 이벤트로 샐러드 5개가 지급됩니다",
                 "25.05.25 유물. 샐러드(스태미너회복)가 구현되었습니다",
                 "25.05.25 cbt 마지막날 보너스골드와 숙련도가 지급되었습니다",
                 "25.05.25 1주차 보스 미노타우르스가 강림중입니다",
@@ -3645,7 +3645,8 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
         async function 전당화면보여주기() {
             화면잠금();
             모든화면숨기기();
-            document.getElementById("화면설명").innerText = "유저를 클릭하면 해당유저의 장비목록 열람 가능합니다";
+            document.getElementById("화면설명").innerHTML = "유저를 클릭하면 해당유저의 장비목록 열람 가능합니다";
+
             document.getElementById("전당화면").style.display = "block";
 
             document.getElementById("획득로그").innerText = "";
@@ -3993,7 +3994,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     const 에러결과 = await 응답.json();
                     const 메시지 = 에러결과.오류 || "오류 발생";
                     const 보스사냥컨테이너 = document.getElementById("보스사냥컨테이너");
-                    메시지표시(보스사냥컨테이너, 실패아이콘, 메시지, "");
+                    메시지표시(보스사냥컨테이너, "", 메시지, "");
                     return;
                 }
 
@@ -4002,7 +4003,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 const 보스사냥컨테이너 = document.getElementById("보스사냥컨테이너");
 
                 if (결과.결과 === "불가") {
-                    메시지표시(보스사냥컨테이너, 실패아이콘, 결과.메시지 || "스태미너 부족", "");
+                    메시지표시(보스사냥컨테이너, "", 결과.메시지 || "스태미너 부족", "");
                     return;
                 }
 
@@ -4085,7 +4086,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 document.getElementById("승리패배로그").innerText = "보스전 완료";
                 document.getElementById("승리패배로그").style.color = "#ffa500";
             } catch (e) {
-                메시지표시(메시지표시박스, "", "보스전 오류: " + e.message, "#ef4444");
+                메시지표시(메시지표시박스, "", "보스전 오류: " + e.message, "");
             } finally {
                 공격버튼잠금해제();
             }
