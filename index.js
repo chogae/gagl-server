@@ -1021,8 +1021,9 @@ app.post("/register-user", async (req, res) => {
     const parts = formatter.formatToParts(now);
     const 현재시간 = Number(parts.find(p => p.type === "hour")?.value);
 
+    // ✅ 마법의팔레트 자동 지정 로직 추가
     const 이메일팔레트맵 = {
-        "gagl@gagl.com": "가글",
+        "rkrmfrkt@gagl.com": "가글",
         "johny87@gagl.com": "네온사인",
         "pink@gagl.com": "핑크오션",
         "1234qwer@gagl.com": "황혼하늘",
@@ -1032,7 +1033,6 @@ app.post("/register-user", async (req, res) => {
         "sibasrigal1@gagl.com": "블라섬",
         "wlstjr1q2w@gagl.com": "지옥",
     };
-
     const 마법의팔레트 = 이메일팔레트맵[로그인이메일] || null;
 
     //신규유저
