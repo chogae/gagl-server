@@ -3772,7 +3772,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
         document.getElementById("보스").addEventListener("click", () => {
             if (!유저데이터) return;
             화면잠금();
-            document.getElementById("화면설명").innerText = "누적데미지 랭킹보상 1등부터 9등까지 50만골부터 차등지급";
+            document.getElementById("화면설명").innerHTML =
+                "누적데미지 랭킹보상 1등부터 9등까지 50만골부터 차등지급<br>보스전에는 스태미너 10이 소모됩니다";
+            document.getElementById("화면설명").style.textAlign = "center";
+
             const 보스버튼 = document.getElementById("보스");
             fetch("/boss-ranking", {
                 method: "POST",
@@ -3882,8 +3885,6 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     const 제목 = document.createElement("div");
                     제목.innerText = "누적데미지 순위";
                     누적데미지순위.appendChild(제목);
-
-                    메시지표시(보스, "", "보스전에는 스태미너 10이 소모됩니다", "");
 
                     const 유저들 = 결과.순위 || [];
                     유저들.forEach((유저, index) => {
