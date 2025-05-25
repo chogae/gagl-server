@@ -38,7 +38,7 @@ app.post("/get-user", async (req, res) => {
 
     // ✅ 마법의팔레트 자동 지정 로직 추가
     const 이메일팔레트맵 = {
-        "gagl@gagl.com": "가글",
+        "rkrmfrkt@gagl.com": "가글",
         "johny87@gagl.com": "네온사인",
         "pink@gagl.com": "핑크오션",
         "1234qwer@gagl.com": "황혼하늘",
@@ -686,11 +686,45 @@ app.post("/attack-rare", async (req, res) => {
             발굴: 발굴발동              // true/false
         }
     });
-    console.log("🧪 입력받은 유저데이터:", req.body.유저데이터);
-    console.log("🧪 레어몬스터이름:", req.body.레어몬스터이름);
-    console.log("🧪 몬스터 정보:", 몬스터);
-    console.log("🧪 유저 상태:", 유저);
+});
 
+app.post("/use-salad", async (req, res) => {
+    const { 유저UID } = req.body;
+    if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("현재스태미너, 최대스태미너, 유물목록")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
+
+    const 보유 = 유저.유물목록?.["샐러드"] || 0;
+    if (보유 < 1) return res.status(400).json({ 오류: "샐러드가 없습니다" });
+
+    const 회복량 = 60;
+    const 현재스태미너 = 유저.현재스태미너 ?? 0;
+    const 최대스태미너 = 유저.최대스태미너 ?? 1000;
+
+    // ✅ 초과할 경우 거부
+    if (현재스태미너 + 회복량 > 최대스태미너) {
+        return res.status(400).json({ 오류: "샐러드를 먹기엔 이릅니다" });
+    }
+
+    const 새스태미너 = 현재스태미너 + 회복량;
+    const 유물목록 = { ...유저.유물목록, 샐러드: 보유 - 1 };
+
+    await supabaseAdmin
+        .from("users")
+        .update({ 현재스태미너: 새스태미너, 유물목록 })
+        .eq("유저UID", 유저UID);
+
+    return res.json({
+        결과: "성공",
+        현재스태미너: 새스태미너,
+        유물목록
+    });
 });
 
 app.post("/refresh-stamina", async (req, res) => {
@@ -1014,7 +1048,7 @@ app.post("/register-user", async (req, res) => {
         장비공격력: 0,
         펫단계: 0,
         경험치: 0,
-        골드: 100000,
+        골드: 0,
         최대체력: 10,
         남은체력: 10,
         숙련도: 0,
@@ -1862,7 +1896,8 @@ const 레어유물데이터 = {
     "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다" },
     "퍼즐": { 설명: "도박비용을 무시합니다" },
     "플라워": { 설명: "스킬을 초기화합니다" },
-    "티켓": { 설명: "고급장비뽑기에 사용됩니다" },
+    "티켓": { 설명: "고급장비도박에 사용됩니다" },
+    "샐러드": { 설명: "스태미너를 60 충전합니다" },
 };
 
 // 🟡 정적 파일 경로 설정
