@@ -3492,7 +3492,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 문장들 = [
                 `${봄아이콘}`,
                 "25.05.25 1주차 보스 미노타우르스가 강림중입니다",
-                "25.05.25 보스 2단계 보상 아이스골렘이 구현되었습니다",
+                "25.05.25 보스 2단계 보상 아이스골렘 펫이 구현되었습니다",
                 "25.05.25 악마성이 무너져 4층까지만 남았습니다",
                 "25.05.24 고급장비도박은 레어부터 타락까지 드랍됩니다",
                 "25.05.24 일반장비도박은 일반부터 태초까지 드랍됩니다",
@@ -3927,7 +3927,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     const 에러결과 = await 응답.json();
                     const 메시지 = 에러결과.오류 || "오류 발생";
                     const 보스사냥컨테이너 = document.getElementById("보스사냥컨테이너");
-                    메시지표시(보스사냥컨테이너, 실패아이콘, 메시지, "#ef4444");
+                    메시지표시(보스사냥컨테이너, 실패아이콘, 메시지, "");
                     return;
                 }
 
@@ -3936,7 +3936,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 const 보스사냥컨테이너 = document.getElementById("보스사냥컨테이너");
 
                 if (결과.결과 === "불가") {
-                    메시지표시(보스사냥컨테이너, 실패아이콘, 결과.메시지 || "스태미너 부족", "#ef4444");
+                    메시지표시(보스사냥컨테이너, 실패아이콘, 결과.메시지 || "스태미너 부족", "");
                     return;
                 }
 

@@ -90,13 +90,13 @@ app.post("/get-user", async (req, res) => {
 
     //     await supabaseAdmin
     //         .from("users")
-    //         .update({ 보스누적데미지: 0 })
-    //         .neq("보스누적데미지", 0); // 0이 아닌 유저만 업데이트 (불필요한 쓰기 방지)
-
-    //     await supabaseAdmin
-    //         .from("users")
     //         .update({ 펫단계 })
     //         .neq("펫단계", 펫단계);
+
+    // await supabaseAdmin
+    //     .from("users")
+    //     .update({ 보스누적데미지: 0 })
+    //     .neq("보스누적데미지", 0); // 0이 아닌 유저만 업데이트 (불필요한 쓰기 방지)
 
     //     const { data: 대표유저, error: 보스에러 } = await supabaseAdmin
     //         .from("users")
