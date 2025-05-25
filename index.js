@@ -58,6 +58,66 @@ app.post("/get-user", async (req, res) => {
         유저.마법의팔레트 = 자동팔레트; // 클라이언트로도 최신값 반영
     }
 
+    // const now = new Date();
+    // const formatter = new Intl.DateTimeFormat("ko-KR", {
+    //     weekday: "short",
+    //     timeZone: "Asia/Seoul"
+    // });
+    // const parts = formatter.formatToParts(now);
+    // const 요일 = parts.find(p => p.type === "weekday")?.value;
+
+    // if (요일 === "일") {
+    //     const { data: 전체합, error: 합계에러 } = await supabaseAdmin
+    //         .from("users")
+    //         .select("보스누적데미지");
+
+    //     if (합계에러 || !전체합) {
+    //         return res.status(500).json({ 오류: "펫단계 계산 실패 (총합 조회 에러)" });
+    //     }
+
+    //     const 누적데미지총합 = 전체합
+    //         .filter(u => u.보스누적데미지 > 0)
+    //         .reduce((합, u) => 합 + Number(u.보스누적데미지), 0);
+
+    //     let 펫단계 = 0;
+    //     if (누적데미지총합 >= 99_999_999) {
+    //         펫단계 = 3;
+    //     } else if (누적데미지총합 >= 9_999_999) {
+    //         펫단계 = 2;
+    //     } else if (누적데미지총합 >= 999_999) {
+    //         펫단계 = 1;
+    //     }
+
+    //     await supabaseAdmin
+    //         .from("users")
+    //         .update({ 보스누적데미지: 0 })
+    //         .neq("보스누적데미지", 0); // 0이 아닌 유저만 업데이트 (불필요한 쓰기 방지)
+
+    //     await supabaseAdmin
+    //         .from("users")
+    //         .update({ 펫단계 })
+    //         .neq("펫단계", 펫단계);
+
+    //     const { data: 대표유저, error: 보스에러 } = await supabaseAdmin
+    //         .from("users")
+    //         .select("보스넘버")
+    //         .not("보스넘버", "is", null)
+    //         .limit(1)
+    //         .single();
+
+    //     if (!대표유저 || 보스에러) {
+    //         return res.status(500).json({ 오류: "보스넘버 조회 실패" });
+    //     }
+
+    //     const 현재보스번호 = 대표유저.보스넘버 ?? 0;
+    //     const 다음보스번호 = (현재보스번호 + 1) % 6;
+
+    //     await supabaseAdmin
+    //         .from("users")
+    //         .update({ 보스넘버: 다음보스번호 })
+    //         .neq("보스넘버", 다음보스번호);
+    // }
+
     const 장비맵 = {
         "일반": { 이름: "릴리트의 독니", 공격력: 30 },
         "레어": { 이름: "디아블로의 뿔", 공격력: 63 },
@@ -86,7 +146,7 @@ app.post("/get-user", async (req, res) => {
     유저.장비공격력 = 장비목록.reduce((합, j) => 합 + (j.공격력 || 0), 0);
 
     유저.최종공격력 = 최종공격력계산(유저);
-    // ✅ 장비목록 및 최종공격력 + 최신 마법의팔레트까지 저장
+
     const { error: 업데이트에러 } = await supabaseAdmin
         .from("users")
         .update({
@@ -104,33 +164,6 @@ app.post("/get-user", async (req, res) => {
     return res.json({ 유저데이터: { ...유저 } });
 });
 
-
-// 업데이트
-// const now = new Date();
-// const formatter = new Intl.DateTimeFormat("ko-KR", {
-//     weekday: "short",
-//     timeZone: "Asia/Seoul"
-// });
-// const parts = formatter.formatToParts(now);
-// const 요일 = parts.find(p => p.type === "weekday")?.value;
-
-// if (요일 === "토") {
-//     // ✅ 펫단계 계산
-//     let 펫단계 = 0;
-//     if (누적데미지총합 >= 99999999) {
-//         펫단계 = 3;
-//     } else if (누적데미지총합 >= 9999999) {
-//         펫단계 = 2;
-//     } else if (누적데미지총합 >= 999999) {
-//         펫단계 = 1;
-//     }
-
-//     // ✅ 모든 유저의 펫단계 일괄 갱신
-//     await supabaseAdmin
-//         .from("users")
-//         .update({ 펫단계 })
-//         .neq("펫단계", 펫단계); // 불필요한 업데이트 방지 (다른 값일 때만)
-// }
 app.post("/boss-ranking", async (req, res) => {
     try {
         const { 유저UID } = req.body;
@@ -177,7 +210,7 @@ app.post("/boss-ranking", async (req, res) => {
 
 
 app.post("/attack-boss", async (req, res) => {
-    const { 유저데이터, 보스이름 } = req.body;  // ✅ 보스이름 구조분해
+    const { 유저데이터, 보스이름 } = req.body;
     const { 유저UID } = 유저데이터;
     const 전투로그 = [];
 
@@ -192,14 +225,11 @@ app.post("/attack-boss", async (req, res) => {
     const parts = formatter.formatToParts(now);
     const 요일 = parts.find(p => p.type === "weekday")?.value;
 
-    // if (요일 === "월" || 요일 === "화" || 요일 === "수" || 요일 === "목" || 요일 === "금" || 요일 === "토" || 요일 === "일") {
-    //     return res.status(403).json({ 오류: "주말은 정산 기간입니다. 보스전은 월~금에만 참여 가능합니다." });
-    // }
-    // if (요일 === "토" || 요일 === "일") {
-    //     return res.status(403).json({ 오류: "주말은 정산 기간입니다. 보스전은 월~금에만 참여 가능합니다." });
-    // }
+    if (요일 === "토") {
+        return res.status(403).json({ 오류: "보스가 점점 멀어집니다" });
+    }
     if (요일 === "일") {
-        return res.status(403).json({ 오류: "새로운 보스가 강림중입니다. 주간을 대비하세요" });
+        return res.status(403).json({ 오류: "새로운 보스의 강림으로 대지가 갈라지는 중입니다" });
     }
 
     const { data: 유저, error } = await supabaseAdmin
@@ -1195,29 +1225,6 @@ app.post("/promote-job", async (req, res) => {
         전직정보,
         전직공격력: 완료전직갯수 + 2  // ✅ 추가됨
     };
-
-
-    // 6월1일
-    // 전직정보[직위] = 1;
-
-    // const 새완료전직갯수 = 완료전직갯수 + 1;
-    // 유저.전직공격력 = 1 + 새완료전직갯수 * 0.2;
-
-    // const 새레벨 = Math.floor((경험치 - 비용) / 1000) + 1;
-    // const 새레벨공격력 = 10 + (새레벨 - 1) * 5;
-    // 유저.레벨공격력 = 새레벨공격력;
-
-    // const 최종공격력 = 최종공격력계산(유저);
-    // 유저.최종공격력 = 최종공격력;
-
-    // const 업데이트 = {
-    //     레벨공격력: 새레벨공격력,
-    //     최종공격력: 최종공격력,
-    //     경험치: 경험치 - 비용,
-    //     레벨: 새레벨,
-    //     전직정보,
-    //     전직공격력: 유저.전직공격력 // ← ✅ 여기도 반영
-    // };
 
     const { error: 업데이트오류 } = await supabaseAdmin
         .from("users")
