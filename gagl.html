@@ -3262,11 +3262,16 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             const 전직정보 = 결과.전직정보;
             const 경험치 = 결과.경험치 ?? 0;
+            const container = document.getElementById("전직컨테이너");
 
             const 킹덤전직 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
             const 검술전직 = ["기사", "팔라딘", "마법검객", "크루세이더", "검성"];
+            const 마술전직 = ["마술사", "마법사", "시마도사", "아크매지션", "마스터마법사"];
+            const 신술전직 = ["프리스트", "하이프리스트", "연금술사", "풍수사", "음양사", "대신관"];
+            const 궁술전직 = ["궁수", "스나이퍼", "발키리", "천사",];
+            const 체술전직 = ["수도사", "마스터몽크", "무신", "그랑베르그",];
+            const 인술전직 = ["시프", "닌자", "암살자", "인비저블",];
 
-            const container = document.getElementById("전직컨테이너");
 
             // 🔷 기존 전직 항목만 삭제 (타이틀/경험치 영역은 유지)
             document.querySelectorAll(".전직항목").forEach(e => e.remove());
@@ -3274,9 +3279,9 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             // 🔷 경험치 표시 갱신
             const 경험치div = document.getElementById("경험치와포인트");
             경험치div.innerHTML = `
-        <div>경험치</div>
-        <div>${경험치.toLocaleString()} 포인트</div>
-    `;
+                <div>경험치</div>
+                <div>${경험치.toLocaleString()} 포인트</div>
+            `;
 
             // 🔷 전직 리스트 추가
             for (let i = 0; i < 킹덤전직.length; i++) {
@@ -3332,6 +3337,190 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
                 break;  // 첫 번째 미완료 항목만 보여줌
             }
+            //             //         // 🔷 전직 리스트 추가
+            //             //         for (let i = 0; i < 검술전직.length; i++) {
+            //             //             const 직위 = 검술전직[i];
+            //             //             const 완료여부 = 전직정보[직위] ?? 0;
+
+            //             //             // 완료된 직위는 건너뜀
+            //             //             if (완료여부 === 1) continue;
+
+            //             //             // 첫 번째 안 배운 직위만 표시하고, 이후는 표시하지 않음
+            //             //             const div = document.createElement("div");
+            //             //             div.className = "사백픽셀테두리 양쪽정렬 전직항목";
+            //             //             div.style.marginTop = "5px";
+
+            //             //             const 왼쪽 = document.createElement("div");
+            //             //             왼쪽.style.display = "flex";
+            //             //             왼쪽.style.flexDirection = "column";  // 세로로 쌓기
+            //             //             왼쪽.style.fontWeight = "bold";
+
+            //             //             const 직위텍스트 = document.createElement("div");
+            //             //             직위텍스트.textContent = 직위;
+
+            //             //             // 🔶 효과 설명 추가
+            //             //             const 효과텍스트 = document.createElement("div");
+            //             //             효과텍스트.textContent = `미정`;
+            //             //             효과텍스트.style.fontSize = "12px";
+            //             //             효과텍스트.style.color = "gray";
+            //             //             효과텍스트.style.marginTop = "3px";
+
+            //             //             왼쪽.appendChild(직위텍스트);
+            //             //             왼쪽.appendChild(효과텍스트);
+
+            //             //             const 오른쪽 = document.createElement("div");
+            //             //             오른쪽.style.borderRadius = "7px";
+            //             //             오른쪽.style.padding = "7px";
+            //             //             오른쪽.style.paddingLeft = "10px";
+            //             //             오른쪽.style.paddingRight = "10px";
+            //             //             오른쪽.style.fontSize = "13px";
+
+            //             //             const 비용 = (i + 1) * 50000;
+            //             //             오른쪽.textContent = `전직(${비용.toLocaleString()}p)`;
+            //             //             오른쪽.style.backgroundColor = "white";
+            //             //             오른쪽.style.color = "black";
+            //             //             오른쪽.style.cursor = "pointer";
+            //             //             오른쪽.style.pointerEvents = "none";
+
+            //             //             오른쪽.onclick = () => {
+            //             //                 전직하기(직위, 왼쪽);
+            //             //             };
+
+            //             //             div.appendChild(왼쪽);
+            //             //             div.appendChild(오른쪽);
+            //             //             container.appendChild(div);
+
+            //             //             break;  // 첫 번째 미완료 항목만 보여줌
+            //             //         }
+            //             //         // 🔷 전직 리스트 추가
+            //             //         for (let i = 0; i < 마술전직.length; i++) {
+            //             //             const 직위 = 마술전직[i];
+            //             //             const 완료여부 = 전직정보[직위] ?? 0;
+
+            //             //             // 완료된 직위는 건너뜀
+            //             //             if (완료여부 === 1) continue;
+
+            //             //             // 첫 번째 안 배운 직위만 표시하고, 이후는 표시하지 않음
+            //             //             const div = document.createElement("div");
+            //             //             div.className = "사백픽셀테두리 양쪽정렬 전직항목";
+            //             //             div.style.marginTop = "5px";
+
+            //             //             const 왼쪽 = document.createElement("div");
+            //             //             왼쪽.style.display = "flex";
+            //             //             왼쪽.style.flexDirection = "column";  // 세로로 쌓기
+            //             //             왼쪽.style.fontWeight = "bold";
+
+            //             //             const 직위텍스트 = document.createElement("div");
+            //             //             직위텍스트.textContent = 직위;
+
+            //             //             // 🔶 효과 설명 추가
+            //             //             const 효과텍스트 = document.createElement("div");
+            //             //             효과텍스트.textContent = `미정`;
+            //             //             효과텍스트.style.fontSize = "12px";
+            //             //             효과텍스트.style.color = "gray";
+            //             //             효과텍스트.style.marginTop = "3px";
+
+            //             //             왼쪽.appendChild(직위텍스트);
+            //             //             왼쪽.appendChild(효과텍스트);
+
+            //             //             const 오른쪽 = document.createElement("div");
+            //             //             오른쪽.style.borderRadius = "7px";
+            //             //             오른쪽.style.padding = "7px";
+            //             //             오른쪽.style.paddingLeft = "10px";
+            //             //             오른쪽.style.paddingRight = "10px";
+            //             //             오른쪽.style.fontSize = "13px";
+
+            //             //             const 비용 = (i + 1) * 50000;
+            //             //             오른쪽.textContent = `전직(${비용.toLocaleString()}p)`;
+            //             //             오른쪽.style.backgroundColor = "white";
+            //             //             오른쪽.style.color = "black";
+            //             //             오른쪽.style.cursor = "pointer";
+            //             //             오른쪽.style.pointerEvents = "none";
+
+            //             //             오른쪽.onclick = () => {
+            //             //                 전직하기(직위, 왼쪽);
+            //             //             };
+
+            //             //             div.appendChild(왼쪽);
+            //             //             div.appendChild(오른쪽);
+            //             //             container.appendChild(div);
+
+            //             //             break;  // 첫 번째 미완료 항목만 보여줌
+            //             //         }
+
+            //             const 전직계열목록 = [
+            //                 { 이름: "킹덤", 목록: ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"], 효과: (i) => `최종공격력 x${(1.1 + i * 0.1).toFixed(1)}`, 활성화: true },
+            //                 { 이름: "검술", 목록: ["기사", "팔라딘", "마법검객", "크루세이더", "검성"], 효과: () => "미정", 활성화: false },
+            //                 { 이름: "마술", 목록: ["마술사", "마법사", "시마도사", "아크매지션", "마스터마법사"], 효과: () => "미정", 활성화: false },
+            //                 { 이름: "신술", 목록: ["프리스트", "하이프리스트", "연금술사", "풍수사", "음양사", "대신관"], 효과: () => "미정", 활성화: false },
+            //                 { 이름: "궁술", 목록: ["궁수", "스나이퍼", "발키리", "천사"], 효과: () => "미정", 활성화: false },
+            //                 { 이름: "체술", 목록: ["수도사", "마스터몽크", "무신", "그랑베르그"], 효과: () => "미정", 활성화: false },
+            //                 { 이름: "인술", 목록: ["시프", "닌자", "암살자", "인비저블"], 효과: () => "미정", 활성화: false },
+            //             ];
+
+            //             // 🔷 기존 전직 항목만 삭제
+            //             document.querySelectorAll(".전직항목").forEach(e => e.remove());
+
+            //             // 🔷 경험치 표시 갱신
+            //             const 경험치div = document.getElementById("경험치와포인트");
+            //             경험치div.innerHTML = `
+            //     <div>경험치</div>
+            //     <div>${경험치.toLocaleString()} 포인트</div>
+            // `;
+
+            //             for (const 계열 of 전직계열목록) {
+            //                 const { 목록, 효과, 활성화 } = 계열;
+            //                 for (let i = 0; i < 목록.length; i++) {
+            //                     const 직위 = 목록[i];
+            //                     const 완료여부 = 전직정보[직위] ?? 0;
+
+            //                     if (완료여부 === 1) continue;
+
+            //                     const div = document.createElement("div");
+            //                     div.className = "사백픽셀테두리 양쪽정렬 전직항목";
+            //                     div.style.marginTop = "5px";
+
+            //                     const 왼쪽 = document.createElement("div");
+            //                     왼쪽.style.display = "flex";
+            //                     왼쪽.style.flexDirection = "column";
+            //                     왼쪽.style.fontWeight = "bold";
+
+            //                     const 직위텍스트 = document.createElement("div");
+            //                     직위텍스트.textContent = 직위;
+
+            //                     const 효과텍스트 = document.createElement("div");
+            //                     효과텍스트.textContent = 효과(i);
+            //                     효과텍스트.style.fontSize = "12px";
+            //                     효과텍스트.style.color = "gray";
+            //                     효과텍스트.style.marginTop = "3px";
+
+            //                     왼쪽.appendChild(직위텍스트);
+            //                     왼쪽.appendChild(효과텍스트);
+
+            //                     const 오른쪽 = document.createElement("div");
+            //                     오른쪽.style.borderRadius = "7px";
+            //                     오른쪽.style.padding = "7px 10px";
+            //                     오른쪽.style.fontSize = "13px";
+
+            //                     const 비용 = (i + 1) * 50000;
+            //                     오른쪽.textContent = `전직(${비용.toLocaleString()}p)`;
+            //                     오른쪽.style.backgroundColor = "white";
+            //                     오른쪽.style.color = "black";
+            //                     오른쪽.style.cursor = "pointer";
+            //                     if (!활성화) 오른쪽.style.pointerEvents = "none";
+
+            //                     오른쪽.onclick = () => {
+            //                         전직하기(직위, 왼쪽);
+            //                     };
+
+            //                     div.appendChild(왼쪽);
+            //                     div.appendChild(오른쪽);
+            //                     container.appendChild(div);
+
+            //                     break; // 각 계열별 첫 번째 미완료 항목만 표시
+            //                 }
+            //             }
+
             화면해제();
         }
 

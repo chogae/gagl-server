@@ -203,7 +203,6 @@ app.post("/boss-ranking", async (req, res) => {
         res.json({ 순위: 유저들, 누적데미지총합, 내정보 });
 
     } catch (e) {
-        console.error("boss-ranking 오류", e);
         return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
     }
 });
@@ -1106,6 +1105,7 @@ app.post("/ranking", async (req, res) => {
             .select("유저UID, 로그인이메일, 유저아이디, 레벨, 최종공격력, 현재층, 장비목록, 합성기록, 전직정보, 마법의팔레트")
             .eq("버전업", 7)
             .not("최종공격력", "is", null)
+            .neq("유저아이디", "테스트아이디")
             .order("최종공격력", { ascending: false })
 
         if (error) {
