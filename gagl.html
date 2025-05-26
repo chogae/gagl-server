@@ -696,8 +696,7 @@
     <!-- 로그인화면 -->
     <div class="사백픽셀 밑줄">
         <div id="화면설명" style="text-align: center;">
-            그 무엇도 올바른 정신을 지닌 사람의 성공을 막을 수 없고<br>
-            그 무엇도 잘못된 정신을 가진 사람을 도울 수 없다
+         25년 5월 26일 오후 3시 정식오픈<br>유물화면에서 [샐러드]를 확인하세요
         </div>
     </div>
 
@@ -1488,10 +1487,10 @@
         }
 
         function 최고전직명(전직정보) {
-            const 전직순서 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
+            const 킹덤전직 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
 
             let 마지막직위 = null;
-            for (const 직위 of 전직순서) {
+            for (const 직위 of 킹덤전직) {
                 if (전직정보?.[직위] === 1) {
                     마지막직위 = 직위;
                 } else {
@@ -3247,7 +3246,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
         async function 전직화면보여주기() {
             화면잠금();
-            document.getElementById("화면설명").innerText = "전직시 레벨이 초기화됩니다";
+            document.getElementById("화면설명").innerHTML = "전직시 레벨이 초기화됩니다";
             const 응답 = await fetch("/get-job-info", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -3264,8 +3263,9 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 전직정보 = 결과.전직정보;
             const 경험치 = 결과.경험치 ?? 0;
 
-            const 전직순서 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
-
+            const 킹덤전직 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
+            const 검술전직 = ["기사", "팔라딘", "마법검객", "크루세이더", "검성"];
+            
             const container = document.getElementById("전직컨테이너");
 
             // 🔷 기존 전직 항목만 삭제 (타이틀/경험치 영역은 유지)
@@ -3279,8 +3279,8 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
     `;
 
             // 🔷 전직 리스트 추가
-            for (let i = 0; i < 전직순서.length; i++) {
-                const 직위 = 전직순서[i];
+            for (let i = 0; i < 킹덤전직.length; i++) {
+                const 직위 = 킹덤전직[i];
                 const 완료여부 = 전직정보[직위] ?? 0;
 
                 // 완료된 직위는 건너뜀
@@ -3583,9 +3583,8 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
                 `${여름아이콘}`,
                 "앞으로의 방향",
-                "신규스킬개발",
-                "주간보스 자동화",
-                "보스별디버프구현",
+                "직업 개발",
+                "보스별 상세스탯 설정",
                 "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
                 `${가을아이콘}`,
                 "가글(gagl)에 찾아와 주셔서 감사합니다",
