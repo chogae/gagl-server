@@ -1059,7 +1059,7 @@ app.post("/register-user", async (req, res) => {
         합성기록: {},
         유물목록: { "샐러드": 5 },
         장비목록: [],
-        버전업: 6,
+        버전업: 7,
         현재스태미너: 1000,
         최대스태미너: 1000,
         스태미너갱신시간: 현재시간,
@@ -1104,7 +1104,7 @@ app.post("/ranking", async (req, res) => {
         const { data: 유저들, error } = await supabaseAdmin
             .from("users")
             .select("유저UID, 로그인이메일, 유저아이디, 레벨, 최종공격력, 현재층, 장비목록, 합성기록, 전직정보, 마법의팔레트")
-            .eq("버전업", 6)
+            .eq("버전업", 7)
             .not("최종공격력", "is", null)
             .order("최종공격력", { ascending: false })
 

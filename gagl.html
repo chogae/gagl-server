@@ -3406,7 +3406,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     const 결과 = await 응답.json();
                     const 유저정보 = 결과.유저데이터;
 
-                    if (!유저정보 || 유저정보.버전업 !== 6) {
+                    if (!유저정보 || 유저정보.버전업 !== 7) {
                         await fetch("/delete-user", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
