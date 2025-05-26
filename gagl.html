@@ -696,7 +696,7 @@
     <!-- 로그인화면 -->
     <div class="사백픽셀 밑줄">
         <div id="화면설명" style="text-align: center;">
-         25년 5월 26일 오후 3시 정식오픈<br>유물화면에서 [샐러드]를 확인하세요
+            25년 5월 26일 오후 3시 정식오픈<br>유물화면에서 [샐러드]를 확인하세요
         </div>
     </div>
 
@@ -2087,7 +2087,7 @@
             document.getElementById("레벨업표시").innerText = "";
 
             document.getElementById("화면설명").innerHTML =
-                "일반 &lt; 레어 &lt; 신화 &lt; 고대 &lt; 태초 &lt; 타락<br>태초 장비부터 유저의 최대체력이 1 증가합니다";
+                "일반 &lt; 레어 &lt; 신화 &lt; 고대 &lt; 태초 &lt; 타락<br>태초 장비부터 합성 시 유저의 최대체력이 1 증가합니다";
 
             // 📌 골드/공격력/체력 표시
             document.getElementById("장비골드표시").innerHTML =
@@ -3265,7 +3265,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             const 킹덤전직 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
             const 검술전직 = ["기사", "팔라딘", "마법검객", "크루세이더", "검성"];
-            
+
             const container = document.getElementById("전직컨테이너");
 
             // 🔷 기존 전직 항목만 삭제 (타이틀/경험치 영역은 유지)
@@ -3554,7 +3554,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             const 문장들 = [
                 `${봄아이콘}`,
-                
+                "25.05.26 최대체력이 정상화됩니다",
                 "25.05.26 오후 3시 6분 정식출시",
                 "25.05.26 cbt 종료",
                 "25.05.25 신규유저 이벤트로 샐러드 5개가 지급됩니다",
@@ -3842,7 +3842,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             if (!유저데이터) return;
             화면잠금();
             document.getElementById("화면설명").innerHTML =
-                "보스전에는 스태미너 10이 소모됩니다<br>누적데미지 랭킹보상 1등부터 9등까지 50만골부터 차등지급";
+                "보스전에는 스태미너 10이 소모됩니다(월~금)<br>누적데미지 랭킹보상 1등부터 9등까지 50만골부터 차등지급";
 
             const 보스버튼 = document.getElementById("보스");
             fetch("/boss-ranking", {
