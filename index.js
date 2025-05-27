@@ -1258,7 +1258,7 @@ app.post("/promote-job", async (req, res) => {
         경험치: 경험치 - 비용,
         레벨: 새레벨,
         전직정보,
-        전직공격력: 완료전직갯수 + 2  // ✅ 추가됨
+        전직공격력: 완료전직갯수 + 2 
     };
 
     const { error: 업데이트오류 } = await supabaseAdmin
