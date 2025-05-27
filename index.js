@@ -19,6 +19,66 @@ const supabaseAdmin = createClient(
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpYWZlc2Z5d3R2cGFjaGJmb3hyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDc4NDAxOCwiZXhwIjoyMDYwMzYwMDE4fQ.inGkUGNirltn3arVtb3rPvLpzoxK28OCDOx04rAH0EE"           // 서비스 롤 키
 );
 
+// const now = new Date();
+// const formatter = new Intl.DateTimeFormat("ko-KR", {
+//     weekday: "short",
+//     timeZone: "Asia/Seoul"
+// });
+// const parts = formatter.formatToParts(now);
+// const 요일 = parts.find(p => p.type === "weekday")?.value;
+
+// if (요일 === "일") {
+//     const { data: 전체합, error: 합계에러 } = await supabaseAdmin
+//         .from("users")
+//         .select("보스누적데미지");
+
+//     if (합계에러 || !전체합) {
+//         return res.status(500).json({ 오류: "펫단계 계산 실패 (총합 조회 에러)" });
+//     }
+
+//     const 누적데미지총합 = 전체합
+//         .filter(u => u.보스누적데미지 > 0)
+//         .reduce((합, u) => 합 + Number(u.보스누적데미지), 0);
+
+//     let 펫단계 = 0;
+//     if (누적데미지총합 >= 99_999_999) {
+//         펫단계 = 3;
+//     } else if (누적데미지총합 >= 9_999_999) {
+//         펫단계 = 2;
+//     } else if (누적데미지총합 >= 999_999) {
+//         펫단계 = 1;
+//     }
+
+//     await supabaseAdmin
+//         .from("users")
+//         .update({ 펫단계 })
+//         .neq("펫단계", 펫단계);
+
+// await supabaseAdmin
+//     .from("users")
+//     .update({ 보스누적데미지: 0 })
+//     .neq("보스누적데미지", 0); // 0이 아닌 유저만 업데이트 (불필요한 쓰기 방지)
+
+//     const { data: 대표유저, error: 보스에러 } = await supabaseAdmin
+//         .from("users")
+//         .select("보스넘버")
+//         .not("보스넘버", "is", null)
+//         .limit(1)
+//         .single();
+
+//     if (!대표유저 || 보스에러) {
+//         return res.status(500).json({ 오류: "보스넘버 조회 실패" });
+//     }
+
+//     const 현재보스번호 = 대표유저.보스넘버 ?? 0;
+//     const 다음보스번호 = (현재보스번호 + 1) % 6;
+
+//     await supabaseAdmin
+//         .from("users")
+//         .update({ 보스넘버: 다음보스번호 })
+//         .neq("보스넘버", 다음보스번호);
+// }
+
 app.post("/get-user", async (req, res) => {
     const { 유저UID } = req.body;
 
@@ -36,87 +96,43 @@ app.post("/get-user", async (req, res) => {
         return res.status(404).json({ 오류: "유저 정보 없음" });
     }
 
-    // ✅ 마법의팔레트 자동 지정 로직 추가
-    const 이메일팔레트맵 = {
-        "rkrmfrkt@gagl.com": "가글",
-        "johny87@gagl.com": "네온사인",
-        "pink@gagl.com": "핑크오션",
-        "1234qwer@gagl.com": "황혼하늘",
-        "saiha@gagl.com": "에메랄드숲",
-        "009900@gagl.com": "겨울",
-        "naataa@gagl.com": "민초",
-        "sibasrigal1@gagl.com": "블라섬",
-        "wlstjr1q2w@gagl.com": "지옥",
-    };
 
-    const 자동팔레트 = 이메일팔레트맵[유저.로그인이메일];
-    if (자동팔레트 && 유저.마법의팔레트 !== 자동팔레트) {
-        await supabaseAdmin
-            .from("users")
-            .update({ 마법의팔레트: 자동팔레트 })
-            .eq("유저UID", 유저UID);
-        유저.마법의팔레트 = 자동팔레트; // 클라이언트로도 최신값 반영
+    if (유저.현질 === 1) {
+        const now = new Date();
+        const kstNow = new Date(
+            now.toLocaleString("en-US", { timeZone: "Asia/Seoul" })
+        );
+        const today = kstNow.toISOString().slice(0, 10);
+
+        if (유저.현질기한체크 !== today) {
+            // 1) 현질기한 1 증가
+            let new현질기한 = (유저.현질기한 ?? 0) + 1;
+
+            // 2) 31일째(== new현질기한이 31) 도달 시 리셋
+            const updates = { 현질기한체크: today };
+            if (new현질기한 >= 31) {
+                updates.현질기한 = 0;
+                updates.현질 = 0;
+                // 메모리 상 객체에도 반영
+                유저.현질기한 = 0;
+                유저.현질 = 0;
+            } else {
+                updates.현질기한 = new현질기한;
+                // 메모리 상 객체에도 반영
+                유저.현질기한 = new현질기한;
+            }
+
+            // 3) DB 업데이트
+            const { error: incErr } = await supabaseAdmin
+                .from("users")
+                .update(updates)
+                .eq("유저UID", 유저UID);
+
+            if (incErr) {
+                console.error("현질기한 증가/초기화 실패:", incErr);
+            }
+        }
     }
-
-    // const now = new Date();
-    // const formatter = new Intl.DateTimeFormat("ko-KR", {
-    //     weekday: "short",
-    //     timeZone: "Asia/Seoul"
-    // });
-    // const parts = formatter.formatToParts(now);
-    // const 요일 = parts.find(p => p.type === "weekday")?.value;
-
-    // if (요일 === "일") {
-    //     const { data: 전체합, error: 합계에러 } = await supabaseAdmin
-    //         .from("users")
-    //         .select("보스누적데미지");
-
-    //     if (합계에러 || !전체합) {
-    //         return res.status(500).json({ 오류: "펫단계 계산 실패 (총합 조회 에러)" });
-    //     }
-
-    //     const 누적데미지총합 = 전체합
-    //         .filter(u => u.보스누적데미지 > 0)
-    //         .reduce((합, u) => 합 + Number(u.보스누적데미지), 0);
-
-    //     let 펫단계 = 0;
-    //     if (누적데미지총합 >= 99_999_999) {
-    //         펫단계 = 3;
-    //     } else if (누적데미지총합 >= 9_999_999) {
-    //         펫단계 = 2;
-    //     } else if (누적데미지총합 >= 999_999) {
-    //         펫단계 = 1;
-    //     }
-
-    //     await supabaseAdmin
-    //         .from("users")
-    //         .update({ 펫단계 })
-    //         .neq("펫단계", 펫단계);
-
-    // await supabaseAdmin
-    //     .from("users")
-    //     .update({ 보스누적데미지: 0 })
-    //     .neq("보스누적데미지", 0); // 0이 아닌 유저만 업데이트 (불필요한 쓰기 방지)
-
-    //     const { data: 대표유저, error: 보스에러 } = await supabaseAdmin
-    //         .from("users")
-    //         .select("보스넘버")
-    //         .not("보스넘버", "is", null)
-    //         .limit(1)
-    //         .single();
-
-    //     if (!대표유저 || 보스에러) {
-    //         return res.status(500).json({ 오류: "보스넘버 조회 실패" });
-    //     }
-
-    //     const 현재보스번호 = 대표유저.보스넘버 ?? 0;
-    //     const 다음보스번호 = (현재보스번호 + 1) % 6;
-
-    //     await supabaseAdmin
-    //         .from("users")
-    //         .update({ 보스넘버: 다음보스번호 })
-    //         .neq("보스넘버", 다음보스번호);
-    // }
 
     const 장비맵 = {
         "일반": { 이름: "릴리트의 독니", 공격력: 30 },
@@ -163,6 +179,28 @@ app.post("/get-user", async (req, res) => {
 
     return res.json({ 유저데이터: { ...유저 } });
 });
+
+// // ✅ 마법의팔레트 자동 지정 로직 추가
+// const 이메일팔레트맵 = {
+//     "rkrmfrkt@gagl.com": "가글",
+//     "johny87@gagl.com": "네온사인",
+//     "pink@gagl.com": "핑크오션",
+//     "1234qwer@gagl.com": "황혼하늘",
+//     "saiha@gagl.com": "에메랄드숲",
+//     "009900@gagl.com": "겨울",
+//     "naataa@gagl.com": "민초",
+//     "sibasrigal1@gagl.com": "블라섬",
+//     "wlstjr1q2w@gagl.com": "지옥",
+// };
+
+// const 자동팔레트 = 이메일팔레트맵[유저.로그인이메일];
+// if (자동팔레트 && 유저.마법의팔레트 !== 자동팔레트) {
+//     await supabaseAdmin
+//         .from("users")
+//         .update({ 마법의팔레트: 자동팔레트 })
+//         .eq("유저UID", 유저UID);
+//     유저.마법의팔레트 = 자동팔레트; // 클라이언트로도 최신값 반영
+// }
 
 app.post("/boss-ranking", async (req, res) => {
     try {
@@ -726,6 +764,65 @@ app.post("/use-salad", async (req, res) => {
     });
 });
 
+// “마법의팔레트” 사용 처리
+app.post("/use-magic-palette", async (req, res) => {
+    const { 유저UID } = req.body;
+    if (!유저UID) return res.status(400).json({ 오류: "유저UID가 누락되었습니다" });
+
+    // 1. 유저 정보 조회
+    const { data: 유저, error: selectError } = await supabaseAdmin
+        .from("users")
+        .select("유물목록")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (selectError || !유저) {
+        return res.status(404).json({ 오류: "유저 정보를 찾을 수 없습니다" });
+    }
+
+    // 2. 보유 개수 확인 및 차감
+    const 현재목록 = { ...유저.유물목록 };
+    const 팔레트개수 = Number(현재목록["마법의팔레트"] || 0);
+    if (팔레트개수 < 1) {
+        return res.status(400).json({ 오류: "마법의팔레트가 부족합니다" });
+    }
+    현재목록["마법의팔레트"] = 팔레트개수 - 1;
+
+    // 3. 랜덤 팔레트 색상 선택
+    const 팔레트목록 = [
+        "민초",
+        "지옥",
+        "블라섬",
+        "겨울",
+        "네온사인",
+        "핑크오션",
+        "황혼하늘",
+        "에메랄드숲"
+    ];
+    const 랜덤색 = 팔레트목록[Math.floor(Math.random() * 팔레트목록.length)];
+
+    // 4. DB 업데이트
+    const { error: updateError } = await supabaseAdmin
+        .from("users")
+        .update({
+            유물목록: 현재목록,
+            마법의팔레트: 랜덤색
+        })
+        .eq("유저UID", 유저UID);
+
+    if (updateError) {
+        return res.status(500).json({ 오류: "DB 업데이트 중 오류가 발생했습니다" });
+    }
+
+    // 5. 결과 반환
+    return res.json({
+        결과: "성공",
+        마법의팔레트: 랜덤색,
+        유물목록: 현재목록
+    });
+});
+
+
 app.post("/refresh-stamina", async (req, res) => {
     const { 유저UID } = req.body;
     if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
@@ -1258,7 +1355,7 @@ app.post("/promote-job", async (req, res) => {
         경험치: 경험치 - 비용,
         레벨: 새레벨,
         전직정보,
-        전직공격력: 완료전직갯수 + 2 
+        전직공격력: 완료전직갯수 + 2
     };
 
     const { error: 업데이트오류 } = await supabaseAdmin
@@ -1916,6 +2013,21 @@ const 레어유물데이터 = {
     "플라워": { 설명: "스킬을 초기화합니다" },
     "티켓": { 설명: "고급장비도박에 사용됩니다" },
     "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
+};
+const 신화유물데이터 = {
+    "소드": { 설명: "공격력이 증가합니다(*1%)" },
+    "하트플러스": { 설명: "체력이 증가합니다(*1%)" },
+    "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
+    "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
+    "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다(*0.1%)" },
+    "클로버": { 설명: "도박확률이 증가합니다(*0.1%)" },
+    "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
+    "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(0.1%)" },
+    "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
+    "플라워": { 설명: "스킬을 초기화합니다" },
+    "티켓": { 설명: "고급장비도박에 사용됩니다" },
+    "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
+    "마법의팔레트": { 설명: "아이디를 염색합니다" },
 };
 
 // 🟡 정적 파일 경로 설정
