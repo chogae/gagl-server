@@ -911,6 +911,37 @@ app.post("/use-magic-palette", async (req, res) => {
     });
 });
 
+app.post("/use-flower", async (req, res) => {
+    const { 유저UID } = req.body;
+    if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("골드, 유물목록")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
+
+    const 보유 = 유저.유물목록?.["플라워"] || 0;
+    if (보유 < 1) return res.status(400).json({ 오류: "꽃이 없습니다" });
+
+    const 판매골드 = 100000;
+    유저.골드 += 판매골드;
+    const 유물목록 = { ...유저.유물목록, 플라워: 보유 - 1 };
+
+    await supabaseAdmin
+        .from("users")
+        .update({ 골드: 유저.골드, 유물목록 })
+        .eq("유저UID", 유저UID);
+
+    return res.json({
+        결과: "성공",
+        골드: 유저.골드,
+        유물목록
+    });
+});
+
 
 app.post("/refresh-stamina", async (req, res) => {
     const { 유저UID } = req.body;

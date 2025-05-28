@@ -2987,6 +2987,35 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                         }
                         화면해제();
                     }
+                    else if (유물이름 === "플라워") {
+                        const 확인 = confirm("꽃을 100,000Gold에 파시겠습니까?");
+                        if (!확인) return;
+
+                        화면잠금();
+                        try {
+                            const 응답 = await fetch("/use-flower", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                            });
+                            const 결과 = await 응답.json();
+
+                            if (결과.오류) {
+                                메시지표시(div, "", 결과.오류, "");
+                            } else {
+                                // 서버가 반환한 업데이트된 유물목록으로 갱신
+                                유저데이터.골드 = 결과.골드;
+                                유저데이터.유물목록 = 결과.유물목록;
+                                메시지표시(div, "", "돈생겼다 도박하러 가즈ㅏㅏ", "");
+                                // 화면 다시 렌더링
+                                document.getElementById("유물").click();
+                            }
+                        } catch (e) {
+                            메시지표시(div, "", "서버 오류 발생", "");
+                        }
+                        화면해제();
+                    }
+
                 });
 
                 컨테이너.appendChild(div);
@@ -3628,6 +3657,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             const 문장들 = [
                 `${봄아이콘}`,
+                `25.05.28 이제 유물. 플라워(스킬초기화)를 판매할 수 있습니다`,
                 `25.05.28 오픈기념 햄버거 1개가 6월1일까지 오후3시 경 배달됩니다`,
                 "25.05.28 과금은 오픈톡 '가글주인장' 문의",
                 "25.05.28 과금상품. 햄버거정기배송(4900원). 한달간 매일 스태+300",
