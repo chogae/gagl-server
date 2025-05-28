@@ -113,9 +113,11 @@ app.post("/get-user", async (req, res) => {
             if (new현질기한 >= 31) {
                 updates.현질기한 = 0;
                 updates.현질 = 0;
+                updates.마법의팔레트 = null;
                 // 메모리 상 객체에도 반영
                 유저.현질기한 = 0;
                 유저.현질 = 0;
+                유저.마법의팔레트 = null;
             } else {
                 updates.현질기한 = new현질기한;
                 // 메모리 상 객체에도 반영
@@ -130,6 +132,52 @@ app.post("/get-user", async (req, res) => {
 
             if (incErr) {
                 console.error("현질기한 증가/초기화 실패:", incErr);
+            }
+        }
+    }
+
+    if (유저.햄버거현질 === 1) {
+        const now = new Date();
+        const kstNow = new Date(
+            now.toLocaleString("en-US", { timeZone: "Asia/Seoul" })
+        );
+        const today = kstNow.toISOString().slice(0, 10);
+
+        if (유저.햄버거현질기한체크 !== today) {
+            // 1) 햄버거현질기한 1 증가
+            let new햄버거현질기한 = (유저.햄버거현질기한 ?? 0) + 1;
+
+            // 2) 31일째(== new햄버거현질기한이 31) 도달 시 리셋
+            const updates = { 햄버거현질기한체크: today };
+            if (new햄버거현질기한 >= 31) {
+                updates.햄버거현질기한 = 0;
+                updates.햄버거현질 = 0;
+                // 메모리 상 객체에도 반영
+                유저.햄버거현질기한 = 0;
+                유저.햄버거현질 = 0;
+            } else {
+                updates.햄버거현질기한 = new햄버거현질기한;
+                // 메모리 상 객체에도 반영
+                유저.햄버거현질기한 = new햄버거현질기한;
+
+                const new목록 = { ...유저.유물목록 };
+                // 기존 count 불러와서 +1
+                const current = Number(new목록["햄버거"] || 0);
+                new목록["햄버거"] = current + 1;
+                // 업데이트 데이터에 포함
+                updates.유물목록 = new목록;
+                // 메모리에도 반영
+                유저.유물목록 = new목록;
+            }
+
+            // 3) DB 업데이트
+            const { error: incErr } = await supabaseAdmin
+                .from("users")
+                .update(updates)
+                .eq("유저UID", 유저UID);
+
+            if (incErr) {
+                console.error("햄버거현질기한 증가/초기화 실패:", incErr);
             }
         }
     }
@@ -764,6 +812,45 @@ app.post("/use-salad", async (req, res) => {
     });
 });
 
+app.post("/use-Hamburger", async (req, res) => {
+    const { 유저UID } = req.body;
+    if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("현재스태미너, 최대스태미너, 유물목록")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
+
+    const 보유 = 유저.유물목록?.["햄버거"] || 0;
+    if (보유 < 1) return res.status(400).json({ 오류: "햄버거가 없습니다" });
+
+    const 회복량 = 300;
+    const 현재스태미너 = 유저.현재스태미너 ?? 0;
+    const 최대스태미너 = 유저.최대스태미너 ?? 1000;
+
+    // ✅ 초과할 경우 거부
+    if (현재스태미너 + 회복량 > 최대스태미너) {
+        return res.status(400).json({ 오류: "배불러서 못먹겠어요" });
+    }
+
+    const 새스태미너 = 현재스태미너 + 회복량;
+    const 유물목록 = { ...유저.유물목록, 햄버거: 보유 - 1 };
+
+    await supabaseAdmin
+        .from("users")
+        .update({ 현재스태미너: 새스태미너, 유물목록 })
+        .eq("유저UID", 유저UID);
+
+    return res.json({
+        결과: "성공",
+        현재스태미너: 새스태미너,
+        유물목록
+    });
+});
+
 // “마법의팔레트” 사용 처리
 app.post("/use-magic-palette", async (req, res) => {
     const { 유저UID } = req.body;
@@ -806,9 +893,11 @@ app.post("/use-magic-palette", async (req, res) => {
         .from("users")
         .update({
             유물목록: 현재목록,
-            마법의팔레트: 랜덤색
+            마법의팔레트: 랜덤색,
+            현질: 1           // ← 이 줄을 추가합니다
         })
         .eq("유저UID", 유저UID);
+
 
     if (updateError) {
         return res.status(500).json({ 오류: "DB 업데이트 중 오류가 발생했습니다" });
@@ -2028,6 +2117,7 @@ const 신화유물데이터 = {
     "티켓": { 설명: "고급장비도박에 사용됩니다" },
     "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
     "마법의팔레트": { 설명: "아이디를 염색합니다" },
+    "햄버거": { 설명: "스태미너를 충전합니다(+300)" },
 };
 
 // 🟡 정적 파일 경로 설정
