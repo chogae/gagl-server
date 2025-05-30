@@ -981,9 +981,9 @@
         <div id="도박타이틀" style="font-size: 20px; font-weight: bold;"></div>
         <div style="margin-top: 15px;">
             <div class="버튼" onclick="장비도박시도('일반')">일반장비도박 (10만)</div>
-            <!-- <div class="버튼" onclick="장비도박시도('연속일반')">연속일반장비도박 (100만)</div> -->
+            <div class="버튼" onclick="장비도박시도('연속일반')">연속일반장비도박 (100만)</div>
             <div class="버튼" onclick="장비도박시도('고급')">고급장비도박 (티켓)</div>
-            <!-- <div class="버튼" onclick="장비도박시도('연속고급')">연속고급장비도박 (티켓열장)</div> -->
+            <div class="버튼" onclick="장비도박시도('연속고급')">연속고급장비도박 (티켓열장)</div>
             <div class="버튼" onclick="유물도박시도()">유물도박 (10만)</div>
         </div>
     </div>
@@ -3146,8 +3146,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             도박창.style.display = "block";
         });
 
+
         async function 장비도박시도(종류 = "일반") {
             const 도박창 = document.getElementById("도박창");
+            const 네온박스 = document.getElementById("네온박스");
             const 비용 = 100000;
 
             if (종류 === "일반") {
@@ -3161,25 +3163,41 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     메시지표시(도박창, "", "유물. 티켓이 부족합니다!", "");
                     return;
                 }
+            } else if (종류 === "연속일반") {
+                if (유저데이터.골드 < 10 * 비용) {
+                    메시지표시(도박창, "", "골드 부족!", "");
+                    return;
+                }
+            } else if (종류 === "연속고급") {
+                const 티켓 = 유저데이터.유물목록?.["티켓"] || 0;
+                if (티켓 < 10) {
+                    메시지표시(도박창, "", "유물. 티켓이 부족합니다!", "");
+                    return;
+                }
             }
 
-            const 확인 = confirm(
+            // confirm 메시지 확장
+            const 메시지 =
                 종류 === "일반"
                     ? `일반장비도박을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`
-                    : "고급장비도박을 티켓 1장으로 진행할까요?"
-            );
+                    : 종류 === "고급"
+                        ? `고급장비도박을 티켓 1장으로 진행하시겠습니까?`
+                        : 종류 === "연속일반"
+                            ? `연속일반장비도박 10회를 총 ${(10 * 비용).toLocaleString()} 골드로 진행하시겠습니까?`
+                            : 종류 === "연속고급"
+                                ? `연속고급장비도박 10회를 티켓 10장으로 진행하시겠습니까?`
+                                : "";
+            const 확인 = confirm(메시지);
             if (!확인) return;
+
 
             화면잠금();
             try {
                 const 응답 = await fetch("/gamble-Equipment", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        유저UID: 유저데이터.유저UID, 종류
-                    })
+                    body: JSON.stringify({ 유저UID: 유저데이터.유저UID, 종류 })
                 });
-
                 const 결과 = await 응답.json();
                 if (!응답.ok || 결과.오류) {
                     메시지표시(도박창, "", 결과.오류 || "", "");
@@ -3187,53 +3205,55 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 }
 
                 유저데이터 = 결과.유저데이터;
-                if (결과.결과 === "성공" && 결과.장비) {
-                    if (결과.퍼즐발동) {
-                        메시지표시(도박창, 퍼즐아이콘, "", "");
-                    }
-
-                    const 네온박스 = document.getElementById("네온박스");
-                    const 등급외테두리 = document.getElementById("등급외테두리");
-
-                    if (네온박스) {
-                        // ✅ 먼저 기존에 떠 있는 박스를 숨김
-                        네온박스.style.display = "none";
-
-                        // ✅ setTimeout 제거 방지: 이전 타이머 클리어 (선택 사항)
-                        if (window.네온타이머) clearTimeout(window.네온타이머);
-                        네온박스.innerText = `${결과.장비.이름}을(를) 획득했다!`;
-                        네온박스.style.display = "block";
-
-                        if (등급외테두리) {
-                            등급외테두리.style.position = "relative";
-                            등급외테두리.appendChild(네온박스);
-                            Object.assign(네온박스.style, {
-                                position: "absolute",
-                                top: "50%",
-                                left: "50%",
-                                transform: "translate(-50%, -50%)",
-                                zIndex: "100"
-                            });
-                        }
-                    }
-
-                    // ✅ 새 타이머로 숨김 처리 (전역 변수로 저장)
-                    window.네온타이머 = setTimeout(() => {
-                        네온박스.style.display = "none";
-                    }, 3000);
-
-
-                } else if (결과.결과 === "실패") {
-                    메시지표시(도박창, 결과.퍼즐발동 ? 퍼즐아이콘 : "", "도박에 실패했습니다!", "");
-                }
-
                 document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
+
+                const items = Array.isArray(결과.results) ? 결과.results : [결과];
+                items.forEach((item, i) => {
+                    setTimeout(() => {
+                        if (!item.장비) {
+                            메시지표시(도박창, item.퍼즐발동 ? 퍼즐아이콘 : "", "도박에 실패했습니다!", "");
+                            return;
+                        }
+                        if (item.퍼즐발동) {
+                            메시지표시(도박창, 퍼즐아이콘, "", "");
+                        }
+
+                        const 네온박스 = document.getElementById("네온박스");
+                        const 등급외테두리 = document.getElementById("등급외테두리");
+
+                        if (네온박스) {
+                            네온박스.style.display = "none";
+
+                            if (window.네온타이머) clearTimeout(window.네온타이머);
+                            네온박스.innerText = `${item.장비.이름}을(를) 획득했다!`;
+                            네온박스.style.display = "block";
+
+                            if (등급외테두리) {
+                                등급외테두리.style.position = "relative";
+                                등급외테두리.appendChild(네온박스);
+                                Object.assign(네온박스.style, {
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    zIndex: "100"
+                                });
+                            }
+                        }
+                        window.네온타이머 = setTimeout(() => {
+                            네온박스.style.display = "none";
+                        }, 3000);
+
+                    }, i * 500);
+                });
+
             } catch (e) {
                 메시지표시(도박창, "", "도박 중 오류: " + e.message, "");
             } finally {
                 화면해제();
             }
         }
+
 
         async function 유물도박시도() {
             const 도박창 = document.getElementById("도박창");
@@ -3475,7 +3495,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
             "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
             "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다(*0.1%)" },
-            "클로버": { 설명: "도박확률이 증가합니다(*0.1%)" },
+            "클로버": { 설명: "장비 도박확률이 증가합니다(*0.1%)" },
             "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
             "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
             "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
@@ -3486,7 +3506,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
             "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
             "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다(*0.1%)" },
-            "클로버": { 설명: "도박확률이 증가합니다(*0.1%)" },
+            "클로버": { 설명: "장비 도박확률이 증가합니다(*0.1%)" },
             "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
             "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
             "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
@@ -3500,7 +3520,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
             "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
             "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다(*0.1%)" },
-            "클로버": { 설명: "도박확률이 증가합니다(*0.1%)" },
+            "클로버": { 설명: "장비 도박확률이 증가합니다(*0.1%)" },
             "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
             "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
             "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
@@ -3676,6 +3696,8 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             const 문장들 = [
                 `${봄아이콘}`,
+                `25.05.30 10연 고급장비도박 시 무료1회 추가기능은 실패했습니다<br>대신, 10연 고급장비도박 시 보너스 티켓 한장이 지급됩니다`,
+                `25.05.30 10연 일반장비도박과 10연 고급장비도박 업데이트`,
                 `25.05.30 유물. 암포라의 수치표기를 바르게 수정했습니다`,
                 `25.05.29 주인장 득템 기념 햄버거 1+1 지급`,
                 `25.05.28 이제 유물. 플라워(스킬초기화)를 판매할 수 있습니다`,
@@ -3761,6 +3783,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 const 줄 = document.createElement("div");
                 줄.innerHTML = 문장;
                 줄.style.margin = "5px 0"; // 줄 간격
+                줄.style.textAlign = "center";
                 컨테이너.appendChild(줄);
             }
 
