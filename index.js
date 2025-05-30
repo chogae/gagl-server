@@ -1426,6 +1426,25 @@ app.post("/get-job-info", async (req, res) => {
     });
 });
 
+app.post("/get-job-result", async (req, res) => {
+    const { 유저UID } = req.body;
+
+    if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("직업결정, 경험치")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
+
+    return res.json({
+        직업결정: 유저.직업결정,
+        경험치: 유저.경험치
+    });
+});
+
 app.post("/promote-job", async (req, res) => {
     const { 유저UID, 직위 } = req.body;
 
@@ -2117,7 +2136,7 @@ const 일반유물데이터 = {
     "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다(*0.1%)" },
     "클로버": { 설명: "도박확률이 증가합니다(*0.1%)" },
     "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
-    "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(0.1%)" },
+    "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
     "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
 };
 const 레어유물데이터 = {
