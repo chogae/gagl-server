@@ -19,65 +19,7 @@ const supabaseAdmin = createClient(
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpYWZlc2Z5d3R2cGFjaGJmb3hyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NDc4NDAxOCwiZXhwIjoyMDYwMzYwMDE4fQ.inGkUGNirltn3arVtb3rPvLpzoxK28OCDOx04rAH0EE"           // 서비스 롤 키
 );
 
-// const now = new Date();
-// const formatter = new Intl.DateTimeFormat("ko-KR", {
-//     weekday: "short",
-//     timeZone: "Asia/Seoul"
-// });
-// const parts = formatter.formatToParts(now);
-// const 요일 = parts.find(p => p.type === "weekday")?.value;
 
-// if (요일 === "일") {
-//     const { data: 전체합, error: 합계에러 } = await supabaseAdmin
-//         .from("users")
-//         .select("보스누적데미지");
-
-//     if (합계에러 || !전체합) {
-//         return res.status(500).json({ 오류: "펫단계 계산 실패 (총합 조회 에러)" });
-//     }
-
-//     const 누적데미지총합 = 전체합
-//         .filter(u => u.보스누적데미지 > 0)
-//         .reduce((합, u) => 합 + Number(u.보스누적데미지), 0);
-
-//     let 펫단계 = 0;
-//     if (누적데미지총합 >= 99_999_999) {
-//         펫단계 = 3;
-//     } else if (누적데미지총합 >= 9_999_999) {
-//         펫단계 = 2;
-//     } else if (누적데미지총합 >= 999_999) {
-//         펫단계 = 1;
-//     }
-
-//     await supabaseAdmin
-//         .from("users")
-//         .update({ 펫단계 })
-//         .neq("펫단계", 펫단계);
-
-// await supabaseAdmin
-//     .from("users")
-//     .update({ 보스누적데미지: 0 })
-//     .neq("보스누적데미지", 0); // 0이 아닌 유저만 업데이트 (불필요한 쓰기 방지)
-
-//     const { data: 대표유저, error: 보스에러 } = await supabaseAdmin
-//         .from("users")
-//         .select("보스넘버")
-//         .not("보스넘버", "is", null)
-//         .limit(1)
-//         .single();
-
-//     if (!대표유저 || 보스에러) {
-//         return res.status(500).json({ 오류: "보스넘버 조회 실패" });
-//     }
-
-//     const 현재보스번호 = 대표유저.보스넘버 ?? 0;
-//     const 다음보스번호 = (현재보스번호 + 1) % 6;
-
-//     await supabaseAdmin
-//         .from("users")
-//         .update({ 보스넘버: 다음보스번호 })
-//         .neq("보스넘버", 다음보스번호);
-// }
 
 app.post("/get-user", async (req, res) => {
     const { 유저UID } = req.body;
@@ -95,6 +37,106 @@ app.post("/get-user", async (req, res) => {
     if (error || !유저) {
         return res.status(404).json({ 오류: "유저 정보 없음" });
     }
+
+
+
+
+
+
+
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat("ko-KR", {
+        weekday: "short",
+        timeZone: "Asia/Seoul"
+    });
+    const parts = formatter.formatToParts(now);
+    const 요일 = parts.find(p => p.type === "weekday")?.value;
+
+    if (요일 === "일") {
+        const { data: 전체합, error: 합계에러 } = await supabaseAdmin
+            .from("users")
+            .select("보스누적데미지");
+
+        if (합계에러 || !전체합) {
+            return res.status(500).json({ 오류: "펫단계 계산 실패 (총합 조회 에러)" });
+        }
+
+        const 누적데미지총합 = 전체합
+            .filter(u => u.보스누적데미지 > 0)
+            .reduce((합, u) => 합 + Number(u.보스누적데미지), 0);
+
+        if (누적데미지총합 != 0) {
+            const { data: 상위유저들, error: 순위에러 } = await supabaseAdmin
+                .from("users")
+                .select("유저UID, 골드")
+                .gt("보스누적데미지", 0)               // 보스누적데미지가 0초과인 유저만
+                .order("보스누적데미지", { ascending: false })
+                .limit(9);
+
+            if (순위에러) {
+                console.error("보스누적데미지 상위 조회 실패:", 순위에러);
+                // 에러가 발생해도 보상 지급을 중단하지 않고, 이후 로직(펫단계 계산 등)은 계속 수행합니다.
+            } else {
+                for (let i = 0; i < 상위유저들.length; i++) {
+                    const user = 상위유저들[i];
+                    // 순위별 보상액 계산: 1위(0)→500000, 2위(1)→450000, …, 9위(8)→100000
+                    const 보상액 = 500000 - (i * 50000);
+                    // 기존 골드에 보상액을 더해서 업데이트
+                    await supabaseAdmin
+                        .from("users")
+                        .update({ 골드: Number(user.골드 || 0) + 보상액 })
+                        .eq("유저UID", user.유저UID);
+                }
+            }
+
+            let 펫단계 = 0;
+            if (누적데미지총합 >= 99_999_999) {
+                펫단계 = 3;
+            } else if (누적데미지총합 >= 9_999_999) {
+                펫단계 = 2;
+            } else if (누적데미지총합 >= 999_999) {
+                펫단계 = 1;
+            }
+
+            await supabaseAdmin
+                .from("users")
+                .update({ 펫단계 })
+                .neq("펫단계", 펫단계);
+
+            await supabaseAdmin
+                .from("users")
+                .update({ 보스누적데미지: 0 })
+                .neq("보스누적데미지", 0); // 0이 아닌 유저만 업데이트 (불필요한 쓰기 방지)
+
+            const { data: 대표유저, error: 보스에러 } = await supabaseAdmin
+                .from("users")
+                .select("보스넘버")
+                .not("보스넘버", "is", null)
+                .limit(1)
+                .single();
+
+            if (!대표유저 || 보스에러) {
+                return res.status(500).json({ 오류: "보스넘버 조회 실패" });
+            }
+
+            const 현재보스번호 = 대표유저.보스넘버 ?? 0;
+            const 다음보스번호 = (현재보스번호 + 1) % 6;
+
+            await supabaseAdmin
+                .from("users")
+                .update({ 보스넘버: 다음보스번호 })
+                .neq("보스넘버", 다음보스번호);
+
+        }
+
+    }
+
+
+
+
+
+
+
 
 
     if (유저.현질 === 1) {
