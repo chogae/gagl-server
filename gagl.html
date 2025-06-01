@@ -988,6 +988,7 @@
             <div class="버튼" onclick="유물도박시도('연속일반')">연속유물도박 (100만)</div>
             <div class="버튼" onclick="현질('팔레트')">마법의팔레트 (1,100원)</div>
             <div class="버튼" onclick="현질('햄버거')">햄버거정기배송 (4,900원)</div>
+            <div class="버튼" onclick="현질('플라워')">플라워한송이 (1,100원)</div>
         </div>
     </div>
 
@@ -2865,6 +2866,15 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 div.style.margin = "5px";
                 div.style.padding = "2px";
 
+                const 레어테두리유물들 = ["샐러드", "티켓"];
+                if (레어테두리유물들.includes(유물이름)) {
+                    div.style.border = `0.2px solid ${색상맵["레어"]}`;
+                }
+                const 신화테두리유물들 = ["햄버거", "플라워", "마법의팔레트"];
+                if (신화테두리유물들.includes(유물이름)) {
+                    div.style.border = `0.2px solid ${색상맵["신화"]}`;
+                }
+
                 div.innerHTML = `
             ${아이콘HTML}
 <div style="
@@ -3726,6 +3736,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             const 문장들 = [
                 `${봄아이콘}`,
+                `25.06.01 유물화면에서 소모성 유물과 과금유물을 구분하였습니다`,
                 `25.06.01 오늘은 오픈기념 이벤트 마지막 날이자, 주인장 생일입니다<br>기념으로 금일 햄버거는 1+1 배송됩니다`,
                 `25.06.01 암포라 발동효과가 기존 9에서 5로 상향되었습니다`,
                 `25.06.01 10연 유물도박이 구현되었습니다`,
