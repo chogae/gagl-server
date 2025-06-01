@@ -1364,7 +1364,7 @@ app.post("/ranking", async (req, res) => {
             .select("유저UID, 로그인이메일, 유저아이디, 레벨, 최종공격력, 현재층, 장비목록, 합성기록, 전직정보, 마법의팔레트")
             .eq("버전업", 7)
             .not("최종공격력", "is", null)
-            .neq("유저아이디", "테스트아이디")
+            .neq("유저아이디", "xptmxm")
             .order("최종공격력", { ascending: false })
 
         if (error) {
@@ -1727,7 +1727,7 @@ app.post("/gamble-Equipment", async (req, res) => {
 
 
 app.post("/gamble-Relic", async (req, res) => {
-    const { 유저UID } = req.body;
+    const { 유저UID, 종류 = "일반" } = req.body;
     const 비용 = 100000;
 
     try {
@@ -1746,48 +1746,84 @@ app.post("/gamble-Relic", async (req, res) => {
             return 보유 < 99;
         });
 
-        // ⛔️ 먼저 후보 유물이 있는지 확인
         if (후보.length === 0) {
             return res.status(400).json({ 오류: "더 이상 획득 가능한 유물이 없습니다" });
         }
 
-        const 퍼즐 = 유저.유물목록?.["퍼즐"] || 0;
-        const 퍼즐발동 = Math.random() < 0.001 * 퍼즐;
+        const 횟수 = 종류 === "연속일반" ? 10 : 1;
+        const results = [];
 
-        // ⛔️ 퍼즐이 없고, 골드도 부족하면 중단
-        if (!퍼즐발동 && 유저.골드 < 비용) {
-            return res.status(400).json({ 오류: "골드 부족" });
+        if (종류 === "일반") {
+            if (유저.골드 < 비용) {
+                return res.status(400).json({ 오류: "골드가 부족합니다" });
+            }
+        } else if (종류 === "연속일반") {
+            if (유저.골드 < 10 * 비용) {
+                return res.status(400).json({ 오류: "골드가 부족합니다" });
+            }
         }
 
-        // ✅ 이제 안전하게 차감
-        if (!퍼즐발동) {
-            유저.골드 -= 비용;
+        for (let i = 0; i < 횟수; i++) {
+            const 퍼즐 = 유저.유물목록?.["퍼즐"] || 0;
+            const 퍼즐발동 = Math.random() < 0.001 * 퍼즐;
+
+            if (!퍼즐발동) {
+                유저.골드 -= 비용;
+            }
+
+            // 3) 랜덤으로 유물 선택
+            const 유물이름 = 후보[Math.floor(Math.random() * 후보.length)];
+
+            // 4) 유물목록 업데이트 (최대 99개까지)
+            const 유물목록복사 = { ...유저.유물목록 };
+            유물목록복사[유물이름] = (유물목록복사[유물이름] || 0) + 1;
+
+            // 5) 결과 배열에 저장
+            results.push({
+                유물이름,
+                퍼즐발동,
+                남은골드: 유저.골드,
+            });
+
+            // 6) 후보 목록 갱신 (이미 99개가 된 유물은 다음 루프부터 후보에서 제외)
+            if (유물목록복사[유물이름] >= 99) {
+                const idx = 후보.indexOf(유물이름);
+                if (idx !== -1) 후보.splice(idx, 1);
+            }
+
+            // 7) 유저 객체에도 유물목록 반영
+            유저.유물목록 = 유물목록복사;
+
+            // 8) 더 이상 후보가 없으면 반복 종료
+            if (후보.length === 0) break;
         }
 
-        const 유물이름 = 후보[Math.floor(Math.random() * 후보.length)];
-        const 유물목록 = { ...유저.유물목록 };
-        유물목록[유물이름] = (유물목록[유물이름] || 0) + 1;
-
-        const 업데이트 = {
-            골드: 유저.골드,
-            유물목록
-        };
-
+        // 9) DB에 유저 정보(골드, 유물목록) 업데이트
         await supabaseAdmin
             .from("users")
-            .update(업데이트)
+            .update({
+                골드: 유저.골드,
+                유물목록: 유저.유물목록,
+            })
             .eq("유저UID", 유저UID);
 
-        const 유저데이터 = { ...유저, ...업데이트 };
+        // 10) 응답으로 최신 유저데이터와 결과 배열 전달
+        const 유저데이터 = {
+            ...유저,
+            골드: 유저.골드,
+            유물목록: 유저.유물목록,
+        };
 
         return res.json({
             결과: "성공",
             유저데이터,
-            유물이름,
-            퍼즐발동
+            results,
         });
     } catch (e) {
-        return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+        console.error(e);
+        return res.status(500).json({
+            오류: "서버 오류입니다. 잠시 후 다시 시도해주세요.",
+        });
     }
 });
 

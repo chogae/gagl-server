@@ -984,7 +984,10 @@
             <div class="버튼" onclick="장비도박시도('연속일반')">연속일반장비도박 (100만)</div>
             <div class="버튼" onclick="장비도박시도('고급')">고급장비도박 (티켓)</div>
             <div class="버튼" onclick="장비도박시도('연속고급')">연속고급장비도박 (티켓열장)</div>
-            <div class="버튼" onclick="유물도박시도()">유물도박 (10만)</div>
+            <div class="버튼" onclick="유물도박시도('일반')">유물도박 (10만)</div>
+            <div class="버튼" onclick="유물도박시도('연속일반')">연속유물도박 (100만)</div>
+            <div class="버튼" onclick="현질('팔레트')">마법의팔레트 (1,100원)</div>
+            <div class="버튼" onclick="현질('햄버거')">햄버거정기배송 (4,900원)</div>
         </div>
     </div>
 
@@ -3254,17 +3257,35 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             }
         }
 
+        async function 현질(종류 = "팔레트") {
+            메시지표시(도박창, "", "오픈톡 '가글주인장'으로 문의하세요", "");
+        }
 
-        async function 유물도박시도() {
+        async function 유물도박시도(종류 = "일반") {
             const 도박창 = document.getElementById("도박창");
             const 비용 = 100000;
+            const 유물드랍박스 = document.getElementById("유물드랍박스");
+            const 유저테두리안표시 = document.getElementById("유저테두리안표시");
 
-            if (유저데이터.골드 < 비용) {
-                메시지표시(도박창, "", "골드 부족!", "");
-                return;
+            if (종류 === "일반") {
+                if (유저데이터.골드 < 비용) {
+                    메시지표시(도박창, "", "골드 부족!", "");
+                    return;
+                }
+            } else if (종류 === "연속일반") {
+                if (유저데이터.골드 < 10 * 비용) {
+                    메시지표시(도박창, "", "골드 부족!", "");
+                    return;
+                }
             }
 
-            const 확인 = confirm(`유물도박을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`);
+            const 메시지 =
+                종류 === "일반"
+                    ? `유물도박을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`
+                    : 종류 === "연속일반"
+                        ? `유물도박 10회를 총 ${(10 * 비용).toLocaleString()} 골드로 진행하시겠습니까?`
+                        : "";
+            const 확인 = confirm(메시지);
             if (!확인) return;
 
             화면잠금();
@@ -3272,9 +3293,11 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 const 응답 = await fetch("/gamble-Relic", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                    body: JSON.stringify({
+                        유저UID: 유저데이터.유저UID,
+                        종류, // 반드시 함께 전송해야 서버에서 1회/10회 구분 가능
+                    }),
                 });
-
                 const 결과 = await 응답.json();
 
                 if (!응답.ok || 결과.오류) {
@@ -3282,49 +3305,56 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     return;
                 }
 
+                // 4) 서버가 반환한 최종 유저데이터로 업데이트
                 유저데이터 = 결과.유저데이터;
-
-                if (결과.결과 === "성공" && 결과.유물이름) {
-                    const 유물드랍박스 = document.getElementById("유물드랍박스");
-                    const 유저테두리안표시 = document.getElementById("유저테두리안표시");
-
-                    if (유물드랍박스) {
-                        // ✅ 먼저 기존에 떠 있는 박스를 숨김
-                        유물드랍박스.style.display = "none";
-
-                        // ✅ setTimeout 제거 방지: 이전 타이머 클리어 (선택 사항)
-                        if (window.유물드랍타이머) clearTimeout(window.유물드랍타이머);
-
-                        유물드랍박스.innerText = `유물 [${결과.유물이름}]을(를) 획득했다!`;
-                        유물드랍박스.style.display = "block";
-
-                        // 위치 조정용 부모 변경
-                        if (유저테두리안표시) {
-                            // 등급외테두리에 위치 기준 설정
-                            유저테두리안표시.style.position = "relative";
-
-                            // 유물드랍박스를 등급외테두리 내부로 이동
-                            유저테두리안표시.appendChild(유물드랍박스);
-
-                            // 전투화면용 위치 조정
-                            Object.assign(유물드랍박스.style, {
-                                position: "absolute",
-                                top: "50%",
-                                left: "50%",
-                                transform: "translate(-50%, -50%)",
-                                zIndex: "100"
-                            });
-                        }
-                    }
-                    // ✅ 새 타이머로 숨김 처리 (전역 변수로 저장)
-                    window.유물드랍타이머 = setTimeout(() => {
-                        유물드랍박스.style.display = "none";
-                    }, 3000);
-                } else {
-                    메시지표시(도박창, "", "도박에 실패했습니다!", "");
-                }
-
                 document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
+
+                // 5) 결과가 여러 회차인 경우, 순차적으로 띄워줌
+                const items = Array.isArray(결과.results) ? 결과.results : [결과];
+
+                items.forEach((item, i) => {
+                    setTimeout(() => {
+                        // 5-1) 퍼즐 발동 시 별도 표시 (원하는 아이콘 넣어주세요)
+                        if (item.퍼즐발동) {
+                            메시지표시(도박창, 퍼즐아이콘, "", "");
+                        }
+
+                        // 5-2) 유물 획득 알림
+                        if (유물드랍박스) {
+                            // 기존에 떠 있던 박스를 숨김
+                            유물드랍박스.style.display = "none";
+                            if (window.유물드랍타이머) clearTimeout(window.유물드랍타이머);
+
+                            // 텍스트 설정
+                            if (item.유물이름) {
+                                유물드랍박스.innerText = `유물 [${item.유물이름}]을(를) 획득했다!`;
+                            } else {
+                                유물드랍박스.innerText = "도박에 실패했습니다!";
+                            }
+
+                            // 화면에 표시
+                            유물드랍박스.style.display = "block";
+
+                            // 위치 조정
+                            if (유저테두리안표시) {
+                                유저테두리안표시.style.position = "relative";
+                                유저테두리안표시.appendChild(유물드랍박스);
+                                Object.assign(유물드랍박스.style, {
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    zIndex: "100",
+                                });
+                            }
+
+                            // 3초 후 숨김
+                            window.유물드랍타이머 = setTimeout(() => {
+                                유물드랍박스.style.display = "none";
+                            }, 3000);
+                        }
+                    }, i * 500); // 회차마다 0.5초 간격으로 표시
+                });
             } catch (e) {
                 메시지표시(도박창, "", "도박 중 오류: " + e.message, "");
             } finally {
@@ -3696,6 +3726,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             const 문장들 = [
                 `${봄아이콘}`,
+                `25.06.01 10연 유물도박이 구현되었습니다`,
                 `25.06.01 보스 공통미션 보상 '펫'과 누적데미지 순위별 골드보상이<br>지급되었습니다`,
                 `25.05.30 10연 고급장비도박 시 무료1회 추가기능은 실패했습니다<br>대신, 10연 고급장비도박 시 보너스 티켓 한장이 지급됩니다`,
                 `25.05.30 10연 일반장비도박과 10연 고급장비도박 업데이트`,
