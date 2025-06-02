@@ -1293,6 +1293,14 @@ app.post("/register-user", async (req, res) => {
     };
     const 마법의팔레트 = 이메일팔레트맵[로그인이메일] || null;
 
+
+    const kstNow = new Date(
+        now.toLocaleString("en-US", { timeZone: "Asia/Seoul" })
+    );
+    const today = kstNow.toISOString().slice(0, 10);
+
+
+
     //신규유저
     const 삽입값 = {
         유저UID,
@@ -1342,6 +1350,7 @@ app.post("/register-user", async (req, res) => {
             "천제": 0
         },
         마법의팔레트,
+        생성일: today,
     };
 
     const { error: 삽입오류 } = await supabaseAdmin

@@ -3905,10 +3905,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             // document.getElementById("다섯째줄왼쪽").innerHTML = `보스 : 위`;
 
             document.getElementById("첫째줄오른쪽").innerHTML = ``;
-            document.getElementById("둘째줄오른쪽").innerHTML = `마법의팔레트 : ${유저데이터.현질기한}/30`;
-            document.getElementById("셋째줄오른쪽").innerHTML = `햄버거정기배송 : ${유저데이터.햄버거현질기한}/30`;
-            document.getElementById("넷째줄오른쪽").innerHTML = `전적 : ${유저데이터.스태미너소모총량}전`;
-            document.getElementById("다섯째줄오른쪽").innerHTML = ``;
+            document.getElementById("둘째줄오른쪽").innerHTML = (유저데이터.현질기한 !== undefined && 유저데이터.현질기한 !== 0) ? `마법의팔레트 : ${유저데이터.현질기한}/30` : `마법의팔레트 : -`;
+            document.getElementById("셋째줄오른쪽").innerHTML = (유저데이터.햄버거현질기한 !== undefined && 유저데이터.햄버거현질기한 !== 0) ? `햄버거정기배송 : ${유저데이터.햄버거현질기한}/30` : `햄버거정기배송 : -`;
+            document.getElementById("넷째줄오른쪽").innerHTML = 유저데이터.생성일 ? `생성일 : ${유저데이터.생성일}` : `생성일 : -`;
+            document.getElementById("다섯째줄오른쪽").innerHTML = (유저데이터.스태미너소모총량 !== undefined && 유저데이터.스태미너소모총량 !== 0) ? `전적 : ${유저데이터.스태미너소모총량}전` : `전적 : -`;
 
             // ─── “공격력 최댓값 장비” 찾기 및 표시 ───
             const 목록 = 유저데이터.장비목록;
