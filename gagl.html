@@ -3768,8 +3768,56 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             }
         });
 
-        document.getElementById("내정보").addEventListener("click", () => {
+        function 한줄에두칸(왼쪽, 오른쪽) {
+            const row = document.createElement("div");
+            row.style.display = "flex";
+            row.style.width = "100%";
+            row.style.gap = "10px";
+
+            const left = document.createElement("div");
+            left.id = 왼쪽;
+            left.style.textAlign = "left";
+            left.style.flex = "1";
+
+            const right = document.createElement("div");
+            right.id = 오른쪽;
+            right.style.textAlign = "left";
+            right.style.flex = "1";
+
+            row.appendChild(left);
+            row.appendChild(right);
+            return row;
+        }
+
+        // 2) 3칸짜리 행(Row)을 생성해서 반환합니다.
+        //    칸: [id1, id2, id3] 형태로 세 개 요소의 id를 전달
+        //    클레스네임: 각 칸(div)에 적용할 공통 클래스 이름 (예: "기본테두리")
+        function 한줄에세칸(칸, 클레스네임) {
+            const row = document.createElement("div");
+            row.style.display = "flex";
+            row.style.width = "100%";
+            row.style.gap = "10px";
+            row.style.justifyContent = "center"; // 필요에 따라 가운데 정렬
+
+            칸.forEach(id => {
+                const div = document.createElement("div");
+                div.id = id;
+                if (클레스네임) div.className = 클레스네임;
+                div.style.flex = "1";
+                div.style.textAlign = "center"; // 칸 내부 텍스트 가운데 정렬
+                row.appendChild(div);
+            });
+
+            return row;
+        }
+
+
+
+
+
+        document.getElementById("내정보").addEventListener("click", async () => {
             if (!유저데이터) return;
+            화면잠금();
             document.getElementById("화면설명").innerHTML = "새로고침(F5)을 생활화하세요";
 
             모든화면숨기기();
@@ -3778,118 +3826,119 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 컨테이너 = document.getElementById("내정보컨테이너");
             컨테이너.innerHTML = "";
 
-            // 첫째줄 생성
-            const 첫째줄 = document.createElement("div");
-            첫째줄.id = "첫째줄";
-            첫째줄.style.width = "100%";
-            첫째줄.style.textAlign = "left";
+            // ─── 첫째줄부터 넷째줄까지 2칸짜리 행 생성 ───
+            const 첫째줄행 = 한줄에두칸("첫째줄왼쪽", "첫째줄오른쪽");
+            const 둘째줄행 = 한줄에두칸("둘째줄왼쪽", "둘째줄오른쪽");
+            const 셋째줄행 = 한줄에두칸("셋째줄왼쪽", "셋째줄오른쪽");
+            const 넷째줄행 = 한줄에두칸("넷째줄왼쪽", "넷째줄오른쪽");
+            const 다섯째줄행 = 한줄에두칸("다섯째줄왼쪽", "다섯째줄오른쪽");
 
-            // 둘째줄(행) 생성
-            const 둘째줄행 = document.createElement("div");
-            둘째줄행.style.display = "flex";
-            둘째줄행.style.width = "100%";
-            둘째줄행.style.gap = "10px";
+            // ─── 다섯째줄(=열째줄) 3칸짜리 행 생성 ───
+            const 열째줄행 = 한줄에세칸(
+                ["열째줄왼쪽", "열째줄가운데", "열째줄오른쪽"],
+                "기본테두리"
+            );
 
-            const 둘째줄왼쪽 = document.createElement("div");
-            둘째줄왼쪽.id = "둘째줄왼쪽";
-            둘째줄왼쪽.style.textAlign = "left";
-            둘째줄왼쪽.style.flex = "1";
-
-            const 둘째줄오른쪽 = document.createElement("div");
-            둘째줄오른쪽.id = "둘째줄오른쪽";
-            둘째줄오른쪽.style.textAlign = "left";
-            둘째줄오른쪽.style.flex = "1";
-
-            둘째줄행.appendChild(둘째줄왼쪽);
-            둘째줄행.appendChild(둘째줄오른쪽);
-
-            // 셋째줄(행) 생성
-            const 셋째줄행 = document.createElement("div");
-            셋째줄행.style.display = "flex";
-            셋째줄행.style.width = "100%";
-            셋째줄행.style.gap = "10px";
-
-            // 여기서 id를 정확히 "셋째줄왼쪽"으로 지정해야 합니다.
-            const 셋째줄왼쪽 = document.createElement("div");
-            셋째줄왼쪽.id = "셋째줄왼쪽";
-            셋째줄왼쪽.style.textAlign = "left";
-            셋째줄왼쪽.style.flex = "1";
-
-            // 여기서도 id를 "셋째줄오른쪽"으로 지정해야 합니다.
-            const 셋째줄오른쪽 = document.createElement("div");
-            셋째줄오른쪽.id = "셋째줄오른쪽";
-            셋째줄오른쪽.style.textAlign = "left";
-            셋째줄오른쪽.style.flex = "1";
-
-            셋째줄행.appendChild(셋째줄왼쪽);
-            셋째줄행.appendChild(셋째줄오른쪽);
-
-            // 넷째줄(행) 생성
-            const 넷째줄행 = document.createElement("div");
-            넷째줄행.id = "넷째줄행";
-            넷째줄행.style.display = "flex";
-            넷째줄행.style.width = "100%";
-            넷째줄행.style.gap = "10px";
-            넷째줄행.style.justifyContent = "center"; // 전체 3개 박스를 가운데 정렬
-
-            // ─── 넷째줄행 안에 세 개의 "기본테두리" 박스 생성 ───
-            const 장비박스1 = document.createElement("div");
-            장비박스1.className = "기본테두리";
-            장비박스1.style.flex = "1";            // 세 박스가 동일 너비를 가지도록
-            장비박스1.style.textAlign = "center"; // 박스 내부 텍스트 가운데 정렬
-
-            const 장비박스2 = document.createElement("div");
-            장비박스2.className = "기본테두리";
-            장비박스2.style.flex = "1";
-            장비박스2.style.textAlign = "center";
-
-            const 장비박스3 = document.createElement("div");
-            장비박스3.className = "기본테두리";
-            장비박스3.style.flex = "1";
-            장비박스3.style.textAlign = "center";
-
-            넷째줄행.appendChild(장비박스1);
-            넷째줄행.appendChild(장비박스2);
-            넷째줄행.appendChild(장비박스3);
-
-            // 컨테이너에 순서대로 붙이기
-            컨테이너.appendChild(첫째줄);
+            // ─── 컨테이너에 차례대로 붙이기 ───
+            컨테이너.appendChild(첫째줄행);
             컨테이너.appendChild(둘째줄행);
             컨테이너.appendChild(셋째줄행);
             컨테이너.appendChild(넷째줄행);
+            컨테이너.appendChild(다섯째줄행);
+            컨테이너.appendChild(열째줄행);
 
-            // 내용 채우기
-            document.getElementById("첫째줄").innerHTML = `아이디 : ${유저데이터.유저아이디}`;
-            document.getElementById("둘째줄왼쪽").innerHTML = `공격력 : ${유저데이터.최종공격력}`;
-            document.getElementById("둘째줄오른쪽").innerHTML = `마법의팔레트 : ${유저데이터.현질기한}/30`;
-            document.getElementById("셋째줄왼쪽").innerHTML = `최대체력 : ${유저데이터.최대체력}`;
-            document.getElementById("셋째줄오른쪽").innerHTML = `햄버거정기배송 : ${유저데이터.햄버거현질기한}/30`;
-            const 목록 = 유저데이터.장비목록;
-            let bestWeapon = null;
 
-            if (Array.isArray(목록) && 목록.length > 0) {
-                // reduce로 공격력 비교하며 객체(아이템) 전체를 bestWeapon에 담는다
-                bestWeapon = 목록.reduce((prev, cur) => {
-                    // 공격력이 숫자나 문자열로 들어올 수 있으므로 Number()로 변환하여 비교
-                    return Number(cur.공격력) > Number(prev.공격력) ? cur : prev;
+            // ─── (2) 서버에서 “전당” 순위만 가져오기 ───
+            try {
+                const 랭킹응답 = await fetch("/ranking", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
                 });
+                const 랭킹결과 = await 랭킹응답.json();
+
+                // 서버에서 받은 랭킹결과는 { 유저들: [...] } 구조
+                const 유저들 = 랭킹결과.유저들 || [];
+
+                // 배열에서 “내 유저UID”와 같은 요소의 인덱스를 찾는다
+                const 내인덱스 = 유저들.findIndex(
+                    (u) => u.유저UID === 유저데이터.유저UID
+                );
+
+                // 인덱스가 -1이 아니면 “인덱스 + 1”이 내 순위
+                const 내전당순위 = 내인덱스 >= 0 ? 내인덱스 + 1 : "-";
+                document.getElementById("넷째줄왼쪽").innerHTML = `전당 : ${내전당순위}위`;
+            } catch (err) {
+                document.getElementById("넷째줄왼쪽").innerHTML = `전당 : 조회실패`;
+                console.error("전당순위 조회 실패:", err);
             }
 
-            if (bestWeapon) {
-                // 1) 이름 표시
-                장비박스1.innerHTML = bestWeapon.이름;
+            // ─── (3) 서버에서 “보스” 순위만 가져오기 ───
+            try {
+                const 보스응답 = await fetch("/boss-ranking", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                });
+                const 보스결과 = await 보스응답.json();
 
-                // 2) 등급에 따른 색상 적용 (색상맵이 미리 정의되어 있다고 가정)
-                // 예: const 색상맵 = { "일반": "#ccc", "레어": "#00f", "신화": "#f0f", … };
+                // /boss-ranking 응답 예시: { 순위: [...], 누적데미지총합: n, 내정보: { 순위, 유저아이디, 보스누적데미지 } }
+                // 내 순위 정보는 보스결과.내정보.순위 필드에 들어 있다.
+                const 내보스순위 =
+                    보스결과.내정보 && typeof 보스결과.내정보.순위 === "number"
+                        ? 보스결과.내정보.순위
+                        : "-";
+
+                document.getElementById("다섯째줄왼쪽").innerHTML = `보스 : ${내보스순위}위`;
+            } catch (err) {
+                document.getElementById("다섯째줄왼쪽").innerHTML = `보스 : 조회실패`;
+                console.error("보스순위 조회 실패:", err);
+            }
+
+            // ─── 내용 채우기 ───
+            document.getElementById("첫째줄왼쪽").innerHTML = `아이디 : ${유저데이터.유저아이디}`;
+            document.getElementById("둘째줄왼쪽").innerHTML = `공격력 : ${유저데이터.최종공격력}`;
+            document.getElementById("셋째줄왼쪽").innerHTML = `최대체력 : ${유저데이터.최대체력}`;
+            // document.getElementById("넷째줄왼쪽").innerHTML = `전당 : 위`;
+            // document.getElementById("다섯째줄왼쪽").innerHTML = `보스 : 위`;
+
+            document.getElementById("첫째줄오른쪽").innerHTML = ``;
+            document.getElementById("둘째줄오른쪽").innerHTML = `마법의팔레트 : ${유저데이터.현질기한}/30`;
+            document.getElementById("셋째줄오른쪽").innerHTML = `햄버거정기배송 : ${유저데이터.햄버거현질기한}/30`;
+            document.getElementById("넷째줄오른쪽").innerHTML = `전적 : ${유저데이터.스태미너소모총량}전`;
+            document.getElementById("다섯째줄오른쪽").innerHTML = ``;
+
+            // ─── “공격력 최댓값 장비” 찾기 및 표시 ───
+            const 목록 = 유저데이터.장비목록;
+            let bestWeapon = null;
+            if (Array.isArray(목록) && 목록.length) {
+                bestWeapon = 목록.reduce((prev, cur) =>
+                    Number(cur.공격력) > Number(prev.공격력) ? cur : prev
+                );
+            }
+
+            const 장비박스1 = document.getElementById("열째줄왼쪽");  // 예시: 첫 번째 칸 사용
+
+            if (bestWeapon) {
+                장비박스1.innerHTML = bestWeapon.이름;
                 장비박스1.style.color = 색상맵[bestWeapon.등급] || "#fff";
             } else {
                 장비박스1.innerHTML = "장비가 없습니다";
                 장비박스1.style.color = "#fff";
             }
+
+            // 필요하다면 두 번째·세 번째 박스에도 같은 방식으로 내용 채우기
+            const 장비박스2 = document.getElementById("열째줄가운데");
             장비박스2.innerHTML = "가장쌘방어구";
+            const 장비박스3 = document.getElementById("열째줄오른쪽");
             장비박스3.innerHTML = "가장쌘장신구";
 
+            화면해제();
         });
+
+
+
+
 
         document.getElementById("메뉴얼").addEventListener("click", () => {
             if (!유저데이터) return;
