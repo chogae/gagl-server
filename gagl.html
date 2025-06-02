@@ -3172,6 +3172,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 도박창 = document.getElementById("도박창");
             const 네온박스 = document.getElementById("네온박스");
             const 비용 = 100000;
+            const 등급외테두리 = document.getElementById("등급외테두리");
 
             if (종류 === "일반") {
                 if (유저데이터.골드 < 비용) {
@@ -3209,6 +3210,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                                 ? `연속고급장비도박 10회를 티켓 10장으로 진행하시겠습니까?`
                                 : "";
             const 확인 = confirm(메시지);
+            도박창.style.display = "none";
             if (!확인) return;
 
 
@@ -3221,26 +3223,25 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 });
                 const 결과 = await 응답.json();
                 if (!응답.ok || 결과.오류) {
-                    메시지표시(도박창, "", 결과.오류 || "", "");
+                    메시지표시(등급외테두리, "", 결과.오류 || "", "");
                     return;
                 }
-
                 유저데이터 = 결과.유저데이터;
                 document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
 
                 const items = Array.isArray(결과.results) ? 결과.results : [결과];
                 items.forEach((item, i) => {
                     setTimeout(() => {
+                        const 네온박스 = document.getElementById("네온박스");
+
                         if (!item.장비) {
-                            메시지표시(도박창, item.퍼즐발동 ? 퍼즐아이콘 : "", "도박에 실패했습니다!", "");
+                            메시지표시(등급외테두리, item.퍼즐발동 ? 퍼즐아이콘 : "", "도박에 실패했습니다!", "");
                             return;
                         }
                         if (item.퍼즐발동) {
-                            메시지표시(도박창, 퍼즐아이콘, "", "");
+                            메시지표시(등급외테두리, 퍼즐아이콘, "", "");
                         }
 
-                        const 네온박스 = document.getElementById("네온박스");
-                        const 등급외테두리 = document.getElementById("등급외테두리");
 
                         if (네온박스) {
                             네온박스.style.display = "none";
@@ -3269,7 +3270,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 });
 
             } catch (e) {
-                메시지표시(도박창, "", "도박 중 오류: " + e.message, "");
+                메시지표시(등급외테두리, "", "도박 중 오류: " + e.message, "");
             } finally {
                 화면해제();
             }
@@ -3304,6 +3305,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                         ? `유물도박 10회를 총 ${(10 * 비용).toLocaleString()} 골드로 진행하시겠습니까?`
                         : "";
             const 확인 = confirm(메시지);
+            도박창.style.display = "none";
             if (!확인) return;
 
             화면잠금();
@@ -3319,7 +3321,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 const 결과 = await 응답.json();
 
                 if (!응답.ok || 결과.오류) {
-                    메시지표시(도박창, "", 결과.오류 || "", "");
+                    메시지표시(유저테두리안표시, "", 결과.오류 || "", "");
                     return;
                 }
 
@@ -3334,7 +3336,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     setTimeout(() => {
                         // 5-1) 퍼즐 발동 시 별도 표시 (원하는 아이콘 넣어주세요)
                         if (item.퍼즐발동) {
-                            메시지표시(도박창, 퍼즐아이콘, "", "");
+                            메시지표시(유저테두리안표시, 퍼즐아이콘, "", "");
                         }
 
                         // 5-2) 유물 획득 알림
@@ -3374,7 +3376,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     }, i * 500); // 회차마다 0.5초 간격으로 표시
                 });
             } catch (e) {
-                메시지표시(도박창, "", "도박 중 오류: " + e.message, "");
+                메시지표시(유저테두리안표시, "", "도박 중 오류: " + e.message, "");
             } finally {
                 화면해제();
             }
@@ -3955,7 +3957,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 `
 25.06.02<br>
 과금상품에서 유물. 플라워가 삭제되었습니다<br>
-정보-내정보 가 업데이트중입니다
+정보-내정보 화면이 추가되었습니다
   `,
                 `
 25.06.01<br>
