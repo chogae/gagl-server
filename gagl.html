@@ -6,6 +6,9 @@
     <title>gagl</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+
     <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
@@ -3633,6 +3636,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     const 결과 = await 응답.json();
                     const 유저정보 = 결과.유저데이터;
 
+                    if (결과.새로고침하자 == true) {
+                        location.reload();
+                    }
+
                     if (!유저정보 || 유저정보.버전업 !== 7) {
                         await fetch("/delete-user", {
                             method: "POST",
@@ -3955,9 +3962,15 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 문장들 = [
                 `${봄아이콘}`,
                 `
+25.06.03<br>
+업데이트 시 자동새로고침<br>
+
+  `,
+                `
 25.06.02<br>
 과금상품에서 유물. 플라워가 삭제되었습니다<br>
-정보-내정보 화면이 추가되었습니다
+정보-내정보 화면이 추가되었습니다<br>
+오늘부터 신규유저에겐 생성일이 등록됩니다
   `,
                 `
 25.06.01<br>

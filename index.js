@@ -253,13 +253,23 @@ app.post("/get-user", async (req, res) => {
 
     유저.최종공격력 = 최종공격력계산(유저);
 
+    let 새로고침하자 = false;
+    if (유저.새로고침 == true) {
+        새로고침하자 = true;
+        유저.새로고침 = false;
+    }
+
+
+
+
     const { error: 업데이트에러 } = await supabaseAdmin
         .from("users")
         .update({
             장비목록,
             장비공격력: 유저.장비공격력,
             최종공격력: 유저.최종공격력,
-            마법의팔레트: 유저.마법의팔레트 // 다시 한번 저장해도 무방
+            마법의팔레트: 유저.마법의팔레트,
+            새로고침: 유저.새로고침
         })
         .eq("유저UID", 유저UID);
 
@@ -267,7 +277,7 @@ app.post("/get-user", async (req, res) => {
         return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
     }
 
-    return res.json({ 유저데이터: { ...유저 } });
+    return res.json({ 유저데이터: { ...유저 }, 새로고침하자 });
 });
 
 // // ✅ 마법의팔레트 자동 지정 로직 추가
