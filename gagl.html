@@ -1438,7 +1438,7 @@
             document.getElementById("전투화면").style.display = "block";
             document.getElementById("에너지박스").style.display = "block";
 
-            document.getElementById("화면설명").innerHTML = "정보-메뉴얼에서 패치노트 확인을 생활화하세요<br>경험치 클릭 전직 / 골드 클릭 도박 / 숙련도 클릭 스킬";
+            document.getElementById("화면설명").innerHTML = "선거기념 햄버거 지급 완<br>경험치 클릭 전직 / 골드 클릭 도박 / 숙련도 클릭 스킬";
 
             const 최대 = 유저.최대스태미너 ?? 100;
             const 현재 = 유저.현재스태미너 ?? 0;
@@ -3750,9 +3750,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
   <div style="display: flex; flex-direction: column; gap: 10px;">    
     <div class="버튼" id="내정보">내정보</div>
     <div class="버튼" id="메뉴얼">메뉴얼</div>
-    <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
   </div>
 `;
+        // <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
+
         정보툴팁.style.display = "none";
         document.body.appendChild(정보툴팁);
 
@@ -3848,6 +3849,11 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 "기본테두리"
             );
 
+            const 열한째줄행 = 한줄에세칸(
+                ["열한째줄왼쪽", "열한째줄가운데", "열한째줄오른쪽"],
+                ""
+            );
+
             // ─── 컨테이너에 차례대로 붙이기 ───
             컨테이너.appendChild(첫째줄행);
             컨테이너.appendChild(둘째줄행);
@@ -3855,6 +3861,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             컨테이너.appendChild(넷째줄행);
             컨테이너.appendChild(다섯째줄행);
             컨테이너.appendChild(열째줄행);
+            컨테이너.appendChild(열한째줄행);
 
 
             // ─── (2) 서버에서 “전당” 순위만 가져오기 ───
@@ -3911,7 +3918,11 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             // document.getElementById("넷째줄왼쪽").innerHTML = `전당 : 위`;
             // document.getElementById("다섯째줄왼쪽").innerHTML = `보스 : 위`;
 
-            document.getElementById("첫째줄오른쪽").innerHTML = ``;
+            // document.getElementById("첫째줄오른쪽").innerHTML = `탈퇴`;
+            // <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
+            document.getElementById("열한째줄가운데").innerHTML =
+                `<div style="margin-top: 20px; cursor: pointer;" id="탈퇴" onclick="회원탈퇴()">{ 계 정 탈 퇴 }</div>`;
+
             document.getElementById("둘째줄오른쪽").innerHTML = (유저데이터.현질기한 !== undefined && 유저데이터.현질기한 !== 0) ? `마법의팔레트 : ${유저데이터.현질기한}/30` : `마법의팔레트 : -`;
             document.getElementById("셋째줄오른쪽").innerHTML = (유저데이터.햄버거현질기한 !== undefined && 유저데이터.햄버거현질기한 !== 0) ? `햄버거정기배송 : ${유저데이터.햄버거현질기한}/30` : `햄버거정기배송 : -`;
             document.getElementById("넷째줄오른쪽").innerHTML = 유저데이터.생성일 ? `생성일 : ${유저데이터.생성일}` : `생성일 : -`;
@@ -3964,7 +3975,8 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 `
 25.06.03<br>
 업데이트 시 자동새로고침<br>
-
+모바일 화면 최적화 업데이트<br>
+탈퇴 버튼을 정보-내정보 최하단으로 이동했습니다<br>
   `,
                 `
 25.06.02<br>
