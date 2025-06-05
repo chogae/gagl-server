@@ -1409,7 +1409,7 @@ app.post("/ranking", async (req, res) => {
     try {
         const { data: 유저들, error } = await supabaseAdmin
             .from("users")
-            .select("유저UID, 로그인이메일, 유저아이디, 레벨, 최종공격력, 현재층, 장비목록, 합성기록, 전직정보, 마법의팔레트")
+            .select("유저UID, 로그인이메일, 유저아이디, 레벨, 최종공격력, 현재층, 장비목록, 합성기록, 전직정보, 마법의팔레트, 직업결정")
             .eq("버전업", 7)
             .not("최종공격력", "is", null)
             .neq("유저아이디", "xptmxm")
