@@ -3495,10 +3495,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
         document.getElementById("위층으로").addEventListener("click", async () => {
             if (!유저데이터) return;
 
-            if (유저데이터.현재층 >= 4) {
-                메시지표시(위층으로, 마법진아이콘, " 빛나는 마법진이 가로막습니다", "");
-                return;
-            }
+            // if (유저데이터.현재층 >= 4) {
+            //     메시지표시(위층으로, 마법진아이콘, " 빛나는 마법진이 가로막습니다", "");
+            //     return;
+            // }
 
             유저데이터.현재층++;
             document.getElementById("현재층").innerText = `${유저데이터.현재층}층`;
@@ -4293,6 +4293,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 레벨당 공격력이 1로 너프되었습니다<br>
 전당화면에서 미니장비창 표시 로직을 개선했습니다<br>
 전당화면에 전직 대신 직업이 표시됩니다<br>
+무너진 악마성을 재건하였습니다. 4층 위로 올라갈 수 있습니다<br>
   `,
                 `
 25.06.03<br>
