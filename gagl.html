@@ -475,6 +475,12 @@
             color: #3b82f6;
         }
 
+        #전직화면타이틀:hover {
+            cursor: pointer;
+            text-decoration: underline;
+            color: #3b82f6;
+        }
+
         .target-icon {
             width: 16px;
             height: 16px;
@@ -999,7 +1005,8 @@
             <div class="버튼" onclick="유물도박시도('연속일반')">연속유물도박 (100만)</div>
             <div class="버튼" onclick="현질('팔레트')">마법의팔레트 (1,100원)</div>
             <div class="버튼" onclick="현질('햄버거')">햄버거정기배송 (4,900원)</div>
-            <!-- <div class="버튼" onclick="현질('플라워')">플라워한송이 (11,000원)</div> -->
+            <div class="버튼" onclick="현질('플라워')">플라워한송이 (11,000원)</div>
+            <div class="버튼" onclick="현질('플라워')">뼈다구한개 (11,000원)</div>
         </div>
     </div>
 
@@ -1103,6 +1110,7 @@
         const 샐러드아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-salad-icon lucide-salad"><path d="M7 21h10"/><path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z"/><path d="M11.38 12a2.4 2.4 0 0 1-.4-4.77 2.4 2.4 0 0 1 3.2-2.77 2.4 2.4 0 0 1 3.47-.63 2.4 2.4 0 0 1 3.37 3.37 2.4 2.4 0 0 1-1.1 3.7 2.51 2.51 0 0 1 .03 1.1"/><path d="m13 12 4-4"/><path d="M10.9 7.25A3.99 3.99 0 0 0 4 10c0 .73.2 1.41.54 2"/></svg>`;
         const 햄버거아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hamburger-icon lucide-hamburger"><path d="M12 16H4a2 2 0 1 1 0-4h16a2 2 0 1 1 0 4h-4.25"/><path d="M5 12a2 2 0 0 1-2-2 9 7 0 0 1 18 0 2 2 0 0 1-2 2"/><path d="M5 16a2 2 0 0 0-2 2 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 2 2 0 0 0-2-2q0 0 0 0"/><path d="m6.67 12 6.13 4.6a2 2 0 0 0 2.8-.4l3.15-4.2"/></svg>`;
         const 마법의팔레트아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-palette-icon lucide-palette"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/></svg>`;
+        const 뼈다구아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bone-icon lucide-bone"><path d="M17 10c.7-.7 1.69 0 2.5 0a2.5 2.5 0 1 0 0-5 .5.5 0 0 1-.5-.5 2.5 2.5 0 1 0-5 0c0 .81.7 1.8 0 2.5l-7 7c-.7.7-1.69 0-2.5 0a2.5 2.5 0 0 0 0 5c.28 0 .5.22.5.5a2.5 2.5 0 1 0 5 0c0-.81-.7-1.8 0-2.5Z"/></svg>`;
 
         //보스아이콘
         const 그루트아이콘 = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="height: 512px; width: 512px;"></path><g class="" transform="translate(0,0)" style=""><path d="m125.5 24.44-15.2 9.64c4.7 7.36 4.1 9.89 2.6 12.91-8.4 11.18-22.25 15.83-32.31 23.89-6.38 5.2-12.53 13.64-10.92 23.76 2.17 13.46 12.66 22.56 23.15 29.76 12.38-.5 25.48.6 36.18.6l.2-.4c-11-5.5-39.08-21.1-41.75-32.85C97.5 75.04 120.3 71.43 128.9 55.13c4.3-8.5 3.4-19.93-3.4-30.69zm92.8.3c-1.8 17.62-4.3 32.04-7.1 44.98l28.3 17.12-33.5 5.31c-3.3 12.75-5.7 22.95-8.4 34.55-10.5 5-22.1 9.4-32.2 12 12.6 6.5 25.2 14.8 30.5 28.1 3.6 8.8 2.1 17.9-.9 25.7-2.9 7.7-7.3 14.8-11.2 21.4-3.9 6.6-7.2 12.7-8.5 17.3.4 23 31.4 26.9 47.4 22.7 1.1-6.6 5.6-13 9.8-17.2-7.4-2.6-14.7-6.3-20.1-12.9-5.9-7.2-7.8-18.4-3.2-29.1 3.7-6.6 11.1-10.7 17.6-11.7 11.5-.9 22.3 1.4 32.8 4.3.8-6.9 2.2-14 4.9-20.3 2.1-4.9 5.5-9.9 10.4-12.9l-11-10.8-17.5 16.5-17.6-17.5-16.8 13 7.3-44.6 14.1 14.7 10.2-15.1 9.1 21.1 18.2-26.5 7.7 47.4c2.7-1 5.3-1.3 7.9-1.3 8.1.5 14.9 5.5 19.3 11.3 5 7.3 8.5 15.4 10.7 22.7 1.4-.8 2.7-1.5 4.1-2.3 6.3-3.3 12.8-6.4 19.5-8-23.2-6.9-27.4-26-28.1-48.7-9.4-.8-16.4-.6-25.6-.4-2-11.2-3.6-23.2-4.8-33.07l-33.8-5.33 30.8-18.68c-1.9-13.34-4.4-26.41-8.9-39.3-14.4 3.78-33 3.98-51.4-4.48zm165.1 22.69s-37.8 20.36-34.6 36.93c1 5.29 5.3 10.28 10.7 13.98-2.5 6.06-3.5 12.06-3.9 18.16 5.9 1.8 11.6 3.8 17.2 5.9-.8-6.3-1.2-12.6-.6-18.8 5.2 1.1 10.3.6 14.1-1.9 15-10.11-2.9-54.27-2.9-54.27zm-53.2 81.07c2.2 14.8 2.2 27.2 17.4 29.4 14.6 3.3 29.9-2.2 42.2 1.2-2.1-4.2-4.2-8.5-6.1-12.8-17.3-7.4-34.3-14.1-53.5-17.8zm-226.1 13.9c-6.18 13.7-12.41 27.3-18.42 40.9-3.84-3-8.01-5.6-12.87-7.5 1.19-6.5.56-13.1-2.54-17.5-3.33-4.7-10.35-6.3-18.12-6.3-14.84-.1-32.45 5.5-32.45 5.5s19.21 43.5 36.96 39.9c4.45-1 8.29-4.3 11.18-8.8 3.97 3.1 7.5 6.8 10.82 10.8-9.36 22-17.81 44-24.12 66.5 21.79 2 39.71 9.7 55.46 19.4 8-32.7 15.2-60.4 30.3-84.9l29.1 2.4c4.3-8.4 13.5-19.9 9.9-29.2-13.1-16.5-29.9-23.6-49.1-30.5-9.2 0-17.7-.5-26.1-.7zm177 31.7c-1.4 3.3-2.6 8.2-3.3 13.4 3.5-1.1 7.2-1.7 11-1.7 3.3 0 6.4.4 9.4 1.2-1.9-5.5-4.3-10.6-6.7-13.8-5-6.6-8.2-4.2-10.4.9zm78.4 2.4c2.5 1.5 4.8 3.8 6.3 6.5 5.2 9.2 2.5 20-2.7 27.5-.8 1.1-1.6 2.3-2.5 3.3l40.2 68.1c1.7-8.8 3.5-20.4 4.7-33 2.4-26.1.2-55.5-9.3-67.2-9.6-8.6-24.9-5.6-36.7-5.2zm-13.4 15.3c-4.2.7-10.7 3.4-16.9 6.8-1.8 1-3.6 2-5.2 3 5.9 2.6 11.3 5.4 15.5 7.9 3.7-3.2 6.9-6.4 8.8-9.2 3.2-5.6 4.2-9.7-2.2-8.5zm-120.3 10c-4.2 3.5-1.8 7.8.5 10.6 2.3 2.7 7.6 5.9 14 8 3.9 1.2 8.1 2.2 11.9 2.9.1-6.5 1.6-13.3 4.2-18.2-7.9-2.2-25-6.2-30.6-3.3zm63 2c-10.5 0-18.6 8-18.6 17.8s8.1 17.8 18.6 17.8c10.5 0 18.6-8 18.6-17.8s-8.1-17.8-18.6-17.8zm135.7 9.9c.8 12.3 0 25-1.1 36.9-1.3 13.6-3.3 26-5.1 35.3 16.2-8.2 28.3-19.6 37.2-33.9-10.8-12.5-21.2-25.2-31-38.3zm-97.8 9.3c-3.3 6.4-4.3 13.9-8 19.1 3.4 3.1 7.5 6.5 12.3 10 5.3 3.8 10.9 7 14.8 8.3 7.2 3.3 9.8-7.3 8.6-11.6-1-3.9-4.8-9-10-13.6-6.1-5.4-12.6-9.3-17.7-12.2zM258 240.8c-6.3 4-14.7 7.6-17.4 15.1-1.1 6.1 5.7 14.7 12.2 13.2 8-3.6 12.7-10 16.8-17.1-4.7-2.8-8.6-6.6-11.6-11.2zm46.8 13c-4.7 2.2-10 3.5-15.5 3.6 1.7 10.3 4.1 29.9 11.4 35 8.7.7 9.9-33.4 4.1-38.6zm-136.2 4.9c-3.4 16.9-6.8 34-10.4 51 10.9 7.3 22.5 16.2 30.5 25 6.9 7.7 12.5 16.4 13.5 26.7.8 8.9-3.4 16.6-8.5 22.1s-11.1 9.8-16.7 13.9-10.7 7.9-13.6 11.2c-2.9 3.4-3.5 5.1-3 7.6 1.9 3.8 8.6 5.1 12.6 6.4 4.4 1.3 9.3 2.7 14.2 5.2 4.9 2.4 10.1 6.4 12.6 12.9v.1c6.9-48 12.3-90.5 27.5-128.5l51.8-1.4c3.9 14.9 7.9 30.8 11.3 43.7 9.1 13 18.4 25.9 30.7 35.2 6 4.4 11.2 6.3 14.9 6.1 5-10.9 8-25.1 19.8-27.9 5.2-1.1 10.3-1 15.3.1-4.3-10.6-8.4-21.1-12.4-31.7-8.4 3.9-18 7.5-28.3 4.7-12.6-3.4-21-13.3-27.7-24.2-1.3-2.2-2.6-4.4-3.8-6.7-7.5-.8-12.9-6.1-16.5-11.7-4-7.5-6.6-15.3-8.2-22.6-4.6 4.8-10.2 9.1-17.4 10.8-13.5.3-24.3-5.2-30.3-15.2-7.6 2-14.9 2.9-21.8 2.6-14.1-.6-26.4-6.2-36.1-15.4zm301.7 3.6c-3.4 5.4-7.2 10.4-11.5 15.1l10.9 3.7 4.8 30.4 17.8-2.8-6.6-41.2zm-145.8 7.2c-.1 8-.8 16.2-3.4 23.7-1.2 3.6-2.8 7-5.4 10 4.5 7.7 11.1 18.1 19.3 20.5 1.9.5 9.9-1.2 17.2-4.2-5.5-14.7-11-29.2-16.6-43.8-3.9-1.7-7.6-3.8-11.1-6.2zm-277.31 14-23.9 46.8 16.04 8.2 26.85-52.6c-5.92-1.4-12.22-2.2-18.99-2.4zm25.07 3.9-14.89 39.2-6.19 35.3 17.72 3.2 5.91-33.7L89.03 294c-5.33-2.6-10.88-4.8-16.77-6.6zm372.14 3.3c-4.7 3.6-9.7 6.8-15 9.8l29.2 48.9 15.4-9.2zm-349.93 6.2 2.64 39.7-14.34 18.6 14.26 11 18.47-24-2.2-33.1c-6.2-4.5-13-9-18.83-12.2zm324.03 8.9c-6.4 2.7-11.3 4.3-17.6 6.3l1.3 18.5 22.3 17.1 11-14.2-15.9-12.3zm-264.4 22.9c-3 14-6.1 27.9-9.4 41.9-14 22.5-35.4 46.8-53.15 56.4-9.69 5.3-17.05 6.2-22.71 3.4-5.67-2.8-12.14-10.9-16.34-29.5l-17.56 4c4.82 21.4 13.3 35.4 25.9 41.6 12.6 6.3 26.8 3.2 39.36-3.7 11.6-6.4 22.9-16.1 33.2-27.3-5.7 21.3-11.9 42.6-18.8 64 18.1 11.4 40.3 7.7 63 2.5 5-13.4 7.7-28.9 5.4-34.9-.4-.9-1.2-1.9-3.9-3.3-2.7-1.3-6.8-2.6-11.4-4-4.5-1.4-9.4-2.8-14.2-5.6-4.7-2.9-9.6-8-10.9-14.8-1.5-8.9 2.4-16.9 7.2-22.6 4.9-5.6 11-9.9 16.6-14 5.6-4.1 10.8-8 14-11.4 3.2-3.5 4.1-5.7 3.8-8.3v-.1c-.4-4.2-3.5-10.2-8.9-16.3-5.5-6.1-13-12.3-20.6-17.6-.2-.1-.4-.3-.6-.4zm202 65.6c-2.9 9.2-8.7 18.5-17.9 19.6-10.4 1-19.7-3.6-27.8-9.6-3-2.3-6-4.8-8.8-7.4 8.1 28.7 17.4 56.9 30.1 84.2 39.8 9.8 69.2 6.5 98 2.5-12.4-19-23.1-38.3-32.8-57.7 6.3-1.1 12.5-2.7 18.6-6 4.2 5 9.6 8.7 15 9.1 16.7 1.4 33-38.3 33-38.3s-17.9-5.1-33.4-5c-9.3 0-17.8 1.9-20.9 7.9-2.2 4-2 9.2-.4 14.2-6.5 1.4-13.2 1.6-19.9 1.4-2.6-5.5-5.1-11.1-7.5-16.6-14.3-9.3-20.2-13.7-25.3 1.7z" fill="#fff" fill-opacity="1"></path></g></svg>'
@@ -1167,6 +1175,7 @@
             샐러드아이콘,
             햄버거아이콘,
             마법의팔레트아이콘,
+            뼈다구아이콘,
         };
 
         function 화면잠금() {
@@ -1438,7 +1447,7 @@
             document.getElementById("전투화면").style.display = "block";
             document.getElementById("에너지박스").style.display = "block";
 
-            document.getElementById("화면설명").innerHTML = "선거기념 햄버거 지급 완<br>경험치 클릭 전직 / 골드 클릭 도박 / 숙련도 클릭 스킬";
+            document.getElementById("화면설명").innerHTML = "단톡 { https://open.kakao.com/o/gbnmdWvh }<br>경험치 클릭 전직 / 골드 클릭 도박 / 숙련도 클릭 스킬";
 
             const 최대 = 유저.최대스태미너 ?? 100;
             const 현재 = 유저.현재스태미너 ?? 0;
@@ -1508,10 +1517,10 @@
         }
 
         function 최고전직명(전직정보) {
-            const 킹덤전직 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
+            const 전직순서 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
 
             let 마지막직위 = null;
-            for (const 직위 of 킹덤전직) {
+            for (const 직위 of 전직순서) {
                 if (전직정보?.[직위] === 1) {
                     마지막직위 = 직위;
                 } else {
@@ -1624,17 +1633,23 @@
                             회복텍스트 = `<span><span style="color: #3b82f6;">${로그.유저아이디}</span> 체력 ${로그.효과} 회복</span>`;
                         }
 
+                        let 추가횟수표시 = "";
+                        if (로그.타입 === "공격" && 로그.추가공격횟수 > 0) {
+                            // 실제 타격 횟수 = 1(기본) + 로그.추가공격횟수
+                            const 총공격횟수 = 1 + 로그.추가공격횟수;
+                            추가횟수표시 = `<span style="margin-left: 4px; color: #f63b3b;">x${총공격횟수}</span>`;
+                        }
+
+                        // (2) innerHTML에서 공격 텍스트 뒤에 추가횟수표시 붙이기
                         로그컨테이너.innerHTML = `
-            <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-                <strong>Turn ${로그.턴}</strong>
-            </div>
-
-            <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
-                ${아이콘HTML}
-                ${로그.타입 === "공격" ? 데미지텍스트 : ""}
-                ${로그.타입 === "회복" ? 회복텍스트 : ""}
-            </div>
-
+    <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+        <strong>Turn ${로그.턴}</strong>
+    </div>
+    <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
+        ${아이콘HTML}
+        ${로그.타입 === "공격" ? 데미지텍스트 + 추가횟수표시 : ""}
+        ${로그.타입 === "회복" ? 회복텍스트 : ""}
+    </div>
 <!-- 유저와 몬스터 정보 양쪽 정렬 -->
 <div class="가로정렬" style="margin-top: 10px; justify-content: space-between; align-items: center; gap: 12px;">
     <div style="border: 0.2px solid #3b82f6; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
@@ -1874,17 +1889,23 @@
                             회복텍스트 = `<span><span style="color: #3b82f6;">${로그.유저아이디}</span> 체력 ${로그.효과} 회복</span>`;
                         }
 
+                        let 추가횟수표시 = "";
+                        if (로그.타입 === "공격" && 로그.추가공격횟수 > 0) {
+                            // 실제 타격 횟수 = 1(기본) + 로그.추가공격횟수
+                            const 총공격횟수 = 1 + 로그.추가공격횟수;
+                            추가횟수표시 = `<span style="margin-left: 4px; color: #f63b3b;">x${총공격횟수}</span>`;
+                        }
+
+                        // (2) innerHTML에서 공격 텍스트 뒤에 추가횟수표시 붙이기
                         로그컨테이너.innerHTML = `
-            <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-                <strong>Turn ${로그.턴}</strong>
-            </div>
-
-            <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
-                ${아이콘HTML}
-                ${로그.타입 === "공격" ? 데미지텍스트 : ""}
-                ${로그.타입 === "회복" ? 회복텍스트 : ""}
-            </div>
-
+    <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+        <strong>Turn ${로그.턴}</strong>
+    </div>
+    <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
+        ${아이콘HTML}
+        ${로그.타입 === "공격" ? 데미지텍스트 + 추가횟수표시 : ""}
+        ${로그.타입 === "회복" ? 회복텍스트 : ""}
+    </div>
 <!-- 유저와 몬스터 정보 양쪽 정렬 -->
 <div class="가로정렬" style="margin-top: 10px; justify-content: space-between; align-items: center; gap: 12px;">
     <div style="border: 0.2px solid #3b82f6; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
@@ -2824,6 +2845,56 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             }
         });
 
+        document.getElementById("전직화면타이틀").addEventListener("click", async () => {
+            const 확인 = window.confirm(
+                "직업 초기화에는 뼈다구 유물 1개가 소모됩니다.\n진행하시겠습니까?"
+            );
+            if (!확인) return;
+
+            화면잠금();
+
+            try {
+                const 응답 = await fetch("/reset-job", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        유저UID: 유저데이터.유저UID
+                    })
+                });
+
+                const 결과 = await 응답.json();
+
+                if (!응답.ok || 결과.오류) {
+                    메시지표시(
+                        전직화면타이틀,
+                        "",
+                        결과.오류 || "초기화 실패",
+                        ""
+                    );
+                    return;
+                }
+
+                // 서버가 정상 반환한 필드를 유저데이터에 반영
+                유저데이터.경험치 = 결과.경험치;
+                유저데이터.레벨 = 결과.레벨;
+                유저데이터.전직공격력 = 결과.전직공격력;
+                유저데이터.레벨공격력 = 결과.레벨공격력;
+                유저데이터.최종공격력 = 결과.최종공격력;
+                유저데이터.유물목록 = 결과.유물목록;
+
+                // 화면에 메시지 출력
+                메시지표시(스킬화면, "", "직업 초기화 완료", "");
+
+                // 전직화면을 새로 불러와서 다시 렌더링
+                전직화면보여주기();
+            } catch (e) {
+                메시지표시(스킬화면, "", "서버 오류: " + e.message, "");
+            } finally {
+                화면해제();
+            }
+        });
+
+
         // ✅ 장비창 내부 클릭 시 document에 이벤트 안 퍼지도록 막기
         document.getElementById("미니장비창").addEventListener("click", (e) => {
             e.stopPropagation();
@@ -2877,7 +2948,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 div.style.margin = "5px";
                 div.style.padding = "2px";
 
-                const 레어테두리유물들 = ["샐러드", "티켓"];
+                const 레어테두리유물들 = ["샐러드", "티켓", "뼈다구"];
                 if (레어테두리유물들.includes(유물이름)) {
                     div.style.border = `0.2px solid ${색상맵["레어"]}`;
                 }
@@ -3020,6 +3091,34 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                         화면잠금();
                         try {
                             const 응답 = await fetch("/use-flower", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                            });
+                            const 결과 = await 응답.json();
+
+                            if (결과.오류) {
+                                메시지표시(div, "", 결과.오류, "");
+                            } else {
+                                // 서버가 반환한 업데이트된 유물목록으로 갱신
+                                유저데이터.골드 = 결과.골드;
+                                유저데이터.유물목록 = 결과.유물목록;
+                                메시지표시(div, "", "돈생겼다 도박하러 가즈ㅏㅏ", "");
+                                // 화면 다시 렌더링
+                                document.getElementById("유물").click();
+                            }
+                        } catch (e) {
+                            메시지표시(div, "", "서버 오류 발생", "");
+                        }
+                        화면해제();
+                    }
+                    else if (유물이름 === "뼈다구") {
+                        const 확인 = confirm("뼈다구를 100,000Gold에 파시겠습니까?");
+                        if (!확인) return;
+
+                        화면잠금();
+                        try {
+                            const 응답 = await fetch("/use-bone", {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
@@ -3405,42 +3504,70 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             document.getElementById("현재층").innerText = `${유저데이터.현재층}층`;
         });
 
+
+
         async function 전직화면보여주기() {
             화면잠금();
-            document.getElementById("화면설명").innerHTML = "전직시 사용 포인트만큼 레벨이 감소합니다";
+            document.getElementById("화면설명").innerHTML =
+                "경험치를 소모하여 전직과 직업선택이 가능합니다<br>전직을 클릭 시 직업 초기화가 가능합니다<br>";
+
+            // 1) 서버에서 전직정보 + 경험치 가져오기
             const 응답 = await fetch("/get-job-info", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
             });
-
             const 결과 = await 응답.json();
             if (!응답.ok) {
                 메시지표시(메시지표시박스, "", "전직정보 조회 실패: " + 결과.오류, "");
                 화면해제();
                 return;
             }
+            const 전직정보 = 결과.전직정보;      // { "백인장":0, "오백인장":1, ... }
+            let 경험치 = 결과.경험치 ?? 0;
 
-            const 전직정보 = 결과.전직정보;
-            const 경험치 = 결과.경험치 ?? 0;
+            // 2) 서버에서 이미 선택된 계열(직업결정 JSON) 가져오기
+            const 둘째응답 = await fetch("/get-job-result", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+            });
+            const 둘째결과 = await 둘째응답.json();
+            if (!둘째응답.ok) {
+                메시지표시(메시지표시박스, "", "전직 결과 조회 실패: " + 둘째결과.오류, "");
+                화면해제();
+                return;
+            }
+            // 직업결정 컬럼 형식: null 또는 { "마술": 1 }, { "궁술": 2 } 등
+            const 직업결정JSON = 둘째결과.직업결정 || null;
+
+            // 3) 완료된 킹덤 전직 개수 계산
+            const 전직순서 = [
+                "백인장", "오백인장", "천인장", "만인장", "부장군", "장군",
+                "대장군", "대사마", "승상", "후", "공", "제후",
+                "왕", "황제", "천황", "제황", "태황", "천제"
+            ];
+            let 완료개수 = 0;
+            for (const 직위 of 전직순서) {
+                if (전직정보[직위] === 1) 완료개수++;
+                else break;
+            }
+            // 완료개수: 0~18
+
+            // 4) 컨테이너 비우기
             const container = document.getElementById("전직컨테이너");
-
-            const 킹덤전직 = ["백인장", "오백인장", "천인장", "만인장", "부장군", "장군", "대장군", "대사마", "승상", "후", "공", "제후", "왕", "황제", "천황", "제황", "태황", "천제"];
-
             document.querySelectorAll(".전직항목").forEach(e => e.remove());
 
+            // 5) “경험치와포인트” 영역 업데이트
             const 경험치div = document.getElementById("경험치와포인트");
             경험치div.innerHTML = `
-                <div>경험치</div>
-                <div>${경험치.toLocaleString()} 포인트</div>
-            `;
+        <div>경험치</div>
+        <div>${경험치.toLocaleString()} 포인트</div>
+    `;
 
-            for (let i = 0; i < 킹덤전직.length; i++) {
-                const 직위 = 킹덤전직[i];
-                const 완료여부 = 전직정보[직위] ?? 0;
-
-                if (완료여부 === 1) continue;
-
+            // 6) 킹덤 전직(왕위)의 최상위 다음 후보 표시
+            if (완료개수 < 전직순서.length) {
+                const 다음킹덤 = 전직순서[완료개수];
                 const div = document.createElement("div");
                 div.className = "사백픽셀테두리 양쪽정렬 전직항목";
                 div.style.marginTop = "5px";
@@ -3451,10 +3578,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 왼쪽.style.fontWeight = "bold";
 
                 const 직위텍스트 = document.createElement("div");
-                직위텍스트.textContent = 직위;
+                직위텍스트.textContent = 다음킹덤;
 
                 const 효과텍스트 = document.createElement("div");
-                효과텍스트.textContent = `최종공격력 x${(1.1 + i * 0.1).toFixed(1)}`;
+                효과텍스트.textContent = `최종공격력 x${(1.1 + 완료개수 * 0.1).toFixed(1)}`;
                 효과텍스트.style.fontSize = "12px";
                 효과텍스트.style.color = "gray";
                 효과텍스트.style.marginTop = "3px";
@@ -3464,87 +3591,224 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
                 const 오른쪽 = document.createElement("div");
                 오른쪽.style.borderRadius = "7px";
-                오른쪽.style.padding = "7px";
-                오른쪽.style.paddingLeft = "10px";
-                오른쪽.style.paddingRight = "10px";
+                오른쪽.style.padding = "7px 10px";
                 오른쪽.style.fontSize = "13px";
-
-                const 비용 = (i + 1) * 50000;
+                const 비용 = (완료개수 + 1) * 50000;
                 오른쪽.textContent = `전직(${비용.toLocaleString()}p)`;
                 오른쪽.style.backgroundColor = "white";
                 오른쪽.style.color = "black";
                 오른쪽.style.cursor = "pointer";
-
                 오른쪽.onclick = () => {
-                    전직하기(직위, 왼쪽);
+                    전직하기(다음킹덤, 왼쪽);
                 };
 
                 div.appendChild(왼쪽);
                 div.appendChild(오른쪽);
                 container.appendChild(div);
-
-                break;
             }
 
-            const 검술직업 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
-            const 검술직업설명 = [
+            // 7) 각 계열별 직업 목록 및 설명 정의
+            const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
+            const 검술설명 = [
                 "추가공격(1~4회) 확률 10%",
                 "추가공격(1~4회) 확률 20%",
                 "추가공격(1~4회) 확률 30%",
                 "추가공격(1~4회) 확률 40%",
                 "추가공격(1~4회) 확률 50%",
-                "추가공격(1~4회) 확률 100%",
+                "추가공격(1~4회) 확률 100%"
             ];
-            const 마술직업 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
-            const 마술직업설명 = [
+
+            const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
+            const 마술설명 = [
                 "추가데미지 20%",
                 "추가데미지 40%",
                 "추가데미지 60%",
                 "추가데미지 80%",
                 "추가데미지 100%",
-                "추가데미지 200%",
+                "추가데미지 200%"
             ];
 
-            const 신술직업 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
-            const 신술직업설명 = [
+            const 신술 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
+            const 신술설명 = [
                 "턴당체력회복 확률 10%",
                 "턴당체력회복 확률 20%",
                 "턴당체력회복 확률 30%",
                 "턴당체력회복 확률 40%",
                 "턴당체력회복 확률 50%",
-                "턴당체력회복 확률 75%",
+                "턴당체력회복 확률 75%"
             ];
 
-            const 궁술직업 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
-            const 궁술직업설명 = [
+            const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
+            const 궁술설명 = [
                 "15% 방어력 무시",
                 "30% 방어력 무시",
                 "45% 방어력 무시",
                 "60% 방어력 무시",
                 "75% 방어력 무시",
-                "99% 방어력 무시",
+                "99% 방어력 무시"
             ];
 
+            // helper: 한 개의 직업 항목을 만들어 container에 추가 (비용 매개변수 추가)
+            function 직업항목추가(직업명, 설명, 비용, onClickFn) {
+                const div = document.createElement("div");
+                div.className = "사백픽셀테두리 양쪽정렬 전직항목";
+                div.style.marginTop = "5px";
 
+                const 왼쪽 = document.createElement("div");
+                왼쪽.style.display = "flex";
+                왼쪽.style.flexDirection = "column";
+                왼쪽.style.fontWeight = "bold";
 
-            const 둘째응답 = await fetch("/get-job-result", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-            });
+                const 이름텍스트 = document.createElement("div");
+                이름텍스트.textContent = 직업명;
 
-            const 둘째결과 = await 둘째응답.json();
+                const 설명텍스트 = document.createElement("div");
+                설명텍스트.textContent = 설명;
+                설명텍스트.style.fontSize = "12px";
+                설명텍스트.style.color = "gray";
+                설명텍스트.style.marginTop = "3px";
 
-            if (!둘째응답.ok) {
-                메시지표시(메시지표시박스, "", "전직정보 조회 실패: " + 결과.오류, "");
+                왼쪽.appendChild(이름텍스트);
+                왼쪽.appendChild(설명텍스트);
+
+                const 오른쪽 = document.createElement("div");
+                오른쪽.style.borderRadius = "7px";
+                오른쪽.style.padding = "7px 10px";
+                오른쪽.style.fontSize = "13px";
+                오른쪽.textContent = `선택(${비용.toLocaleString()}p)`;
+                오른쪽.style.backgroundColor = "white";
+                오른쪽.style.color = "black";
+                오른쪽.style.cursor = "pointer";
+                오른쪽.onclick = onClickFn;
+
+                div.appendChild(왼쪽);
+                div.appendChild(오른쪽);
+                container.appendChild(div);
+            }
+
+            // a) 킹덤 완료개수 < 3: 계열 직업 노출 없음
+            if (완료개수 < 3) {
                 화면해제();
                 return;
             }
 
-            if (!둘째결과.직업결정) {
+            // b) 직업결정이 아직 없는 상태 → 1차 직업을 “[계열] 직업명” 형태로 노출
+            if (!직업결정JSON) {
+                if (완료개수 >= 3) {
+                    const cost1 = 150000;
+                    직업항목추가(
+                        `[검술] ${검술[0]}`,  // ← “[검술] 나이트”
+                        검술설명[0],
+                        cost1,
+                        () => 계열선택("검술")
+                    );
+                    직업항목추가(
+                        `[마술] ${마술[0]}`,  // ← “[마술] 매지션”
+                        마술설명[0],
+                        cost1,
+                        () => 계열선택("마술")
+                    );
+                    직업항목추가(
+                        `[신술] ${신술[0]}`,  // ← “[신술] 클레릭”
+                        신술설명[0],
+                        cost1,
+                        () => 계열선택("신술")
+                    );
+                    직업항목추가(
+                        `[궁술] ${궁술[0]}`,  // ← “[궁술] 스나이퍼”
+                        궁술설명[0],
+                        cost1,
+                        () => 계열선택("궁술")
+                    );
+                }
+                화면해제();
+                return;
+            }
+
+            // c) 직업결정JSON이 존재하는 상태 → 계열 + 단계 정보 파싱
+            const 선택계열 = Object.keys(직업결정JSON)[0];   // ex) "마술"
+            const 선택단계 = 직업결정JSON[선택계열];           // ex) 1
+
+            // 계열별 목록과 설명을 결정
+            let 계열목록, 계열설명;
+            if (선택계열 === "검술") {
+                계열목록 = 검술;
+                계열설명 = 검술설명;
+            } else if (선택계열 === "마술") {
+                계열목록 = 마술;
+                계열설명 = 마술설명;
+            } else if (선택계열 === "신술") {
+                계열목록 = 신술;
+                계열설명 = 신술설명;
+            } else {
+                계열목록 = 궁술;
+                계열설명 = 궁술설명;
+            }
+
+            // 다음 단계 인덱스 (0-based)
+            const 다음Idx = 선택단계; // 예: 선택단계=1 이면 다음Idx=1
+
+            if (다음Idx < 계열목록.length) {
+                // → “[마술] 워록” 식으로 표시
+                const 다음직업명 = `[${선택계열}] ${계열목록[다음Idx]}`;
+                const 다음설명 = 계열설명[다음Idx];
+
+                // 필요한 킹덤 전직 완료 단계: (다음Idx + 1) * 3
+                const 필요한단계 = (다음Idx + 1) * 3;
+
+                // 경험치 비용 계산 (단계 1: 100,000p, 단계 2: 200,000p, …)
+                const cost = (다음Idx + 1) * 150000;
+
+                const 클릭함수 = () => {
+                    if (완료개수 < 필요한단계) {
+                        메시지표시(
+                            메시지표시박스,
+                            "",
+                            `${전직순서[필요한단계 - 1]} 전직 완료 시 선택할 수 있습니다.`,
+                            ""
+                        );
+                        return;
+                    }
+                    계열선택(선택계열);
+                };
+
+                직업항목추가(다음직업명, 다음설명, cost, 클릭함수);
             }
 
             화면해제();
+        }
+
+
+
+
+        async function 계열선택(계열) {
+            화면잠금();
+            try {
+                // 서버에 선택된 계열을 저장
+                const 응답 = await fetch("/set-job-result", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        유저UID: 유저데이터.유저UID,
+                        계열선택: 계열  // ex) "궁술"
+                    })
+                });
+
+                const 결과 = await 응답.json();
+                if (!응답.ok) {
+                    // 오류가 있을 때 메시지 표시하고 화면 해제
+                    메시지표시(메시지표시박스, "", (결과.오류 || "알 수 없는 오류"), "");
+                    화면해제();
+                    return;
+                }
+
+                // 저장이 완료되었으면 전직화면을 다시 그리기
+                await 전직화면보여주기();
+            } catch (e) {
+                메시지표시(메시지표시박스, "", "서버 오류 발생", "");
+            } finally {
+                화면해제();
+            }
         }
 
 
@@ -3599,6 +3863,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
             "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
             "플라워": { 설명: "스킬을 초기화합니다" },
+            "뼈다구": { 설명: "직업을 초기화합니다" },
             "티켓": { 설명: "고급장비도박에 사용됩니다" },
             "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
         };
@@ -3613,6 +3878,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
             "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
             "플라워": { 설명: "스킬을 초기화합니다" },
+            "뼈다구": { 설명: "직업을 초기화합니다" },
             "티켓": { 설명: "고급장비도박에 사용됩니다" },
             "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
             "마법의팔레트": { 설명: "아이디를 염색합니다" },
@@ -3640,19 +3906,19 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                         location.reload();
                     }
 
-                    if (!유저정보 || 유저정보.버전업 !== 7) {
-                        await fetch("/delete-user", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ 유저UID: user.id })
-                        });
+                    // if (!유저정보 || 유저정보.버전업 !== 7) {
+                    //     await fetch("/delete-user", {
+                    //         method: "POST",
+                    //         headers: { "Content-Type": "application/json" },
+                    //         body: JSON.stringify({ 유저UID: user.id })
+                    //     });
 
-                        await supabase.auth.signOut();
-                        alert("드락실 벨고르 마하 투라크... 에이라스 노 크살. 메테오!");
-                        location.reload();
-                        alert("메테오를 맞고 새로 태어납니다.");
-                        return;
-                    }
+                    //     await supabase.auth.signOut();
+                    //     alert("드락실 벨고르 마하 투라크... 에이라스 노 크살. 메테오!");
+                    //     location.reload();
+                    //     alert("메테오를 맞고 새로 태어납니다.");
+                    //     return;
+                    // }
 
                     유저데이터 = 유저정보;
                     메시지표시(메시지표시박스, "", "자동로그인 완료", "");
@@ -3842,6 +4108,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 셋째줄행 = 한줄에두칸("셋째줄왼쪽", "셋째줄오른쪽");
             const 넷째줄행 = 한줄에두칸("넷째줄왼쪽", "넷째줄오른쪽");
             const 다섯째줄행 = 한줄에두칸("다섯째줄왼쪽", "다섯째줄오른쪽");
+            const 여섯째줄행 = 한줄에두칸("여섯째줄왼쪽", "여섯째줄오른쪽");
 
             // ─── 다섯째줄(=열째줄) 3칸짜리 행 생성 ───
             const 열째줄행 = 한줄에세칸(
@@ -3860,6 +4127,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             컨테이너.appendChild(셋째줄행);
             컨테이너.appendChild(넷째줄행);
             컨테이너.appendChild(다섯째줄행);
+            컨테이너.appendChild(여섯째줄행);
             컨테이너.appendChild(열째줄행);
             컨테이너.appendChild(열한째줄행);
 
@@ -3928,6 +4196,43 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             document.getElementById("넷째줄오른쪽").innerHTML = 유저데이터.생성일 ? `생성일 : ${유저데이터.생성일}` : `생성일 : -`;
             document.getElementById("다섯째줄오른쪽").innerHTML = (유저데이터.스태미너소모총량 !== undefined && 유저데이터.스태미너소모총량 !== 0) ? `전적 : ${유저데이터.스태미너소모총량}전` : `전적 : -`;
 
+            // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
+            const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
+            const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
+            const 신술 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
+            const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
+
+            // … (유저데이터.직업결정은 { "신술": 6 } 같은 객체 형태로 들어있다고 가정)
+
+            const 결정객체 = 유저데이터.직업결정;  // 예: { "신술": 6 }
+            if (결정객체) {
+                // 첫 번째(유일한) 키만 꺼냅니다. → "신술"
+                const 계열키 = Object.keys(결정객체)[0];
+                // 해당 키의 값(단계)을 꺼냅니다. → 6
+                const 단계 = 결정객체[계열키];
+
+                // 단계(숫자)에 해당하는 실제 직업명을 찾아서 변수에 저장
+                let 직업이름;
+                if (계열키 === "검술") {
+                    직업이름 = 검술[단계 - 1];   // 예: 단계=1 → 검술[0] = "나이트"
+                } else if (계열키 === "마술") {
+                    직업이름 = 마술[단계 - 1];
+                } else if (계열키 === "신술") {
+                    직업이름 = 신술[단계 - 1];   // 단계=6 → 신술[5] = "퀸"
+                } else if (계열키 === "궁술") {
+                    직업이름 = 궁술[단계 - 1];
+                } else {
+                    직업이름 = "-";
+                }
+
+                // 화면에 “신술(퀸)” 형태로 표시
+                document.getElementById("여섯째줄왼쪽").innerHTML = `직업 : [${계열키}] ${직업이름}`;
+            } else {
+                // 아직 선택된 직업이 없으면 ‘-’만 표시
+                document.getElementById("여섯째줄왼쪽").innerHTML = "직업 : -";
+            }
+
+
             // ─── “공격력 최댓값 장비” 찾기 및 표시 ───
             const 목록 = 유저데이터.장비목록;
             let bestWeapon = null;
@@ -3971,7 +4276,23 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             컨테이너.innerHTML = "";
 
             const 문장들 = [
+                `${여름아이콘}`,
+                "앞으로의 방향",
+                "장비 리뉴얼",
+                "보스별 상세스탯 설정",
+                "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
+
                 `${봄아이콘}`,
+                `
+25.06.05<br>
+직업이 구현되었습니다<br>
+유물. 뼈다구가 추가되었습니다(직업초기화)<br>
+과금상품에 플라워가 부활, 뼈다구가 추가되었습니다<br>
+전직화면에서 전직 타이틀 클릭 시 직업초기화가 가능합니다<br>
+전 유저에게 뼈다구 1개가 지급되었습니다<br>
+레벨당 공격력이 1로 너프되었습니다<br>
+전당화면에서 미니장비창 표시 로직을 개선했습니다<br>
+  `,
                 `
 25.06.03<br>
 업데이트 시 자동새로고침<br>
@@ -4066,11 +4387,6 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 스킬초기화 안되게할랬찌만, 유물 소모로 구현<br>
 패치노트 기록하기로 결심
   `,
-                "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
-                `${여름아이콘}`,
-                "앞으로의 방향",
-                "직업 개발",
-                "보스별 상세스탯 설정",
                 "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
                 `${가을아이콘}`,
                 "가글(gagl)에 찾아와 주셔서 감사합니다",
@@ -4202,7 +4518,43 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                     닉네임표시 = `<span class="마법의팔레트에메랄드숲">${닉네임표시}</span>`;
                 }
 
-                오른쪽.innerHTML = `${유저.직위 ? `[${유저.직위}] ` : ""}${닉네임표시} (lv.${유저.레벨 || 1}) - 공격력 ${유저.최종공격력} / ${유저.현재층}층`;
+                // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
+                const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
+                const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
+                const 신술 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
+                const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
+
+                // … (유저데이터.직업결정은 { "신술": 6 } 같은 객체 형태로 들어있다고 가정)
+
+                const 결정객체 = 유저.직업결정;  // 예: { "신술": 6 }
+                if (결정객체) {
+                    // 첫 번째(유일한) 키만 꺼냅니다. → "신술"
+                    const 계열키 = Object.keys(결정객체)[0];
+                    // 해당 키의 값(단계)을 꺼냅니다. → 6
+                    const 단계 = 결정객체[계열키];
+
+                    // 단계(숫자)에 해당하는 실제 직업명을 찾아서 변수에 저장
+                    let 직업이름;
+                    if (계열키 === "검술") {
+                        직업이름 = 검술[단계 - 1];   // 예: 단계=1 → 검술[0] = "나이트"
+                    } else if (계열키 === "마술") {
+                        직업이름 = 마술[단계 - 1];
+                    } else if (계열키 === "신술") {
+                        직업이름 = 신술[단계 - 1];   // 단계=6 → 신술[5] = "퀸"
+                    } else if (계열키 === "궁술") {
+                        직업이름 = 궁술[단계 - 1];
+                    } else {
+                        직업이름 = "-";
+                    }
+
+
+                    오른쪽.innerHTML = `[${직업이름}] ${닉네임표시} (lv.${유저.레벨 || 1}) - 공격력 ${유저.최종공격력} / ${유저.현재층}층`;
+
+                } else {
+                    오른쪽.innerHTML = `${닉네임표시} (lv.${유저.레벨 || 1}) - 공격력 ${유저.최종공격력} / ${유저.현재층}층`;
+
+                }
+
                 오른쪽.style.flex = "1";
                 오른쪽.style.textAlign = "right";
 
@@ -4213,6 +4565,14 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                     e.stopPropagation();
 
                     const 창 = document.getElementById("미니장비창");
+
+
+                    // ① 이미 미니장비창이 화면에 떠 있으면 "닫기만" 하고 리턴
+                    if (창.style.display === "block") {
+                        창.style.display = "none";
+                        return;  // 다른 동작 없이 함수 종료
+                    }
+
                     창.style.display = "block";
 
                     // 줄의 뷰포트 내 위치 가져오기 (스크롤 무시됨)
@@ -4268,6 +4628,9 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
             });
             화면해제();
         }
+
+
+
 
         function 펫보여주기(아이콘HTML, 색상코드 = "#ffffff") {
             const 펫 = document.getElementById("펫컨테이너");
@@ -4520,16 +4883,25 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                             회복텍스트 = `<span><span style="color: #3b82f6;">${로그.유저아이디}</span> 체력 ${로그.효과} 회복</span>`;
                         }
 
+                        let 추가횟수표시 = "";
+                        if (로그.타입 === "공격" && 로그.추가공격횟수 > 0) {
+                            // 실제 타격 횟수 = 1(기본) + 로그.추가공격횟수
+                            const 총공격횟수 = 1 + 로그.추가공격횟수;
+                            추가횟수표시 = `<span style="margin-left: 4px; color: #f63b3b;">x${총공격횟수}</span>`;
+                        }
+
+                        // (2) innerHTML에서 공격 텍스트 뒤에 추가횟수표시 붙이기
                         로그컨테이너.innerHTML = `
-                    <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-                        <strong>Turn ${로그.턴}</strong>
-                    </div>
-                    <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
-                        ${아이콘HTML}
-                        ${로그.타입 === "공격" ? 데미지텍스트 : ""}
-                        ${로그.타입 === "회복" ? 회복텍스트 : ""}
-                    </div>
-                    <div class="가로정렬" style="margin-top: 10px; justify-content: space-between; align-items: center; gap: 12px;">
+    <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+        <strong>Turn ${로그.턴}</strong>
+    </div>
+    <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
+        ${아이콘HTML}
+        ${로그.타입 === "공격" ? 데미지텍스트 + 추가횟수표시 : ""}
+        ${로그.타입 === "회복" ? 회복텍스트 : ""}
+    </div>
+    
+    <div class="가로정렬" style="margin-top: 10px; justify-content: space-between; align-items: center; gap: 12px;">
                         <div style="border: 0.2px solid #3b82f6; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
                             <div>${로그.유저아이디}</div>
                             <div>

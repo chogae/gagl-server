@@ -577,7 +577,6 @@ app.post("/attack-normal", async (req, res) => {
         숙련도: 새유저.숙련도,
         현재층: 새유저.현재층,
         스킬: 새유저.스킬,
-        버전업: 새유저.버전업,
         유물목록: 새유저.유물목록,
         현재스태미너,
         스태미너소모총량: 유저.스태미너소모총량,
@@ -793,7 +792,6 @@ app.post("/attack-rare", async (req, res) => {
         조우기록: 새유저.조우기록,
         합성기록: 새유저.합성기록,
         장비목록: 새유저.장비목록,
-        버전업: 새유저.버전업,
         유물목록: 새유저.유물목록,
         현재스태미너,
         스태미너소모총량: 유저.스태미너소모총량,
@@ -981,6 +979,37 @@ app.post("/use-flower", async (req, res) => {
     const 판매골드 = 100000;
     유저.골드 += 판매골드;
     const 유물목록 = { ...유저.유물목록, 플라워: 보유 - 1 };
+
+    await supabaseAdmin
+        .from("users")
+        .update({ 골드: 유저.골드, 유물목록 })
+        .eq("유저UID", 유저UID);
+
+    return res.json({
+        결과: "성공",
+        골드: 유저.골드,
+        유물목록
+    });
+});
+
+app.post("/use-bone", async (req, res) => {
+    const { 유저UID } = req.body;
+    if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("골드, 유물목록")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
+
+    const 보유 = 유저.유물목록?.["뼈다구"] || 0;
+    if (보유 < 1) return res.status(400).json({ 오류: "뼈다구가 없습니다" });
+
+    const 판매골드 = 100000;
+    유저.골드 += 판매골드;
+    const 유물목록 = { ...유저.유물목록, 뼈다구: 보유 - 1 };
 
     await supabaseAdmin
         .from("users")
@@ -1506,6 +1535,69 @@ app.post("/get-job-result", async (req, res) => {
     });
 });
 
+app.post("/set-job-result", async (req, res) => {
+    const { 유저UID, 계열선택 } = req.body;
+    if (!유저UID || !계열선택) {
+        return res.status(400).json({ 오류: "유저UID 또는 계열 정보 누락" });
+    }
+
+    try {
+        // 1) 현재 저장된 직업결정(JSON) 컬럼 + 경험치 조회
+        const { data: 유저, error: 조회에러 } = await supabaseAdmin
+            .from("users")
+            .select("직업결정, 경험치")
+            .eq("유저UID", 유저UID)
+            .single();
+
+        if (조회에러 || !유저) {
+            return res.status(404).json({ 오류: "유저 정보 없음" });
+        }
+
+        // 2) 기존에 저장된 JSON을 파싱하거나, 없으면 빈 객체로 초기화
+        const 기존직업결정 = 유저.직업결정 || {};
+        // 예) { "궁술": 1 } 혹은 {}
+
+        // 3) 해당 계열의 단계 계산 (이미 키가 있으면 +1, 없으면 1부터 시작)
+        const 현재단계 = 기존직업결정[계열선택] ?? 0;
+        const 다음단계 = 현재단계 + 1;
+
+        // 4) 경험치 비용 계산 (단계 1 → 100,000p, 단계 2 → 200,000p, …)
+        const cost = 다음단계 * 150000;
+
+        // 5) 경험치 충분 여부 검사
+        const 현재경험치 = 유저.경험치 ?? 0;
+        if (현재경험치 < cost) {
+            return res.status(400).json({ 오류: `경험치가 부족합니다` });
+        }
+
+        // 6) 새로운 JSON 객체 생성
+        const 새로운직업결정 = {
+            ...기존직업결정,
+            [계열선택]: 다음단계
+        };
+
+        // 7) 새로운 경험치 계산
+        const 새로운경험치 = 현재경험치 - cost;
+
+        // 8) users 테이블의 직업결정 + 경험치 컬럼 업데이트
+        const { error: 업데이트에러 } = await supabaseAdmin
+            .from("users")
+            .update({
+                직업결정: 새로운직업결정,
+                경험치: 새로운경험치
+            })
+            .eq("유저UID", 유저UID);
+
+        if (업데이트에러) {
+            return res.status(500).json({ 오류: "DB 업데이트 실패" });
+        }
+
+        return res.json({ 성공: true, 새로운경험치 });
+    } catch (e) {
+        return res.status(500).json({ 오류: "서버 예외 발생" });
+    }
+});
+
 app.post("/promote-job", async (req, res) => {
     const { 유저UID, 직위 } = req.body;
 
@@ -1543,7 +1635,7 @@ app.post("/promote-job", async (req, res) => {
     유저.전직공격력 = 완료전직갯수 + 2;
     const 새레벨 = Math.floor((경험치 - 비용) / 1000) + 1;
 
-    const 새레벨공격력 = 10 + (새레벨 - 1) * 5;
+    const 새레벨공격력 = 10 + (새레벨 - 1) * 1;
     유저.레벨공격력 = 새레벨공격력;
 
     const 최종공격력 = 최종공격력계산(유저);
@@ -1568,6 +1660,137 @@ app.post("/promote-job", async (req, res) => {
     }
 
     return res.json({ 성공: true, 전직정보: 전직정보, 경험치: 경험치 - 비용, 레벨: 새레벨, 최종공격력: 최종공격력 });
+});
+
+function calc전직환급(expInfo) {
+    // expInfo 는 JSON 객체. 예: { "공":0, "왕":1, "후":1, ... }
+    const learnedCount = Object.values(expInfo).filter(v => v === 1).length;
+    let total = 0;
+    for (let i = 1; i <= learnedCount; i++) {
+        total += 50000 * i;
+    }
+    return total;
+}
+
+// Helper: 직업결정 JSON에서 레벨을 꺼내어 누적 경험치 계산 (150k * 1 + 150k * 2 + …)
+function calc직업환급(jobDecision) {
+    // jobDecision 은 null 이거나 { "계열명": 숫자 } 형태
+    if (!jobDecision) return 0;
+    // Object.values(jobDecision)[0]으로 레벨을 가져옴
+    const level = Object.values(jobDecision)[0];
+    if (typeof level !== 'number' || level < 1) return 0;
+
+    let total = 0;
+    for (let i = 1; i <= level; i++) {
+        total += 150000 * i;
+    }
+    return total;
+}
+
+// index.js (기존 코드에서 /reset-job 핸들러만 발췌하여 수정한 예시)
+
+app.post('/reset-job', async (req, res) => {
+    const { 유저UID } = req.body;
+    if (!유저UID) {
+        return res.status(400).json({ 오류: '유저UID 누락' });
+    }
+
+    try {
+        // 1) 유저 정보 조회
+        //    - 최종공격력 계산을 위해 '장비공격력'과 '펫단계'도 함께 가져옵니다.
+        const { data: user, error: selectError } = await supabaseAdmin
+            .from('users')
+            .select('전직정보, 직업결정, 경험치, 유물목록, 장비공격력, 펫단계')
+            .eq('유저UID', 유저UID)
+            .single();
+
+        if (selectError || !user) {
+            return res.status(404).json({ 오류: '유저 정보 없음' });
+        }
+
+        // 2) "뼈다구" 유물이 최소 1개 있는지 확인
+        const 유물목록 = user.유물목록 || {};
+        const 현재뼈다구개수 = (유물목록['뼈다구'] ?? 0);
+        if (현재뼈다구개수 < 1) {
+            return res.status(400).json({ 오류: '뼈다구 유물이 부족합니다.' });
+        }
+
+        // 3) 기존 전직정보에서 환급 경험치 계산
+        //    calc전직환급() 함수는, 값이 1인 키의 개수만큼 (50,000 × 레벨번호)를 누적하여 반환합니다.
+        const 전직정보 = user.전직정보 || {};
+        const 전직환급 = calc전직환급(전직정보);  // :contentReference[oaicite:0]{index=0}
+
+        // 4) 기존 직업결정에서 환급 경험치 계산
+        //    calc직업환급() 함수는, 저장된 레벨에 따라 (150,000 × 레벨번호)를 누적하여 반환합니다.
+        const 직업환급 = calc직업환급(user.직업결정);  // :contentReference[oaicite:1]{index=1}
+
+        // 5) 최종 환급 경험치 = 전직환급 + 직업환급
+        const total환급 = 전직환급 + 직업환급;
+
+        // 6) 기존 경험치 + 환급된 경험치
+        const 기존경험치 = user.경험치 ?? 0;
+        const 환급후경험치 = 기존경험치 + total환급;
+
+        // 7) 유물목록에서 "뼈다구" 1개 차감
+        const updated유물목록 = {
+            ...유물목록,
+            '뼈다구': 현재뼈다구개수 - 1
+        };
+
+        // 8) 전직정보 초기화: 모든 키를 0으로 변경
+        const 초기전직정보 = {};
+        for (const key of Object.keys(전직정보)) {
+            초기전직정보[key] = 0;
+        }
+
+        const 새전직공격력 = 1;
+
+        const 새레벨 = Math.floor(환급후경험치 / 1000) + 1;
+
+        const 새레벨공격력 = 10 + (새레벨 - 1) * 1;
+
+        const 임시유저 = {
+            ...user,
+            경험치: 환급후경험치,
+            전직정보: 초기전직정보,
+            전직공격력: 새전직공격력,
+            레벨: 새레벨,
+            레벨공격력: 새레벨공격력,
+            장비공격력: user.장비공격력,
+            유물목록: updated유물목록
+        };
+        const 새최종공격력 = 최종공격력계산(임시유저);  // :contentReference[oaicite:2]{index=2}
+
+        const { error: updateError } = await supabaseAdmin
+            .from('users')
+            .update({
+                전직정보: 초기전직정보,
+                직업결정: null,
+                경험치: 환급후경험치,
+                유물목록: updated유물목록,
+                전직공격력: 새전직공격력,
+                레벨: 새레벨,
+                레벨공격력: 새레벨공격력,
+                최종공격력: 새최종공격력
+            })
+            .eq('유저UID', 유저UID);
+
+        if (updateError) {
+            return res.status(500).json({ 오류: '업데이트 실패: ' + updateError.message });
+        }
+
+        // 14) 클라이언트에 반환
+        return res.json({
+            경험치: 환급후경험치,
+            레벨: 새레벨,
+            전직공격력: 새전직공격력,
+            레벨공격력: 새레벨공격력,
+            최종공격력: 새최종공격력,
+            유물목록: updated유물목록
+        });
+    } catch (e) {
+        return res.status(500).json({ 오류: '서버 오류: ' + e.message });
+    }
 });
 
 function 최고전직명(전직정보) {
@@ -1887,23 +2110,53 @@ function 브로큰방어무시율계산(유저) {
 function 데미지계산(유저, 몬스터, 스킬결과) {
     let 방어력 = 몬스터.방어력 || 0;
 
+    // 1) 쉴드밴 보정
     const 쉴드밴개수 = 유저.유물목록?.["쉴드밴"] || 0;
     const 보정 = 1 - 0.01 * 쉴드밴개수;
 
     if (스킬결과.방어무시율 > 0) {
         방어력 = Math.floor(방어력 * (1 - 스킬결과.방어무시율) * 보정);
+    } else {
+        방어력 = Math.floor(방어력 * 보정);
     }
 
-    const 랜덤보정 = Math.random() * 0.4 + 0.8;
+    // 2) 궁술 계열 방어무시 로직
+    const 결정객체 = 유저.직업결정 || {};
+    const 계열키 = Object.keys(결정객체)[0];  // 예: "궁술", "마술" 등
+    if (계열키 === "궁술") {
+        const 단계 = 결정객체[계열키];  // 1~6
+        const 궁술무시율 = [0.15, 0.30, 0.45, 0.60, 0.75, 0.99];
+        if (단계 >= 1 && 단계 <= 궁술무시율.length) {
+            const 직업방어무시율 = 궁술무시율[단계 - 1];
+            방어력 = Math.floor(방어력 * (1 - 직업방어무시율));
+        }
+    }
 
+    // 3) 랜덤 보정 및 기본/랜덤 데미지 계산
+    const 랜덤보정 = Math.random() * 0.4 + 0.8;
     const 기본데미지 = Math.max(0, 유저.최종공격력 - 방어력);
     const 랜덤데미지 = Math.floor(기본데미지 * 랜덤보정);
 
+    // 4) 크리티컬·버서커·버닝 등의 배율 합성
     const 최종배율 = (스킬결과.크리티컬배율) * (스킬결과.버서커배율) * (스킬결과.버닝배율);
-    const 최종데미지 = Math.floor(랜덤데미지 * 최종배율);
+
+    // 5) 마술 계열 추가 데미지 로직
+    //    단계별 추가비율: [20%, 40%, 60%, 80%, 100%, 200%] → [1.2, 1.4, 1.6, 1.8, 2.0, 3.0]
+    let 직업추가배율 = 1;
+    if (계열키 === "마술") {
+        const 단계 = 결정객체[계열키];  // 1~6
+        const 마술배율 = [1.2, 1.4, 1.6, 1.8, 2.0, 3.0];
+        if (단계 >= 1 && 단계 <= 마술배율.length) {
+            직업추가배율 = 마술배율[단계 - 1];
+        }
+    }
+
+    // 6) 최종데미지 계산 (원래 데미지 * 마술추가배율)
+    const 최종데미지 = Math.floor(랜덤데미지 * 최종배율 * 직업추가배율);
 
     return 최종데미지;
 }
+
 
 function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴, 보스전 = false) {
     let 유저HP = 유저.남은체력;
@@ -1914,11 +2167,30 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴, 보�
     let 몬스터HP = 몬스터.체력;
     let 현재턴 = 시작턴;
 
+    const 신술확률 = [0.10, 0.20, 0.30, 0.40, 0.50, 0.75];
+    const 검술확률 = [0.10, 0.20, 0.30, 0.40, 0.50, 1.00];
+
     while (유저HP > 0 && (보스전 || 몬스터HP > 0)) {
         몬스터HP = Math.max(0, 몬스터HP);
         유저HP = Math.max(0, 유저HP);
 
         유저HP--;
+
+        // ↓ 여기에 신술 회복 로직 추가 ↓
+        // 1) 유저 직업 결정 객체 가져오기
+        const 결정객체 = 유저.직업결정 || {};
+        const 계열키 = Object.keys(결정객체)[0];  // 예: "신술"
+
+        if (계열키 === "신술") {
+            const 단계 = 결정객체[계열키];  // 예: 1 ~ 6
+            // 단계가 유효 범위(1~6)인지 확인
+            if (단계 >= 1 && 단계 <= 신술확률.length) {
+                const 확률 = 신술확률[단계 - 1];  // 배열은 0부터 시작하므로 단계-1
+                if (Math.random() < 확률) {
+                    유저HP++;  // 확률에 따라 턴당 체력 1 회복
+                }
+            }
+        }
 
         // 🟡 스킬별 개별 계산
         const 크리티컬배율 = 크리티컬배율계산(유저);
@@ -1934,6 +2206,11 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴, 보�
         });
 
         유저HP -= 체력소모;
+
+
+
+
+
 
         if (!보스전) {
             몬스터HP -= 데미지;
@@ -1955,6 +2232,34 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴, 보�
             방어보정
         );
 
+
+
+
+
+        // ── 검술 추가공격 로직 ──
+        let 추가공격횟수 = 0;  // 기본값 0으로 초기화
+
+        if (계열키 === "검술") {
+            const 단계 = 결정객체[계열키];  // 1~6
+            if (단계 >= 1 && 단계 <= 검술확률.length) {
+                const 확률 = 검술확률[단계 - 1];
+                if (Math.random() < 확률) {
+                    // 1~4회 랜덤 추가공격 횟수 계산
+                    const 횟수 = Math.floor(Math.random() * 4) + 1;
+                    추가공격횟수 = 횟수;
+
+                    // 실제로 몬스터에 데미지 적용
+                    for (let i = 0; i < 횟수; i++) {
+                        if (!보스전) {
+                            몬스터HP -= 데미지;
+                            몬스터HP = Math.max(0, 몬스터HP);
+                        }
+                    }
+                }
+            }
+        }
+
+        // ── 전투로그에 기본 공격 로그 + 추가공격횟수만 푸쉬 ──
         전투로그.push({
             턴: 현재턴,
             타입: "공격",
@@ -1968,7 +2273,8 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴, 보�
             몬스터최대체력: 몬스터.체력,
             몬스터방어력: 몬스터방어력계산,
             아이콘: 발동아이콘,
-            효과: `${데미지}`
+            효과: `${데미지}`,
+            추가공격횟수  // 예: 2면 { 추가공격횟수: 2 }로 들어감
         });
 
         현재턴++;
@@ -2060,7 +2366,7 @@ function 레벨업판정(현재경험치, 현재레벨) {
     return {
         새레벨,
         증가한레벨: 증가량,
-        증가한공격력: 증가량 * 5
+        증가한공격력: 증가량 * 1
     };
 }
 
@@ -2272,6 +2578,7 @@ const 레어유물데이터 = {
     "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
     "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
     "플라워": { 설명: "스킬을 초기화합니다" },
+    "뼈다구": { 설명: "직업을 초기화합니다" },
     "티켓": { 설명: "고급장비도박에 사용됩니다" },
     "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
 };
@@ -2286,6 +2593,7 @@ const 신화유물데이터 = {
     "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
     "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
     "플라워": { 설명: "스킬을 초기화합니다" },
+    "뼈다구": { 설명: "직업을 초기화합니다" },
     "티켓": { 설명: "고급장비도박에 사용됩니다" },
     "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
     "마법의팔레트": { 설명: "아이디를 염색합니다" },
