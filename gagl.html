@@ -4672,6 +4672,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                 줄.appendChild(오른쪽);
 
                 줄.addEventListener("click", (e) => {
+                    화면잠금();
                     e.stopPropagation();
                     const 창 = document.getElementById("미니정보창");
 
@@ -4809,7 +4810,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                     장비박스2.innerHTML = "가장쌘방어구";
                     const 장비박스3 = document.getElementById("열째줄오른쪽");
                     장비박스3.innerHTML = "가장쌘장신구";
-
+                    화면해제();
                 });
 
 
