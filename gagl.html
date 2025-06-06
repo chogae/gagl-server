@@ -4719,6 +4719,17 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                     창.appendChild(열한째줄행);
 
 
+
+                    // ─── 내용 채우기 ───
+                    document.getElementById("첫째줄왼쪽").innerHTML = `아이디 : ${유저.유저아이디}`;
+                    document.getElementById("둘째줄왼쪽").innerHTML = `공격력 : ${유저.최종공격력}`;
+                    document.getElementById("셋째줄왼쪽").innerHTML = `최대체력 : ${유저.최대체력}`;
+                    document.getElementById("넷째줄왼쪽").innerHTML = `전당 : ${index + 1}위`;
+
+                    document.getElementById("둘째줄오른쪽").innerHTML = (유저.현질기한 !== undefined && 유저.현질기한 !== 0) ? `마법의팔레트 : ${유저.현질기한}/30` : `마법의팔레트 : -`;
+                    document.getElementById("셋째줄오른쪽").innerHTML = (유저.햄버거현질기한 !== undefined && 유저.햄버거현질기한 !== 0) ? `햄버거정기배송 : ${유저.햄버거현질기한}/30` : `햄버거정기배송 : -`;
+                    document.getElementById("넷째줄오른쪽").innerHTML = 유저.생성일 ? `생성일 : ${유저.생성일}` : `생성일 : -`;
+
                     const bossIndex = 보스랭킹.findIndex(u => u.유저UID === 유저.유저UID);
 
                     if (bossIndex >= 0) {
@@ -4729,23 +4740,6 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                         // 순위가 없으면 “-”만 표시
                         document.getElementById("다섯째줄왼쪽").innerText = `보스 : -`;
                     }
-                    document.getElementById("넷째줄왼쪽").innerHTML = `전당 : ${index + 1}위`;
-
-                    // ─── 내용 채우기 ───
-                    document.getElementById("첫째줄왼쪽").innerHTML = `아이디 : ${유저.유저아이디}`;
-                    document.getElementById("둘째줄왼쪽").innerHTML = `공격력 : ${유저.최종공격력}`;
-                    document.getElementById("셋째줄왼쪽").innerHTML = `최대체력 : ${유저.최대체력}`;
-                    // document.getElementById("넷째줄왼쪽").innerHTML = `전당 : 위`;
-                    // document.getElementById("다섯째줄왼쪽").innerHTML = `보스 : 위`;
-
-                    // document.getElementById("첫째줄오른쪽").innerHTML = `탈퇴`;
-                    // <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
-                    // document.getElementById("열한째줄가운데").innerHTML =
-                    //     `<div style="margin-top: 20px; cursor: pointer;" id="탈퇴" onclick="회원탈퇴()">{ 계 정 탈 퇴 }</div>`;
-                    document.getElementById("열한째줄가운데").innerHTML = ``;
-                    document.getElementById("둘째줄오른쪽").innerHTML = (유저.현질기한 !== undefined && 유저.현질기한 !== 0) ? `마법의팔레트 : ${유저.현질기한}/30` : `마법의팔레트 : -`;
-                    document.getElementById("셋째줄오른쪽").innerHTML = (유저.햄버거현질기한 !== undefined && 유저.햄버거현질기한 !== 0) ? `햄버거정기배송 : ${유저.햄버거현질기한}/30` : `햄버거정기배송 : -`;
-                    document.getElementById("넷째줄오른쪽").innerHTML = 유저.생성일 ? `생성일 : ${유저.생성일}` : `생성일 : -`;
                     document.getElementById("다섯째줄오른쪽").innerHTML = (유저.스태미너소모총량 !== undefined && 유저.스태미너소모총량 !== 0) ? `전적 : ${유저.스태미너소모총량}전` : `전적 : -`;
 
                     // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
@@ -4809,6 +4803,10 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                     장비박스2.innerHTML = "가장쌘방어구";
                     const 장비박스3 = document.getElementById("열째줄오른쪽");
                     장비박스3.innerHTML = "가장쌘장신구";
+
+
+                    document.getElementById("열한째줄가운데").innerHTML = ``;
+
                 });
 
 
