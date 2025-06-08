@@ -244,58 +244,12 @@ app.post("/get-user", async (req, res) => {
     유저.장비공격력 = max공격력;
 
     유저.버전업 = 8;
+    유저.최대체력 = 10;
 
 
 
-    // (async function backgroundUpdate() {
-    //     // 1) 등급별 기준 무기 공격력 매핑 객체
-    //     const 공격력맵 = {
-    //         "일반": { 이름: "릴리트의 독니", 공격력: 30 },
-    //         "레어": { 이름: "디아블로의 뿔", 공격력: 63 },
-    //         "신화": { 이름: "레비아탄의 비늘", 공격력: 132 },
-    //         "고대": { 이름: "벨제부브의 꼬리", 공격력: 276 },
-    //         "태초": { 이름: "사탄의 날개", 공격력: 576 },
-    //         "타락": { 이름: "루시퍼의 심장", 공격력: 1200 },
-    //     };
 
-    //     let from = 0, pageSize = 100;
-    //     while (true) {
-    //         const { data: users } = await supabaseAdmin
-    //             .from("users")
-    //             .select("*")
-    //             .range(from, from + pageSize - 1);
-    //         if (!users?.length) break;
 
-    //         await Promise.all(users.map(async u => {
-    //             const 기록 = u.합성기록 || {};
-    //             const new장비목록 = (u.장비목록 || []).map(item => {
-    //                 const 수량 = 기록[`${item.이름}|${item.등급}`] || 0;
-    //                 const 매핑 = 공격력맵[item.등급];
-    //                 const 공격력 = (매핑 && 매핑.이름 === item.이름)
-    //                     ? 매핑.공격력
-    //                     : item.공격력;
-    //                 return { ...item, 수량, 공격력 };
-    //             });
-    //             const max공격력 = new장비목록.length
-    //                 ? Math.max(...new장비목록.map(e => e.공격력))
-    //                 : 0;
-
-    //             const 계산용유저 = { ...u, 장비공격력 };
-    //             const 최종Atk = 최종공격력계산(계산용유저);
-
-    //             await supabaseAdmin
-    //                 .from("users")
-    //                 .update({
-    //                     장비목록: new장비목록,
-    //                     장비공격력: max공격력,
-    //                     최종공격력: 최종Atk
-    //                 })
-    //                 .eq("유저UID", u.유저UID);
-    //         }));
-
-    //         from += pageSize;
-    //     }
-    // })().catch(console.error);
 
 
 
@@ -304,6 +258,7 @@ app.post("/get-user", async (req, res) => {
         .from("users")
         .update({
             // 장비목록,
+            최대체력: 유저.최대체력,
             장비공격력: 유저.장비공격력,
             최종공격력: 유저.최종공격력,
             마법의팔레트: 유저.마법의팔레트,
@@ -2075,6 +2030,83 @@ app.post("/gamble-Relic", async (req, res) => {
 
 
 
+// index.js 파일의 다른 POST 라우트 정의들 아래, app.listen 호출 위에 추가하세요.
+app.post('/synthesize-item', async (req, res) => {
+    const { 유저UID } = req.body;
+    if (!유저UID) {
+        return res.status(400).json({ 오류: "유저UID 누락" });
+    }
+
+    // 필요한 필드 함께 조회
+    const { data: user, error: fetchError } = await supabaseAdmin
+        .from('users')
+        .select('장비목록, 레벨공격력, 전직공격력, 펫단계, 유물목록')
+        .eq('유저UID', 유저UID)
+        .single();
+    if (fetchError || !user) {
+        return res.status(404).json({ 오류: "유저 정보 없음" });
+    }
+    let equipmentList = user.장비목록 || [];
+
+    const gradeOrder = ['일반', '레어', '신화', '고대', '태초', '타락'];
+    const gradeMap = {
+        일반: { 이름: '릴리트의 독니', 공격력: 30 },
+        레어: { 이름: '디아블로의 뿔', 공격력: 63 },
+        신화: { 이름: '레비아탄의 비늘', 공격력: 132 },
+        고대: { 이름: '벨제부브의 꼬리', 공격력: 276 },
+        태초: { 이름: '사탄의 날개', 공격력: 576 },
+        타락: { 이름: '루시퍼의 심장', 공격력: 1200 }
+    };
+
+    // 등급별 합성 처리
+    for (let i = 0; i < gradeOrder.length - 1; i++) {
+        const currentGrade = gradeOrder[i];
+        const nextGrade = gradeOrder[i + 1];
+        const currentItem = equipmentList.find(item => item.등급 === currentGrade);
+        const nextItem = equipmentList.find(item => item.등급 === nextGrade);
+        const currentQty = currentItem ? currentItem.수량 : 0;
+        const synthCount = Math.floor(currentQty / 3);
+        if (synthCount > 0) {
+            // 하위 장비 수량 차감
+            currentItem.수량 -= synthCount * 3;
+            if (nextItem) {
+                // 기존 상위 장비 수량 증가
+                nextItem.수량 += synthCount;
+            } else {
+                // 신규 상위 장비 생성 시 수수료 1개 제하고 생성
+                const createdQty = synthCount > 0 ? synthCount - 1 : 0;
+                equipmentList.push({
+                    이름: gradeMap[nextGrade].이름,
+                    공격력: gradeMap[nextGrade].공격력,
+                    등급: nextGrade,
+                    강화: 0,
+                    수량: createdQty
+                });
+            }
+        }
+    }
+
+    // 장비공격력(최댓값) 계산
+    const 장비공격력 = equipmentList.reduce(
+        (maxAttack, item) => item.공격력 > maxAttack ? item.공격력 : maxAttack,
+        0
+    );
+    // 유저 객체에 장비공격력 반영
+    user.장비공격력 = 장비공격력;
+    // 최종공격력 계산 함수 사용
+    const 최종공격력 = 최종공격력계산(user);
+
+    // DB 업데이트
+    const { error: updateError } = await supabaseAdmin
+        .from('users')
+        .update({ 장비목록: equipmentList, 장비공격력, 최종공격력 })
+        .eq('유저UID', 유저UID);
+    if (updateError) {
+        return res.status(500).json({ 오류: '서버 오류로 합성에 실패했습니다.' });
+    }
+
+    return res.json({ 장비목록: equipmentList, 장비공격력, 최종공격력 });
+});
 
 
 

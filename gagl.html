@@ -2294,17 +2294,16 @@
 
 
 
-        // 2) 클릭 리스너를 통일된 스타일로 수정
         document.getElementById("장비자동합성").addEventListener("click", async () => {
             if (!유저데이터 || !유저데이터.유저UID) return;
+            const 확인 = confirm(`하위장비 3개를 상위장비 1개로 합성하시겠습니까?`);
+            if (!확인) return;
 
-            // 버튼 또는 출력할 위치용 element (메시지표시용)
             const 합성버튼 = document.getElementById("장비자동합성");
 
             화면잠금();
 
             try {
-                // fetch 요청
                 const 응답 = await fetch("/synthesize-item", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -2312,23 +2311,17 @@
                 });
                 const 결과 = await 응답.json();
 
-                // 응답 상태나 서버 에러 키(`결과.오류`) 확인
                 if (!응답.ok || 결과.오류) {
-                    // 오류 메시지 띄우기
                     메시지표시(합성버튼, "", 결과.오류 || "장비 합성에 실패했습니다.", "");
                     return;
                 }
 
-                // 합성 성공 → 유저데이터 갱신
                 유저데이터.장비목록 = 결과.장비목록;
                 유저데이터.장비공격력 = 결과.장비공격력;
                 유저데이터.최종공격력 = 결과.최종공격력;
 
-                // 화면 다시 그리기
                 장비화면보여주기();
-
-                // 완료 메시지 (원하면 추가)
-                메시지표시(합성버튼, "✅", "자동합성 완료", "#00c851");
+                메시지표시(메시지표시박스, "", "성공", "");
 
             } catch (e) {
                 // 네트워크나 예외 발생 시
@@ -4461,6 +4454,8 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 장비효과가 개편되었습니다<br>
 지금부턴 최고공격력 장비만 자동 장착됩니다<br>
 장비 누적공격력 시스템이 삭제되었습니다<br>
+장비자동합성 기능이 구현되었습니다<br>
+장비화면 오른쪽 상단의 자동합성 버튼을 클릭하세요<br>
   `,
                 `
 25.06.06<br>
