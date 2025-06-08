@@ -449,12 +449,10 @@ app.post("/attack-normal", async (req, res) => {
     }
 
     const 모래시계개수 = 유저.유물목록?.["모래시계"] || 0;
-
-    // 총 확률 계산 (예: 3개면 0.03%)
     const 확률 = 모래시계개수 * 0.001;
+    const 모래시계발동 = Math.random() <= 확률;
 
-    // 확률 실패 시에만 스태미너 감소
-    if (Math.random() > 확률) {
+    if (!모래시계발동) {
         현재스태미너--;
     }
 
@@ -512,7 +510,8 @@ app.post("/attack-normal", async (req, res) => {
             몬스터,
             유저남은체력: 전투.유저남은체력,
             유저데이터: 유저복구,
-            전투로그
+            전투로그,
+            모래시계발동
         });
     }
 
@@ -603,7 +602,8 @@ app.post("/attack-normal", async (req, res) => {
             인사이트: 인사이트발동,   // true/false
             인텔리전스: 인텔리전스발동, // true/false
             발굴: 발굴발동              // true/false
-        }
+        },
+        모래시계발동
     });
 });
 
@@ -628,12 +628,10 @@ app.post("/attack-rare", async (req, res) => {
     }
 
     const 모래시계개수 = 유저.유물목록?.["모래시계"] || 0;
-
-    // 총 확률 계산 (예: 3개면 0.03%)
     const 확률 = 모래시계개수 * 0.001;
+    const 모래시계발동 = Math.random() <= 확률;
 
-    // 확률 실패 시에만 스태미너 감소
-    if (Math.random() > 확률) {
+    if (!모래시계발동) {
         현재스태미너--;
     }
 
@@ -703,7 +701,8 @@ app.post("/attack-rare", async (req, res) => {
             몬스터,
             유저남은체력: 전투.유저남은체력,
             유저데이터: 유저복구,
-            전투로그
+            전투로그,
+            모래시계발동
         });
     }
 
@@ -819,7 +818,8 @@ app.post("/attack-rare", async (req, res) => {
             인사이트: 인사이트발동,   // true/false
             인텔리전스: 인텔리전스발동, // true/false
             발굴: 발굴발동              // true/false
-        }
+        },
+        모래시계발동
     });
 });
 

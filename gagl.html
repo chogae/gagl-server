@@ -102,6 +102,21 @@
             cursor: pointer;
         }
 
+        .풀자동 {
+            /* border: 0.2px solid #4b4b4b; */
+            /* background-color: #ffffff; */
+            /* color: black; */
+            border-radius: 5px;
+            padding: 3px 5px;
+            text-align: center;
+        }
+
+        .풀자동:hover {
+            /* background-color: #f7535b; */
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
         .보스몬스터 {
             margin-top: 7px;
             margin-bottom: 7px;
@@ -861,7 +876,8 @@
             </div>
 
             <div class="사백픽셀테두리 세로정렬" id="등급외테두리" style="position: relative;">
-                <div id="모바일풀자동" style="position: absolute; top: 5px; right: 10px; cursor: pointer; font-size: 16px;">
+                <div class="풀자동" id="모바일풀자동"
+                    style="position: absolute; top: 5px; right: 10px; cursor: pointer; font-size: 16px;">
                     풀자동
                 </div>
 
@@ -962,6 +978,13 @@
         </div>
     </div>
 
+    <div id="캐시샾화면" style="display: none;">
+        <div class="사백픽셀테두리" id="캐시샾컨테이너">
+
+        </div>
+    </div>
+
+
     <div id="미니정보창" class="사백픽셀테두리" style="
     position: fixed;
     top: 57px;
@@ -976,10 +999,10 @@
 
     <div id="메시지표시박스" style="
     position: fixed;
-    top: 0;
-    left: 40%;
-    right: 40%;
-    height: 50%;
+    top: 130px;
+    left: 320px;
+    right: 480px;
+    height: 500px;
     z-index: 9999;
     display: flex;
     flex-direction: column;
@@ -1012,10 +1035,10 @@
             <div class="버튼" onclick="장비도박시도('연속고급')">연속고급장비도박 (티켓열장)</div>
             <div class="버튼" onclick="유물도박시도('일반')">유물도박 (10만)</div>
             <div class="버튼" onclick="유물도박시도('연속일반')">연속유물도박 (100만)</div>
-            <div class="버튼" onclick="현질('팔레트')">마법의팔레트 (1,100원)</div>
+            <!-- <div class="버튼" onclick="현질('팔레트')">마법의팔레트 (1,100원)</div>
             <div class="버튼" onclick="현질('햄버거')">햄버거정기배송 (4,900원)</div>
             <div class="버튼" onclick="현질('플라워')">플라워한송이 (11,000원)</div>
-            <div class="버튼" onclick="현질('플라워')">뼈다구한개 (11,000원)</div>
+            <div class="버튼" onclick="현질('플라워')">뼈다구한개 (11,000원)</div> -->
         </div>
     </div>
 
@@ -1504,7 +1527,42 @@
             document.getElementById("전투스킬설정버튼").style.display = "block";
 
             const 직위 = 최고전직명(유저.전직정보);
-            document.getElementById("유저아이디").innerHTML = (직위 ? `[${직위}] ` : "") + (`${닉네임표시}` || "알 수 없음");
+
+            // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
+            const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
+            const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
+            const 신술 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
+            const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
+
+            // … (유저데이터.직업결정은 { "신술": 6 } 같은 객체 형태로 들어있다고 가정)
+
+            const 결정객체 = 유저.직업결정;  // 예: { "신술": 6 }
+
+            if (결정객체) {
+                // 첫 번째(유일한) 키만 꺼냅니다. → "신술"
+                const 계열키 = Object.keys(결정객체)[0];
+                // 해당 키의 값(단계)을 꺼냅니다. → 6
+                const 단계 = 결정객체[계열키];
+
+                // 단계(숫자)에 해당하는 실제 직업명을 찾아서 변수에 저장
+                let 직업이름;
+                if (계열키 === "검술") {
+                    직업이름 = 검술[단계 - 1];   // 예: 단계=1 → 검술[0] = "나이트"
+                } else if (계열키 === "마술") {
+                    직업이름 = 마술[단계 - 1];
+                } else if (계열키 === "신술") {
+                    직업이름 = 신술[단계 - 1];   // 단계=6 → 신술[5] = "퀸"
+                } else if (계열키 === "궁술") {
+                    직업이름 = 궁술[단계 - 1];
+                } else {
+                    직업이름 = "-";
+                }
+
+                document.getElementById("유저아이디").innerHTML = (직업이름 ? `[${직업이름}] ` : "") + (`${닉네임표시}` || "알 수 없음");
+
+            }
+
+            // document.getElementById("유저아이디").innerHTML = (직위 ? `[${직위}] ` : "") + (`${닉네임표시}` || "알 수 없음");
             document.getElementById("유저공격력").innerText = `공격력 ${유저.최종공격력 || 10}`;
             document.getElementById("유저체력").innerText = `체력 ${유저.남은체력}/${유저.최대체력}`;
 
@@ -1820,6 +1878,9 @@
                     스태미너표시.innerText = `${현재}/${최대}`;
                     에너지바.style.width = `${(현재 / 최대) * 100}%`;
                 }
+                if (결과.모래시계발동) {
+                    메시지표시(에너지바, 모래시계아이콘, "", "");
+                }
             } catch (e) {
                 메시지표시(메시지표시박스, "", "전투 중 오류: " + e.message, "");
                 자동사냥허용 = false;
@@ -2121,6 +2182,10 @@
                     const 현재 = 유저데이터.현재스태미너 ?? 0;
                     스태미너표시.innerText = `${현재}/${최대}`;
                     에너지바.style.width = `${(현재 / 최대) * 100}%`;
+                }
+
+                if (결과.모래시계발동) {
+                    메시지표시(에너지바, 모래시계아이콘, "", "");
                 }
 
             } catch (e) {
@@ -3049,11 +3114,11 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 div.style.margin = "5px";
                 div.style.padding = "2px";
 
-                const 레어테두리유물들 = ["샐러드", "티켓", "뼈다구"];
+                const 레어테두리유물들 = ["샐러드",];
                 if (레어테두리유물들.includes(유물이름)) {
                     div.style.border = `0.2px solid ${색상맵["레어"]}`;
                 }
-                const 신화테두리유물들 = ["햄버거", "플라워", "마법의팔레트"];
+                const 신화테두리유물들 = ["햄버거", "마법의팔레트"];
                 if (신화테두리유물들.includes(유물이름)) {
                     div.style.border = `0.2px solid ${색상맵["신화"]}`;
                 }
@@ -3185,62 +3250,62 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                         }
                         화면해제();
                     }
-                    else if (유물이름 === "플라워") {
-                        const 확인 = confirm("꽃을 100,000Gold에 파시겠습니까?");
-                        if (!확인) return;
+                    // else if (유물이름 === "플라워") {
+                    //     const 확인 = confirm("꽃을 100,000Gold에 파시겠습니까?");
+                    //     if (!확인) return;
 
-                        화면잠금();
-                        try {
-                            const 응답 = await fetch("/use-flower", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-                            });
-                            const 결과 = await 응답.json();
+                    //     화면잠금();
+                    //     try {
+                    //         const 응답 = await fetch("/use-flower", {
+                    //             method: "POST",
+                    //             headers: { "Content-Type": "application/json" },
+                    //             body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                    //         });
+                    //         const 결과 = await 응답.json();
 
-                            if (결과.오류) {
-                                메시지표시(div, "", 결과.오류, "");
-                            } else {
-                                // 서버가 반환한 업데이트된 유물목록으로 갱신
-                                유저데이터.골드 = 결과.골드;
-                                유저데이터.유물목록 = 결과.유물목록;
-                                메시지표시(div, "", "돈생겼다 도박하러 가즈ㅏㅏ", "");
-                                // 화면 다시 렌더링
-                                document.getElementById("유물").click();
-                            }
-                        } catch (e) {
-                            메시지표시(div, "", "서버 오류 발생", "");
-                        }
-                        화면해제();
-                    }
-                    else if (유물이름 === "뼈다구") {
-                        const 확인 = confirm("뼈다구를 100,000Gold에 파시겠습니까?");
-                        if (!확인) return;
+                    //         if (결과.오류) {
+                    //             메시지표시(div, "", 결과.오류, "");
+                    //         } else {
+                    //             // 서버가 반환한 업데이트된 유물목록으로 갱신
+                    //             유저데이터.골드 = 결과.골드;
+                    //             유저데이터.유물목록 = 결과.유물목록;
+                    //             메시지표시(div, "", "돈생겼다 도박하러 가즈ㅏㅏ", "");
+                    //             // 화면 다시 렌더링
+                    //             document.getElementById("유물").click();
+                    //         }
+                    //     } catch (e) {
+                    //         메시지표시(div, "", "서버 오류 발생", "");
+                    //     }
+                    //     화면해제();
+                    // }
+                    // else if (유물이름 === "뼈다구") {
+                    //     const 확인 = confirm("뼈다구를 100,000Gold에 파시겠습니까?");
+                    //     if (!확인) return;
 
-                        화면잠금();
-                        try {
-                            const 응답 = await fetch("/use-bone", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-                            });
-                            const 결과 = await 응답.json();
+                    //     화면잠금();
+                    //     try {
+                    //         const 응답 = await fetch("/use-bone", {
+                    //             method: "POST",
+                    //             headers: { "Content-Type": "application/json" },
+                    //             body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                    //         });
+                    //         const 결과 = await 응답.json();
 
-                            if (결과.오류) {
-                                메시지표시(div, "", 결과.오류, "");
-                            } else {
-                                // 서버가 반환한 업데이트된 유물목록으로 갱신
-                                유저데이터.골드 = 결과.골드;
-                                유저데이터.유물목록 = 결과.유물목록;
-                                메시지표시(div, "", "돈생겼다 도박하러 가즈ㅏㅏ", "");
-                                // 화면 다시 렌더링
-                                document.getElementById("유물").click();
-                            }
-                        } catch (e) {
-                            메시지표시(div, "", "서버 오류 발생", "");
-                        }
-                        화면해제();
-                    }
+                    //         if (결과.오류) {
+                    //             메시지표시(div, "", 결과.오류, "");
+                    //         } else {
+                    //             // 서버가 반환한 업데이트된 유물목록으로 갱신
+                    //             유저데이터.골드 = 결과.골드;
+                    //             유저데이터.유물목록 = 결과.유물목록;
+                    //             메시지표시(div, "", "돈생겼다 도박하러 가즈ㅏㅏ", "");
+                    //             // 화면 다시 렌더링
+                    //             document.getElementById("유물").click();
+                    //         }
+                    //     } catch (e) {
+                    //         메시지표시(div, "", "서버 오류 발생", "");
+                    //     }
+                    //     화면해제();
+                    // }
 
                 });
 
@@ -4040,7 +4105,6 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                         펫보여주기(펫아이콘, 색상코드);
                     }
 
-                    // ✅ 스태미너 갱신 요청
                     try {
                         const 응답 = await fetch("/refresh-stamina", {
                             method: "POST",
@@ -4090,7 +4154,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 화면ID들 = [
                 "전투화면", "장비화면", "스킬화면", "전당화면",
                 "유물화면", "전직화면", "보스화면", "에너지박스",
-                "메뉴얼화면", "내정보화면",
+                "메뉴얼화면", "내정보화면", "캐시샾화면",
             ];
             화면ID들.forEach(id => {
                 const el = document.getElementById(id);
@@ -4118,6 +4182,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
   <div style="display: flex; flex-direction: column; gap: 10px;">    
     <div class="버튼" id="내정보">내정보</div>
     <div class="버튼" id="메뉴얼">메뉴얼</div>
+    <div class="버튼" id="캐시샾">캐시샾</div>
   </div>
 `;
         // <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
@@ -4356,9 +4421,9 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             // 필요하다면 두 번째·세 번째 박스에도 같은 방식으로 내용 채우기
             const 장비박스2 = document.getElementById("열째줄가운데");
-            장비박스2.innerHTML = "가장쌘방어구";
+            장비박스2.innerHTML = "가장쎈방어구";
             const 장비박스3 = document.getElementById("열째줄오른쪽");
-            장비박스3.innerHTML = "가장쌘장신구";
+            장비박스3.innerHTML = "가장쎈장신구";
 
             화면해제();
         });
@@ -4388,6 +4453,15 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
 
                 `${봄아이콘}`,
+                `
+25.06.08<br>
+전당화면에서 유저정보가 빈칸으로 표시되던 문제를 해결했습니다<br>
+도박창에서 과금상품목록을 제거했습니다<br>
+과금상품 목록이 정보-캐시샵으로 이동되었습니다<br>
+유물. 플라워와 뼈다구의 판매기능이 삭제되었습니다<br>
+플라워와 뼈다구의 과금금액이 1,100원으로 변경되었습니다<br>
+전투화면(에너지바)에 모래시계의 발동효과가 추가되었습니다<br>
+  `,
                 `
 25.06.06<br>
 드디어, 모바일에서도 '풀자동' 사냥이 가능합니다<br>
@@ -4721,26 +4795,26 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 
 
                     // ─── 내용 채우기 ───
-                    document.getElementById("첫째줄왼쪽").innerHTML = `아이디 : ${유저.유저아이디}`;
-                    document.getElementById("둘째줄왼쪽").innerHTML = `공격력 : ${유저.최종공격력}`;
-                    document.getElementById("셋째줄왼쪽").innerHTML = `최대체력 : ${유저.최대체력}`;
-                    document.getElementById("넷째줄왼쪽").innerHTML = `전당 : ${index + 1}위`;
+                    창.querySelector("#첫째줄왼쪽").innerHTML = `아이디 : ${유저.유저아이디}`;
+                    창.querySelector("#둘째줄왼쪽").innerHTML = `공격력 : ${유저.최종공격력}`;
+                    창.querySelector("#셋째줄왼쪽").innerHTML = `최대체력 : ${유저.최대체력}`;
+                    창.querySelector("#넷째줄왼쪽").innerHTML = `전당 : ${index + 1}위`;
 
-                    document.getElementById("둘째줄오른쪽").innerHTML = (유저.현질기한 !== undefined && 유저.현질기한 !== 0) ? `마법의팔레트 : ${유저.현질기한}/30` : `마법의팔레트 : -`;
-                    document.getElementById("셋째줄오른쪽").innerHTML = (유저.햄버거현질기한 !== undefined && 유저.햄버거현질기한 !== 0) ? `햄버거정기배송 : ${유저.햄버거현질기한}/30` : `햄버거정기배송 : -`;
-                    document.getElementById("넷째줄오른쪽").innerHTML = 유저.생성일 ? `생성일 : ${유저.생성일}` : `생성일 : -`;
+                    창.querySelector("#둘째줄오른쪽").innerHTML = (유저.현질기한 !== undefined && 유저.현질기한 !== 0) ? `마법의팔레트 : ${유저.현질기한}/30` : `마법의팔레트 : -`;
+                    창.querySelector("#셋째줄오른쪽").innerHTML = (유저.햄버거현질기한 !== undefined && 유저.햄버거현질기한 !== 0) ? `햄버거정기배송 : ${유저.햄버거현질기한}/30` : `햄버거정기배송 : -`;
+                    창.querySelector("#넷째줄오른쪽").innerHTML = 유저.생성일 ? `생성일 : ${유저.생성일}` : `생성일 : -`;
 
                     const bossIndex = 보스랭킹.findIndex(u => u.유저UID === 유저.유저UID);
 
                     if (bossIndex >= 0) {
                         // 순위가 있으면 “XX위” 형식으로 표시
                         const bossRank = bossIndex + 1;
-                        document.getElementById("다섯째줄왼쪽").innerText = `보스 : ${bossRank}위`;
+                        창.querySelector("#다섯째줄왼쪽").innerText = `보스 : ${bossRank}위`;
                     } else {
                         // 순위가 없으면 “-”만 표시
-                        document.getElementById("다섯째줄왼쪽").innerText = `보스 : -`;
+                        창.querySelector("#다섯째줄왼쪽").innerText = `보스 : -`;
                     }
-                    document.getElementById("다섯째줄오른쪽").innerHTML = (유저.스태미너소모총량 !== undefined && 유저.스태미너소모총량 !== 0) ? `전적 : ${유저.스태미너소모총량}전` : `전적 : -`;
+                    창.querySelector("#다섯째줄오른쪽").innerHTML = (유저.스태미너소모총량 !== undefined && 유저.스태미너소모총량 !== 0) ? `전적 : ${유저.스태미너소모총량}전` : `전적 : -`;
 
                     // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
                     const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
@@ -4772,10 +4846,10 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                         }
 
                         // 화면에 “신술(퀸)” 형태로 표시
-                        document.getElementById("여섯째줄왼쪽").innerHTML = `직업 : [${계열키}] ${직업이름}`;
+                        창.querySelector("#여섯째줄왼쪽").innerHTML = `직업 : [${계열키}] ${직업이름}`;
                     } else {
                         // 아직 선택된 직업이 없으면 ‘-’만 표시
-                        document.getElementById("여섯째줄왼쪽").innerHTML = "직업 : -";
+                        창.querySelector("#여섯째줄왼쪽").innerHTML = "직업 : -";
                     }
 
 
@@ -4788,7 +4862,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                         );
                     }
 
-                    const 장비박스1 = document.getElementById("열째줄왼쪽");  // 예시: 첫 번째 칸 사용
+                    const 장비박스1 = 창.querySelector("#열째줄왼쪽");  // 예시: 첫 번째 칸 사용
 
                     if (bestWeapon) {
                         장비박스1.innerHTML = bestWeapon.이름;
@@ -4799,13 +4873,13 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                     }
 
                     // 필요하다면 두 번째·세 번째 박스에도 같은 방식으로 내용 채우기
-                    const 장비박스2 = document.getElementById("열째줄가운데");
-                    장비박스2.innerHTML = "가장쌘방어구";
-                    const 장비박스3 = document.getElementById("열째줄오른쪽");
-                    장비박스3.innerHTML = "가장쌘장신구";
+                    const 장비박스2 = 창.querySelector("#열째줄가운데");
+                    장비박스2.innerHTML = "가장쎈방어구";
+                    const 장비박스3 = 창.querySelector("#열째줄오른쪽");
+                    장비박스3.innerHTML = "가장쎈장신구";
 
 
-                    document.getElementById("열한째줄가운데").innerHTML = ``;
+                    창.querySelector("#열한째줄가운데").innerHTML = ``;
 
                 });
 
@@ -5138,6 +5212,64 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
             }
         });
 
+
+        //캐시샾화면보여주기
+        document.getElementById("캐시샾").addEventListener("click", () => {
+            if (!유저데이터) return;
+
+            화면잠금();
+            모든화면숨기기();
+            document.getElementById("화면설명").innerHTML =
+                "gagl의 상품들은 소모성 또는 30일 기간제입니다<br>오픈톡 프로필 '가글주인장'에게 문의하세요";
+
+            document.getElementById("캐시샾화면").style.display = "block";
+
+            const 컨테이너 = document.getElementById("캐시샾컨테이너");
+            컨테이너.innerHTML = "";
+
+            function 줄추가(왼쪽내용, 오른쪽내용) {
+                // 1) 줄 컨테이너
+                const 줄 = document.createElement("div");
+                줄.className = "밑줄 양쪽정렬";
+                줄.style.display = "flex";
+                줄.style.justifyContent = "space-between";
+                줄.style.alignItems = "center";   // ← 부모 컨테이너 내에서 세로 가운데
+                줄.style.width = "100%";
+
+                // 2) 왼쪽 셀
+                const leftDiv = document.createElement("div");
+                leftDiv.style.display = "flex";      // ← 내부 요소 정렬을 flex로
+                leftDiv.style.alignItems = "center"; // ← 아이콘+텍스트 세로 가운데
+                leftDiv.style.flex = "0 0 auto";
+                leftDiv.innerHTML = 왼쪽내용;
+
+                // 3) 오른쪽 셀
+                const rightDiv = document.createElement("div");
+                // rightDiv.style.display = "flex";
+                rightDiv.style.alignItems = "center"; // ← 텍스트 세로 가운데
+                rightDiv.style.flex = "1";
+                rightDiv.style.textAlign = "right";
+                rightDiv.innerHTML = 오른쪽내용;
+
+                // 4) 조립
+                줄.appendChild(leftDiv);
+                줄.appendChild(rightDiv);
+                컨테이너.appendChild(줄);
+            }
+
+            // — 여기 데이터 배열에 원하는 만큼 줄 정보를 추가 —
+            const 줄데이터 = [
+                { 왼쪽: `${마법의팔레트아이콘}(마법의팔레트)`, 오른쪽: "아이디를 색칠할 수 있습니다(1,100원)" },
+                { 왼쪽: `${플라워아이콘}(플라워)`, 오른쪽: "스킬을 초기화합니다(1,100원)" },
+                { 왼쪽: `${뼈다구아이콘}(뼈다구)`, 오른쪽: "직업을 초기화합니다(1,100원)" },
+                { 왼쪽: `${햄버거아이콘}(햄버거정기배송)`, 오른쪽: "매일 햄버거(스태미너+300) 배송(4,900원)" },
+            ];
+
+            // — 배열 순회하며 자동으로 줄 추가 —
+            줄데이터.forEach(item => 줄추가(item.왼쪽, item.오른쪽));
+
+            화면해제();
+        });
 
 
 
