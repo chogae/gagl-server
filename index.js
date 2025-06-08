@@ -39,29 +39,6 @@ app.post("/get-user", async (req, res) => {
     }
 
 
-    // (async function backgroundUpdate() {
-    //     let from = 0, pageSize = 100;
-    //     while (true) {
-    //         const { data: users } = await supabaseAdmin
-    //             .from("users")
-    //             .select("유저UID, 합성기록, 장비목록")
-    //             .range(from, from + pageSize - 1);
-    //         if (!users?.length) break;
-
-    //         await Promise.all(users.map(async u => {
-    //             const 기록 = u.합성기록 || {};
-    //             const new장비목록 = (u.장비목록 || []).map(item => ({
-    //                 ...item,
-    //                 수량: 기록[`${item.이름}|${item.등급}`] ?? 0
-    //             }));
-    //             await supabaseAdmin
-    //                 .from("users")
-    //                 .update({ 장비목록: new장비목록 })
-    //                 .eq("유저UID", u.유저UID);
-    //         }));
-    //         from += pageSize;
-    //     }
-    // })().catch(console.error);
 
 
     const now = new Date();
@@ -266,6 +243,59 @@ app.post("/get-user", async (req, res) => {
     const max공격력 = Math.max(...장비목록.map(e => e.공격력));
     유저.장비공격력 = max공격력;
 
+    유저.버전업 = 8;
+
+
+
+    // (async function backgroundUpdate() {
+    //     // 1) 등급별 기준 무기 공격력 매핑 객체
+    //     const 공격력맵 = {
+    //         "일반": { 이름: "릴리트의 독니", 공격력: 30 },
+    //         "레어": { 이름: "디아블로의 뿔", 공격력: 63 },
+    //         "신화": { 이름: "레비아탄의 비늘", 공격력: 132 },
+    //         "고대": { 이름: "벨제부브의 꼬리", 공격력: 276 },
+    //         "태초": { 이름: "사탄의 날개", 공격력: 576 },
+    //         "타락": { 이름: "루시퍼의 심장", 공격력: 1200 },
+    //     };
+
+    //     let from = 0, pageSize = 100;
+    //     while (true) {
+    //         const { data: users } = await supabaseAdmin
+    //             .from("users")
+    //             .select("*")
+    //             .range(from, from + pageSize - 1);
+    //         if (!users?.length) break;
+
+    //         await Promise.all(users.map(async u => {
+    //             const 기록 = u.합성기록 || {};
+    //             const new장비목록 = (u.장비목록 || []).map(item => {
+    //                 const 수량 = 기록[`${item.이름}|${item.등급}`] || 0;
+    //                 const 매핑 = 공격력맵[item.등급];
+    //                 const 공격력 = (매핑 && 매핑.이름 === item.이름)
+    //                     ? 매핑.공격력
+    //                     : item.공격력;
+    //                 return { ...item, 수량, 공격력 };
+    //             });
+    //             const max공격력 = new장비목록.length
+    //                 ? Math.max(...new장비목록.map(e => e.공격력))
+    //                 : 0;
+
+    //             const 계산용유저 = { ...u, 장비공격력 };
+    //             const 최종Atk = 최종공격력계산(계산용유저);
+
+    //             await supabaseAdmin
+    //                 .from("users")
+    //                 .update({
+    //                     장비목록: new장비목록,
+    //                     장비공격력: max공격력,
+    //                     최종공격력: 최종Atk
+    //                 })
+    //                 .eq("유저UID", u.유저UID);
+    //         }));
+
+    //         from += pageSize;
+    //     }
+    // })().catch(console.error);
 
 
 
@@ -277,7 +307,8 @@ app.post("/get-user", async (req, res) => {
             장비공격력: 유저.장비공격력,
             최종공격력: 유저.최종공격력,
             마법의팔레트: 유저.마법의팔레트,
-            새로고침: 유저.새로고침
+            새로고침: 유저.새로고침,
+            버전업: 유저.버전업
         })
         .eq("유저UID", 유저UID);
 
@@ -1337,7 +1368,7 @@ app.post("/register-user", async (req, res) => {
         스킬: {},
         유물목록: { "샐러드": 5 },
         장비목록: [],
-        버전업: 7,
+        버전업: 8,
         현재스태미너: 1000,
         최대스태미너: 1000,
         스태미너갱신시간: 현재시간,
@@ -1383,7 +1414,7 @@ app.post("/ranking", async (req, res) => {
         const { data: 유저들, error } = await supabaseAdmin
             .from("users")
             .select("*")
-            .eq("버전업", 7)
+            .eq("버전업", 8)
             .not("최종공격력", "is", null)
             .neq("유저아이디", "xptmxm")
             .order("최종공격력", { ascending: false })
