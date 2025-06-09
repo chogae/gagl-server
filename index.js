@@ -70,19 +70,40 @@ app.post("/get-user", async (req, res) => {
                 .order("보스누적데미지", { ascending: false })
                 .limit(9);
 
-            if (순위에러) {
-                console.error("보스누적데미지 상위 조회 실패:", 순위에러);
-                // 에러가 발생해도 보상 지급을 중단하지 않고, 이후 로직(펫단계 계산 등)은 계속 수행합니다.
-            } else {
+            // 기존 금드 지급 부분을 대체할 코드 예시
+            if (!순위에러) {
                 for (let i = 0; i < 상위유저들.length; i++) {
                     const user = 상위유저들[i];
-                    // 순위별 보상액 계산: 1위(0)→500000, 2위(1)→450000, …, 9위(8)→100000
-                    const 보상액 = 500000 - (i * 50000);
-                    // 기존 골드에 보상액을 더해서 업데이트
-                    await supabaseAdmin
+                    const 지급티켓 = 10 - i;
+
+                    const { data: 현재유물목록, error: fetchErr } = await supabaseAdmin
                         .from("users")
-                        .update({ 골드: Number(user.골드 || 0) + 보상액 })
+                        .select("유물목록")
+                        .eq("유저UID", user.유저UID)
+                        .single();
+
+                    if (fetchErr || !현재유물목록) {
+                        console.error(`유물목록 조회 실패 (${user.유저UID}):`, fetchErr);
+                        continue;
+                    }
+
+                    // 2) 티켓 수 더해주기
+                    const oldList = 현재유물목록.유물목록 || {};
+                    const oldTicket = Number(oldList["티켓"] || 0);
+                    const newList = {
+                        ...oldList,
+                        티켓: oldTicket + 지급티켓
+                    };
+
+                    // 3) DB 업데이트
+                    const { error: updateErr } = await supabaseAdmin
+                        .from("users")
+                        .update({ 유물목록: newList })
                         .eq("유저UID", user.유저UID);
+
+                    if (updateErr) {
+                        console.error(`티켓 지급 실패 (${user.유저UID}):`, updateErr);
+                    }
                 }
             }
 
@@ -1797,7 +1818,7 @@ app.post("/gamble-Equipment", async (req, res) => {
             if (티켓 < 10) {
                 return res.status(400).json({ 오류: "티켓이 부족합니다" });
             }
-            유저.유물목록["티켓"] = 티켓 - 9;
+            유저.유물목록["티켓"] = 티켓 - 10;
         } else if (종류 === "일반") {
             if (유저.골드 < 비용) {
                 return res.status(400).json({ 오류: "골드가 부족합니다" });
@@ -1808,8 +1829,15 @@ app.post("/gamble-Equipment", async (req, res) => {
             }
         }
 
-        // 3) 반복 횟수 결정
-        const 횟수 = (종류 === "연속일반" || 종류 === "연속고급") ? 10 : 1;
+        let 횟수;
+        if (종류 === "연속고급") {
+            횟수 = 11;                           // ← 11회 뽑기
+        } else if (종류 === "연속일반") {
+            횟수 = 10;
+        } else {
+            횟수 = 1;
+        }
+
         const results = [];
 
         // 4) 드랍 로직 반복 처리

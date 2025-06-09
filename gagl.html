@@ -708,7 +708,7 @@
                         <div class="버튼" id="전투">전투</div>
                         <div class="버튼" id="장비">장비</div>
                         <div class="버튼" id="유물">유물</div>
-                        <div class="버튼" id="보스">보스</div>
+                        <div class="버튼" id="월드">월드</div>
                         <div class="버튼" id="전당">전당</div>
                         <div class="버튼" id="정보">정보</div>
                     </div>
@@ -753,6 +753,12 @@
 
     <div id="내정보화면" style="display: none;">
         <div class="사백픽셀테두리 세로정렬" id="내정보컨테이너">
+
+        </div>
+    </div>
+
+    <div id="지하던전화면" style="display: none;">
+        <div class="사백픽셀테두리 세로정렬" id="지하던전컨테이너">
 
         </div>
     </div>
@@ -1031,7 +1037,7 @@
             <div class="버튼" onclick="장비뽑기시도('일반')">일반장비뽑기 (10만)</div>
             <div class="버튼" onclick="장비뽑기시도('연속일반')">연속일반장비뽑기 (100만)</div>
             <div class="버튼" onclick="장비뽑기시도('고급')">고급장비뽑기 (티켓)</div>
-            <div class="버튼" onclick="장비뽑기시도('연속고급')">연속고급장비뽑기 (티켓열장)</div>
+            <div class="버튼" onclick="장비뽑기시도('연속고급')">연속고급장비뽑기(10+1) (티켓열장)</div>
             <div class="버튼" onclick="유물뽑기시도('일반')">유물뽑기 (10만)</div>
             <div class="버튼" onclick="유물뽑기시도('연속일반')">연속유물뽑기 (100만)</div>
             <!-- <div class="버튼" onclick="현질('팔레트')">마법의팔레트 (1,100원)</div>
@@ -2230,7 +2236,7 @@
             document.getElementById("레벨업표시").innerText = "";
 
             document.getElementById("화면설명").innerHTML =
-                "일반 &lt; 레어 &lt; 신화 &lt; 고대 &lt; 태초 &lt; 타락<br>태초 장비부터 합성 시 유저의 최대체력이 1 증가합니다";
+                "일반 &lt; 레어 &lt; 신화 &lt; 고대 &lt; 태초 &lt; 타락<br>자동합성으로 상위장비를 획득하세요";
 
             // 📌 골드/공격력/체력 표시
             document.getElementById("장비골드표시").innerHTML =
@@ -4203,7 +4209,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 화면ID들 = [
                 "전투화면", "장비화면", "스킬화면", "전당화면",
                 "유물화면", "전직화면", "보스화면", "에너지박스",
-                "메뉴얼화면", "내정보화면", "캐시샵화면",
+                "메뉴얼화면", "내정보화면", "캐시샵화면", "지하던전화면",
             ];
             화면ID들.forEach(id => {
                 const el = document.getElementById(id);
@@ -4250,6 +4256,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             정보툴팁.style.top = rect.bottom + "px";
         });
 
+
         // 마우스가 정보버튼과 정보툴팁 외부로 나가면 닫기
         document.addEventListener("mouseover", (e) => {
             if (
@@ -4259,6 +4266,63 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 정보툴팁.style.display = "none";
             }
         });
+
+
+
+
+        const 월드버튼 = document.getElementById("월드");
+
+        const 월드툴팁 = document.createElement("div");
+        월드툴팁.id = "월드툴팁";
+        월드툴팁.style.position = "absolute";
+        월드툴팁.style.zIndex = "99999";
+        월드툴팁.style.display = "flex";
+        월드툴팁.style.flexDirection = "column";
+        월드툴팁.style.gap = "4px";
+        월드툴팁.style.background = "black";
+        월드툴팁.style.width = "fit-content";
+        월드툴팁.style.border = "0.2px solid #4b4b4b";
+        월드툴팁.style.borderRadius = "10px";
+        월드툴팁.style.boxSizing = "border-box";
+        월드툴팁.style.padding = "5px";
+
+        월드툴팁.innerHTML = `
+  <div style="display: flex; flex-direction: column; gap: 10px;">    
+    <div class="버튼" id="보스">보스</div>
+    <div class="버튼" id="지하던전">지하던전</div>
+  </div>
+`;
+
+        월드툴팁.style.display = "none";
+        document.body.appendChild(월드툴팁);
+
+        월드버튼.addEventListener("mouseenter", () => {
+            const rect = 월드버튼.getBoundingClientRect();
+
+            // 먼저 보여줘야 offsetWidth를 읽을 수 있음
+            월드툴팁.style.display = "block";
+
+            const 툴팁너비 = 월드툴팁.offsetWidth;
+            월드툴팁.style.left = (rect.right - 툴팁너비) + "px";
+            월드툴팁.style.top = rect.bottom + "px";
+        });
+
+
+        // 마우스가 월드버튼 월드툴팁 외부로 나가면 닫기
+        document.addEventListener("mouseover", (e) => {
+            if (
+                !월드툴팁.contains(e.target) &&
+                !월드버튼.contains(e.target)
+            ) {
+                월드툴팁.style.display = "none";
+            }
+        });
+
+
+
+
+
+
 
         function 한줄에두칸(왼쪽, 오른쪽) {
             const row = document.createElement("div");
@@ -4481,6 +4545,30 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
 
 
+
+        document.getElementById("지하던전").addEventListener("click", async () => {
+            if (!유저데이터) return;
+            화면잠금();
+
+
+            document.getElementById("화면설명").innerHTML = "새로고침(F5)을 생활화하세요";
+
+            모든화면숨기기();
+            document.getElementById("지하던전화면").style.display = "block";
+
+            const 컨테이너 = document.getElementById("지하던전컨테이너");
+            컨테이너.innerHTML = "";
+
+
+
+
+
+            화면해제();
+        });
+
+
+
+
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
         // npm install -g nodemon
         // nodemon index.js
@@ -4499,8 +4587,8 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 문장들 = [
                 `${여름아이콘}`,
                 "앞으로의 방향",
-                "장비 리뉴얼",
-                "보스별 상세스탯 설정",
+                "보스 랜덤 방어력 부여",
+                "지하던전",
                 "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
 
                 `${봄아이콘}`,
@@ -4513,6 +4601,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 캐시샵에 '1억골드'가 추가되었습니다<br>
 보스누적데미지 랭킹보샹이 골드에서 티켓으로 변경되었습니다<br>
 대격변 기념 햄버거4개, 플라워1개, 뼈다구1개가 배송되었습니다<br>
+연속고급장비뽑기 10+1회 로직을 구현하였습니다<br>
   `,
                 `
 25.06.08<br>
@@ -5333,7 +5422,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                 { 왼쪽: `${뼈다구아이콘}(뼈다구)`, 오른쪽: "직업을 초기화합니다(1,100원)" },
                 { 왼쪽: `${햄버거아이콘}(햄버거정기배송)`, 오른쪽: "매일 햄버거(스태미너+300) 배송(4,900원)" },
                 { 왼쪽: `${현질아이콘}(1억골드)`, 오른쪽: "랭커로 만들어 드립니다(1,000,000원)" },
-                
+
             ];
 
             // — 배열 순회하며 자동으로 줄 추가 —
