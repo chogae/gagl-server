@@ -978,8 +978,8 @@
         </div>
     </div>
 
-    <div id="캐시샾화면" style="display: none;">
-        <div class="사백픽셀테두리" id="캐시샾컨테이너">
+    <div id="캐시샵화면" style="display: none;">
+        <div class="사백픽셀테두리" id="캐시샵컨테이너">
 
         </div>
     </div>
@@ -1013,8 +1013,7 @@
     pointer-events: none;
 "></div>
 
-    <!-- 🟢 도박창 -->
-    <div id="도박창" class="기본테두리 세로정렬" style="
+    <div id="뽑기창" class="기본테두리 세로정렬" style="
   display: none;
   position: fixed;
   top: 20%;
@@ -1027,14 +1026,14 @@
   text-align: center;
   width:auto;
 ">
-        <div id="도박타이틀" style="font-size: 20px; font-weight: bold;"></div>
+        <div id="뽑기타이틀" style="font-size: 20px; font-weight: bold;"></div>
         <div style="margin-top: 15px;">
-            <div class="버튼" onclick="장비도박시도('일반')">일반장비도박 (10만)</div>
-            <div class="버튼" onclick="장비도박시도('연속일반')">연속일반장비도박 (100만)</div>
-            <div class="버튼" onclick="장비도박시도('고급')">고급장비도박 (티켓)</div>
-            <div class="버튼" onclick="장비도박시도('연속고급')">연속고급장비도박 (티켓열장)</div>
-            <div class="버튼" onclick="유물도박시도('일반')">유물도박 (10만)</div>
-            <div class="버튼" onclick="유물도박시도('연속일반')">연속유물도박 (100만)</div>
+            <div class="버튼" onclick="장비뽑기시도('일반')">일반장비뽑기 (10만)</div>
+            <div class="버튼" onclick="장비뽑기시도('연속일반')">연속일반장비뽑기 (100만)</div>
+            <div class="버튼" onclick="장비뽑기시도('고급')">고급장비뽑기 (티켓)</div>
+            <div class="버튼" onclick="장비뽑기시도('연속고급')">연속고급장비뽑기 (티켓열장)</div>
+            <div class="버튼" onclick="유물뽑기시도('일반')">유물뽑기 (10만)</div>
+            <div class="버튼" onclick="유물뽑기시도('연속일반')">연속유물뽑기 (100만)</div>
             <!-- <div class="버튼" onclick="현질('팔레트')">마법의팔레트 (1,100원)</div>
             <div class="버튼" onclick="현질('햄버거')">햄버거정기배송 (4,900원)</div>
             <div class="버튼" onclick="현질('플라워')">플라워한송이 (11,000원)</div>
@@ -1100,7 +1099,7 @@
         const 성공아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-party-popper-icon lucide-party-popper"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"/><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/></svg>`;
         const 실패아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>`;
         const 마스터아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap-icon lucide-graduation-cap"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>`;
-        const 도박아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dices-icon lucide-dices"><rect width="12" height="12" x="2" y="10" rx="2" ry="2"/><path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6"/><path d="M6 18h.01"/><path d="M10 14h.01"/><path d="M15 6h.01"/><path d="M18 9h.01"/></svg>`;
+        const 뽑기아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dices-icon lucide-dices"><rect width="12" height="12" x="2" y="10" rx="2" ry="2"/><path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6"/><path d="M6 18h.01"/><path d="M10 14h.01"/><path d="M15 6h.01"/><path d="M18 9h.01"/></svg>`;
         const 공격력아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-swords-icon lucide-swords"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"/><line x1="5" x2="9" y1="14" y2="18"/><line x1="7" x2="4" y1="17" y2="20"/><line x1="3" x2="5" y1="19" y2="21"/></svg>`;
         const 체력아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-icon lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
         const 마법진아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-aperture-icon lucide-aperture"><circle cx="12" cy="12" r="10"/><path d="m14.31 8 5.74 9.94"/><path d="M9.69 8h11.48"/><path d="m7.38 12 5.74-9.94"/><path d="M9.69 16 3.95 6.06"/><path d="M14.31 16H2.83"/><path d="m16.62 12-5.74 9.94"/></svg>`;
@@ -1121,7 +1120,16 @@
         const 여름아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun-icon lucide-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>`;
         const 가을아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-leaf-icon lucide-leaf"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>`;
         const 겨울아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-snowflake-icon lucide-snowflake"><path d="m10 20-1.25-2.5L6 18"/><path d="M10 4 8.75 6.5 6 6"/><path d="m14 20 1.25-2.5L18 18"/><path d="m14 4 1.25 2.5L18 6"/><path d="m17 21-3-6h-4"/><path d="m17 3-3 6 1.5 3"/><path d="M2 12h6.5L10 9"/><path d="m20 10-1.5 2 1.5 2"/><path d="M22 12h-6.5L14 15"/><path d="m4 10 1.5 2L4 14"/><path d="m7 21 3-6-1.5-3"/><path d="m7 3 3 6h4"/></svg>`;
-        const 해머아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hammer-icon lucide-hammer"><path d="m15 12-8.373 8.373a1 1 0 1 1-3-3L12 9"/><path d="m18 15 4-4"/><path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172V7l-2.26-2.26a6 6 0 0 0-4.202-1.756L9 2.96l.92.82A6.18 6.18 0 0 1 12 8.4V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"/></svg>`;
+        const 해머아이콘 = `<svg xmlns="http://www.w3.org/2000/svg"
+     width="18" height="18" viewBox="0 0 24 24"
+     fill="none" stroke="currentColor" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round"
+     class="lucide lucide-hammer-icon lucide-hammer"
+     style="cursor:pointer">
+  <path d="m15 12-8.373 8.373a1 1 0 1 1-3-3L12 9"/>
+  <path d="m18 15 4-4"/>
+  <path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172V7l-2.26-2.26a6 6 0 0 0-4.202-1.756L9 2.96l.92.82A6.18 6.18 0 0 1 12 8.4V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"/>
+</svg>`;
 
         //유물아이콘
         const 소드아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sword-icon lucide-sword"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/></svg>`;
@@ -1175,7 +1183,7 @@
             실패아이콘,
             마스터아이콘,
             버닝아이콘,
-            도박아이콘,
+            뽑기아이콘,
             인텔리전스아이콘,
             브로큰아이콘,
             즉사아이콘,
@@ -1479,7 +1487,7 @@
             document.getElementById("전투화면").style.display = "block";
             document.getElementById("에너지박스").style.display = "block";
 
-            document.getElementById("화면설명").innerHTML = "단톡 { https://open.kakao.com/o/gbnmdWvh }<br>경험치 클릭 전직 / 골드 클릭 도박 / 숙련도 클릭 스킬";
+            document.getElementById("화면설명").innerHTML = "단톡 { https://open.kakao.com/o/gbnmdWvh }<br>경험치 클릭 전직 / 골드 클릭 뽑기 / 숙련도 클릭 스킬";
 
             const 최대 = 유저.최대스태미너 ?? 100;
             const 현재 = 유저.현재스태미너 ?? 0;
@@ -2276,16 +2284,68 @@
                 박스.style.fontWeight = "bold";
 
                 const 키 = `${장비.이름}|${장비.등급}`;
-                const 수량 = 장비.수량 ? `+${장비.수량}` : "0";
+                const 수량 = 장비.수량 ? `${장비.수량}` : "0";
                 const 강화표시 = 장비.강화 ? `+${장비.강화}` : "";
                 const 이름표시 = `${장비.이름} (${수량}) ${강화표시}`;
 
+
+                const 공격력HTML = 장비.등급 === "타락"
+                    ? `${해머아이콘}  공격력 +${장비.공격력}`
+                    : `공격력 +${장비.공격력}`;
+
                 박스.innerHTML = `
-            <div>[${장비.등급}] ${이름표시}</div>
-            <div>
-                공격력 +${장비.공격력}
-            </div>
-        `;
+    <div>[${장비.등급}] ${이름표시}</div>
+    <div>${공격력HTML}</div>
+`;
+                //         박스.innerHTML = `
+                //     <div>[${장비.등급}] ${이름표시}</div>
+                //     <div>
+                //         공격력 +${장비.공격력}
+                //     </div>
+                // `;
+                const hammerEl = 박스.querySelector('.lucide-hammer-icon');
+                if (hammerEl) {
+
+                    hammerEl.addEventListener('click', async () => {
+
+                        const 확인 = confirm(`루시퍼의 심장 1개를 소모해서 강화를 진행하시겠습니까? 공격력 증가량은 +360입니다`);
+                        if (!확인) return;
+
+                        try {
+                            const res = await fetch("/upgrade-corrupted-item", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    유저UID: 유저데이터.유저UID,
+                                    이름: 장비.이름,
+                                    등급: 장비.등급
+                                })
+                            });
+                            const data = await res.json();
+                            if (!res.ok) throw new Error(data.오류);
+
+                            // 1) 전역 유저데이터의 해당 아이템만 업데이트
+                            const item = 유저데이터.장비목록.find(e =>
+                                e.이름 === data.이름 && e.등급 === data.등급
+                            );
+                            if (item) {
+                                item.수량 = data.수량;
+                                item.강화 = data.강화;
+                                item.공격력 = data.공격력;
+                            }
+
+                            // 2) 전역 최종공격력 갱신
+                            유저데이터.최종공격력 = data.최종공격력;
+
+                            // 3) 메시지 보여주고 화면 다시 그리기
+                            메시지표시(메시지표시박스, "", "강화 성공", "");
+                            장비화면보여주기();
+                        } catch (e) {
+                            메시지표시(메시지표시박스, "", e.message, "");
+                        }
+                    });
+
+                }
 
                 장비컨테이너.appendChild(박스);
             });
@@ -3074,7 +3134,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             화면잠금();
             모든화면숨기기();
             document.getElementById("화면설명").innerHTML =
-                "유물당 최대 개수는 99개입니다<br>소모성 유물은 도박으로만 획득 가능합니다";
+                "유물당 최대 개수는 99개입니다<br>소모성 유물은 뽑기으로만 획득 가능합니다";
 
             document.getElementById("유물화면").style.display = "block";
 
@@ -3259,7 +3319,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     //             // 서버가 반환한 업데이트된 유물목록으로 갱신
                     //             유저데이터.골드 = 결과.골드;
                     //             유저데이터.유물목록 = 결과.유물목록;
-                    //             메시지표시(div, "", "돈생겼다 도박하러 가즈ㅏㅏ", "");
+                    //             메시지표시(div, "", "돈생겼다 뽑기하러 가즈ㅏㅏ", "");
                     //             // 화면 다시 렌더링
                     //             document.getElementById("유물").click();
                     //         }
@@ -3287,7 +3347,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     //             // 서버가 반환한 업데이트된 유물목록으로 갱신
                     //             유저데이터.골드 = 결과.골드;
                     //             유저데이터.유물목록 = 결과.유물목록;
-                    //             메시지표시(div, "", "돈생겼다 도박하러 가즈ㅏㅏ", "");
+                    //             메시지표시(div, "", "돈생겼다 뽑기하러 가즈ㅏㅏ", "");
                     //             // 화면 다시 렌더링
                     //             document.getElementById("유물").click();
                     //         }
@@ -3398,61 +3458,59 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
         let 색상인덱스 = 0;
         const 무지개색들 = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff", "#4b0082", "#9400d3"];
         setInterval(() => {
-            const 타이틀 = document.getElementById("도박타이틀");
+            const 타이틀 = document.getElementById("뽑기타이틀");
             // 타이틀.style.display = "flex";
             // 타이틀.style.alignItems = "center";
             // 타이틀.style.gap = "6px";
-            타이틀.innerHTML = `${도박아이콘} 도박장`;
+            타이틀.innerHTML = `${뽑기아이콘} 뽑기장`;
             if (타이틀) {
                 타이틀.style.color = 무지개색들[색상인덱스 % 무지개색들.length];
                 색상인덱스++;
             }
         }, 250);
 
-        // 🟢 도박창 외부 클릭 시 닫기
         document.addEventListener("click", (e) => {
-            const 도박창 = document.getElementById("도박창");
-            if (도박창.style.display === "none") return;
-            if (!도박창.contains(e.target) && e.target.id !== "총골드") {
-                도박창.style.display = "none";
+            const 뽑기창 = document.getElementById("뽑기창");
+            if (뽑기창.style.display === "none") return;
+            if (!뽑기창.contains(e.target) && e.target.id !== "총골드") {
+                뽑기창.style.display = "none";
             }
         });
 
-        // 🟢 총골드 클릭 시 도박창 표시
         document.getElementById("총골드").addEventListener("click", () => {
             if (!유저데이터) return;
-            const 도박창 = document.getElementById("도박창");
-            도박창.style.display = "block";
+            const 뽑기창 = document.getElementById("뽑기창");
+            뽑기창.style.display = "block";
         });
 
 
 
-        async function 장비도박시도(종류 = "일반") {
-            const 도박창 = document.getElementById("도박창");
+        async function 장비뽑기시도(종류 = "일반") {
+            const 뽑기창 = document.getElementById("뽑기창");
             const 네온박스 = document.getElementById("네온박스");
             const 비용 = 100000;
             const 등급외테두리 = document.getElementById("등급외테두리");
 
             if (종류 === "일반") {
                 if (유저데이터.골드 < 비용) {
-                    메시지표시(도박창, "", "골드 부족!", "");
+                    메시지표시(뽑기창, "", "골드 부족!", "");
                     return;
                 }
             } else if (종류 === "고급") {
                 const 티켓 = 유저데이터.유물목록?.["티켓"] || 0;
                 if (티켓 < 1) {
-                    메시지표시(도박창, "", "유물. 티켓이 부족합니다!", "");
+                    메시지표시(뽑기창, "", "유물. 티켓이 부족합니다!", "");
                     return;
                 }
             } else if (종류 === "연속일반") {
                 if (유저데이터.골드 < 10 * 비용) {
-                    메시지표시(도박창, "", "골드 부족!", "");
+                    메시지표시(뽑기창, "", "골드 부족!", "");
                     return;
                 }
             } else if (종류 === "연속고급") {
                 const 티켓 = 유저데이터.유물목록?.["티켓"] || 0;
                 if (티켓 < 10) {
-                    메시지표시(도박창, "", "유물. 티켓이 부족합니다!", "");
+                    메시지표시(뽑기창, "", "유물. 티켓이 부족합니다!", "");
                     return;
                 }
             }
@@ -3460,16 +3518,16 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             // confirm 메시지 확장
             const 메시지 =
                 종류 === "일반"
-                    ? `일반장비도박을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`
+                    ? `일반장비뽑기을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`
                     : 종류 === "고급"
-                        ? `고급장비도박을 티켓 1장으로 진행하시겠습니까?`
+                        ? `고급장비뽑기을 티켓 1장으로 진행하시겠습니까?`
                         : 종류 === "연속일반"
-                            ? `연속일반장비도박 10회를 총 ${(10 * 비용).toLocaleString()} 골드로 진행하시겠습니까?`
+                            ? `연속일반장비뽑기 10회를 총 ${(10 * 비용).toLocaleString()} 골드로 진행하시겠습니까?`
                             : 종류 === "연속고급"
-                                ? `연속고급장비도박 10회를 티켓 10장으로 진행하시겠습니까?`
+                                ? `연속고급장비뽑기 10회를 티켓 10장으로 진행하시겠습니까?`
                                 : "";
             const 확인 = confirm(메시지);
-            도박창.style.display = "none";
+            뽑기창.style.display = "none";
             if (!확인) return;
 
 
@@ -3494,7 +3552,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                         const 네온박스 = document.getElementById("네온박스");
 
                         if (!item.장비) {
-                            메시지표시(등급외테두리, item.퍼즐발동 ? 퍼즐아이콘 : "", "도박에 실패했습니다!", "");
+                            메시지표시(등급외테두리, item.퍼즐발동 ? 퍼즐아이콘 : "", "뽑기에 실패했습니다!", "");
                             return;
                         }
                         if (item.퍼즐발동) {
@@ -3529,42 +3587,42 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 });
 
             } catch (e) {
-                메시지표시(등급외테두리, "", "도박 중 오류: " + e.message, "");
+                메시지표시(등급외테두리, "", "뽑기 중 오류: " + e.message, "");
             } finally {
                 화면해제();
             }
         }
 
         async function 현질(종류 = "팔레트") {
-            메시지표시(도박창, "", "오픈톡 '가글주인장'으로 문의하세요", "");
+            메시지표시(뽑기창, "", "오픈톡 '가글주인장'으로 문의하세요", "");
         }
 
-        async function 유물도박시도(종류 = "일반") {
-            const 도박창 = document.getElementById("도박창");
+        async function 유물뽑기시도(종류 = "일반") {
+            const 뽑기창 = document.getElementById("뽑기창");
             const 비용 = 100000;
             const 유물드랍박스 = document.getElementById("유물드랍박스");
             const 유저테두리안표시 = document.getElementById("유저테두리안표시");
 
             if (종류 === "일반") {
                 if (유저데이터.골드 < 비용) {
-                    메시지표시(도박창, "", "골드 부족!", "");
+                    메시지표시(뽑기창, "", "골드 부족!", "");
                     return;
                 }
             } else if (종류 === "연속일반") {
                 if (유저데이터.골드 < 10 * 비용) {
-                    메시지표시(도박창, "", "골드 부족!", "");
+                    메시지표시(뽑기창, "", "골드 부족!", "");
                     return;
                 }
             }
 
             const 메시지 =
                 종류 === "일반"
-                    ? `유물도박을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`
+                    ? `유물뽑기을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`
                     : 종류 === "연속일반"
-                        ? `유물도박 10회를 총 ${(10 * 비용).toLocaleString()} 골드로 진행하시겠습니까?`
+                        ? `유물뽑기 10회를 총 ${(10 * 비용).toLocaleString()} 골드로 진행하시겠습니까?`
                         : "";
             const 확인 = confirm(메시지);
-            도박창.style.display = "none";
+            뽑기창.style.display = "none";
             if (!확인) return;
 
             화면잠금();
@@ -3608,7 +3666,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                             if (item.유물이름) {
                                 유물드랍박스.innerText = `유물 [${item.유물이름}]을(를) 획득했다!`;
                             } else {
-                                유물드랍박스.innerText = "도박에 실패했습니다!";
+                                유물드랍박스.innerText = "뽑기에 실패했습니다!";
                             }
 
                             // 화면에 표시
@@ -3635,7 +3693,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     }, i * 500); // 회차마다 0.5초 간격으로 표시
                 });
             } catch (e) {
-                메시지표시(유저테두리안표시, "", "도박 중 오류: " + e.message, "");
+                메시지표시(유저테두리안표시, "", "뽑기 중 오류: " + e.message, "");
             } finally {
                 화면해제();
             }
@@ -4004,10 +4062,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
             "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
             "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다(*0.1%)" },
-            "클로버": { 설명: "장비 도박확률이 증가합니다(*0.1%)" },
+            "클로버": { 설명: "장비 뽑기확률이 증가합니다(*0.1%)" },
             "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
             "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
-            "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
+            "퍼즐": { 설명: "뽑기비용을 무시합니다(0.1%)" },
         };
         const 레어유물데이터 = {
             "소드": { 설명: "공격력이 증가합니다(*1%)" },
@@ -4015,13 +4073,13 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
             "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
             "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다(*0.1%)" },
-            "클로버": { 설명: "장비 도박확률이 증가합니다(*0.1%)" },
+            "클로버": { 설명: "장비 뽑기확률이 증가합니다(*0.1%)" },
             "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
             "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
-            "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
+            "퍼즐": { 설명: "뽑기비용을 무시합니다(0.1%)" },
             "플라워": { 설명: "스킬을 초기화합니다" },
             "뼈다구": { 설명: "직업을 초기화합니다" },
-            "티켓": { 설명: "고급장비도박에 사용됩니다" },
+            "티켓": { 설명: "고급장비뽑기에 사용됩니다" },
             "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
         };
         const 신화유물데이터 = {
@@ -4030,13 +4088,13 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
             "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
             "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다(*0.1%)" },
-            "클로버": { 설명: "장비 도박확률이 증가합니다(*0.1%)" },
+            "클로버": { 설명: "장비 뽑기확률이 증가합니다(*0.1%)" },
             "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
             "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
-            "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
+            "퍼즐": { 설명: "뽑기비용을 무시합니다(0.1%)" },
             "플라워": { 설명: "스킬을 초기화합니다" },
             "뼈다구": { 설명: "직업을 초기화합니다" },
-            "티켓": { 설명: "고급장비도박에 사용됩니다" },
+            "티켓": { 설명: "고급장비뽑기에 사용됩니다" },
             "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
             "마법의팔레트": { 설명: "아이디를 염색합니다" },
             "햄버거": { 설명: "스태미너를 충전합니다(+300)" },
@@ -4144,7 +4202,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 화면ID들 = [
                 "전투화면", "장비화면", "스킬화면", "전당화면",
                 "유물화면", "전직화면", "보스화면", "에너지박스",
-                "메뉴얼화면", "내정보화면", "캐시샾화면",
+                "메뉴얼화면", "내정보화면", "캐시샵화면",
             ];
             화면ID들.forEach(id => {
                 const el = document.getElementById(id);
@@ -4172,7 +4230,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
   <div style="display: flex; flex-direction: column; gap: 10px;">    
     <div class="버튼" id="내정보">내정보</div>
     <div class="버튼" id="메뉴얼">메뉴얼</div>
-    <div class="버튼" id="캐시샾">캐시샾</div>
+    <div class="버튼" id="캐시샵">캐시샵</div>
   </div>
 `;
         // <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
@@ -4444,9 +4502,17 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
                 `${봄아이콘}`,
                 `
+25.06.09<br>
+유물뽑기으로만 등장하는 '플라워', '뼈다구'를 9개 이상 보유 시<br>
+뽑기에서 더이상 등장하지 않습니다<br>
+'도박' 을 '뽑기'로 변경하였습니다<br>
+무기 '루시퍼의 심장'을 강화할 수 있습니다<br>
+
+  `,
+                `
 25.06.08<br>
 전당화면에서 유저정보가 빈칸으로 표시되던 문제를 해결했습니다<br>
-도박창에서 과금상품목록을 제거했습니다<br>
+뽑기창에서 과금상품목록을 제거했습니다<br>
 과금상품 목록이 정보-캐시샵으로 이동되었습니다<br>
 유물. 플라워와 뼈다구의 판매기능이 삭제되었습니다<br>
 플라워와 뼈다구의 과금금액이 1,100원으로 변경되었습니다<br>
@@ -4493,13 +4559,13 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 유물화면에서 소모성 유물과 과금유물을 구분하였습니다<br>
 오늘은 오픈기념 이벤트 마지막 날이자, 주인장 생일입니다<br>기념으로 금일 햄버거는 1+1 배송됩니다<br>
 암포라 발동효과가 기존 9에서 5로 상향되었습니다<br>
-10연 유물도박이 구현되었습니다<br>
+10연 유물뽑기이 구현되었습니다<br>
 보스 공통미션 보상 '펫'과 누적데미지 순위별 골드보상이<br>지급되었습니다
   `,
                 `
 25.05.30<br>
-10연 고급장비도박 시 무료1회 추가기능은 실패했습니다<br>대신, 10연 고급장비도박 시 보너스 티켓 한장이 지급됩니다<br>
-10연 일반장비도박과 10연 고급장비도박 업데이트<br>
+10연 고급장비뽑기 시 무료1회 추가기능은 실패했습니다<br>대신, 10연 고급장비뽑기 시 보너스 티켓 한장이 지급됩니다<br>
+10연 일반장비뽑기과 10연 고급장비뽑기 업데이트<br>
 유물. 암포라의 수치표기를 바르게 수정했습니다
   `,
                 `
@@ -4536,25 +4602,25 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
   `,
                 `
 25.05.24<br>
-고급장비도박은 레어부터 타락까지 드랍됩니다<br>
-일반장비도박은 일반부터 태초까지 드랍됩니다<br>
+고급장비뽑기은 레어부터 타락까지 드랍됩니다<br>
+일반장비뽑기은 일반부터 태초까지 드랍됩니다<br>
 보스전 스태미너 소모가 10으로 너프되었습니다<br>
 유저의 최대체력은 고등급 장비(태초,타락)로만 증가합니다<br>
-유물. 티켓(고급장비도박)이 유물도박으로만 등장합니다<br>
-유물. 플라워(스킬초기화)가 유물도박으로만 등장합니다
+유물. 티켓(고급장비뽑기)이 유물뽑기으로만 등장합니다<br>
+유물. 플라워(스킬초기화)가 유물뽑기으로만 등장합니다
   `,
                 `
 25.05.23<br>
 각 화면에 대한 설명을 표시<br>
 보스화면 내 순위 별도 표시<br>
-클로버 유물효과 도박확률증가로 변경<br>
-<s>신규유저 이벤트 10만골드 도박 가즈ㅏㅏ</s><br>
+클로버 유물효과 뽑기확률증가로 변경<br>
+<s>신규유저 이벤트 10만골드 뽑기 가즈ㅏㅏ</s><br>
 3시 10분 5월 26일 오픈 전 마지막 cbt 초기화 진행
   `,
                 `
 25.05.22<br>
 보스 펫 보상 로직 변경<br>
-유물도박 업데이트
+유물뽑기 업데이트
   `,
                 `
 25.05.21<br>
@@ -4594,7 +4660,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                 "풀 자동사냥이 가능합니다",
                 "누르고 계시면 안됩니다",
                 `<s>레벨업당 5의 공격력이 증가합니다</s>`,
-                "도박은 최소 일반장비가 드랍됩니다",
+                "뽑기은 최소 일반장비가 드랍됩니다",
                 "모든 스킬은 단계가 존재하며, 습득한 스킬 효과만 적용됩니다",
                 "전투로그의 아이콘으로 스킬의 발동여부를 확인하실 수 있습니다",
                 "유물의 효과는 대부분 개당 1%의 효과가 곱연산이지만,",
@@ -5208,8 +5274,8 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
         });
 
 
-        //캐시샾화면보여주기
-        document.getElementById("캐시샾").addEventListener("click", () => {
+        //캐시샵화면보여주기
+        document.getElementById("캐시샵").addEventListener("click", () => {
             if (!유저데이터) return;
 
             화면잠금();
@@ -5217,9 +5283,9 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
             document.getElementById("화면설명").innerHTML =
                 "gagl의 상품들은 소모성 또는 30일 기간제입니다<br>오픈톡 프로필 '가글주인장'에게 문의하세요";
 
-            document.getElementById("캐시샾화면").style.display = "block";
+            document.getElementById("캐시샵화면").style.display = "block";
 
-            const 컨테이너 = document.getElementById("캐시샾컨테이너");
+            const 컨테이너 = document.getElementById("캐시샵컨테이너");
             컨테이너.innerHTML = "";
 
             function 줄추가(왼쪽내용, 오른쪽내용) {

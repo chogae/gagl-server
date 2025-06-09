@@ -1925,7 +1925,10 @@ app.post("/gamble-Equipment", async (req, res) => {
 app.post("/gamble-Relic", async (req, res) => {
     const { 유저UID, 종류 = "일반" } = req.body;
     const 비용 = 100000;
-
+    const maxCounts = {
+        "플라워": 9,
+        "뼈다구": 9
+    };
     try {
         const { data: 유저, error } = await supabaseAdmin
             .from("users")
@@ -1939,7 +1942,8 @@ app.post("/gamble-Relic", async (req, res) => {
 
         const 후보 = Object.keys(레어유물데이터).filter(이름 => {
             const 보유 = 유저.유물목록?.[이름] || 0;
-            return 보유 < 99;
+            const max = maxCounts[이름] ?? 99;
+            return 보유 < max;
         });
 
         if (후보.length === 0) {
@@ -1981,8 +1985,8 @@ app.post("/gamble-Relic", async (req, res) => {
                 남은골드: 유저.골드,
             });
 
-            // 6) 후보 목록 갱신 (이미 99개가 된 유물은 다음 루프부터 후보에서 제외)
-            if (유물목록복사[유물이름] >= 99) {
+            const max = maxCounts[유물이름] ?? 99;
+            if (유물목록복사[유물이름] >= max) {
                 const idx = 후보.indexOf(유물이름);
                 if (idx !== -1) 후보.splice(idx, 1);
             }
@@ -2115,6 +2119,67 @@ app.post('/synthesize-item', async (req, res) => {
 
 
 
+// 🔹 index.js 맨 아래쯤에 추가
+app.post("/upgrade-corrupted-item", async (req, res) => {
+    const { 유저UID, 이름, 등급 } = req.body;
+    if (!유저UID || !이름 || !등급) {
+        return res.status(400).json({ 오류: "필수 값 누락" });
+    }
+
+    // 1) 유저 조회
+    const { data: 유저, error: userErr } = await supabaseAdmin
+        .from("users")
+        .select("*")
+        .eq("유저UID", 유저UID)
+        .single();
+    if (userErr || !유저) {
+        return res.status(404).json({ 오류: "유저 정보 없음" });
+    }
+
+    // 2) 대상 장비 찾기
+    const 장비목록 = 유저.장비목록 || [];
+    const 대상 = 장비목록.find(e => e.이름 === 이름 && e.등급 === 등급);
+    if (!대상) {
+        return res.status(404).json({ 오류: "장비를 찾을 수 없음" });
+    }
+    if (등급 !== "타락") {
+        return res.status(400).json({ 오류: "타락 장비만 강화 가능합니다" });
+    }
+    if ((대상.수량 || 0) < 1) {
+        return res.status(400).json({ 오류: "수량이 부족합니다" });
+    }
+
+    대상.수량 -= 1;
+    대상.강화 = (대상.강화 || 0) + 1;
+
+    대상.공격력 += 360;
+
+    const maxAtk = Math.max(...장비목록.map(e => e.공격력));
+    유저.장비공격력 = maxAtk;
+    유저.최종공격력 = 최종공격력계산(유저);
+    const { error: updErr1 } = await supabaseAdmin
+        .from("users")
+        .update({ 장비목록, 장비공격력: 유저.장비공격력, 최종공격력: 유저.최종공격력 })
+        .eq("유저UID", 유저UID);
+    if (updErr1) {
+        return res.status(500).json({ 오류: "강화 처리 중 오류 발생" });
+    }
+
+
+    res.json({
+        이름: 대상.이름,
+        등급: 대상.등급,
+        수량: 대상.수량,
+        강화: 대상.강화,
+        공격력: 대상.공격력,
+        최종공격력: 유저.최종공격력,
+        유저데이터: {
+            ...유저,
+            장비목록,
+            최종공격력: 유저.최종공격력
+        }
+    });
+});
 
 
 
