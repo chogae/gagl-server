@@ -994,8 +994,8 @@
     <div id="메시지표시박스" style="
     position: fixed;
     top: 130px;
-    left: 320px;
-    right: 480px;
+    left: 740px;
+    right: 900px;
     height: 500px;
     z-index: 9999;
     display: flex;
@@ -1006,6 +1006,7 @@
     box-sizing: border-box;
     pointer-events: none;
 "></div>
+    <!-- background: rgba(23, 221, 33, 0.897); -->
 
     <div id="뽑기창" class="기본테두리 세로정렬" style="
   display: none;
@@ -1351,9 +1352,11 @@
 
                 if (document.readyState === "complete" || document.readyState === "interactive") {
                     전투화면보여주기(유저데이터);
+                    document.getElementById("메뉴얼").click();
                 } else {
                     document.addEventListener("DOMContentLoaded", () => {
                         전투화면보여주기(유저데이터);
+                        document.getElementById("메뉴얼").click();
                     });
                 }
 
@@ -1419,7 +1422,7 @@
 
                 메시지표시(메시지표시박스, "✅", "로그인 성공!", "#00c851");
                 전투화면보여주기(유저데이터);
-
+                document.getElementById("메뉴얼").click();
             } catch (e) {
                 메시지표시(메시지표시박스, "", "오류 발생: " + e.message, "");
             } finally {
@@ -1483,19 +1486,13 @@
             const 최대 = 유저.최대스태미너 ?? 100;
             const 현재 = 유저.현재스태미너 ?? 0;
 
-            // ✅ 스태미너 텍스트 표시
             const 스태미너표시 = document.getElementById("스태미너표시");
             if (스태미너표시) 스태미너표시.innerText = `${현재}/${최대}`;
 
-            // ✅ 에너지바 길이 조절
             const 에너지바 = document.querySelector(".에너지바");
             if (에너지바) 에너지바.style.width = `${(현재 / 최대) * 100}%`;
 
             document.getElementById("등급외테두리").style.border = "0.2px solid #4b4b4b";
-            // document.getElementById("레어몬스터").style.display = "inline-block";
-
-            // document.getElementById("레어몬스터").style.display = "none";
-            document.getElementById("인증화면").style.display = "none";
 
             let 닉네임표시 = 유저.유저아이디;
 
@@ -1531,7 +1528,7 @@
             const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
 
 
-            const 결정객체 = 유저.직업결정; 
+            const 결정객체 = 유저.직업결정;
 
             if (결정객체) {
                 const 계열키 = Object.keys(결정객체)[0];
@@ -1539,11 +1536,11 @@
 
                 let 직업이름;
                 if (계열키 === "검술") {
-                    직업이름 = 검술[단계 - 1];  
+                    직업이름 = 검술[단계 - 1];
                 } else if (계열키 === "마술") {
                     직업이름 = 마술[단계 - 1];
                 } else if (계열키 === "신술") {
-                    직업이름 = 신술[단계 - 1];  
+                    직업이름 = 신술[단계 - 1];
                 } else if (계열키 === "궁술") {
                     직업이름 = 궁술[단계 - 1];
                 } else {
@@ -2301,7 +2298,7 @@
 
                         const 확인 = confirm(`루시퍼의 심장 1개를 소모해서 강화를 진행하시겠습니까? 공격력 증가량은 +360입니다`);
                         if (!확인) return;
-
+                        화면잠금();
                         try {
                             const res = await fetch("/upgrade-corrupted-item", {
                                 method: "POST",
@@ -2333,6 +2330,8 @@
                             장비화면보여주기();
                         } catch (e) {
                             메시지표시(메시지표시박스, "", e.message, "");
+                        } finally {
+                            화면해제();
                         }
                     });
 
@@ -3453,7 +3452,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             // 타이틀.style.display = "flex";
             // 타이틀.style.alignItems = "center";
             // 타이틀.style.gap = "6px";
-            타이틀.innerHTML = `${뽑기아이콘} 뽑기장`;
+            타이틀.innerHTML = `${뽑기아이콘} 뽑기`;
             if (타이틀) {
                 타이틀.style.color = 무지개색들[색상인덱스 % 무지개색들.length];
                 색상인덱스++;
@@ -4127,7 +4126,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     // }
 
                     유저데이터 = 유저정보;
-                    메시지표시(메시지표시박스, "", "자동로그인 완료", "");
+                    메시지표시(메시지표시박스, "", "자동로그인 완료", "#00c851");
 
                     if (유저데이터.펫단계 >= 1) {
                         let 색상코드;
@@ -4160,6 +4159,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     }
 
                     전투화면보여주기(유저데이터);
+                    document.getElementById("메뉴얼").click();
 
                 } catch (e) {
                     메시지표시(메시지표시박스, "", "자동 로그인 오류: " + e.message, "");
@@ -4191,7 +4191,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
         function 모든화면숨기기() {
             const 화면ID들 = [
-                "전투화면", "장비화면", "스킬화면", "전당화면",
+                "전투화면", "장비화면", "스킬화면", "전당화면", "인증화면",
                 "유물화면", "전직화면", "보스화면", "에너지박스",
                 "메뉴얼화면", "내정보화면", "캐시샵화면", "지하던전화면",
             ];
@@ -4540,10 +4540,14 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             모든화면숨기기();
             document.getElementById("지하던전화면").style.display = "block";
+            document.getElementById("에너지박스").style.display = "block";
 
             const 컨테이너 = document.getElementById("지하던전컨테이너");
             컨테이너.innerHTML = "";
 
+            // <div id="전직화면타이틀" class="밑줄" style="text-align: left; font-weight: bold;  font-size: 24px;">
+            //     전직
+            // </div>
 
 
 
@@ -4561,7 +4565,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
         document.getElementById("메뉴얼").addEventListener("click", () => {
             if (!유저데이터) return;
-            document.getElementById("화면설명").innerHTML = "새로고침(F5)을 생활화하세요";
+            document.getElementById("화면설명").innerHTML = "오늘도, 행복하세요";
 
             모든화면숨기기();
             document.getElementById("메뉴얼화면").style.display = "block";
@@ -4571,12 +4575,27 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             const 문장들 = [
                 `${여름아이콘}`,
-                "앞으로의 방향",
-                "보스 랜덤 방어력 부여",
-                "지하던전",
-                "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
-
+                `
+1. '전투'를 클릭해서 전투화면으로 진입 후 100만골드를 클릭<br>
+2. 연속일반장비 뽑기를 통해 [태초] 사탄의 날개를 뽑으세요<br>
+3. 사탄의 날개가 나오지 않았다면 '정보'-'내정보'<br>
+4. 계정탈퇴 후 재가입하세요<br>
+5. 사탄의 날개가 등장할때까지 1,2,3을 반복하세요<br>
+6. 전투화면에서 악마성을 클릭하세요<br>
+7. 자동사냥을 구경하며 레어몬스터가 등장했다면 도전해보세요<br>
+8. 레어몬스터까지 자동사냥되는 풀자동 버튼을 경험하세요<br>
+9. 숙련도 500을 모았다면 전투화면에서 숙련도를 클릭하세요<br>
+10. 스킬창에서 숙련도를 소모하여, 인사이트 스킬을 습득하세요<br>
+11. 단톡에 참여하여 더 많은 정보를 구하세요<br>
+                `,
+                `
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+                `,
                 `${봄아이콘}`,
+                `
+25.06.10<br>
+초기화면을 전투화면에서 메뉴얼 화면으로 수정했습니다<br>
+                `,
                 `
 25.06.09<br>
 유물뽑기로만 등장하는 '플라워', '뼈다구'를 9개 이상 보유 시<br>
@@ -4590,6 +4609,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 보스화면이 '월드'화면으로 통합되었습니다<br>
 직업초기화 시 유저아이디가 사라지는 버그 해결<br>
 전투화면 외에서도 단축키가 사용되던 버그 해결<br>
+신규유저 100만골 회원가입 이벤트 시작<br>
   `,
                 `
 25.06.08<br>
