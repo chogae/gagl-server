@@ -2218,6 +2218,73 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
 
 
 
+// → "/attack-dungeon" 핸들러 추가 (지하던전 전투)
+app.post("/attack-dungeon", async (req, res) => {
+    const { 유저UID } = req.body;
+    if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
+
+    // 1) 유저 조회 (지하던전, 유물목록)
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("지하던전, 유물목록")
+        .eq("유저UID", 유저UID)
+        .single();
+    if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
+
+    // 2) 몬스터 스탯 계산
+    const level = 유저.지하던전;
+    const 몬스터 = {
+        이름: `???`,
+        체력: 5000 * level,
+        방어력: 500 * level
+    };
+
+    // 3) 전투 시뮬레이션 호출 (전투로그 생성)
+    const 전투로그 = [];
+    const 결과 = 전투시뮬레이션(유저, 몬스터, 전투로그, 1);
+
+    // 4) 전투 결과 반영
+    let 새로운레벨 = level;
+    let 드랍티켓 = false;
+    if (결과.결과 === "승리") {
+        새로운레벨 = level + 1;
+        // 티켓 확정 드랍
+        const oldTickets = Number(유저.유물목록?.티켓 || 0);
+        유저.유물목록 = { ...유저.유물목록, 티켓: oldTickets + 1 };
+        드랍티켓 = true;
+    }
+
+    // 5) DB 업데이트
+    await supabaseAdmin
+        .from("users")
+        .update({
+            지하던전: 새로운레벨,
+            유물목록: 유저.유물목록
+        })
+        .eq("유저UID", 유저UID);
+
+    return res.json({
+        결과: 결과.결과,         // "승리" or "패배"
+        새로운레벨,
+        드랍티켓,
+        유물목록: 유저.유물목록,
+        전투로그
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
