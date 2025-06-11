@@ -1620,67 +1620,67 @@
             return 마지막직위;
         }
 
-        let 자동사냥허용 = false;
-        let 풀자동사냥허용 = false;  // 기본값 false
+        // let 자동사냥허용 = false;
+        // let 풀자동사냥허용 = false;  // 기본값 false
 
-        document.addEventListener("keydown", (e) => {
-            const 전투화면 = document.getElementById("전투화면");
-            if (!전투화면 || window.getComputedStyle(전투화면).display === "none") {
-                return;
-            }
+        // document.addEventListener("keydown", (e) => {
+        //     const 전투화면 = document.getElementById("전투화면");
+        //     if (!전투화면 || window.getComputedStyle(전투화면).display === "none") {
+        //         return;
+        //     }
 
-            const 스페이스바 = e.code === "Space";
-            const 알트A = e.altKey && e.key.toLowerCase() === "a";
+        //     const 스페이스바 = e.code === "Space";
+        //     const 알트A = e.altKey && e.key.toLowerCase() === "a";
 
-            if (알트A || 스페이스바) {
-                if (스페이스바) e.preventDefault();
+        //     if (알트A || 스페이스바) {
+        //         if (스페이스바) e.preventDefault();
 
-                풀자동사냥허용 = !풀자동사냥허용;
+        //         풀자동사냥허용 = !풀자동사냥허용;
 
-                if (풀자동사냥허용) {
-                    자동사냥허용 = false;
+        //         if (풀자동사냥허용) {
+        //             자동사냥허용 = false;
 
-                    const 레어버튼 = document.getElementById("레어몬스터");
-                    const 일반버튼 = document.getElementById("공격버튼");
+        //             const 레어버튼 = document.getElementById("레어몬스터");
+        //             const 일반버튼 = document.getElementById("공격버튼");
 
-                    if (레어버튼 && 레어버튼.style.display !== "none") {
-                        레어버튼.click();
-                    } else if (일반버튼 && 일반버튼.style.display !== "none") {
-                        일반버튼.click();
-                    }
-                }
-            }
-        });
+        //             if (레어버튼 && 레어버튼.style.display !== "none") {
+        //                 레어버튼.click();
+        //             } else if (일반버튼 && 일반버튼.style.display !== "none") {
+        //                 일반버튼.click();
+        //             }
+        //         }
+        //     }
+        // });
 
-        document.getElementById("모바일풀자동").addEventListener("click", () => {
-            풀자동사냥허용 = !풀자동사냥허용;
+        // document.getElementById("모바일풀자동").addEventListener("click", () => {
+        //     풀자동사냥허용 = !풀자동사냥허용;
 
-            if (풀자동사냥허용) {
-                자동사냥허용 = false;
-                const 레어버튼 = document.getElementById("레어몬스터");
-                const 일반버튼 = document.getElementById("공격버튼");
+        //     if (풀자동사냥허용) {
+        //         자동사냥허용 = false;
+        //         const 레어버튼 = document.getElementById("레어몬스터");
+        //         const 일반버튼 = document.getElementById("공격버튼");
 
-                if (레어버튼 && 레어버튼.style.display !== "none") {
-                    레어버튼.click();
-                } else if (일반버튼 && 일반버튼.style.display !== "none") {
-                    일반버튼.click();
-                }
-            }
-        });
+        //         if (레어버튼 && 레어버튼.style.display !== "none") {
+        //             레어버튼.click();
+        //         } else if (일반버튼 && 일반버튼.style.display !== "none") {
+        //             일반버튼.click();
+        //         }
+        //     }
+        // });
 
         document.getElementById("공격버튼").addEventListener("click", async () => {
             if (!유저데이터) return;
 
-            if (!풀자동사냥허용) {
-                자동사냥허용 = true;
-            }
+            // if (!풀자동사냥허용) {
+            //     자동사냥허용 = true;
+            // }
 
-            if (레어몬스터 && getComputedStyle(레어몬스터).display === "block") {
-                if (!풀자동사냥허용) {
-                    자동사냥허용 = false;
-                    return;
-                }
-            }
+            // if (레어몬스터 && getComputedStyle(레어몬스터).display === "block") {
+            //     if (!풀자동사냥허용) {
+            //         자동사냥허용 = false;
+            //         return;
+            //     }
+            // }
 
             공격버튼잠금();
             let 레어몬스터등장 = false;
@@ -1699,8 +1699,8 @@
                 if (결과.결과 === "불가") {
                     메시지표시(등급외테두리, "", 결과.메시지 || "스태미너 부족", "");
                     화면해제();
-                    자동사냥허용 = false;
-                    풀자동사냥허용 = false;
+                    // 자동사냥허용 = false;
+                    // 풀자동사냥허용 = false;
                     return;
                 }
 
@@ -1887,7 +1887,7 @@
                     레어몬스터.innerText = 결과.레어몬스터이름;
                     레어몬스터.style.display = "inline-block";
                     레어몬스터등장 = true;
-                    자동사냥허용 = false;
+                    // 자동사냥허용 = false;
                 } else {
                     레어몬스터.style.display = "none";
                     document.getElementById("등급외테두리").style.border = "0.2px solid #4b4b4b";
@@ -1908,24 +1908,24 @@
                 }
             } catch (e) {
                 메시지표시(메시지표시박스, "", "전투 중 오류: " + e.message, "");
-                자동사냥허용 = false;
+                // 자동사냥허용 = false;
             } finally {
                 if (레어몬스터등장) {
                     await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
                 }
                 공격버튼잠금해제();
 
-                if (풀자동사냥허용) {
-                    // 우선 레어몬스터 공격
-                    const 레어 = document.getElementById("레어몬스터");
-                    if (레어 && getComputedStyle(레어).display !== "none") {
-                        레어.click();
-                    } else {
-                        document.getElementById("공격버튼").click();
-                    }
-                } else if (자동사냥허용) {
-                    document.getElementById("공격버튼").click();
-                }
+                // if (풀자동사냥허용) {
+                //     // 우선 레어몬스터 공격
+                //     const 레어 = document.getElementById("레어몬스터");
+                //     if (레어 && getComputedStyle(레어).display !== "none") {
+                //         레어.click();
+                //     } else {
+                //         document.getElementById("공격버튼").click();
+                //     }
+                // } else if (자동사냥허용) {
+                //     document.getElementById("공격버튼").click();
+                // }
             }
 
         });
@@ -1936,8 +1936,8 @@
                 e.target.closest("#레어몬스터") ||
                 e.target.closest("#모바일풀자동")
             ) return;
-            자동사냥허용 = false;
-            풀자동사냥허용 = false;
+            // 자동사냥허용 = false;
+            // 풀자동사냥허용 = false;
         });
 
         document.getElementById("레어몬스터").addEventListener("click", async () => {
@@ -1961,8 +1961,8 @@
                 if (결과.결과 === "불가") {
                     메시지표시(등급외테두리, "", 결과.메시지 || "스태미너 부족", "");
                     화면해제();
-                    자동사냥허용 = false;
-                    풀자동사냥허용 = false;
+                    // 자동사냥허용 = false;
+                    // 풀자동사냥허용 = false;
                     return;
                 }
 
@@ -2221,14 +2221,14 @@
                 }
                 공격버튼잠금해제();
 
-                if (풀자동사냥허용) {
-                    const 레어 = document.getElementById("레어몬스터");
-                    if (레어 && getComputedStyle(레어).display !== "none") {
-                        레어.click();
-                    } else {
-                        document.getElementById("공격버튼").click();
-                    }
-                }
+                // if (풀자동사냥허용) {
+                //     const 레어 = document.getElementById("레어몬스터");
+                //     if (레어 && getComputedStyle(레어).display !== "none") {
+                //         레어.click();
+                //     } else {
+                //         document.getElementById("공격버튼").click();
+                //     }
+                // }
 
             }
 
