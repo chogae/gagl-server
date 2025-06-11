@@ -287,7 +287,7 @@ app.post("/get-user", async (req, res) => {
         .eq("유저UID", 유저UID);
 
     if (업데이트에러) {
-        return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+        return res.status(500).json({ 오류: "서버오류" });
     }
 
     return res.json({ 유저데이터: { ...유저 }, 새로고침하자 });
@@ -335,13 +335,13 @@ app.post("/boss-ranking", async (req, res) => {
         } : null;
 
         if (유저에러) {
-            return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+            return res.status(500).json({ 오류: "서버오류" });
         }
 
         res.json({ 순위: 유저들, 누적데미지총합, 내정보 });
 
     } catch (e) {
-        return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+        return res.status(500).json({ 오류: "서버오류" });
     }
 });
 
@@ -560,6 +560,16 @@ app.post("/attack-normal", async (req, res) => {
         현재스태미너++;
     }
 
+
+    let 새로고침하자 = false;
+    if (유저.새로고침 == true) {
+        새로고침하자 = true;
+        유저.새로고침 = false;
+    }
+
+
+
+
     await supabaseAdmin.from("users").update({
         레벨: 새유저.레벨,
         레벨공격력: 새유저.레벨공격력,
@@ -574,6 +584,8 @@ app.post("/attack-normal", async (req, res) => {
         유물목록: 새유저.유물목록,
         현재스태미너,
         스태미너소모총량: 유저.스태미너소모총량,
+        새로고침: 유저.새로고침
+
     }).eq("유저UID", 새유저.유저UID);
 
 
@@ -598,7 +610,8 @@ app.post("/attack-normal", async (req, res) => {
             인텔리전스: 인텔리전스발동, // true/false
             발굴: 발굴발동              // true/false
         },
-        모래시계발동
+        모래시계발동, 
+        새로고침하자
     });
 });
 
@@ -1149,7 +1162,7 @@ app.post("/upgrade-item", async (req, res) => {
         .eq("유저UID", 유저UID);
 
     if (저장오류) {
-        return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+        return res.status(500).json({ 오류: "서버오류" });
     }
 
     return res.json({
@@ -1202,7 +1215,7 @@ app.post("/update-skill", async (req, res) => {
             .update({ 스킬, 숙련도, 유물목록 })  // ← 유물목록도 같이 저장
             .eq("유저UID", 유저UID);
 
-        if (저장오류) return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+        if (저장오류) return res.status(500).json({ 오류: "서버오류" });
 
         return res.json({ 성공: true, 스킬, 숙련도, 스킬상태: {}, 유물목록 }); // ← 유물목록도 같이 반환
     }
@@ -1251,7 +1264,7 @@ app.post("/update-skill", async (req, res) => {
     }
 
     else {
-        return res.status(400).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+        return res.status(400).json({ 오류: "서버오류" });
     }
 
     // ✅ 스킬상태 계산: 각 계열의 현재 이름과 설명
@@ -1275,7 +1288,7 @@ app.post("/update-skill", async (req, res) => {
         .update({ 스킬, 숙련도 })
         .eq("유저UID", 유저UID);
 
-    if (저장오류) return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+    if (저장오류) return res.status(500).json({ 오류: "서버오류" });
 
     return res.json({ 성공: true, 스킬, 숙련도, 스킬상태 });
 });
@@ -1286,7 +1299,7 @@ app.post("/register-user", async (req, res) => {
     const { 유저UID, 유저아이디, 기기ID, 로그인이메일 } = req.body;
 
     if (!유저UID || !유저아이디 || !기기ID) {
-        return res.status(400).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+        return res.status(400).json({ 오류: "서버오류" });
     }
 
     const now = new Date();
@@ -1375,7 +1388,7 @@ app.post("/register-user", async (req, res) => {
         .insert(삽입값);
 
     if (삽입오류) {
-        return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+        return res.status(500).json({ 오류: "서버오류" });
     }
 
     return res.json({ 유저데이터: 삽입값 });
@@ -1394,7 +1407,7 @@ app.post("/ranking", async (req, res) => {
             .order("최종공격력", { ascending: false })
 
         if (error) {
-            return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+            return res.status(500).json({ 오류: "서버오류" });
         }
 
         for (const 유저 of 유저들) {
@@ -1410,7 +1423,7 @@ app.post("/ranking", async (req, res) => {
 
         return res.json({ 유저들, 보스랭킹 });
     } catch (e) {
-        return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+        return res.status(500).json({ 오류: "서버오류" });
     }
 });
 
@@ -1430,7 +1443,7 @@ app.post("/delete-user", async (req, res) => {
 
         if (테이블삭제오류) {
             console.error("유저 테이블 삭제 실패:", 테이블삭제오류.message);
-            return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+            return res.status(500).json({ 오류: "서버오류" });
         }
 
         // 2. Supabase Auth 계정 삭제
@@ -1438,13 +1451,13 @@ app.post("/delete-user", async (req, res) => {
 
         if (인증삭제오류) {
             console.error("Auth 삭제 실패:", 인증삭제오류.message);
-            return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+            return res.status(500).json({ 오류: "서버오류" });
         }
 
         return res.json({ 메시지: "유저 데이터 및 인증 삭제 완료" });
     } catch (e) {
         console.error("유저 삭제 중 예외:", e.message);
-        return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+        return res.status(500).json({ 오류: "서버오류" });
     }
 });
 
@@ -1463,7 +1476,7 @@ app.post("/update-username", async (req, res) => {
         .neq("유저UID", 유저UID);
 
     if (조회오류) {
-        return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+        return res.status(500).json({ 오류: "서버오류" });
     }
 
     if (중복.length > 0) {
@@ -1476,7 +1489,7 @@ app.post("/update-username", async (req, res) => {
         .eq("유저UID", 유저UID);
 
     if (업데이트오류) {
-        return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+        return res.status(500).json({ 오류: "서버오류" });
     }
 
     return res.json({ 성공: true });
@@ -1641,7 +1654,7 @@ app.post("/promote-job", async (req, res) => {
         .eq("유저UID", 유저UID);
 
     if (업데이트오류) {
-        return res.status(500).json({ 오류: "제잘못아니고 서버오류입니다. 잠시 후 새로고침하시고 다시 시도하세요" });
+        return res.status(500).json({ 오류: "서버오류" });
     }
 
     return res.json({ 성공: true, 전직정보: 전직정보, 경험치: 경험치 - 비용, 레벨: 새레벨, 최종공격력: 최종공격력 });
