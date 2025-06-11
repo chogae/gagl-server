@@ -257,6 +257,11 @@ app.post("/get-user", async (req, res) => {
 
 
 
+    let 점검하자 = false;
+    if (유저.점검 == true) {
+        점검하자 = true;
+        // 유저.점검 = false;
+    }
 
 
 
@@ -282,7 +287,8 @@ app.post("/get-user", async (req, res) => {
             최종공격력: 최종공격력,
             마법의팔레트: 유저.마법의팔레트,
             새로고침: 유저.새로고침,
-            버전업: 유저.버전업
+            버전업: 유저.버전업,
+            점검: 유저.점검
         })
         .eq("유저UID", 유저UID);
 
@@ -290,7 +296,7 @@ app.post("/get-user", async (req, res) => {
         return res.status(500).json({ 오류: "서버오류" });
     }
 
-    return res.json({ 유저데이터: { ...유저 }, 새로고침하자 });
+    return res.json({ 유저데이터: { ...유저 }, 새로고침하자, 점검하자 });
 });
 
 
@@ -567,6 +573,11 @@ app.post("/attack-normal", async (req, res) => {
         유저.새로고침 = false;
     }
 
+    let 점검하자 = false;
+    if (유저.점검 == true) {
+        점검하자 = true;
+        // 유저.점검 = false;
+    }
 
 
 
@@ -584,7 +595,8 @@ app.post("/attack-normal", async (req, res) => {
         유물목록: 새유저.유물목록,
         현재스태미너,
         스태미너소모총량: 유저.스태미너소모총량,
-        새로고침: 유저.새로고침
+        새로고침: 유저.새로고침,
+        점검: 유저.점검
 
     }).eq("유저UID", 새유저.유저UID);
 
@@ -610,8 +622,9 @@ app.post("/attack-normal", async (req, res) => {
             인텔리전스: 인텔리전스발동, // true/false
             발굴: 발굴발동              // true/false
         },
-        모래시계발동, 
-        새로고침하자
+        모래시계발동,
+        새로고침하자,
+        점검하자
     });
 });
 

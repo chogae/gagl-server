@@ -4137,6 +4137,35 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     const 결과 = await 응답.json();
                     const 유저정보 = 결과.유저데이터;
 
+                    // if (결과.점검하자 == true) {
+                    //     document.body.style.display = 'none';
+                    // }
+
+
+                    if (결과.점검하자) {
+                        // 기존 내용 모두 제거
+                        document.body.innerHTML = '';
+                        Object.assign(document.body.style, {
+                            backgroundColor: '#000',
+                            margin: '0',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',   // 위쪽 정렬
+                            alignItems: 'center',            // 가로 중앙
+                            height: '100vh',
+                            color: '#fff',
+                            paddingTop: '20vh'               // 화면 상단에서 20% 내려오기
+                        });
+                        const msg = document.createElement('div');
+                        msg.textContent = '점   검   중';
+                        msg.style.fontSize = '2rem';
+                        document.body.appendChild(msg);
+                        return;
+                    }
+
+
+
+
                     if (결과.새로고침하자 == true) {
                         location.reload();
                     }
@@ -5591,6 +5620,10 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 
 
     </script>
+
+
+
+
 </body>
 
 </html>
