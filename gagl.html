@@ -543,12 +543,7 @@
             position: relative;
         }
 
-        .자동사냥 {
-            border-radius: 5px;
-            padding: 5px;
-            background-color: #fafafa;
-            color: black;
-        }
+
 
         @keyframes 악마강림효과 {
             0% {
@@ -903,7 +898,11 @@
             </div>
 
             <div class="사백픽셀테두리 세로정렬" id="등급외테두리" style="position: relative;">
-                <div class="풀자동" id="모바일풀자동"
+                <div class="풀자동" id="반자동"
+                    style="position: absolute; top: 5px; left: 10px; cursor: pointer; font-size: 16px;">
+                    반자동
+                </div>
+                <div class="풀자동" id="풀자동"
                     style="position: absolute; top: 5px; right: 10px; cursor: pointer; font-size: 16px;">
                     풀자동
                 </div>
@@ -1620,67 +1619,43 @@
             return 마지막직위;
         }
 
-        // let 자동사냥허용 = false;
-        // let 풀자동사냥허용 = false;  // 기본값 false
 
-        // document.addEventListener("keydown", (e) => {
-        //     const 전투화면 = document.getElementById("전투화면");
-        //     if (!전투화면 || window.getComputedStyle(전투화면).display === "none") {
-        //         return;
-        //     }
+        let 반자동실행 = false;
+        let 풀자동실행 = false;
 
-        //     const 스페이스바 = e.code === "Space";
-        //     const 알트A = e.altKey && e.key.toLowerCase() === "a";
 
-        //     if (알트A || 스페이스바) {
-        //         if (스페이스바) e.preventDefault();
+        const 반자동Btn = document.getElementById("반자동");
+        const 풀자동Btn = document.getElementById("풀자동");
+        const 공격Btn = document.getElementById("공격버튼");
+        const 레어Btn = document.getElementById("레어몬스터");
 
-        //         풀자동사냥허용 = !풀자동사냥허용;
 
-        //         if (풀자동사냥허용) {
-        //             자동사냥허용 = false;
+        반자동Btn.addEventListener("click", (e) => {
+            if (풀자동실행) return;
 
-        //             const 레어버튼 = document.getElementById("레어몬스터");
-        //             const 일반버튼 = document.getElementById("공격버튼");
+            e.stopPropagation();     // 외부 클릭 리스너로 전파 방지
+            반자동실행 = !반자동실행;
+            if (반자동실행) {
+                document.getElementById("공격버튼").click();
+            }
+        });
 
-        //             if (레어버튼 && 레어버튼.style.display !== "none") {
-        //                 레어버튼.click();
-        //             } else if (일반버튼 && 일반버튼.style.display !== "none") {
-        //                 일반버튼.click();
-        //             }
-        //         }
-        //     }
-        // });
+        풀자동Btn.addEventListener("click", (e) => {
+            if (반자동실행) return;
+            e.stopPropagation();
+            풀자동실행 = !풀자동실행;
+            반자동실행 = false;
 
-        // document.getElementById("모바일풀자동").addEventListener("click", () => {
-        //     풀자동사냥허용 = !풀자동사냥허용;
+            if (풀자동실행) {
+                if (레어Btn.style.display !== "none") 레어Btn.click();
+                else 공격Btn.click();
+            }
+        });
 
-        //     if (풀자동사냥허용) {
-        //         자동사냥허용 = false;
-        //         const 레어버튼 = document.getElementById("레어몬스터");
-        //         const 일반버튼 = document.getElementById("공격버튼");
-
-        //         if (레어버튼 && 레어버튼.style.display !== "none") {
-        //             레어버튼.click();
-        //         } else if (일반버튼 && 일반버튼.style.display !== "none") {
-        //             일반버튼.click();
-        //         }
-        //     }
-        // });
 
         document.getElementById("공격버튼").addEventListener("click", async () => {
             if (!유저데이터) return;
 
-            // if (!풀자동사냥허용) {
-            //     자동사냥허용 = true;
-            // }
-
-            // if (레어몬스터 && getComputedStyle(레어몬스터).display === "block") {
-            //     if (!풀자동사냥허용) {
-            //         자동사냥허용 = false;
-            //         return;
-            //     }
-            // }
 
             공격버튼잠금();
             let 레어몬스터등장 = false;
@@ -1699,8 +1674,6 @@
                 if (결과.결과 === "불가") {
                     메시지표시(등급외테두리, "", 결과.메시지 || "스태미너 부족", "");
                     화면해제();
-                    // 자동사냥허용 = false;
-                    // 풀자동사냥허용 = false;
                     return;
                 }
 
@@ -1887,7 +1860,6 @@
                     레어몬스터.innerText = 결과.레어몬스터이름;
                     레어몬스터.style.display = "inline-block";
                     레어몬스터등장 = true;
-                    // 자동사냥허용 = false;
                 } else {
                     레어몬스터.style.display = "none";
                     document.getElementById("등급외테두리").style.border = "0.2px solid #4b4b4b";
@@ -1908,37 +1880,34 @@
                 }
             } catch (e) {
                 메시지표시(메시지표시박스, "", "전투 중 오류: " + e.message, "");
-                // 자동사냥허용 = false;
             } finally {
                 if (레어몬스터등장) {
+                    반자동실행 = !반자동실행;
                     await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
-                }
-                공격버튼잠금해제();
+                } else {
+                    await new Promise(resolve => setTimeout(resolve, 500));
 
-                // if (풀자동사냥허용) {
-                //     // 우선 레어몬스터 공격
-                //     const 레어 = document.getElementById("레어몬스터");
-                //     if (레어 && getComputedStyle(레어).display !== "none") {
-                //         레어.click();
-                //     } else {
-                //         document.getElementById("공격버튼").click();
-                //     }
-                // } else if (자동사냥허용) {
-                //     document.getElementById("공격버튼").click();
-                // }
+
+                }
+
+                공격버튼잠금해제();
+                if (풀자동실행) {
+                    if (레어Btn.style.display !== "none") {
+                        레어Btn.click();
+                    } else {
+                        공격Btn.click();
+                    }
+                    return;
+                }
+
+                if (반자동실행) {
+                    공격Btn.click();
+                }
             }
 
         });
 
-        document.addEventListener("click", (e) => {
-            if (
-                e.target.closest("#공격버튼") ||
-                e.target.closest("#레어몬스터") ||
-                e.target.closest("#모바일풀자동")
-            ) return;
-            // 자동사냥허용 = false;
-            // 풀자동사냥허용 = false;
-        });
+
 
         document.getElementById("레어몬스터").addEventListener("click", async () => {
             if (!유저데이터) return;
@@ -1961,8 +1930,6 @@
                 if (결과.결과 === "불가") {
                     메시지표시(등급외테두리, "", 결과.메시지 || "스태미너 부족", "");
                     화면해제();
-                    // 자동사냥허용 = false;
-                    // 풀자동사냥허용 = false;
                     return;
                 }
 
@@ -2218,17 +2185,21 @@
             } finally {
                 if (레어몬스터등장) {
                     await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
+                } else {
+                    await new Promise(resolve => setTimeout(resolve, 500));
+
+
                 }
+
                 공격버튼잠금해제();
 
-                // if (풀자동사냥허용) {
-                //     const 레어 = document.getElementById("레어몬스터");
-                //     if (레어 && getComputedStyle(레어).display !== "none") {
-                //         레어.click();
-                //     } else {
-                //         document.getElementById("공격버튼").click();
-                //     }
-                // }
+                if (풀자동실행) {
+                    if (레어Btn.style.display !== "none") {
+                        레어Btn.click();
+                    } else {
+                        공격Btn.click();
+                    }
+                }
 
             }
 
@@ -3132,21 +3103,8 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
         });
 
 
-        // ✅ 장비창 내부 클릭 시 document에 이벤트 안 퍼지도록 막기
-        document.getElementById("미니정보창").addEventListener("click", (e) => {
-            e.stopPropagation();
-        });
 
-        // ✅ 장비창 외부 클릭 시 닫기
-        document.addEventListener("click", (e) => {
-            const 창 = document.getElementById("미니정보창");
 
-            if (창.style.display !== "block") return;
-
-            if (!창.contains(e.target)) {
-                창.style.display = "none";
-            }
-        });
 
         //유물화면보여주기
         document.getElementById("유물").addEventListener("click", () => {
@@ -3490,13 +3448,44 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             }
         }, 250);
 
+
+
+        //외부클릭시
         document.addEventListener("click", (e) => {
+            const target = e.target;
+
+
+            if (target.id !== "반자동" && target.id !== "풀자동" && target.id !== "공격버튼" && target.id !== "레어몬스터") {
+                반자동실행 = false;
+                풀자동실행 = false;
+            }
+
+
             const 뽑기창 = document.getElementById("뽑기창");
-            if (뽑기창.style.display === "none") return;
-            if (!뽑기창.contains(e.target) && e.target.id !== "총골드") {
+            if (뽑기창.style.display !== "none" && !뽑기창.contains(target) && target.id !== "총골드") {
                 뽑기창.style.display = "none";
             }
+
+            const 미니창 = document.getElementById("미니정보창");
+            if (미니창.style.display === "block" && !미니창.contains(target)) {
+                미니창.style.display = "none";
+            }
+
+            // 3) 기타 클릭 핸들링
+            switch (target.id) {
+                // case "객체아이디":
+                //   실행함수();
+                //   break;
+            }
+
+            //    총경험치 클릭 시 전직화면 열기
+            if (target.matches("#총경험치")) {
+                모든화면숨기기();
+                document.getElementById("전직화면").style.display = "block";
+                전직화면보여주기();
+            }
         });
+
 
         document.getElementById("총골드").addEventListener("click", () => {
             if (!유저데이터) return;
@@ -4064,7 +4053,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 결과 = await 응답.json();
 
             if (!응답.ok) {
-                메시지표시(위치참조, "", "전직 실패: " + 결과.오류, "");
+                메시지표시(메시지표시박스, "", "전직 실패: " + 결과.오류, "");
                 화면해제();
                 return;
             }
@@ -4073,7 +4062,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             유저데이터.최종공격력 = 결과.최종공격력;
 
             // 성공하면 화면 갱신
-            메시지표시(위치참조, "", 직위 + " 전직 성공!", "");
+            메시지표시(메시지표시박스, "", 직위 + " 전직 성공!", "");
             전직화면보여주기();
         }
 
@@ -4201,24 +4190,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
         });
 
-        document.addEventListener("click", (e) => {
-            const target = e.target;
 
-            switch (target.id) {
-                // case "객체아이디":
-                //     실행함수();
-                //     break;
-
-            }
-
-            if (
-                target.matches("#총경험치")
-            ) {
-                모든화면숨기기();
-                document.getElementById("전직화면").style.display = "block";
-                전직화면보여주기();
-            }
-        });
 
         function 모든화면숨기기() {
             const 화면ID들 = [
@@ -4584,135 +4556,135 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             화면해제();
         });
 
-//         document.getElementById("지하층수").addEventListener("click", async () => {
-//             if (!유저데이터) return;
-//             화면잠금();
+        //         document.getElementById("지하층수").addEventListener("click", async () => {
+        //             if (!유저데이터) return;
+        //             화면잠금();
 
-//             const res = await fetch("/attack-dungeon", {
-//                 method: "POST",
-//                 headers: { "Content-Type": "application/json" },
-//                 body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-//             });
-//             const data = await res.json();
+        //             const res = await fetch("/attack-dungeon", {
+        //                 method: "POST",
+        //                 headers: { "Content-Type": "application/json" },
+        //                 body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+        //             });
+        //             const data = await res.json();
 
-//             // 승패 표시
-//             document.getElementById("지하승패").innerText = data.결과;
+        //             // 승패 표시
+        //             document.getElementById("지하승패").innerText = data.결과;
 
-//             // 다음 층수 표시
-//             document.getElementById("지하층수").innerText = `지하${data.새로운레벨}층`;
-//             유저데이터.지하던전 = data.새로운레벨;
-//             유저데이터.유물목록 = data.유물목록;
+        //             // 다음 층수 표시
+        //             document.getElementById("지하층수").innerText = `지하${data.새로운레벨}층`;
+        //             유저데이터.지하던전 = data.새로운레벨;
+        //             유저데이터.유물목록 = data.유물목록;
 
-//             // 티켓 드랍 효과
-//             if (data.드랍티켓) {
-//                 const 유물드랍박스 = document.getElementById("유물드랍박스");
-//                 const 던전아이콘 = document.getElementById("던전아이콘");
+        //             // 티켓 드랍 효과
+        //             if (data.드랍티켓) {
+        //                 const 유물드랍박스 = document.getElementById("유물드랍박스");
+        //                 const 던전아이콘 = document.getElementById("던전아이콘");
 
-//                 if (유물드랍박스) {
-//                     // ✅ 먼저 기존에 떠 있는 박스를 숨김
-//                     유물드랍박스.style.display = "none";
+        //                 if (유물드랍박스) {
+        //                     // ✅ 먼저 기존에 떠 있는 박스를 숨김
+        //                     유물드랍박스.style.display = "none";
 
-//                     // ✅ setTimeout 제거 방지: 이전 타이머 클리어 (선택 사항)
-//                     if (window.유물드랍타이머) clearTimeout(window.유물드랍타이머);
+        //                     // ✅ setTimeout 제거 방지: 이전 타이머 클리어 (선택 사항)
+        //                     if (window.유물드랍타이머) clearTimeout(window.유물드랍타이머);
 
-//                     유물드랍박스.innerText = `유물 [티켓]을(를) 획득했다!`;
-//                     유물드랍박스.style.display = "block";
+        //                     유물드랍박스.innerText = `유물 [티켓]을(를) 획득했다!`;
+        //                     유물드랍박스.style.display = "block";
 
-//                     // 위치 조정용 부모 변경
-//                     if (던전아이콘) {
-//                         // 등급외테두리에 위치 기준 설정
-//                         던전아이콘.style.position = "relative";
+        //                     // 위치 조정용 부모 변경
+        //                     if (던전아이콘) {
+        //                         // 등급외테두리에 위치 기준 설정
+        //                         던전아이콘.style.position = "relative";
 
-//                         // 유물드랍박스를 등급외테두리 내부로 이동
-//                         던전아이콘.appendChild(유물드랍박스);
+        //                         // 유물드랍박스를 등급외테두리 내부로 이동
+        //                         던전아이콘.appendChild(유물드랍박스);
 
-//                         // 전투화면용 위치 조정
-//                         Object.assign(유물드랍박스.style, {
-//                             position: "absolute",
-//                             top: "50%",
-//                             left: "50%",
-//                             transform: "translate(-50%, -50%)",
-//                             zIndex: "100"
-//                         });
-//                     }
-//                 }
-//                 // ✅ 새 타이머로 숨김 처리 (전역 변수로 저장)
-//                 window.유물드랍타이머 = setTimeout(() => {
-//                     유물드랍박스.style.display = "none";
-//                 }, 3000);
-//             }
+        //                         // 전투화면용 위치 조정
+        //                         Object.assign(유물드랍박스.style, {
+        //                             position: "absolute",
+        //                             top: "50%",
+        //                             left: "50%",
+        //                             transform: "translate(-50%, -50%)",
+        //                             zIndex: "100"
+        //                         });
+        //                     }
+        //                 }
+        //                 // ✅ 새 타이머로 숨김 처리 (전역 변수로 저장)
+        //                 window.유물드랍타이머 = setTimeout(() => {
+        //                     유물드랍박스.style.display = "none";
+        //                 }, 3000);
+        //             }
 
-//             // 기존 전투 로그 삭제
-//             const 기존로그들 = document.querySelectorAll(".전투로그컨테이너");
-//             기존로그들.forEach(e => e.remove());
+        //             // 기존 전투 로그 삭제
+        //             const 기존로그들 = document.querySelectorAll(".전투로그컨테이너");
+        //             기존로그들.forEach(e => e.remove());
 
-//             // 새로운 로그 생성
-//             if (data.전투로그 && Array.isArray(data.전투로그)) {
-//                 data.전투로그.slice().reverse().forEach(로그 => {
-//                     const 로그컨테이너 = document.createElement("div");
-//                     로그컨테이너.className = "전투로그컨테이너";
-//                     로그컨테이너.style.marginTop = "15px";
-//                     로그컨테이너.style.border = "0.2px solid #4b4b4b";
-//                     로그컨테이너.style.borderRadius = "10px";
-//                     로그컨테이너.style.padding = "15px";
+        //             // 새로운 로그 생성
+        //             if (data.전투로그 && Array.isArray(data.전투로그)) {
+        //                 data.전투로그.slice().reverse().forEach(로그 => {
+        //                     const 로그컨테이너 = document.createElement("div");
+        //                     로그컨테이너.className = "전투로그컨테이너";
+        //                     로그컨테이너.style.marginTop = "15px";
+        //                     로그컨테이너.style.border = "0.2px solid #4b4b4b";
+        //                     로그컨테이너.style.borderRadius = "10px";
+        //                     로그컨테이너.style.padding = "15px";
 
-//                     const 아이콘HTML = (로그.아이콘 || []).map(이름 => 아이콘맵[이름] || "").join(" ");
+        //                     const 아이콘HTML = (로그.아이콘 || []).map(이름 => 아이콘맵[이름] || "").join(" ");
 
-//                     // 회복 로그는 데미지 표시 안 함
-//                     let 데미지텍스트 = "";
-//                     let 회복텍스트 = "";
+        //                     // 회복 로그는 데미지 표시 안 함
+        //                     let 데미지텍스트 = "";
+        //                     let 회복텍스트 = "";
 
-//                     if (로그.타입 === "공격") {
-//                         데미지텍스트 = `<span><span style="color: #f63b3b;">${로그.몬스터이름}</span>에게 ${로그.효과} 피해를 입혔다!</span>`;
-//                     } else if (로그.타입 === "회복") {
-//                         회복텍스트 = `<span><span style="color: #3b82f6;">${로그.유저아이디}</span> 체력 ${로그.효과} 회복</span>`;
-//                     }
+        //                     if (로그.타입 === "공격") {
+        //                         데미지텍스트 = `<span><span style="color: #f63b3b;">${로그.몬스터이름}</span>에게 ${로그.효과} 피해를 입혔다!</span>`;
+        //                     } else if (로그.타입 === "회복") {
+        //                         회복텍스트 = `<span><span style="color: #3b82f6;">${로그.유저아이디}</span> 체력 ${로그.효과} 회복</span>`;
+        //                     }
 
-//                     let 추가횟수표시 = "";
-//                     if (로그.타입 === "공격" && 로그.추가공격횟수 > 0) {
-//                         // 실제 타격 횟수 = 1(기본) + 로그.추가공격횟수
-//                         const 총공격횟수 = 1 + 로그.추가공격횟수;
-//                         추가횟수표시 = `<span style="margin-left: 4px; color: #f63b3b;">x${총공격횟수}</span>`;
-//                     }
+        //                     let 추가횟수표시 = "";
+        //                     if (로그.타입 === "공격" && 로그.추가공격횟수 > 0) {
+        //                         // 실제 타격 횟수 = 1(기본) + 로그.추가공격횟수
+        //                         const 총공격횟수 = 1 + 로그.추가공격횟수;
+        //                         추가횟수표시 = `<span style="margin-left: 4px; color: #f63b3b;">x${총공격횟수}</span>`;
+        //                     }
 
-//                     // (2) innerHTML에서 공격 텍스트 뒤에 추가횟수표시 붙이기
-//                     로그컨테이너.innerHTML = `
-//     <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-//         <strong>Turn ${로그.턴}</strong>
-//     </div>
-//     <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
-//         ${아이콘HTML}
-//         ${로그.타입 === "공격" ? 데미지텍스트 + 추가횟수표시 : ""}
-//         ${로그.타입 === "회복" ? 회복텍스트 : ""}
-//     </div>
-// <!-- 유저와 몬스터 정보 양쪽 정렬 -->
-// <div class="가로정렬" style="margin-top: 10px; justify-content: space-between; align-items: center; gap: 12px;">
-//     <div style="border: 0.2px solid #3b82f6; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
-//         <div>${로그.유저아이디}</div>
-//         <div>
-//             <div>공격력 ${로그.유저최종공격력}</div>
-//             <div>체력 ${로그.유저체력}/${로그.유저최대체력}</div>
-//         </div>
-//     </div>
+        //                     // (2) innerHTML에서 공격 텍스트 뒤에 추가횟수표시 붙이기
+        //                     로그컨테이너.innerHTML = `
+        //     <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+        //         <strong>Turn ${로그.턴}</strong>
+        //     </div>
+        //     <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
+        //         ${아이콘HTML}
+        //         ${로그.타입 === "공격" ? 데미지텍스트 + 추가횟수표시 : ""}
+        //         ${로그.타입 === "회복" ? 회복텍스트 : ""}
+        //     </div>
+        // <!-- 유저와 몬스터 정보 양쪽 정렬 -->
+        // <div class="가로정렬" style="margin-top: 10px; justify-content: space-between; align-items: center; gap: 12px;">
+        //     <div style="border: 0.2px solid #3b82f6; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
+        //         <div>${로그.유저아이디}</div>
+        //         <div>
+        //             <div>공격력 ${로그.유저최종공격력}</div>
+        //             <div>체력 ${로그.유저체력}/${로그.유저최대체력}</div>
+        //         </div>
+        //     </div>
 
-//     <div style="border: 0.2px solid #f63b3b; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
-//         <div>${로그.몬스터이름}</div>
-//         <div>
-//             <div>체력 ${Math.max(0, 로그.몬스터체력)}/${로그.몬스터최대체력}</div>
-//             <div>방어력 ${로그.몬스터방어력}</div>
-//         </div>
-//     </div>
-// </div>
-//         `;
+        //     <div style="border: 0.2px solid #f63b3b; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
+        //         <div>${로그.몬스터이름}</div>
+        //         <div>
+        //             <div>체력 ${Math.max(0, 로그.몬스터체력)}/${로그.몬스터최대체력}</div>
+        //             <div>방어력 ${로그.몬스터방어력}</div>
+        //         </div>
+        //     </div>
+        // </div>
+        //         `;
 
-//                     const 타겟 = document.getElementById("지하등반");
-//                     if (타겟 && 타겟.parentNode) {
-//                         타겟.parentNode.insertBefore(로그컨테이너, 타겟.nextSibling);
-//                     }
-//                 });
-//             }
-//             화면해제();
-//         });
+        //                     const 타겟 = document.getElementById("지하등반");
+        //                     if (타겟 && 타겟.parentNode) {
+        //                         타겟.parentNode.insertBefore(로그컨테이너, 타겟.nextSibling);
+        //                     }
+        //                 });
+        //             }
+        //             화면해제();
+        //         });
 
 
         // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
@@ -4740,8 +4712,8 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 5. 사탄의 날개가 등장할때까지 1,2,3,4를 반복하세요<br>
 6. 전투화면에서 악마성을 클릭하세요<br>
 6-1. 층수를 올려서 2층을 사냥해보세요<br>
-7. 자동사냥을 구경하며 레어몬스터가 등장했다면 도전해보세요<br>
-8. 레어몬스터까지 자동사냥되는 풀자동 버튼을 경험하세요<br>
+7. 반자동 버튼을 클릭해서 자동공격을 경험해보세요<br>
+8. 레어몬스터를 우선공격하는 풀자동 공격을 경험해보세요<br>
 9. 숙련도 500을 모았다면 전투화면에서 숙련도를 클릭하세요<br>
 10. 스킬창에서 숙련도를 소모하여, 인사이트 스킬을 습득하세요<br>
 11. 단톡에 참여하여 더 많은 정보를 구하세요<br>
@@ -4750,6 +4722,12 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                 `,
                 `${봄아이콘}`,
+                `
+25.06.11<br>
+일반몬스터를 자동공격하는 반자동 버튼이 구현되었습니다<br>
+레어몬스터를 우선 자동공격하는 풀자동 버튼이 구현되었습니다<br>
+자동사냥 이슈로 인한 티켓 1장이 전 유저에게 지급되었습니다<br>
+                `,
                 `
 25.06.10<br>
 초기화면을 전투화면에서 메뉴얼 화면으로 수정했습니다<br>
