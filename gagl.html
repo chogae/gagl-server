@@ -717,8 +717,9 @@
                     <div class="가로정렬">
                         <!-- <div class="마법의팔레트지옥 버튼">마법의팔레트</div> -->
                         <div class="버튼" id="전투">전투</div>
-                        <div class="버튼" id="장비">장비</div>
-                        <div class="버튼" id="유물">유물</div>
+                        <!-- <div class="버튼" id="장비">장비</div>
+                        <div class="버튼" id="유물">유물</div> -->
+                        <div class="버튼" id="성장">성장</div>
                         <div class="버튼" id="월드">월드</div>
                         <div class="버튼" id="전당">전당</div>
                         <div class="버튼" id="정보">정보</div>
@@ -1172,6 +1173,7 @@
         const 햄버거아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hamburger-icon lucide-hamburger"><path d="M12 16H4a2 2 0 1 1 0-4h16a2 2 0 1 1 0 4h-4.25"/><path d="M5 12a2 2 0 0 1-2-2 9 7 0 0 1 18 0 2 2 0 0 1-2 2"/><path d="M5 16a2 2 0 0 0-2 2 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 2 2 0 0 0-2-2q0 0 0 0"/><path d="m6.67 12 6.13 4.6a2 2 0 0 0 2.8-.4l3.15-4.2"/></svg>`;
         const 마법의팔레트아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-palette-icon lucide-palette"><path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/></svg>`;
         const 뼈다구아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bone-icon lucide-bone"><path d="M17 10c.7-.7 1.69 0 2.5 0a2.5 2.5 0 1 0 0-5 .5.5 0 0 1-.5-.5 2.5 2.5 0 1 0-5 0c0 .81.7 1.8 0 2.5l-7 7c-.7.7-1.69 0-2.5 0a2.5 2.5 0 0 0 0 5c.28 0 .5.22.5.5a2.5 2.5 0 1 0 5 0c0-.81-.7-1.8 0-2.5Z"/></svg>`;
+        const 스탭아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-footprints-icon lucide-footprints"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"/><path d="M16 17h4"/><path d="M4 13h4"/></svg>`;
 
         //보스아이콘
         const 그루트아이콘 = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="height: 512px; width: 512px;"></path><g class="" transform="translate(0,0)" style=""><path d="m125.5 24.44-15.2 9.64c4.7 7.36 4.1 9.89 2.6 12.91-8.4 11.18-22.25 15.83-32.31 23.89-6.38 5.2-12.53 13.64-10.92 23.76 2.17 13.46 12.66 22.56 23.15 29.76 12.38-.5 25.48.6 36.18.6l.2-.4c-11-5.5-39.08-21.1-41.75-32.85C97.5 75.04 120.3 71.43 128.9 55.13c4.3-8.5 3.4-19.93-3.4-30.69zm92.8.3c-1.8 17.62-4.3 32.04-7.1 44.98l28.3 17.12-33.5 5.31c-3.3 12.75-5.7 22.95-8.4 34.55-10.5 5-22.1 9.4-32.2 12 12.6 6.5 25.2 14.8 30.5 28.1 3.6 8.8 2.1 17.9-.9 25.7-2.9 7.7-7.3 14.8-11.2 21.4-3.9 6.6-7.2 12.7-8.5 17.3.4 23 31.4 26.9 47.4 22.7 1.1-6.6 5.6-13 9.8-17.2-7.4-2.6-14.7-6.3-20.1-12.9-5.9-7.2-7.8-18.4-3.2-29.1 3.7-6.6 11.1-10.7 17.6-11.7 11.5-.9 22.3 1.4 32.8 4.3.8-6.9 2.2-14 4.9-20.3 2.1-4.9 5.5-9.9 10.4-12.9l-11-10.8-17.5 16.5-17.6-17.5-16.8 13 7.3-44.6 14.1 14.7 10.2-15.1 9.1 21.1 18.2-26.5 7.7 47.4c2.7-1 5.3-1.3 7.9-1.3 8.1.5 14.9 5.5 19.3 11.3 5 7.3 8.5 15.4 10.7 22.7 1.4-.8 2.7-1.5 4.1-2.3 6.3-3.3 12.8-6.4 19.5-8-23.2-6.9-27.4-26-28.1-48.7-9.4-.8-16.4-.6-25.6-.4-2-11.2-3.6-23.2-4.8-33.07l-33.8-5.33 30.8-18.68c-1.9-13.34-4.4-26.41-8.9-39.3-14.4 3.78-33 3.98-51.4-4.48zm165.1 22.69s-37.8 20.36-34.6 36.93c1 5.29 5.3 10.28 10.7 13.98-2.5 6.06-3.5 12.06-3.9 18.16 5.9 1.8 11.6 3.8 17.2 5.9-.8-6.3-1.2-12.6-.6-18.8 5.2 1.1 10.3.6 14.1-1.9 15-10.11-2.9-54.27-2.9-54.27zm-53.2 81.07c2.2 14.8 2.2 27.2 17.4 29.4 14.6 3.3 29.9-2.2 42.2 1.2-2.1-4.2-4.2-8.5-6.1-12.8-17.3-7.4-34.3-14.1-53.5-17.8zm-226.1 13.9c-6.18 13.7-12.41 27.3-18.42 40.9-3.84-3-8.01-5.6-12.87-7.5 1.19-6.5.56-13.1-2.54-17.5-3.33-4.7-10.35-6.3-18.12-6.3-14.84-.1-32.45 5.5-32.45 5.5s19.21 43.5 36.96 39.9c4.45-1 8.29-4.3 11.18-8.8 3.97 3.1 7.5 6.8 10.82 10.8-9.36 22-17.81 44-24.12 66.5 21.79 2 39.71 9.7 55.46 19.4 8-32.7 15.2-60.4 30.3-84.9l29.1 2.4c4.3-8.4 13.5-19.9 9.9-29.2-13.1-16.5-29.9-23.6-49.1-30.5-9.2 0-17.7-.5-26.1-.7zm177 31.7c-1.4 3.3-2.6 8.2-3.3 13.4 3.5-1.1 7.2-1.7 11-1.7 3.3 0 6.4.4 9.4 1.2-1.9-5.5-4.3-10.6-6.7-13.8-5-6.6-8.2-4.2-10.4.9zm78.4 2.4c2.5 1.5 4.8 3.8 6.3 6.5 5.2 9.2 2.5 20-2.7 27.5-.8 1.1-1.6 2.3-2.5 3.3l40.2 68.1c1.7-8.8 3.5-20.4 4.7-33 2.4-26.1.2-55.5-9.3-67.2-9.6-8.6-24.9-5.6-36.7-5.2zm-13.4 15.3c-4.2.7-10.7 3.4-16.9 6.8-1.8 1-3.6 2-5.2 3 5.9 2.6 11.3 5.4 15.5 7.9 3.7-3.2 6.9-6.4 8.8-9.2 3.2-5.6 4.2-9.7-2.2-8.5zm-120.3 10c-4.2 3.5-1.8 7.8.5 10.6 2.3 2.7 7.6 5.9 14 8 3.9 1.2 8.1 2.2 11.9 2.9.1-6.5 1.6-13.3 4.2-18.2-7.9-2.2-25-6.2-30.6-3.3zm63 2c-10.5 0-18.6 8-18.6 17.8s8.1 17.8 18.6 17.8c10.5 0 18.6-8 18.6-17.8s-8.1-17.8-18.6-17.8zm135.7 9.9c.8 12.3 0 25-1.1 36.9-1.3 13.6-3.3 26-5.1 35.3 16.2-8.2 28.3-19.6 37.2-33.9-10.8-12.5-21.2-25.2-31-38.3zm-97.8 9.3c-3.3 6.4-4.3 13.9-8 19.1 3.4 3.1 7.5 6.5 12.3 10 5.3 3.8 10.9 7 14.8 8.3 7.2 3.3 9.8-7.3 8.6-11.6-1-3.9-4.8-9-10-13.6-6.1-5.4-12.6-9.3-17.7-12.2zM258 240.8c-6.3 4-14.7 7.6-17.4 15.1-1.1 6.1 5.7 14.7 12.2 13.2 8-3.6 12.7-10 16.8-17.1-4.7-2.8-8.6-6.6-11.6-11.2zm46.8 13c-4.7 2.2-10 3.5-15.5 3.6 1.7 10.3 4.1 29.9 11.4 35 8.7.7 9.9-33.4 4.1-38.6zm-136.2 4.9c-3.4 16.9-6.8 34-10.4 51 10.9 7.3 22.5 16.2 30.5 25 6.9 7.7 12.5 16.4 13.5 26.7.8 8.9-3.4 16.6-8.5 22.1s-11.1 9.8-16.7 13.9-10.7 7.9-13.6 11.2c-2.9 3.4-3.5 5.1-3 7.6 1.9 3.8 8.6 5.1 12.6 6.4 4.4 1.3 9.3 2.7 14.2 5.2 4.9 2.4 10.1 6.4 12.6 12.9v.1c6.9-48 12.3-90.5 27.5-128.5l51.8-1.4c3.9 14.9 7.9 30.8 11.3 43.7 9.1 13 18.4 25.9 30.7 35.2 6 4.4 11.2 6.3 14.9 6.1 5-10.9 8-25.1 19.8-27.9 5.2-1.1 10.3-1 15.3.1-4.3-10.6-8.4-21.1-12.4-31.7-8.4 3.9-18 7.5-28.3 4.7-12.6-3.4-21-13.3-27.7-24.2-1.3-2.2-2.6-4.4-3.8-6.7-7.5-.8-12.9-6.1-16.5-11.7-4-7.5-6.6-15.3-8.2-22.6-4.6 4.8-10.2 9.1-17.4 10.8-13.5.3-24.3-5.2-30.3-15.2-7.6 2-14.9 2.9-21.8 2.6-14.1-.6-26.4-6.2-36.1-15.4zm301.7 3.6c-3.4 5.4-7.2 10.4-11.5 15.1l10.9 3.7 4.8 30.4 17.8-2.8-6.6-41.2zm-145.8 7.2c-.1 8-.8 16.2-3.4 23.7-1.2 3.6-2.8 7-5.4 10 4.5 7.7 11.1 18.1 19.3 20.5 1.9.5 9.9-1.2 17.2-4.2-5.5-14.7-11-29.2-16.6-43.8-3.9-1.7-7.6-3.8-11.1-6.2zm-277.31 14-23.9 46.8 16.04 8.2 26.85-52.6c-5.92-1.4-12.22-2.2-18.99-2.4zm25.07 3.9-14.89 39.2-6.19 35.3 17.72 3.2 5.91-33.7L89.03 294c-5.33-2.6-10.88-4.8-16.77-6.6zm372.14 3.3c-4.7 3.6-9.7 6.8-15 9.8l29.2 48.9 15.4-9.2zm-349.93 6.2 2.64 39.7-14.34 18.6 14.26 11 18.47-24-2.2-33.1c-6.2-4.5-13-9-18.83-12.2zm324.03 8.9c-6.4 2.7-11.3 4.3-17.6 6.3l1.3 18.5 22.3 17.1 11-14.2-15.9-12.3zm-264.4 22.9c-3 14-6.1 27.9-9.4 41.9-14 22.5-35.4 46.8-53.15 56.4-9.69 5.3-17.05 6.2-22.71 3.4-5.67-2.8-12.14-10.9-16.34-29.5l-17.56 4c4.82 21.4 13.3 35.4 25.9 41.6 12.6 6.3 26.8 3.2 39.36-3.7 11.6-6.4 22.9-16.1 33.2-27.3-5.7 21.3-11.9 42.6-18.8 64 18.1 11.4 40.3 7.7 63 2.5 5-13.4 7.7-28.9 5.4-34.9-.4-.9-1.2-1.9-3.9-3.3-2.7-1.3-6.8-2.6-11.4-4-4.5-1.4-9.4-2.8-14.2-5.6-4.7-2.9-9.6-8-10.9-14.8-1.5-8.9 2.4-16.9 7.2-22.6 4.9-5.6 11-9.9 16.6-14 5.6-4.1 10.8-8 14-11.4 3.2-3.5 4.1-5.7 3.8-8.3v-.1c-.4-4.2-3.5-10.2-8.9-16.3-5.5-6.1-13-12.3-20.6-17.6-.2-.1-.4-.3-.6-.4zm202 65.6c-2.9 9.2-8.7 18.5-17.9 19.6-10.4 1-19.7-3.6-27.8-9.6-3-2.3-6-4.8-8.8-7.4 8.1 28.7 17.4 56.9 30.1 84.2 39.8 9.8 69.2 6.5 98 2.5-12.4-19-23.1-38.3-32.8-57.7 6.3-1.1 12.5-2.7 18.6-6 4.2 5 9.6 8.7 15 9.1 16.7 1.4 33-38.3 33-38.3s-17.9-5.1-33.4-5c-9.3 0-17.8 1.9-20.9 7.9-2.2 4-2 9.2-.4 14.2-6.5 1.4-13.2 1.6-19.9 1.4-2.6-5.5-5.1-11.1-7.5-16.6-14.3-9.3-20.2-13.7-25.3 1.7z" fill="#fff" fill-opacity="1"></path></g></svg>'
@@ -1194,6 +1196,7 @@
         ];
 
         const 아이콘맵 = {
+            스탭아이콘,
             크리티컬아이콘,
             드레인아이콘,
             버서커아이콘,
@@ -2217,6 +2220,2344 @@
         });
 
 
+        document.getElementById("타이틀을아이디로").addEventListener("click", async function 아이디변경시작() {
+            if (!유저데이터) return;
+
+            const 기존표시 = document.getElementById("타이틀을아이디로");
+            const 원래아이디 = 유저데이터.유저아이디;
+
+            // 입력창 생성
+            const 입력창 = document.createElement("input");
+            입력창.type = "text";
+            입력창.maxLength = 8;
+            입력창.placeholder = "새 아이디 입력";
+            입력창.style.background = "white";
+            입력창.style.color = "black";
+            입력창.style.border = "none";
+            입력창.style.fontSize = "14px";
+            입력창.size = 8;
+            입력창.style.outline = "none";
+            입력창.value = "";
+            기존표시.replaceWith(입력창);
+            입력창.focus();
+
+            // 외부 클릭 감지 핸들러
+            const 외부클릭취소 = (e) => {
+                if (!입력창.contains(e.target)) {
+                    const 복원 = document.createElement("div");
+                    복원.id = "타이틀을아이디로";
+                    복원.className = "커서호버";
+                    복원.innerText = 원래아이디;
+                    입력창.replaceWith(복원);
+                    복원.addEventListener("click", 아이디변경시작);
+                    document.removeEventListener("click", 외부클릭취소);
+                }
+            };
+
+            // 입력창 클릭 제외하고 바깥 클릭 시 취소
+            setTimeout(() => {
+                document.addEventListener("click", 외부클릭취소);
+            }, 0);
+
+            입력창.addEventListener("keydown", async (e) => {
+                if (e.key !== "Enter") return;
+
+                const 새아이디 = 입력창.value.trim();
+                if (!새아이디 || 새아이디.length > 6) {
+                    메시지표시(메시지표시박스, "", "1~6자 이내로 입력하세요", "");
+                    return;
+                }
+
+                화면잠금();
+
+                try {
+                    const 응답 = await fetch("/update-username", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            유저UID: 유저데이터.유저UID,
+                            새아이디
+                        })
+                    });
+
+                    const 결과 = await 응답.json();
+
+                    if (!응답.ok) {
+                        메시지표시(메시지표시박스, "", 결과.오류 || "아이디 변경 실패", "");
+                        화면해제();
+                        return;
+                    }
+
+                    유저데이터.유저아이디 = 새아이디;
+
+                    const 복원 = document.createElement("div");
+                    복원.id = "타이틀을아이디로";
+                    복원.className = "커서호버";
+                    복원.innerText = 새아이디;
+                    입력창.replaceWith(복원);
+                    복원.addEventListener("click", 아이디변경시작);
+
+                    document.getElementById("유저아이디").innerText = 새아이디;
+                    메시지표시(메시지표시박스, "✅", "아이디 변경 완료", "#00c851");
+
+                    document.removeEventListener("click", 외부클릭취소);
+                } catch (e) {
+                    메시지표시(메시지표시박스, "", "네트워크 오류", "");
+                } finally {
+                    화면해제();
+                }
+            });
+        });
+
+        // 🟡 무지개 타이틀 애니메이션
+        let 색상인덱스 = 0;
+        const 무지개색들 = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff", "#4b0082", "#9400d3"];
+        setInterval(() => {
+            const 타이틀 = document.getElementById("뽑기타이틀");
+            // 타이틀.style.display = "flex";
+            // 타이틀.style.alignItems = "center";
+            // 타이틀.style.gap = "6px";
+            타이틀.innerHTML = `${뽑기아이콘} 뽑기`;
+            if (타이틀) {
+                타이틀.style.color = 무지개색들[색상인덱스 % 무지개색들.length];
+                색상인덱스++;
+            }
+        }, 250);
+
+
+
+        //외부클릭시
+        document.addEventListener("click", (e) => {
+            const target = e.target;
+
+
+            if (target.id !== "반자동" && target.id !== "풀자동" && target.id !== "공격버튼" && target.id !== "레어몬스터") {
+                반자동실행 = false;
+                풀자동실행 = false;
+            }
+
+
+            const 뽑기창 = document.getElementById("뽑기창");
+            if (뽑기창.style.display !== "none" && !뽑기창.contains(target) && target.id !== "총골드" && target.id !== "뽑기") {
+                뽑기창.style.display = "none";
+            }
+
+            const 미니창 = document.getElementById("미니정보창");
+            if (미니창.style.display === "block" && !미니창.contains(target)) {
+                미니창.style.display = "none";
+            }
+
+            // 3) 기타 클릭 핸들링
+            switch (target.id) {
+                // case "객체아이디":
+                //   실행함수();
+                //   break;
+            }
+
+            //    총경험치 클릭 시 전직화면 열기
+            if (target.matches("#총경험치") || target.matches("#전직")) {
+                모든화면숨기기();
+                document.getElementById("전직화면").style.display = "block";
+                전직화면보여주기();
+            }
+        });
+
+
+        document.getElementById("총골드").addEventListener("click", () => {
+            if (!유저데이터) return;
+            const 뽑기창 = document.getElementById("뽑기창");
+            뽑기창.style.display = "block";
+        });
+
+
+        async function 장비뽑기시도(종류 = "일반") {
+            const 뽑기창 = document.getElementById("뽑기창");
+            const 네온박스 = document.getElementById("네온박스");
+            const 비용 = 100000;
+            const 등급외테두리 = document.getElementById("등급외테두리");
+
+            if (종류 === "일반") {
+                if (유저데이터.골드 < 비용) {
+                    메시지표시(뽑기창, "", "골드 부족!", "");
+                    return;
+                }
+            } else if (종류 === "고급") {
+                const 티켓 = 유저데이터.유물목록?.["티켓"] || 0;
+                if (티켓 < 1) {
+                    메시지표시(뽑기창, "", "유물. 티켓이 부족합니다!", "");
+                    return;
+                }
+            } else if (종류 === "연속일반") {
+                if (유저데이터.골드 < 10 * 비용) {
+                    메시지표시(뽑기창, "", "골드 부족!", "");
+                    return;
+                }
+            } else if (종류 === "연속고급") {
+                const 티켓 = 유저데이터.유물목록?.["티켓"] || 0;
+                if (티켓 < 10) {
+                    메시지표시(뽑기창, "", "유물. 티켓이 부족합니다!", "");
+                    return;
+                }
+            }
+
+            // confirm 메시지 확장
+            const 메시지 =
+                종류 === "일반"
+                    ? `일반장비뽑기을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`
+                    : 종류 === "고급"
+                        ? `고급장비뽑기을 티켓 1장으로 진행하시겠습니까?`
+                        : 종류 === "연속일반"
+                            ? `연속일반장비뽑기 10회를 총 ${(10 * 비용).toLocaleString()} 골드로 진행하시겠습니까?`
+                            : 종류 === "연속고급"
+                                ? `연속고급장비뽑기 10회를 티켓 10장으로 진행하시겠습니까?`
+                                : "";
+            const 확인 = confirm(메시지);
+            뽑기창.style.display = "none";
+            if (!확인) return;
+
+
+            화면잠금();
+            try {
+                const 응답 = await fetch("/gamble-Equipment", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 유저UID: 유저데이터.유저UID, 종류 })
+                });
+                const 결과 = await 응답.json();
+                if (!응답.ok || 결과.오류) {
+                    메시지표시(등급외테두리, "", 결과.오류 || "", "");
+                    return;
+                }
+                유저데이터 = 결과.유저데이터;
+                document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
+
+                const items = Array.isArray(결과.results) ? 결과.results : [결과];
+                items.forEach((item, i) => {
+                    setTimeout(() => {
+                        const 네온박스 = document.getElementById("네온박스");
+
+                        if (!item.장비) {
+                            메시지표시(등급외테두리, item.퍼즐발동 ? 퍼즐아이콘 : "", "뽑기에 실패했습니다!", "");
+                            return;
+                        }
+                        if (item.퍼즐발동) {
+                            메시지표시(등급외테두리, 퍼즐아이콘, "", "");
+                        }
+
+
+                        if (네온박스) {
+                            네온박스.style.display = "none";
+
+                            if (window.네온타이머) clearTimeout(window.네온타이머);
+                            네온박스.innerText = `${item.장비.이름}을(를) 획득했다!`;
+                            네온박스.style.display = "block";
+
+                            if (등급외테두리) {
+                                등급외테두리.style.position = "relative";
+                                등급외테두리.appendChild(네온박스);
+                                Object.assign(네온박스.style, {
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    zIndex: "100"
+                                });
+                            }
+                        }
+                        window.네온타이머 = setTimeout(() => {
+                            네온박스.style.display = "none";
+                        }, 3000);
+
+                    }, i * 500);
+                });
+
+            } catch (e) {
+                메시지표시(등급외테두리, "", "뽑기 중 오류: " + e.message, "");
+            } finally {
+                화면해제();
+            }
+        }
+
+        async function 현질(종류 = "팔레트") {
+            메시지표시(뽑기창, "", "오픈톡 '가글주인장'으로 문의하세요", "");
+        }
+
+        async function 유물뽑기시도(종류 = "일반") {
+            const 뽑기창 = document.getElementById("뽑기창");
+            const 비용 = 100000;
+            const 유물드랍박스 = document.getElementById("유물드랍박스");
+            const 유저테두리안표시 = document.getElementById("유저테두리안표시");
+
+            if (종류 === "일반") {
+                if (유저데이터.골드 < 비용) {
+                    메시지표시(뽑기창, "", "골드 부족!", "");
+                    return;
+                }
+            } else if (종류 === "연속일반") {
+                if (유저데이터.골드 < 10 * 비용) {
+                    메시지표시(뽑기창, "", "골드 부족!", "");
+                    return;
+                }
+            }
+
+            const 메시지 =
+                종류 === "일반"
+                    ? `유물뽑기을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`
+                    : 종류 === "연속일반"
+                        ? `유물뽑기 10회를 총 ${(10 * 비용).toLocaleString()} 골드로 진행하시겠습니까?`
+                        : "";
+            const 확인 = confirm(메시지);
+            뽑기창.style.display = "none";
+            if (!확인) return;
+
+            화면잠금();
+            try {
+                const 응답 = await fetch("/gamble-Relic", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        유저UID: 유저데이터.유저UID,
+                        종류, // 반드시 함께 전송해야 서버에서 1회/10회 구분 가능
+                    }),
+                });
+                const 결과 = await 응답.json();
+
+                if (!응답.ok || 결과.오류) {
+                    메시지표시(유저테두리안표시, "", 결과.오류 || "", "");
+                    return;
+                }
+
+                // 4) 서버가 반환한 최종 유저데이터로 업데이트
+                유저데이터 = 결과.유저데이터;
+                document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
+
+                // 5) 결과가 여러 회차인 경우, 순차적으로 띄워줌
+                const items = Array.isArray(결과.results) ? 결과.results : [결과];
+
+                items.forEach((item, i) => {
+                    setTimeout(() => {
+                        // 5-1) 퍼즐 발동 시 별도 표시 (원하는 아이콘 넣어주세요)
+                        if (item.퍼즐발동) {
+                            메시지표시(유저테두리안표시, 퍼즐아이콘, "", "");
+                        }
+
+                        // 5-2) 유물 획득 알림
+                        if (유물드랍박스) {
+                            // 기존에 떠 있던 박스를 숨김
+                            유물드랍박스.style.display = "none";
+                            if (window.유물드랍타이머) clearTimeout(window.유물드랍타이머);
+
+                            // 텍스트 설정
+                            if (item.유물이름) {
+                                유물드랍박스.innerText = `유물 [${item.유물이름}]을(를) 획득했다!`;
+                            } else {
+                                유물드랍박스.innerText = "뽑기에 실패했습니다!";
+                            }
+
+                            // 화면에 표시
+                            유물드랍박스.style.display = "block";
+
+                            // 위치 조정
+                            if (유저테두리안표시) {
+                                유저테두리안표시.style.position = "relative";
+                                유저테두리안표시.appendChild(유물드랍박스);
+                                Object.assign(유물드랍박스.style, {
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    zIndex: "100",
+                                });
+                            }
+
+                            // 3초 후 숨김
+                            window.유물드랍타이머 = setTimeout(() => {
+                                유물드랍박스.style.display = "none";
+                            }, 3000);
+                        }
+                    }, i * 500); // 회차마다 0.5초 간격으로 표시
+                });
+            } catch (e) {
+                메시지표시(유저테두리안표시, "", "뽑기 중 오류: " + e.message, "");
+            } finally {
+                화면해제();
+            }
+        }
+
+        document.getElementById("아래층으로").addEventListener("click", async () => {
+            if (!유저데이터) return;
+            if (유저데이터.현재층 <= 1) return 메시지표시(아래층으로, "", "지하로 내려갈 수 없습니다", "");
+
+            유저데이터.현재층--;
+            document.getElementById("현재층").innerText = `${유저데이터.현재층}층`;
+        });
+
+        document.getElementById("위층으로").addEventListener("click", async () => {
+            if (!유저데이터) return;
+
+            // if (유저데이터.현재층 >= 4) {
+            //     메시지표시(위층으로, 마법진아이콘, " 빛나는 마법진이 가로막습니다", "");
+            //     return;
+            // }
+
+            유저데이터.현재층++;
+            document.getElementById("현재층").innerText = `${유저데이터.현재층}층`;
+        });
+
+
+
+        async function 전직화면보여주기() {
+            화면잠금();
+            document.getElementById("화면설명").innerHTML =
+                "경험치를 소모하여 전직과 직업선택이 가능합니다<br>전직을 클릭 시 직업 초기화가 가능합니다<br>";
+
+            // 1) 서버에서 전직정보 + 경험치 가져오기
+            const 응답 = await fetch("/get-job-info", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+            });
+            const 결과 = await 응답.json();
+            if (!응답.ok) {
+                메시지표시(메시지표시박스, "", "전직정보 조회 실패: " + 결과.오류, "");
+                화면해제();
+                return;
+            }
+            const 전직정보 = 결과.전직정보;      // { "백인장":0, "오백인장":1, ... }
+            let 경험치 = 결과.경험치 ?? 0;
+
+            // 2) 서버에서 이미 선택된 계열(직업결정 JSON) 가져오기
+            const 둘째응답 = await fetch("/get-job-result", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+            });
+            const 둘째결과 = await 둘째응답.json();
+            if (!둘째응답.ok) {
+                메시지표시(메시지표시박스, "", "전직 결과 조회 실패: " + 둘째결과.오류, "");
+                화면해제();
+                return;
+            }
+            // 직업결정 컬럼 형식: null 또는 { "마술": 1 }, { "궁술": 2 } 등
+            const 직업결정JSON = 둘째결과.직업결정 || null;
+
+            // 3) 완료된 킹덤 전직 개수 계산
+            const 전직순서 = [
+                "백인장", "오백인장", "천인장", "만인장", "부장군", "장군",
+                "대장군", "대사마", "승상", "후", "공", "제후",
+                "왕", "황제", "천황", "제황", "태황", "천제"
+            ];
+            let 완료개수 = 0;
+            for (const 직위 of 전직순서) {
+                if (전직정보[직위] === 1) 완료개수++;
+                else break;
+            }
+            // 완료개수: 0~18
+
+            // 4) 컨테이너 비우기
+            const container = document.getElementById("전직컨테이너");
+            document.querySelectorAll(".전직항목").forEach(e => e.remove());
+
+            // 5) “경험치와포인트” 영역 업데이트
+            const 경험치div = document.getElementById("경험치와포인트");
+            경험치div.innerHTML = `
+        <div>경험치</div>
+        <div>${경험치.toLocaleString()} 포인트</div>
+    `;
+
+            // 6) 킹덤 전직(왕위)의 최상위 다음 후보 표시
+            if (완료개수 < 전직순서.length) {
+                const 다음킹덤 = 전직순서[완료개수];
+                const div = document.createElement("div");
+                div.className = "사백픽셀테두리 양쪽정렬 전직항목";
+                div.style.marginTop = "5px";
+
+                const 왼쪽 = document.createElement("div");
+                왼쪽.style.display = "flex";
+                왼쪽.style.flexDirection = "column";
+                왼쪽.style.fontWeight = "bold";
+
+                const 직위텍스트 = document.createElement("div");
+                직위텍스트.textContent = 다음킹덤;
+
+                const 효과텍스트 = document.createElement("div");
+                효과텍스트.textContent = `최종공격력 x${(1.1 + 완료개수 * 0.1).toFixed(1)}`;
+                효과텍스트.style.fontSize = "12px";
+                효과텍스트.style.color = "gray";
+                효과텍스트.style.marginTop = "3px";
+
+                왼쪽.appendChild(직위텍스트);
+                왼쪽.appendChild(효과텍스트);
+
+                const 오른쪽 = document.createElement("div");
+                오른쪽.style.borderRadius = "7px";
+                오른쪽.style.padding = "7px 10px";
+                오른쪽.style.fontSize = "13px";
+                const 비용 = (완료개수 + 1) * 50000;
+                오른쪽.textContent = `전직(${비용.toLocaleString()}p)`;
+                오른쪽.style.backgroundColor = "white";
+                오른쪽.style.color = "black";
+                오른쪽.style.cursor = "pointer";
+                오른쪽.onclick = () => {
+                    전직하기(다음킹덤, 왼쪽);
+                };
+
+                div.appendChild(왼쪽);
+                div.appendChild(오른쪽);
+                container.appendChild(div);
+            }
+
+            // 7) 각 계열별 직업 목록 및 설명 정의
+            const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
+            const 검술설명 = [
+                "추가공격(1~4회) 확률 10%",
+                "추가공격(1~4회) 확률 20%",
+                "추가공격(1~4회) 확률 30%",
+                "추가공격(1~4회) 확률 40%",
+                "추가공격(1~4회) 확률 50%",
+                "추가공격(1~4회) 확률 100%"
+            ];
+
+            const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
+            const 마술설명 = [
+                "추가데미지 20%",
+                "추가데미지 40%",
+                "추가데미지 60%",
+                "추가데미지 80%",
+                "추가데미지 100%",
+                "추가데미지 200%"
+            ];
+
+            const 신술 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
+            const 신술설명 = [
+                "턴당체력회복 확률 10%",
+                "턴당체력회복 확률 20%",
+                "턴당체력회복 확률 30%",
+                "턴당체력회복 확률 40%",
+                "턴당체력회복 확률 50%",
+                "턴당체력회복 확률 75%"
+            ];
+
+            const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
+            const 궁술설명 = [
+                "15% 방어력 무시",
+                "30% 방어력 무시",
+                "45% 방어력 무시",
+                "60% 방어력 무시",
+                "75% 방어력 무시",
+                "99% 방어력 무시"
+            ];
+
+            // helper: 한 개의 직업 항목을 만들어 container에 추가 (비용 매개변수 추가)
+            function 직업항목추가(직업명, 설명, 비용, onClickFn) {
+                const div = document.createElement("div");
+                div.className = "사백픽셀테두리 양쪽정렬 전직항목";
+                div.style.marginTop = "5px";
+
+                const 왼쪽 = document.createElement("div");
+                왼쪽.style.display = "flex";
+                왼쪽.style.flexDirection = "column";
+                왼쪽.style.fontWeight = "bold";
+
+                const 이름텍스트 = document.createElement("div");
+                이름텍스트.textContent = 직업명;
+
+                const 설명텍스트 = document.createElement("div");
+                설명텍스트.textContent = 설명;
+                설명텍스트.style.fontSize = "12px";
+                설명텍스트.style.color = "gray";
+                설명텍스트.style.marginTop = "3px";
+
+                왼쪽.appendChild(이름텍스트);
+                왼쪽.appendChild(설명텍스트);
+
+                const 오른쪽 = document.createElement("div");
+                오른쪽.style.borderRadius = "7px";
+                오른쪽.style.padding = "7px 10px";
+                오른쪽.style.fontSize = "13px";
+                오른쪽.textContent = `선택(${비용.toLocaleString()}p)`;
+                오른쪽.style.backgroundColor = "white";
+                오른쪽.style.color = "black";
+                오른쪽.style.cursor = "pointer";
+                오른쪽.onclick = onClickFn;
+
+                div.appendChild(왼쪽);
+                div.appendChild(오른쪽);
+                container.appendChild(div);
+            }
+
+            // a) 킹덤 완료개수 < 3: 계열 직업 노출 없음
+            if (완료개수 < 3) {
+                화면해제();
+                return;
+            }
+
+            // b) 직업결정이 아직 없는 상태 → 1차 직업을 “[계열] 직업명” 형태로 노출
+            if (!직업결정JSON) {
+                if (완료개수 >= 3) {
+                    const cost1 = 150000;
+                    직업항목추가(
+                        `[검술] ${검술[0]}`,  // ← “[검술] 나이트”
+                        검술설명[0],
+                        cost1,
+                        () => 계열선택("검술")
+                    );
+                    직업항목추가(
+                        `[마술] ${마술[0]}`,  // ← “[마술] 매지션”
+                        마술설명[0],
+                        cost1,
+                        () => 계열선택("마술")
+                    );
+                    직업항목추가(
+                        `[신술] ${신술[0]}`,  // ← “[신술] 클레릭”
+                        신술설명[0],
+                        cost1,
+                        () => 계열선택("신술")
+                    );
+                    직업항목추가(
+                        `[궁술] ${궁술[0]}`,  // ← “[궁술] 스나이퍼”
+                        궁술설명[0],
+                        cost1,
+                        () => 계열선택("궁술")
+                    );
+                }
+                화면해제();
+                return;
+            }
+
+            // c) 직업결정JSON이 존재하는 상태 → 계열 + 단계 정보 파싱
+            const 선택계열 = Object.keys(직업결정JSON)[0];   // ex) "마술"
+            const 선택단계 = 직업결정JSON[선택계열];           // ex) 1
+
+            // 계열별 목록과 설명을 결정
+            let 계열목록, 계열설명;
+            if (선택계열 === "검술") {
+                계열목록 = 검술;
+                계열설명 = 검술설명;
+            } else if (선택계열 === "마술") {
+                계열목록 = 마술;
+                계열설명 = 마술설명;
+            } else if (선택계열 === "신술") {
+                계열목록 = 신술;
+                계열설명 = 신술설명;
+            } else {
+                계열목록 = 궁술;
+                계열설명 = 궁술설명;
+            }
+
+            // 다음 단계 인덱스 (0-based)
+            const 다음Idx = 선택단계; // 예: 선택단계=1 이면 다음Idx=1
+
+            if (다음Idx < 계열목록.length) {
+                // → “[마술] 워록” 식으로 표시
+                const 다음직업명 = `[${선택계열}] ${계열목록[다음Idx]}`;
+                const 다음설명 = 계열설명[다음Idx];
+
+                // 필요한 킹덤 전직 완료 단계: (다음Idx + 1) * 3
+                const 필요한단계 = (다음Idx + 1) * 3;
+
+                // 경험치 비용 계산 (단계 1: 100,000p, 단계 2: 200,000p, …)
+                const cost = (다음Idx + 1) * 150000;
+
+                const 클릭함수 = () => {
+                    if (완료개수 < 필요한단계) {
+                        메시지표시(메시지표시박스, "", `${전직순서[필요한단계 - 1]} 전직 완료 시 선택할 수 있습니다.`, "");
+                        return;
+                    }
+                    계열선택(선택계열);
+                };
+
+                직업항목추가(다음직업명, 다음설명, cost, 클릭함수);
+            }
+
+            화면해제();
+        }
+
+
+
+
+        async function 계열선택(계열) {
+            화면잠금();
+            try {
+                // 서버에 선택된 계열을 저장
+                const 응답 = await fetch("/set-job-result", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        유저UID: 유저데이터.유저UID,
+                        계열선택: 계열  // ex) "궁술"
+                    })
+                });
+
+                const 결과 = await 응답.json();
+                if (!응답.ok) {
+                    // 오류가 있을 때 메시지 표시하고 화면 해제
+                    메시지표시(메시지표시박스, "", (결과.오류 || "알 수 없는 오류"), "");
+                    화면해제();
+                    return;
+                }
+
+                // 저장이 완료되었으면 전직화면을 다시 그리기
+                await 전직화면보여주기();
+            } catch (e) {
+                메시지표시(메시지표시박스, "", "서버 오류 발생", "");
+            } finally {
+                화면해제();
+            }
+        }
+
+
+
+        async function 전직하기(직위, 위치참조) {
+            화면잠금();
+
+            const 응답 = await fetch("/promote-job", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    유저UID: 유저데이터.유저UID,
+                    직위: 직위
+                })
+            });
+
+            const 결과 = await 응답.json();
+
+            if (!응답.ok) {
+                메시지표시(메시지표시박스, "", "전직 실패: " + 결과.오류, "");
+                화면해제();
+                return;
+            }
+            유저데이터.레벨 = 결과.레벨;
+            유저데이터.경험치 = 결과.경험치;
+            유저데이터.최종공격력 = 결과.최종공격력;
+
+            // 성공하면 화면 갱신
+            메시지표시(메시지표시박스, "", 직위 + " 전직 성공!", "");
+            전직화면보여주기();
+        }
+
+        const 일반유물데이터 = {
+            "소드": { 설명: "공격력이 증가합니다(*1%)" },
+            "하트플러스": { 설명: "체력이 증가합니다(*1%)" },
+            "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
+            "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
+            "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다(*0.1%)" },
+            "클로버": { 설명: "장비 도박확률이 증가합니다(*0.1%)" },
+            "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
+            "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
+            "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
+            "스탭": { 설명: "화려한 발재간으로 체력소모를 무시합니다" },
+
+        };
+        const 레어유물데이터 = {
+            "소드": { 설명: "공격력이 증가합니다(*1%)" },
+            "하트플러스": { 설명: "체력이 증가합니다(*1%)" },
+            "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
+            "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
+            "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다(*0.1%)" },
+            "클로버": { 설명: "장비 도박확률이 증가합니다(*0.1%)" },
+            "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
+            "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
+            "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
+            "스탭": { 설명: "화려한 발재간으로 체력소모를 무시합니다" },
+            "플라워": { 설명: "스킬을 초기화합니다" },
+            "뼈다구": { 설명: "직업을 초기화합니다" },
+            "티켓": { 설명: "고급장비도박에 사용됩니다" },
+            "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
+        };
+        const 신화유물데이터 = {
+            "소드": { 설명: "공격력이 증가합니다(*1%)" },
+            "하트플러스": { 설명: "체력이 증가합니다(*1%)" },
+            "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
+            "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
+            "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다(*0.1%)" },
+            "클로버": { 설명: "장비 도박확률이 증가합니다(*0.1%)" },
+            "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
+            "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
+            "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
+            "스탭": { 설명: "화려한 발재간으로 체력소모를 무시합니다" },
+            "플라워": { 설명: "스킬을 초기화합니다" },
+            "뼈다구": { 설명: "직업을 초기화합니다" },
+            "티켓": { 설명: "고급장비도박에 사용됩니다" },
+            "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
+            "마법의팔레트": { 설명: "아이디를 염색합니다" },
+            "햄버거": { 설명: "스태미너를 충전합니다(+300)" },
+        };
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
+
+            if (인증오류) {
+                return;
+            }
+
+            if (user && user.id) {
+                try {
+                    const 응답 = await fetch("/get-user", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ 유저UID: user.id })
+                    });
+                    const 결과 = await 응답.json();
+                    const 유저정보 = 결과.유저데이터;
+
+                    // if (결과.점검하자 == true) {
+                    //     document.body.style.display = 'none';
+                    // }
+
+
+                    if (결과.점검하자) {
+                        // 기존 내용 모두 제거
+                        document.body.innerHTML = '';
+                        Object.assign(document.body.style, {
+                            backgroundColor: '#000',
+                            margin: '0',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',   // 위쪽 정렬
+                            alignItems: 'center',            // 가로 중앙
+                            height: '100vh',
+                            color: '#fff',
+                            paddingTop: '20vh'               // 화면 상단에서 20% 내려오기
+                        });
+                        const msg = document.createElement('div');
+                        msg.textContent = '점   검   중';
+                        msg.style.fontSize = '2rem';
+                        document.body.appendChild(msg);
+                        return;
+                    }
+
+
+
+
+                    if (결과.새로고침하자 == true) {
+                        location.reload();
+                    }
+
+                    // if (!유저정보 || 유저정보.버전업 !== 7) {
+                    //     await fetch("/delete-user", {
+                    //         method: "POST",
+                    //         headers: { "Content-Type": "application/json" },
+                    //         body: JSON.stringify({ 유저UID: user.id })
+                    //     });
+
+                    //     await supabase.auth.signOut();
+                    //     alert("드락실 벨고르 마하 투라크... 에이라스 노 크살. 메테오!");
+                    //     location.reload();
+                    //     alert("메테오를 맞고 새로 태어납니다.");
+                    //     return;
+                    // }
+
+                    유저데이터 = 유저정보;
+                    메시지표시(메시지표시박스, "", "자동로그인 완료", "#00c851");
+
+                    if (유저데이터.펫단계 >= 1) {
+                        let 색상코드;
+                        if (유저데이터.펫단계 === 1) 색상코드 = "#cd7f32"; // 동색
+                        else if (유저데이터.펫단계 === 2) 색상코드 = "#c0c0c0"; // 은색
+                        else 색상코드 = "#ffd700"; // 금색
+
+
+                        const 보스이름목록 = ["미노타우르스", "락골렘", "가고일", "그루트", "와이번", "아이스골렘"];
+                        const 보스번호 = ((유저데이터.보스넘버 ?? 0)) % 6;
+                        const 펫번호 = ((유저데이터.보스넘버 ?? 0) - 1 + 6) % 6;
+                        현재보스이름 = 보스이름목록[보스번호];
+                        const 펫아이콘 = 보스아이콘목록[펫번호] || 그루트아이콘;
+                        펫보여주기(펫아이콘, 색상코드);
+                    }
+
+                    try {
+                        const 응답 = await fetch("/refresh-stamina", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ 유저UID: 유저정보.유저UID })
+                        });
+
+                        const 결과 = await 응답.json();
+                        if (응답.ok && 결과.유저데이터) {
+                            유저정보.현재스태미너 = 결과.유저데이터.현재스태미너;
+                        }
+                    } catch (e) {
+                        console.warn("스태미너 갱신 실패", e);
+                    }
+
+                    전투화면보여주기(유저데이터);
+                    document.getElementById("메뉴얼").click();
+
+                } catch (e) {
+                    메시지표시(메시지표시박스, "", "자동 로그인 오류: " + e.message, "");
+                }
+            } else {
+                메시지표시(메시지표시박스, "", "로그인된 유저 없음", "");
+            }
+
+        });
+
+
+
+        function 모든화면숨기기() {
+            const 화면ID들 = [
+                "전투화면", "장비화면", "스킬화면", "전당화면", "인증화면",
+                "유물화면", "전직화면", "보스화면", "에너지박스",
+                "메뉴얼화면", "내정보화면", "캐시샵화면", "지하던전화면",
+                "정보툴팁", "성장툴팁", "월드툴팁",
+            ];
+            화면ID들.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = "none";
+            });
+        }
+
+        const 정보버튼 = document.getElementById("정보");
+
+        const 정보툴팁 = document.createElement("div");
+        정보툴팁.id = "정보툴팁";
+        정보툴팁.style.position = "absolute";
+        정보툴팁.style.zIndex = "99999";
+        정보툴팁.style.display = "flex";
+        정보툴팁.style.flexDirection = "column";
+        정보툴팁.style.gap = "4px";
+        정보툴팁.style.background = "black";
+        정보툴팁.style.width = "fit-content";
+        정보툴팁.style.border = "0.2px solid #4b4b4b";
+        정보툴팁.style.borderRadius = "10px";
+        정보툴팁.style.boxSizing = "border-box";
+        정보툴팁.style.padding = "5px";
+
+        정보툴팁.innerHTML = `
+  <div style="display: flex; flex-direction: column; gap: 10px;">    
+    <div class="버튼" id="내정보">내정보</div>
+    <div class="버튼" id="메뉴얼">메뉴얼</div>
+    <div class="버튼" id="캐시샵">캐시샵</div>
+  </div>
+`;
+        // <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
+
+        정보툴팁.style.display = "none";
+        document.body.appendChild(정보툴팁);
+
+        정보버튼.addEventListener("mouseenter", () => {
+            const rect = 정보버튼.getBoundingClientRect();
+
+            // 먼저 보여줘야 offsetWidth를 읽을 수 있음
+            정보툴팁.style.display = "block";
+
+            const 툴팁너비 = 정보툴팁.offsetWidth;
+            정보툴팁.style.left = (rect.right - 툴팁너비) + "px";
+            정보툴팁.style.top = rect.bottom + "px";
+        });
+
+
+        // 마우스가 정보버튼과 정보툴팁 외부로 나가면 닫기
+        document.addEventListener("mouseover", (e) => {
+            if (
+                !정보툴팁.contains(e.target) &&
+                !정보버튼.contains(e.target)
+            ) {
+                정보툴팁.style.display = "none";
+            }
+        });
+
+
+
+
+        const 월드버튼 = document.getElementById("월드");
+
+        const 월드툴팁 = document.createElement("div");
+        월드툴팁.id = "월드툴팁";
+        월드툴팁.style.position = "absolute";
+        월드툴팁.style.zIndex = "99999";
+        월드툴팁.style.display = "flex";
+        월드툴팁.style.flexDirection = "column";
+        월드툴팁.style.gap = "4px";
+        월드툴팁.style.background = "black";
+        월드툴팁.style.width = "fit-content";
+        월드툴팁.style.border = "0.2px solid #4b4b4b";
+        월드툴팁.style.borderRadius = "10px";
+        월드툴팁.style.boxSizing = "border-box";
+        월드툴팁.style.padding = "5px";
+
+        월드툴팁.innerHTML = `
+  <div style="display: flex; flex-direction: column; gap: 10px;">    
+    <div class="버튼" id="보스">보스</div>
+    <div class="버튼" id="지하던전">지하던전</div>
+  </div>
+`;
+
+        월드툴팁.style.display = "none";
+        document.body.appendChild(월드툴팁);
+
+        월드버튼.addEventListener("mouseenter", () => {
+            const rect = 월드버튼.getBoundingClientRect();
+
+            // 먼저 보여줘야 offsetWidth를 읽을 수 있음
+            월드툴팁.style.display = "block";
+
+            const 툴팁너비 = 월드툴팁.offsetWidth;
+            월드툴팁.style.left = (rect.right - 툴팁너비) + "px";
+            월드툴팁.style.top = rect.bottom + "px";
+        });
+
+
+        // 마우스가 월드버튼 월드툴팁 외부로 나가면 닫기
+        document.addEventListener("mouseover", (e) => {
+            if (
+                !월드툴팁.contains(e.target) &&
+                !월드버튼.contains(e.target)
+            ) {
+                월드툴팁.style.display = "none";
+            }
+        });
+
+
+
+
+
+        const 성장버튼 = document.getElementById("성장");
+
+        const 성장툴팁 = document.createElement("div");
+        성장툴팁.id = "성장툴팁";
+        성장툴팁.style.position = "absolute";
+        성장툴팁.style.zIndex = "99999";
+        성장툴팁.style.display = "flex";
+        성장툴팁.style.flexDirection = "column";
+        성장툴팁.style.gap = "4px";
+        성장툴팁.style.background = "black";
+        성장툴팁.style.width = "fit-content";
+        성장툴팁.style.border = "0.2px solid #4b4b4b";
+        성장툴팁.style.borderRadius = "10px";
+        성장툴팁.style.boxSizing = "border-box";
+        성장툴팁.style.padding = "5px";
+
+        성장툴팁.innerHTML = `
+  <div style="display: flex; flex-direction: column; gap: 10px;">    
+    <div class="버튼" id="장비">장비</div>
+    <div class="버튼" id="유물">유물</div>
+    <div class="버튼" id="전직">전직</div>
+    <div class="버튼" id="스킬">스킬</div>
+    <div class="버튼" id="뽑기">뽑기</div>
+  </div>
+`;
+
+        성장툴팁.style.display = "none";
+        document.body.appendChild(성장툴팁);
+
+        성장버튼.addEventListener("mouseenter", () => {
+            const rect = 성장버튼.getBoundingClientRect();
+
+            // 먼저 보여줘야 offsetWidth를 읽을 수 있음
+            성장툴팁.style.display = "block";
+
+            const 툴팁너비 = 성장툴팁.offsetWidth;
+            성장툴팁.style.left = (rect.right - 툴팁너비) + "px";
+            성장툴팁.style.top = rect.bottom + "px";
+        });
+
+
+        // 마우스가 성장버튼 성장툴팁 외부로 나가면 닫기
+        document.addEventListener("mouseover", (e) => {
+            if (
+                !성장툴팁.contains(e.target) &&
+                !성장버튼.contains(e.target)
+            ) {
+                성장툴팁.style.display = "none";
+            }
+        });
+
+
+        document.getElementById("뽑기").addEventListener("click", () => {
+            if (!유저데이터) return;
+            const 뽑기창 = document.getElementById("뽑기창");
+            뽑기창.style.display = "block";
+        });
+
+
+
+
+
+
+
+        function 한줄에두칸(왼쪽, 오른쪽) {
+            const row = document.createElement("div");
+            row.style.display = "flex";
+            row.style.width = "100%";
+            row.style.gap = "10px";
+
+            const left = document.createElement("div");
+            left.id = 왼쪽;
+            left.style.textAlign = "left";
+            left.style.flex = "1";
+
+            const right = document.createElement("div");
+            right.id = 오른쪽;
+            right.style.textAlign = "left";
+            right.style.flex = "1";
+
+            row.appendChild(left);
+            row.appendChild(right);
+            return row;
+        }
+
+        // 2) 3칸짜리 행(Row)을 생성해서 반환합니다.
+        //    칸: [id1, id2, id3] 형태로 세 개 요소의 id를 전달
+        //    클레스네임: 각 칸(div)에 적용할 공통 클래스 이름 (예: "기본테두리")
+        function 한줄에세칸(칸, 클레스네임) {
+            const row = document.createElement("div");
+            row.style.display = "flex";
+            row.style.width = "100%";
+            row.style.gap = "10px";
+            row.style.justifyContent = "center"; // 필요에 따라 가운데 정렬
+
+            칸.forEach(id => {
+                const div = document.createElement("div");
+                div.id = id;
+                if (클레스네임) div.className = 클레스네임;
+                div.style.flex = "1";
+                div.style.textAlign = "center"; // 칸 내부 텍스트 가운데 정렬
+                row.appendChild(div);
+            });
+
+            return row;
+        }
+
+
+
+
+
+        document.getElementById("내정보").addEventListener("click", async () => {
+            if (!유저데이터) return;
+            화면잠금();
+            document.getElementById("화면설명").innerHTML = "새로고침(F5)을 생활화하세요";
+
+            모든화면숨기기();
+            document.getElementById("내정보화면").style.display = "block";
+
+            const 컨테이너 = document.getElementById("내정보컨테이너");
+            컨테이너.innerHTML = "";
+
+            // ─── 첫째줄부터 넷째줄까지 2칸짜리 행 생성 ───
+            const 첫째줄행 = 한줄에두칸("첫째줄왼쪽", "첫째줄오른쪽");
+            const 둘째줄행 = 한줄에두칸("둘째줄왼쪽", "둘째줄오른쪽");
+            const 셋째줄행 = 한줄에두칸("셋째줄왼쪽", "셋째줄오른쪽");
+            const 넷째줄행 = 한줄에두칸("넷째줄왼쪽", "넷째줄오른쪽");
+            const 다섯째줄행 = 한줄에두칸("다섯째줄왼쪽", "다섯째줄오른쪽");
+            const 여섯째줄행 = 한줄에두칸("여섯째줄왼쪽", "여섯째줄오른쪽");
+
+            // ─── 다섯째줄(=열째줄) 3칸짜리 행 생성 ───
+            const 열째줄행 = 한줄에세칸(
+                ["열째줄왼쪽", "열째줄가운데", "열째줄오른쪽"],
+                "기본테두리"
+            );
+
+            const 열한째줄행 = 한줄에세칸(
+                ["열한째줄왼쪽", "열한째줄가운데", "열한째줄오른쪽"],
+                ""
+            );
+
+            // ─── 컨테이너에 차례대로 붙이기 ───
+            컨테이너.appendChild(첫째줄행);
+            컨테이너.appendChild(둘째줄행);
+            컨테이너.appendChild(셋째줄행);
+            컨테이너.appendChild(넷째줄행);
+            컨테이너.appendChild(다섯째줄행);
+            컨테이너.appendChild(여섯째줄행);
+            컨테이너.appendChild(열째줄행);
+            컨테이너.appendChild(열한째줄행);
+
+
+            // ─── (2) 서버에서 “전당” 순위만 가져오기 ───
+            try {
+                const 랭킹응답 = await fetch("/ranking", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                });
+                const 랭킹결과 = await 랭킹응답.json();
+
+                // 서버에서 받은 랭킹결과는 { 유저들: [...] } 구조
+                const 유저들 = 랭킹결과.유저들 || [];
+
+                // 배열에서 “내 유저UID”와 같은 요소의 인덱스를 찾는다
+                const 내인덱스 = 유저들.findIndex(
+                    (u) => u.유저UID === 유저데이터.유저UID
+                );
+
+                // 인덱스가 -1이 아니면 “인덱스 + 1”이 내 순위
+                const 내전당순위 = 내인덱스 >= 0 ? 내인덱스 + 1 : "-";
+                document.getElementById("넷째줄왼쪽").innerHTML = `전당 : ${내전당순위}위`;
+            } catch (err) {
+                document.getElementById("넷째줄왼쪽").innerHTML = `전당 : 조회실패`;
+                console.error("전당순위 조회 실패:", err);
+            }
+
+            // ─── (3) 서버에서 “보스” 순위만 가져오기 ───
+            try {
+                const 보스응답 = await fetch("/boss-ranking", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                });
+                const 보스결과 = await 보스응답.json();
+
+                // /boss-ranking 응답 예시: { 순위: [...], 누적데미지총합: n, 내정보: { 순위, 유저아이디, 보스누적데미지 } }
+                // 내 순위 정보는 보스결과.내정보.순위 필드에 들어 있다.
+                const 내보스순위 =
+                    보스결과.내정보 && typeof 보스결과.내정보.순위 === "number"
+                        ? 보스결과.내정보.순위
+                        : "-";
+
+                document.getElementById("다섯째줄왼쪽").innerHTML = `보스 : ${내보스순위}위`;
+            } catch (err) {
+                document.getElementById("다섯째줄왼쪽").innerHTML = `보스 : 조회실패`;
+                console.error("보스순위 조회 실패:", err);
+            }
+
+            // ─── 내용 채우기 ───
+            document.getElementById("첫째줄왼쪽").innerHTML = `아이디 : ${유저데이터.유저아이디}`;
+            document.getElementById("둘째줄왼쪽").innerHTML = `공격력 : ${유저데이터.최종공격력}`;
+            document.getElementById("셋째줄왼쪽").innerHTML = `최대체력 : ${유저데이터.최대체력}`;
+            // document.getElementById("넷째줄왼쪽").innerHTML = `전당 : 위`;
+            // document.getElementById("다섯째줄왼쪽").innerHTML = `보스 : 위`;
+
+            // document.getElementById("첫째줄오른쪽").innerHTML = `탈퇴`;
+            // <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
+            document.getElementById("열한째줄가운데").innerHTML =
+                `<div style="margin-top: 20px; cursor: pointer;" id="탈퇴" onclick="회원탈퇴()">{ 계 정 탈 퇴 }</div>`;
+
+            document.getElementById("둘째줄오른쪽").innerHTML = (유저데이터.현질기한 !== undefined && 유저데이터.현질기한 !== 0) ? `마법의팔레트 : ${유저데이터.현질기한}/30` : `마법의팔레트 : -`;
+            document.getElementById("셋째줄오른쪽").innerHTML = (유저데이터.햄버거현질기한 !== undefined && 유저데이터.햄버거현질기한 !== 0) ? `햄버거정기배송 : ${유저데이터.햄버거현질기한}/30` : `햄버거정기배송 : -`;
+            document.getElementById("넷째줄오른쪽").innerHTML = 유저데이터.생성일 ? `생성일 : ${유저데이터.생성일}` : `생성일 : -`;
+            document.getElementById("다섯째줄오른쪽").innerHTML = (유저데이터.스태미너소모총량 !== undefined && 유저데이터.스태미너소모총량 !== 0) ? `전적 : ${유저데이터.스태미너소모총량}전` : `전적 : -`;
+
+            // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
+            const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
+            const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
+            const 신술 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
+            const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
+
+            // … (유저데이터.직업결정은 { "신술": 6 } 같은 객체 형태로 들어있다고 가정)
+
+            const 결정객체 = 유저데이터.직업결정;  // 예: { "신술": 6 }
+            if (결정객체) {
+                // 첫 번째(유일한) 키만 꺼냅니다. → "신술"
+                const 계열키 = Object.keys(결정객체)[0];
+                // 해당 키의 값(단계)을 꺼냅니다. → 6
+                const 단계 = 결정객체[계열키];
+
+                // 단계(숫자)에 해당하는 실제 직업명을 찾아서 변수에 저장
+                let 직업이름;
+                if (계열키 === "검술") {
+                    직업이름 = 검술[단계 - 1];   // 예: 단계=1 → 검술[0] = "나이트"
+                } else if (계열키 === "마술") {
+                    직업이름 = 마술[단계 - 1];
+                } else if (계열키 === "신술") {
+                    직업이름 = 신술[단계 - 1];   // 단계=6 → 신술[5] = "퀸"
+                } else if (계열키 === "궁술") {
+                    직업이름 = 궁술[단계 - 1];
+                } else {
+                    직업이름 = "-";
+                }
+
+                // 화면에 “신술(퀸)” 형태로 표시
+                document.getElementById("여섯째줄왼쪽").innerHTML = `직업 : [${계열키}] ${직업이름}`;
+            } else {
+                // 아직 선택된 직업이 없으면 ‘-’만 표시
+                document.getElementById("여섯째줄왼쪽").innerHTML = "직업 : -";
+            }
+
+
+            const 목록 = 유저데이터.장비목록;
+            let bestWeapon = null;
+            if (Array.isArray(목록) && 목록.length) {
+                bestWeapon = 목록.reduce((prev, cur) =>
+                    Number(cur.공격력) > Number(prev.공격력) ? cur : prev
+                );
+            }
+
+            const 장비박스1 = document.getElementById("열째줄왼쪽");
+
+            if (bestWeapon) {
+                // 강화 수치 표시 문자열 생성
+                const 강화표시 = bestWeapon.강화 ? ` +${bestWeapon.강화}` : "";
+                // 예: "루시퍼의 심장 +3" (강화가 0이면 이름만)
+                장비박스1.innerText = `${bestWeapon.이름}${강화표시}`;
+                장비박스1.style.color = 색상맵[bestWeapon.등급] || "#fff";
+            } else {
+                장비박스1.innerText = "장비가 없습니다";
+                장비박스1.style.color = "#fff";
+            }
+
+            // 필요하다면 두 번째·세 번째 박스에도 같은 방식으로 내용 채우기
+            const 장비박스2 = document.getElementById("열째줄가운데");
+            장비박스2.innerHTML = "가장쎈방어구";
+            const 장비박스3 = document.getElementById("열째줄오른쪽");
+            장비박스3.innerHTML = "가장쎈장신구";
+
+            화면해제();
+        });
+
+
+
+
+        document.getElementById("지하던전").addEventListener("click", async () => {
+            if (!유저데이터) return;
+            화면잠금();
+
+            // document.getElementById("화면설명").innerHTML = "강함을 증명하세요<br>층당 티켓 한장이 보상으로 지급됩니다";
+            document.getElementById("화면설명").innerHTML = "구현중입니다";
+            모든화면숨기기();
+            document.getElementById("지하던전화면").style.display = "block";
+            document.getElementById("에너지박스").style.display = "block";
+
+            // const 컨테이너 = document.getElementById("지하던전컨테이너");
+            // 컨테이너.innerHTML = "";
+
+            const 아이콘컨테이너 = document.getElementById("던전아이콘");
+            아이콘컨테이너.innerHTML = 던전아이콘;
+
+            const level = 유저데이터.지하던전;
+            document.getElementById("지하층수").innerText = `지하${level}층`;
+            document.getElementById("지하승패").innerText = "";
+
+            화면해제();
+        });
+
+        //         document.getElementById("지하층수").addEventListener("click", async () => {
+        //             if (!유저데이터) return;
+        //             화면잠금();
+
+        //             const res = await fetch("/attack-dungeon", {
+        //                 method: "POST",
+        //                 headers: { "Content-Type": "application/json" },
+        //                 body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+        //             });
+        //             const data = await res.json();
+
+        //             // 승패 표시
+        //             document.getElementById("지하승패").innerText = data.결과;
+
+        //             // 다음 층수 표시
+        //             document.getElementById("지하층수").innerText = `지하${data.새로운레벨}층`;
+        //             유저데이터.지하던전 = data.새로운레벨;
+        //             유저데이터.유물목록 = data.유물목록;
+
+        //             // 티켓 드랍 효과
+        //             if (data.드랍티켓) {
+        //                 const 유물드랍박스 = document.getElementById("유물드랍박스");
+        //                 const 던전아이콘 = document.getElementById("던전아이콘");
+
+        //                 if (유물드랍박스) {
+        //                     // ✅ 먼저 기존에 떠 있는 박스를 숨김
+        //                     유물드랍박스.style.display = "none";
+
+        //                     // ✅ setTimeout 제거 방지: 이전 타이머 클리어 (선택 사항)
+        //                     if (window.유물드랍타이머) clearTimeout(window.유물드랍타이머);
+
+        //                     유물드랍박스.innerText = `유물 [티켓]을(를) 획득했다!`;
+        //                     유물드랍박스.style.display = "block";
+
+        //                     // 위치 조정용 부모 변경
+        //                     if (던전아이콘) {
+        //                         // 등급외테두리에 위치 기준 설정
+        //                         던전아이콘.style.position = "relative";
+
+        //                         // 유물드랍박스를 등급외테두리 내부로 이동
+        //                         던전아이콘.appendChild(유물드랍박스);
+
+        //                         // 전투화면용 위치 조정
+        //                         Object.assign(유물드랍박스.style, {
+        //                             position: "absolute",
+        //                             top: "50%",
+        //                             left: "50%",
+        //                             transform: "translate(-50%, -50%)",
+        //                             zIndex: "100"
+        //                         });
+        //                     }
+        //                 }
+        //                 // ✅ 새 타이머로 숨김 처리 (전역 변수로 저장)
+        //                 window.유물드랍타이머 = setTimeout(() => {
+        //                     유물드랍박스.style.display = "none";
+        //                 }, 3000);
+        //             }
+
+        //             // 기존 전투 로그 삭제
+        //             const 기존로그들 = document.querySelectorAll(".전투로그컨테이너");
+        //             기존로그들.forEach(e => e.remove());
+
+        //             // 새로운 로그 생성
+        //             if (data.전투로그 && Array.isArray(data.전투로그)) {
+        //                 data.전투로그.slice().reverse().forEach(로그 => {
+        //                     const 로그컨테이너 = document.createElement("div");
+        //                     로그컨테이너.className = "전투로그컨테이너";
+        //                     로그컨테이너.style.marginTop = "15px";
+        //                     로그컨테이너.style.border = "0.2px solid #4b4b4b";
+        //                     로그컨테이너.style.borderRadius = "10px";
+        //                     로그컨테이너.style.padding = "15px";
+
+        //                     const 아이콘HTML = (로그.아이콘 || []).map(이름 => 아이콘맵[이름] || "").join(" ");
+
+        //                     // 회복 로그는 데미지 표시 안 함
+        //                     let 데미지텍스트 = "";
+        //                     let 회복텍스트 = "";
+
+        //                     if (로그.타입 === "공격") {
+        //                         데미지텍스트 = `<span><span style="color: #f63b3b;">${로그.몬스터이름}</span>에게 ${로그.효과} 피해를 입혔다!</span>`;
+        //                     } else if (로그.타입 === "회복") {
+        //                         회복텍스트 = `<span><span style="color: #3b82f6;">${로그.유저아이디}</span> 체력 ${로그.효과} 회복</span>`;
+        //                     }
+
+        //                     let 추가횟수표시 = "";
+        //                     if (로그.타입 === "공격" && 로그.추가공격횟수 > 0) {
+        //                         // 실제 타격 횟수 = 1(기본) + 로그.추가공격횟수
+        //                         const 총공격횟수 = 1 + 로그.추가공격횟수;
+        //                         추가횟수표시 = `<span style="margin-left: 4px; color: #f63b3b;">x${총공격횟수}</span>`;
+        //                     }
+
+        //                     // (2) innerHTML에서 공격 텍스트 뒤에 추가횟수표시 붙이기
+        //                     로그컨테이너.innerHTML = `
+        //     <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+        //         <strong>Turn ${로그.턴}</strong>
+        //     </div>
+        //     <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
+        //         ${아이콘HTML}
+        //         ${로그.타입 === "공격" ? 데미지텍스트 + 추가횟수표시 : ""}
+        //         ${로그.타입 === "회복" ? 회복텍스트 : ""}
+        //     </div>
+        // <!-- 유저와 몬스터 정보 양쪽 정렬 -->
+        // <div class="가로정렬" style="margin-top: 10px; justify-content: space-between; align-items: center; gap: 12px;">
+        //     <div style="border: 0.2px solid #3b82f6; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
+        //         <div>${로그.유저아이디}</div>
+        //         <div>
+        //             <div>공격력 ${로그.유저최종공격력}</div>
+        //             <div>체력 ${로그.유저체력}/${로그.유저최대체력}</div>
+        //         </div>
+        //     </div>
+
+        //     <div style="border: 0.2px solid #f63b3b; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
+        //         <div>${로그.몬스터이름}</div>
+        //         <div>
+        //             <div>체력 ${Math.max(0, 로그.몬스터체력)}/${로그.몬스터최대체력}</div>
+        //             <div>방어력 ${로그.몬스터방어력}</div>
+        //         </div>
+        //     </div>
+        // </div>
+        //         `;
+
+        //                     const 타겟 = document.getElementById("지하등반");
+        //                     if (타겟 && 타겟.parentNode) {
+        //                         타겟.parentNode.insertBefore(로그컨테이너, 타겟.nextSibling);
+        //                     }
+        //                 });
+        //             }
+        //             화면해제();
+        //         });
+
+
+        // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
+        // npm install -g nodemon
+        // nodemon index.js
+
+
+        document.getElementById("메뉴얼").addEventListener("click", () => {
+            if (!유저데이터) return;
+            document.getElementById("화면설명").innerHTML = "오늘도, 행복하세요";
+
+            모든화면숨기기();
+            document.getElementById("메뉴얼화면").style.display = "block";
+
+            const 컨테이너 = document.getElementById("메뉴얼컨테이너");
+            컨테이너.innerHTML = "";
+
+            const 문장들 = [
+                `${여름아이콘}`,
+                `
+1. '전투'를 클릭해서 전투화면으로 진입 후 100만골드를 클릭<br>
+2. 연속일반장비 뽑기를 통해 [태초] 사탄의 날개를 뽑으세요<br>
+3. 사탄의 날개가 나오지 않았다면 '정보'-'내정보'<br>
+4. 계정탈퇴 후 재가입하세요<br>
+5. 사탄의 날개가 등장할때까지 1,2,3,4를 반복하세요<br>
+6. 전투화면에서 악마성을 클릭하세요<br>
+6-1. 층수를 올려서 2층을 사냥해보세요<br>
+6-2. 유저의 체력을 1 소모해서 Trun 하나를 진행합니다<br>
+7. 반자동 버튼을 클릭해서 자동공격을 경험해보세요<br>
+8. 레어몬스터를 우선공격하는 풀자동 공격을 경험해보세요<br>
+9. 숙련도 500을 모았다면 전투화면에서 숙련도를 클릭하세요<br>
+10. 스킬창에서 숙련도를 소모하여, 인사이트 스킬을 습득하세요<br>
+11. 단톡에 참여하여 더 많은 정보를 구하세요<br>
+                `,
+                //보스보상표시
+                //광장
+                //보스스탯적용
+                //전직도박스킬창분리
+                //신술상향
+                `
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+                `,
+                `${봄아이콘}`,
+                `
+25.06.12<br>
+루시퍼의 심장 강화 시 10강마다 10%씩 확률이 감소합니다<br>
+공격에 필요한 체력소모를 무시하는 유물. 스탭이 추가되었습니다<br>
+전직, 뽑기, 스킬 화면들을 [성장] 타이틀로 통합했습니다<br>
+                `,
+                `
+25.06.11<br>
+일반몬스터를 자동공격하는 반자동 버튼이 구현되었습니다<br>
+레어몬스터를 우선 자동공격하는 풀자동 버튼이 구현되었습니다<br>
+반자동 또는 풀자동을 재클릭하거나, 외부를 클릭 시 자동사냥이<br>
+정지됩니다<br>
+자동사냥 이슈로 인한 티켓 1장이 전 유저에게 지급되었습니다<br>
+검술직업의 추가공격 데미지가 보스 누적데미지에 적용되지않던<br>
+버그를 수정했습니다<br>
+                `,
+                `
+25.06.10<br>
+초기화면을 전투화면에서 메뉴얼 화면으로 수정했습니다<br>
+                `,
+                `
+25.06.09<br>
+유물뽑기로만 등장하는 '플라워', '뼈다구'를 9개 이상 보유 시<br>
+뽑기에서 더이상 등장하지 않습니다<br>
+'도박' 을 '뽑기'로 변경하였습니다<br>
+무기 '루시퍼의 심장'을 강화할 수 있습니다<br>
+캐시샵에 '1억골드'가 추가되었습니다<br>
+보스누적데미지 랭킹보상이 골드에서 티켓으로 변경되었습니다<br>
+대격변 기념 햄버거4개, 플라워1개, 뼈다구1개가 배송되었습니다<br>
+연속고급장비뽑기 10+1회 로직을 구현하였습니다<br>
+보스화면이 '월드'화면으로 통합되었습니다<br>
+직업초기화 시 유저아이디가 사라지는 버그 해결<br>
+전투화면 외에서도 단축키가 사용되던 버그 해결<br>
+신규유저 100만골 회원가입 이벤트 시작<br>
+  `,
+                `
+25.06.08<br>
+전당화면에서 유저정보가 빈칸으로 표시되던 문제를 해결했습니다<br>
+뽑기창에서 과금상품목록을 제거했습니다<br>
+과금상품 목록이 정보-캐시샵으로 이동되었습니다<br>
+유물. 플라워와 뼈다구의 판매기능이 삭제되었습니다<br>
+플라워와 뼈다구의 과금금액이 1,100원으로 변경되었습니다<br>
+전투화면(에너지바)에 모래시계의 발동효과가 추가되었습니다<br>
+장비효과가 개편되었습니다<br>
+지금부턴 최고공격력 장비만 자동 장착됩니다<br>
+장비 누적공격력 시스템이 삭제되었습니다<br>
+장비자동합성 기능이 구현되었습니다<br>
+장비화면 오른쪽 상단의 자동합성 버튼을 클릭하세요<br>
+  `,
+                `
+25.06.06<br>
+드디어, 모바일에서도 '풀자동' 사냥이 가능합니다<br>
+전당화면 미니장비창이 미니정보창으로 개선되었습니다<br>
+  `,
+                `
+25.06.05<br>
+직업이 구현되었습니다<br>
+유물. 뼈다구가 추가되었습니다(직업초기화)<br>
+과금상품에 플라워가 부활, 뼈다구가 추가되었습니다<br>
+전직화면에서 전직 타이틀 클릭 시 직업초기화가 가능합니다<br>
+전 유저에게 뼈다구 1개가 지급되었습니다<br>
+레벨당 공격력이 1로 너프되었습니다<br>
+전당화면에서 미니정보창 표시 로직을 개선했습니다<br>
+전당화면에 전직 대신 직업이 표시됩니다<br>
+무너진 악마성을 재건하였습니다. 4층 위로 올라갈 수 있습니다<br>
+  `,
+                `
+25.06.03<br>
+업데이트 시 자동새로고침<br>
+모바일 화면 최적화 업데이트<br>
+탈퇴 버튼을 정보-내정보 최하단으로 이동했습니다<br>
+  `,
+                `
+25.06.02<br>
+과금상품에서 유물. 플라워가 삭제되었습니다<br>
+정보-내정보 화면이 추가되었습니다<br>
+오늘부터 신규유저에겐 생성일이 등록됩니다
+  `,
+                `
+25.06.01<br>
+무료서버에서 유료서버 전환 기념 뽀나스 햄버거 1개 배송<br>
+<s>유물. 플라워가 과금상품에 추가되었습니다</s><br>
+유물화면에서 소모성 유물과 과금유물을 구분하였습니다<br>
+오늘은 오픈기념 이벤트 마지막 날이자, 주인장 생일입니다<br>기념으로 금일 햄버거는 1+1 배송됩니다<br>
+암포라 발동효과가 기존 9에서 5로 상향되었습니다<br>
+10연 유물뽑기이 구현되었습니다<br>
+보스 공통미션 보상 '펫'과 누적데미지 순위별 골드보상이<br>지급되었습니다
+  `,
+                `
+25.05.30<br>
+10연 고급장비뽑기 시 무료1회 추가기능은 실패했습니다<br>대신, 10연 고급장비뽑기 시 보너스 티켓 한장이 지급됩니다<br>
+10연 일반장비뽑기과 10연 고급장비뽑기 업데이트<br>
+유물. 암포라의 수치표기를 바르게 수정했습니다
+  `,
+                `
+25.05.29<br>
+주인장 득템 기념 햄버거 1+1 지급
+  `,
+                `
+25.05.28<br>
+이제 유물. 플라워(스킬초기화)를 판매할 수 있습니다<br>
+오픈기념 햄버거 1개가 6월1일까지 오후3시 경 배달됩니다<br>
+과금은 오픈톡 '가글주인장' 문의<br>
+과금상품. 햄버거정기배송(4900원). 한달간 매일 스태+300<br>
+과금상품. 마법의팔레트(1100원). 한달간 아이디 염색
+  `,
+                `
+25.05.27<br>
+<s>오픈기념 샐러드5개가 일주일간 오후3시에 배달됩니다</s>
+  `,
+                `
+25.05.26<br>
+유물설명에 1개 효과 기입<br>
+최대체력이 정상화됩니다<br>
+오후 3시 6분 정식출시<br>
+cbt 종료
+  `,
+                `
+25.05.25<br>
+신규유저 이벤트로 샐러드 5개가 지급됩니다<br>
+유물. 샐러드(스태미너회복)가 구현되었습니다<br>
+cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
+<s>1주차 보스 미노타우르스가 강림중입니다</s><br>
+<s>보스 2단계 보상 아이스골렘 펫이 구현되었습니다</s><br>
+악마성이 무너져 4층까지만 남았습니다
+  `,
+                `
+25.05.24<br>
+고급장비뽑기은 레어부터 타락까지 드랍됩니다<br>
+일반장비뽑기은 일반부터 태초까지 드랍됩니다<br>
+보스전 스태미너 소모가 10으로 너프되었습니다<br>
+유저의 최대체력은 고등급 장비(태초,타락)로만 증가합니다<br>
+유물. 티켓(고급장비뽑기)이 유물뽑기으로만 등장합니다<br>
+유물. 플라워(스킬초기화)가 유물뽑기으로만 등장합니다
+  `,
+                `
+25.05.23<br>
+각 화면에 대한 설명을 표시<br>
+보스화면 내 순위 별도 표시<br>
+클로버 유물효과 뽑기확률증가로 변경<br>
+<s>신규유저 이벤트 10만골드 뽑기 가즈ㅏㅏ</s><br>
+3시 10분 5월 26일 오픈 전 마지막 cbt 초기화 진행
+  `,
+                `
+25.05.22<br>
+보스 펫 보상 로직 변경<br>
+유물뽑기 업데이트
+  `,
+                `
+25.05.21<br>
+정보 버튼에서 전당 분리<br>
+보스컨텐츠 공통보상 '펫'구현 시작<br>
+보스컨텐츠 대충 구현 완료
+  `,
+                `
+25.05.20<br>
+메뉴얼,전당,탈퇴 버튼을 정보 버튼으로 통합<br>
+스킬초기화 안되게할랬찌만, 유물 소모로 구현<br>
+패치노트 기록하기로 결심
+  `,
+                "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
+                `${가을아이콘}`,
+                "가글(gagl)에 찾아와 주셔서 감사합니다",
+                "가글은 25년 3월 1일을 시작으로 25년 4월 15일 낮 12시 40분경",
+                "서비스를 종료 한 마글(magl)이란 게임의 팬게임으로",
+                "제작을 시작한 게임입니다",
+                "저는 코딩을 모르는 평범한 아재이며, 가글의 제작은",
+                "100% 챗지피티로 제작되고 있는 점 알아주시면 감사하겠습니다",
+                "최대한 노력하겠지만, 게임의 수명은 장담할 수 없는 점",
+                "심심한 이해를 부탁드립니다",
+                "주인장이 운영중인 오픈톡이 존재하지만, 귀찮으신분들은",
+                "오픈톡에 '가글주인장'을 검색하시면 제 프로필이 나옵니다",
+                "1:1채팅으로 문의를 주시면 최대한 빠르게 조치해드리도록",
+                "하겠습니다",
+                "최초버그를 제보해주시면, 소소한 스태미너 보상을 드리겠습니다",
+                "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
+                `${겨울아이콘}`,
+                "화면 최상단 아이디를 클릭하시면, 아이디 변경이 가능합니다",
+                "모든 팝업창은 외부를 클릭 시 닫힙니다",
+                "스태미너는 시간당 60씩 회복됩니다",
+                "가글은 기본적으로 자동사냥이 지원되며, 레어몬스터 등장 시",
+                "자동사냥이 멈추게 됩니다",
+                "스페이스바를 한번만 치시면 레어몬스터를 우선 공격하는",
+                "풀 자동사냥이 가능합니다",
+                "누르고 계시면 안됩니다",
+                `<s>레벨업당 5의 공격력이 증가합니다</s>`,
+                "뽑기은 최소 일반장비가 드랍됩니다",
+                "모든 스킬은 단계가 존재하며, 습득한 스킬 효과만 적용됩니다",
+                "전투로그의 아이콘으로 스킬의 발동여부를 확인하실 수 있습니다",
+                "유물의 효과는 대부분 개당 1%의 효과가 곱연산이지만,",
+                "밸런스상 예외로 0.1%거나 합연산, 소모성 유물도 존재합니다",
+                `<s>장비는 중복 드랍할수록 합성횟수가 증가하게되고,</s>`,
+                `<s>합성횟수당 유저의 최대체력 1과 공격력이 누적됩니다</s>`,
+                "보스 누적데미지 목표달성 전유저 공통보상은 펫입니다",
+                "목표달성에 따라 최종공격력을 10%, 20%, 30% 증가시켜주는",
+                "펫을 획득할 수 있으며, 다음 보스가 등장하기 전까지 가글의",
+                "모든 화면에 펫이 떠다니게됩니다",
+            ];
+
+            for (const 문장 of 문장들) {
+                const 줄 = document.createElement("div");
+                줄.innerHTML = 문장;
+                줄.style.margin = "5px 0"; // 줄 간격
+                줄.style.textAlign = "center";
+                컨테이너.appendChild(줄);
+            }
+
+        });
+
+
+        document.getElementById("전당").addEventListener("click", () => {
+            if (!유저데이터) return;
+            전당화면보여주기();
+        });
+
+        async function 전당화면보여주기() {
+            화면잠금();
+            모든화면숨기기();
+            document.getElementById("화면설명").innerHTML = "유저를 클릭하면 해당유저의 정보를 확인할 수 있습니다";
+
+            document.getElementById("전당화면").style.display = "block";
+
+            document.getElementById("획득로그").innerText = "";
+            document.getElementById("추가획득로그").innerText = "";
+            document.getElementById("레벨업표시").innerText = "";
+
+            const 컨테이너 = document.getElementById("전당컨테이너");
+            컨테이너.innerHTML = "";
+
+            const 응답 = await fetch("/ranking", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+            });
+
+            const 결과 = await 응답.json();
+            const 유저들 = 결과.유저들 || [];
+            // const 내순위 = 결과.내순위;
+            const 보스랭킹 = 결과.보스랭킹 || [];
+
+            유저들.forEach((유저, index) => {
+                const 줄 = document.createElement("div");
+                줄.className = "밑줄 양쪽정렬";
+                줄.style.display = "flex";
+                줄.style.justifyContent = "space-between";
+                줄.style.width = "100%";
+
+                if (유저.유저아이디 === 유저데이터.유저아이디) 줄.classList.add("내아이디강조");
+
+                let 왼쪽표시;
+                if (index === 0) {
+                    왼쪽표시 = `<svg class="lucide lucide-crown" style="color: gold;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
+                } else if (index === 1) {
+                    왼쪽표시 = `<svg class="lucide lucide-crown" style="color: silver;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
+                } else if (index === 2) {
+                    왼쪽표시 = `<svg class="lucide lucide-crown" style="color: peru;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
+                } else {
+                    왼쪽표시 = `<span style="width:24px; display:inline-block;">${index + 1}</span>`;
+                }
+
+                const 왼쪽 = document.createElement("div");
+                왼쪽.innerHTML = 왼쪽표시;
+                왼쪽.style.flex = "0 0 auto";
+
+                const 오른쪽 = document.createElement("div");
+
+                let 닉네임표시 = 유저.유저아이디;
+
+                const 팔레트 = 유저.마법의팔레트;
+                if (팔레트 === "민초") {
+                    닉네임표시 = `<span class="마법의팔레트민초">${닉네임표시}</span>`;
+                } else if (팔레트 === "지옥") {
+                    닉네임표시 = `<span class="마법의팔레트지옥">${닉네임표시}</span>`;
+                } else if (팔레트 === "블라섬") {
+                    닉네임표시 = `<span class="마법의팔레트블라섬">${닉네임표시}</span>`;
+                } else if (팔레트 === "가글") {
+                    닉네임표시 = `<span class="마법의팔레트가글">${닉네임표시}</span>`;
+                } else if (팔레트 === "겨울") {
+                    닉네임표시 = `<span class="마법의팔레트겨울">${닉네임표시}</span>`;
+                } else if (팔레트 === "네온사인") {
+                    닉네임표시 = `<span class="마법의팔레트네온사인">${닉네임표시}</span>`;
+                } else if (팔레트 === "핑크오션") {
+                    닉네임표시 = `<span class="마법의팔레트핑크오션">${닉네임표시}</span>`;
+                } else if (팔레트 === "황혼하늘") {
+                    닉네임표시 = `<span class="마법의팔레트황혼하늘">${닉네임표시}</span>`;
+                } else if (팔레트 === "에메랄드숲") {
+                    닉네임표시 = `<span class="마법의팔레트에메랄드숲">${닉네임표시}</span>`;
+                }
+
+                // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
+                const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
+                const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
+                const 신술 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
+                const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
+
+                // … (유저데이터.직업결정은 { "신술": 6 } 같은 객체 형태로 들어있다고 가정)
+
+                const 결정객체 = 유저.직업결정;  // 예: { "신술": 6 }
+
+                if (결정객체) {
+                    // 첫 번째(유일한) 키만 꺼냅니다. → "신술"
+                    const 계열키 = Object.keys(결정객체)[0];
+                    // 해당 키의 값(단계)을 꺼냅니다. → 6
+                    const 단계 = 결정객체[계열키];
+
+                    // 단계(숫자)에 해당하는 실제 직업명을 찾아서 변수에 저장
+                    let 직업이름;
+                    if (계열키 === "검술") {
+                        직업이름 = 검술[단계 - 1];   // 예: 단계=1 → 검술[0] = "나이트"
+                    } else if (계열키 === "마술") {
+                        직업이름 = 마술[단계 - 1];
+                    } else if (계열키 === "신술") {
+                        직업이름 = 신술[단계 - 1];   // 단계=6 → 신술[5] = "퀸"
+                    } else if (계열키 === "궁술") {
+                        직업이름 = 궁술[단계 - 1];
+                    } else {
+                        직업이름 = "-";
+                    }
+
+
+                    오른쪽.innerHTML = `[${직업이름}] ${닉네임표시} (lv.${유저.레벨 || 1}) - 공격력 ${유저.최종공격력} / ${유저.현재층}층`;
+                } else {
+                    오른쪽.innerHTML = `${닉네임표시} (lv.${유저.레벨 || 1}) - 공격력 ${유저.최종공격력} / ${유저.현재층}층`;
+
+                }
+
+                오른쪽.style.flex = "1";
+                오른쪽.style.textAlign = "right";
+
+                줄.appendChild(왼쪽);
+                줄.appendChild(오른쪽);
+
+                줄.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    const 창 = document.getElementById("미니정보창");
+
+                    // 이미 떠 있으면 닫기만
+                    if (창.style.display === "block") {
+                        창.style.display = "none";
+                        return;
+                    }
+
+                    // 위치 계산 후 표시
+                    const rect = 줄.getBoundingClientRect();
+                    창.style.left = `${rect.left}px`;
+                    창.style.top = `${rect.bottom + 6}px`;
+                    창.style.display = "block";
+
+                    창.innerHTML = "";
+
+                    // ─── 첫째줄부터 넷째줄까지 2칸짜리 행 생성 ───
+                    const 첫째줄행 = 한줄에두칸("첫째줄왼쪽", "첫째줄오른쪽");
+                    const 둘째줄행 = 한줄에두칸("둘째줄왼쪽", "둘째줄오른쪽");
+                    const 셋째줄행 = 한줄에두칸("셋째줄왼쪽", "셋째줄오른쪽");
+                    const 넷째줄행 = 한줄에두칸("넷째줄왼쪽", "넷째줄오른쪽");
+                    const 다섯째줄행 = 한줄에두칸("다섯째줄왼쪽", "다섯째줄오른쪽");
+                    const 여섯째줄행 = 한줄에두칸("여섯째줄왼쪽", "여섯째줄오른쪽");
+
+                    // ─── 다섯째줄(=열째줄) 3칸짜리 행 생성 ───
+                    const 열째줄행 = 한줄에세칸(
+                        ["열째줄왼쪽", "열째줄가운데", "열째줄오른쪽"],
+                        "기본테두리"
+                    );
+
+                    const 열한째줄행 = 한줄에세칸(
+                        ["열한째줄왼쪽", "열한째줄가운데", "열한째줄오른쪽"],
+                        ""
+                    );
+
+                    // ─── 컨테이너에 차례대로 붙이기 ───
+                    창.appendChild(첫째줄행);
+                    창.appendChild(둘째줄행);
+                    창.appendChild(셋째줄행);
+                    창.appendChild(넷째줄행);
+                    창.appendChild(다섯째줄행);
+                    창.appendChild(여섯째줄행);
+                    창.appendChild(열째줄행);
+                    창.appendChild(열한째줄행);
+
+
+
+                    // ─── 내용 채우기 ───
+                    창.querySelector("#첫째줄왼쪽").innerHTML = `아이디 : ${유저.유저아이디}`;
+                    창.querySelector("#둘째줄왼쪽").innerHTML = `공격력 : ${유저.최종공격력}`;
+                    창.querySelector("#셋째줄왼쪽").innerHTML = `최대체력 : ${유저.최대체력}`;
+                    창.querySelector("#넷째줄왼쪽").innerHTML = `전당 : ${index + 1}위`;
+
+                    창.querySelector("#둘째줄오른쪽").innerHTML = (유저.현질기한 !== undefined && 유저.현질기한 !== 0) ? `마법의팔레트 : ${유저.현질기한}/30` : `마법의팔레트 : -`;
+                    창.querySelector("#셋째줄오른쪽").innerHTML = (유저.햄버거현질기한 !== undefined && 유저.햄버거현질기한 !== 0) ? `햄버거정기배송 : ${유저.햄버거현질기한}/30` : `햄버거정기배송 : -`;
+                    창.querySelector("#넷째줄오른쪽").innerHTML = 유저.생성일 ? `생성일 : ${유저.생성일}` : `생성일 : -`;
+
+                    const bossIndex = 보스랭킹.findIndex(u => u.유저UID === 유저.유저UID);
+
+                    if (bossIndex >= 0) {
+                        // 순위가 있으면 “XX위” 형식으로 표시
+                        const bossRank = bossIndex + 1;
+                        창.querySelector("#다섯째줄왼쪽").innerText = `보스 : ${bossRank}위`;
+                    } else {
+                        // 순위가 없으면 “-”만 표시
+                        창.querySelector("#다섯째줄왼쪽").innerText = `보스 : -`;
+                    }
+                    창.querySelector("#다섯째줄오른쪽").innerHTML = (유저.스태미너소모총량 !== undefined && 유저.스태미너소모총량 !== 0) ? `전적 : ${유저.스태미너소모총량}전` : `전적 : -`;
+
+                    // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
+                    const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
+                    const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
+                    const 신술 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
+                    const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
+
+                    // … (유저.직업결정은 { "신술": 6 } 같은 객체 형태로 들어있다고 가정)
+
+                    const 결정객체 = 유저.직업결정;  // 예: { "신술": 6 }
+                    if (결정객체) {
+                        // 첫 번째(유일한) 키만 꺼냅니다. → "신술"
+                        const 계열키 = Object.keys(결정객체)[0];
+                        // 해당 키의 값(단계)을 꺼냅니다. → 6
+                        const 단계 = 결정객체[계열키];
+
+                        // 단계(숫자)에 해당하는 실제 직업명을 찾아서 변수에 저장
+                        let 직업이름;
+                        if (계열키 === "검술") {
+                            직업이름 = 검술[단계 - 1];   // 예: 단계=1 → 검술[0] = "나이트"
+                        } else if (계열키 === "마술") {
+                            직업이름 = 마술[단계 - 1];
+                        } else if (계열키 === "신술") {
+                            직업이름 = 신술[단계 - 1];   // 단계=6 → 신술[5] = "퀸"
+                        } else if (계열키 === "궁술") {
+                            직업이름 = 궁술[단계 - 1];
+                        } else {
+                            직업이름 = "-";
+                        }
+
+                        // 화면에 “신술(퀸)” 형태로 표시
+                        창.querySelector("#여섯째줄왼쪽").innerHTML = `직업 : [${계열키}] ${직업이름}`;
+                    } else {
+                        // 아직 선택된 직업이 없으면 ‘-’만 표시
+                        창.querySelector("#여섯째줄왼쪽").innerHTML = "직업 : -";
+                    }
+
+
+                    // ─── “공격력 최댓값 장비” 찾기 및 표시 ───
+                    const 목록 = 유저.장비목록;
+                    let bestWeapon = null;
+                    if (Array.isArray(목록) && 목록.length) {
+                        bestWeapon = 목록.reduce((prev, cur) =>
+                            Number(cur.공격력) > Number(prev.공격력) ? cur : prev
+                        );
+                    }
+
+                    const 장비박스1 = 창.querySelector("#열째줄왼쪽");  // 첫 번째 칸 사용
+
+                    if (bestWeapon) {
+                        // 🔹 강화수치 있으면 "+n" 붙이기
+                        const 강화표시 = bestWeapon.강화 ? ` +${bestWeapon.강화}` : "";
+                        장비박스1.innerText = `${bestWeapon.이름}${강화표시}`;
+                        장비박스1.style.color = 색상맵[bestWeapon.등급] || "#fff";
+                    } else {
+                        장비박스1.innerText = "장비가 없습니다";
+                        장비박스1.style.color = "#fff";
+                    }
+
+
+                    // 필요하다면 두 번째·세 번째 박스에도 같은 방식으로 내용 채우기
+                    const 장비박스2 = 창.querySelector("#열째줄가운데");
+                    장비박스2.innerHTML = "가장쎈방어구";
+                    const 장비박스3 = 창.querySelector("#열째줄오른쪽");
+                    장비박스3.innerHTML = "가장쎈장신구";
+
+
+                    창.querySelector("#열한째줄가운데").innerHTML = ``;
+
+                });
+
+
+
+                컨테이너.appendChild(줄);
+            });
+            화면해제();
+        }
+
+
+
+
+        function 펫보여주기(아이콘HTML, 색상코드 = "#ffffff") {
+            const 펫 = document.getElementById("펫컨테이너");
+            펫.innerHTML = 아이콘HTML;
+            펫.style.display = "block";
+            펫.style.position = "fixed";
+            펫.style.transform = "scale(0.1)";
+            펫.style.pointerEvents = "none";
+            펫.style.zIndex = "9999";
+            펫.style.background = "transparent";
+
+            // ✅ 전달받은 색상코드로 path 채우기
+            const paths = 펫.querySelectorAll("path");
+            paths.forEach(p => p.setAttribute("fill", 색상코드));
+
+            const 중심X = window.innerWidth / 2;
+            const 최소X = 중심X - 500;
+            const 최대X = 중심X + 0;
+            const 최소Y = 0;
+            const 최대Y = 400;
+
+            let x = 중심X;
+            let y = 최대Y / 2;
+            let vx = (Math.random() - 0.5) * 2;
+            let vy = (Math.random() - 0.5) * 2;
+
+            function update() {
+                x += vx;
+                y += vy;
+
+                if (x < 최소X || x > 최대X) vx *= -1;
+                if (y < 최소Y || y > 최대Y) vy *= -1;
+
+                vx += (Math.random() - 0.5) * 0.1;
+                vy += (Math.random() - 0.5) * 0.1;
+
+                const 속도 = Math.sqrt(vx * vx + vy * vy);
+                const 최대속도 = 1.5;
+                if (속도 > 최대속도) {
+                    vx *= 최대속도 / 속도;
+                    vy *= 최대속도 / 속도;
+                }
+
+                펫.style.left = `${x}px`;
+                펫.style.top = `${y}px`;
+
+                requestAnimationFrame(update);
+            }
+
+            update();
+        }
+
+        let 현재보스이름 = "그루트"; // 이 줄만 수정하면 전부 연동됨
+
+        // 보스화면보여주기
+        document.getElementById("보스").addEventListener("click", () => {
+            if (!유저데이터) return;
+            화면잠금();
+            document.getElementById("화면설명").innerHTML =
+                "보스전에는 스태미너 10이 소모됩니다(월~금)<br>누적데미지 랭킹보상 1등부터 9등까지 티켓10장부터 차등지급";
+
+            const 보스버튼 = document.getElementById("보스");
+            fetch("/boss-ranking", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+            })
+                .then(res => res.json())
+                .then(결과 => {
+                    if (결과.오류) {
+                        return 메시지표시(보스, "", 결과.오류, "");
+                    }
+
+                    document.querySelectorAll(".전투로그컨테이너").forEach(e => e.remove());
+                    document.getElementById("최종데미지").innerText = "";
+
+                    모든화면숨기기();
+                    document.getElementById("에너지박스").style.display = "block";
+                    document.getElementById("보스화면").style.display = "block";
+
+                    const 보스컨테이너 = document.getElementById("보스컨테이너");
+                    보스컨테이너.style.marginTop = "15px";
+                    보스컨테이너.style.width = "400px";
+                    보스컨테이너.style.border = "0.2px solid #4b4b4b";
+                    보스컨테이너.style.borderRadius = "10px";
+                    보스컨테이너.style.padding = "15px";
+                    보스컨테이너.style.display = "flex";
+                    보스컨테이너.style.alignItems = "center";
+                    보스컨테이너.style.justifyContent = "flex-start";
+                    보스컨테이너.style.gap = "10px";
+
+                    const 보스아이콘 = document.getElementById("보스아이콘");
+                    보스아이콘.innerHTML = `
+    <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+        <div style="width: 200px; height: 200px;">
+            ${아이콘맵[현재보스이름 + "아이콘"]
+                            .replace(/height:\s*\d+px/, 'height: 200px')
+                            .replace(/width:\s*\d+px/, 'width: 200px')}
+        </div>
+    </div>
+`;
+
+                    const 목표1 = 999999;
+                    const 목표2 = 9999999;
+                    const 목표3 = 99999999;
+                    const 누적 = 결과.누적데미지총합 || 0;
+
+                    function 만들기단계라인(id, 현재값, 목표값) {
+                        const div = document.createElement("div");
+                        div.id = id;
+                        div.style.border = "0.2px solid #4b4b4b";
+                        div.style.display = "flex";
+                        div.style.alignItems = "center";
+                        div.style.justifyContent = "space-between";
+                        div.style.borderRadius = "6px";
+                        div.style.padding = "8px";
+
+                        // ✅ 달성한 경우, 현재값을 목표값으로 강제 표기
+                        const 표시값 = 현재값 >= 목표값 ? 목표값 : 현재값;
+
+                        const 숫자표시 = `${표시값.toLocaleString()}/${목표값.toLocaleString()}`;
+                        const 아이콘HTML = 현재값 >= 목표값 ? 아이콘맵["서클체크아이콘"] : "";
+
+                        div.innerHTML = `
+        <span>${숫자표시}</span>
+        <span>${아이콘HTML}</span>
+    `;
+                        return div;
+                    }
+
+                    // 단계별 줄 생성
+                    const 단계1 = 만들기단계라인("단계1", 누적, 목표1);
+                    const 단계2 = 만들기단계라인("단계2", 누적, 목표2);
+                    const 단계3 = 만들기단계라인("단계3", 누적, 목표3);
+
+                    // 화면에 추가할 박스 준비
+                    const 총합박스 = document.createElement("div");
+                    총합박스.id = "단계박스";
+                    총합박스.style.display = "flex";
+                    총합박스.style.flexDirection = "column";
+                    총합박스.style.gap = "10px";
+                    총합박스.style.marginTop = "10px";
+
+                    // 조건에 따라 단계별로 추가
+                    총합박스.appendChild(단계1);
+
+                    if (누적 >= 목표1) {
+                        총합박스.appendChild(단계2);
+                    }
+                    if (누적 >= 목표2) {
+                        총합박스.appendChild(단계3);
+                    }
+
+                    보스아이콘.appendChild(총합박스);
+
+                    const 보스몬스터 = document.getElementById("보스몬스터");
+                    보스몬스터.innerText = 현재보스이름;
+
+                    const 누적데미지순위 = document.getElementById("누적데미지순위");
+                    누적데미지순위.innerHTML = "";
+                    누적데미지순위.style.display = "flex";
+                    누적데미지순위.style.flexDirection = "column";
+                    누적데미지순위.style.alignItems = "flex-start";
+                    누적데미지순위.style.justifyContent = "flex-start";
+                    누적데미지순위.style.gap = "10px";
+                    누적데미지순위.style.textAlign = "left";
+
+                    const 제목 = document.createElement("div");
+                    제목.innerText = "누적데미지 순위";
+                    누적데미지순위.appendChild(제목);
+
+                    const 유저들 = 결과.순위 || [];
+                    유저들.forEach((유저, index) => {
+                        if (index >= 9) return;
+                        const div = document.createElement("div");
+                        div.innerText = `${index + 1}. ${유저.보스누적데미지.toLocaleString()} [${유저.유저아이디}]`;
+                        누적데미지순위.appendChild(div);
+                    });
+
+                    if (결과.내정보) {
+                        const div = document.createElement("div");
+                        div.innerText = `${결과.내정보.순위}. ${결과.내정보.보스누적데미지.toLocaleString()} [${결과.내정보.유저아이디}]`;
+                        div.style.marginTop = "8px";
+                        div.style.backgroundColor = "#505050";
+                        누적데미지순위.appendChild(div);
+                    }
+                    화면해제();
+
+                })
+                .catch(err => {
+                    console.error("보스 순위 조회 실패", err);
+                    화면해제();
+                });
+        });
+
+        document.getElementById("보스몬스터").addEventListener("click", async () => {
+            if (!유저데이터) return;
+            공격버튼잠금();
+
+            try {
+                const 응답 = await fetch("/attack-boss", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        유저데이터,
+                        보스이름: 현재보스이름
+                    })
+                });
+
+                if (!응답.ok) {
+                    const 에러결과 = await 응답.json();
+                    const 메시지 = 에러결과.오류 || "오류 발생";
+                    const 보스사냥컨테이너 = document.getElementById("보스사냥컨테이너");
+                    메시지표시(보스사냥컨테이너, "", 메시지, "");
+                    return;
+                }
+
+                const 결과 = await 응답.json();
+                const 등급외테두리 = document.getElementById("등급외테두리");
+                const 보스사냥컨테이너 = document.getElementById("보스사냥컨테이너");
+
+                if (결과.결과 === "불가") {
+                    메시지표시(보스사냥컨테이너, "", 결과.메시지 || "스태미너 부족", "");
+                    return;
+                }
+
+                유저데이터 = 결과.유저데이터;
+
+                // 기존 로그 제거
+                document.querySelectorAll(".전투로그컨테이너").forEach(e => e.remove());
+
+                // 전투 로그 출력
+                if (Array.isArray(결과.전투로그)) {
+                    결과.전투로그.slice().reverse().forEach(로그 => {
+                        const 로그컨테이너 = document.createElement("div");
+                        로그컨테이너.className = "전투로그컨테이너";
+                        로그컨테이너.style.marginTop = "15px";
+                        로그컨테이너.style.border = "0.2px solid #4b4b4b";
+                        로그컨테이너.style.borderRadius = "10px";
+                        로그컨테이너.style.padding = "15px";
+
+                        const 아이콘HTML = (로그.아이콘 || []).map(이름 => 아이콘맵[이름] || "").join(" ");
+
+                        let 데미지텍스트 = "";
+                        let 회복텍스트 = "";
+
+                        if (로그.타입 === "공격") {
+                            데미지텍스트 = `<span><span style="color: #f63b3b;">${로그.몬스터이름}</span>에게 ${로그.효과} 피해를 입혔다!</span>`;
+                        } else if (로그.타입 === "회복") {
+                            회복텍스트 = `<span><span style="color: #3b82f6;">${로그.유저아이디}</span> 체력 ${로그.효과} 회복</span>`;
+                        }
+
+                        let 추가횟수표시 = "";
+                        if (로그.타입 === "공격" && 로그.추가공격횟수 > 0) {
+                            // 실제 타격 횟수 = 1(기본) + 로그.추가공격횟수
+                            const 총공격횟수 = 1 + 로그.추가공격횟수;
+                            추가횟수표시 = `<span style="margin-left: 4px; color: #f63b3b;">x${총공격횟수}</span>`;
+                        }
+
+                        // (2) innerHTML에서 공격 텍스트 뒤에 추가횟수표시 붙이기
+                        로그컨테이너.innerHTML = `
+    <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+        <strong>Turn ${로그.턴}</strong>
+    </div>
+    <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
+        ${아이콘HTML}
+        ${로그.타입 === "공격" ? 데미지텍스트 + 추가횟수표시 : ""}
+        ${로그.타입 === "회복" ? 회복텍스트 : ""}
+    </div>
+    
+    <div class="가로정렬" style="margin-top: 10px; justify-content: space-between; align-items: center; gap: 12px;">
+                        <div style="border: 0.2px solid #3b82f6; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
+                            <div>${로그.유저아이디}</div>
+                            <div>
+                                <div>공격력 ${로그.유저최종공격력}</div>
+                                <div>체력 ${로그.유저체력}/${로그.유저최대체력}</div>
+                            </div>
+                        </div>
+                        <div style="border: 0.2px solid #f63b3b; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
+                            <div>${로그.몬스터이름}</div>
+                            <div>
+                                <div>체력 ${무한대아이콘}</div>
+                                <div>방어력 ${로그.몬스터방어력}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                        const 타겟 = document.getElementById("보스사냥컨테이너");
+                        if (타겟 && 타겟.parentNode) {
+                            타겟.parentNode.insertBefore(로그컨테이너, 타겟.nextSibling);
+                        }
+                    });
+                }
+
+                // 체력, 스태미너, 누적데미지 UI 업데이트
+                document.getElementById("악마이름").innerText = 결과.유저데이터?.보스이름 || 현재보스이름;
+                document.getElementById("악마체력").innerText = `체력 ???`;  // 보스는 체력 없음
+                document.getElementById("악마방어력").innerText = `방어력 0`;
+                document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}/${유저데이터.최대체력}`;
+                document.getElementById("최종데미지").innerText = `총피해량 : ${결과.누적데미지.toLocaleString()}`;
+
+                const 스태미너표시 = document.getElementById("스태미너표시");
+                const 에너지바 = document.querySelector(".에너지바");
+                if (스태미너표시 && 에너지바) {
+                    const 최대 = 유저데이터.최대스태미너 ?? 100;
+                    const 현재 = 유저데이터.현재스태미너 ?? 0;
+                    스태미너표시.innerText = `${현재}/${최대}`;
+                    에너지바.style.width = `${(현재 / 최대) * 100}%`;
+                }
+
+                document.getElementById("승리패배로그").innerText = "보스전 완료";
+                document.getElementById("승리패배로그").style.color = "#ffa500";
+            } catch (e) {
+                메시지표시(메시지표시박스, "", "보스전 오류: " + e.message, "");
+            } finally {
+                공격버튼잠금해제();
+            }
+        });
+
+
+        //캐시샵화면보여주기
+        document.getElementById("캐시샵").addEventListener("click", () => {
+            if (!유저데이터) return;
+
+            화면잠금();
+            모든화면숨기기();
+            document.getElementById("화면설명").innerHTML =
+                "gagl의 상품들은 소모성 또는 30일 기간제입니다<br>오픈톡 프로필 '가글주인장'에게 문의하세요";
+
+            document.getElementById("캐시샵화면").style.display = "block";
+
+            const 컨테이너 = document.getElementById("캐시샵컨테이너");
+            컨테이너.innerHTML = "";
+
+            function 줄추가(왼쪽내용, 오른쪽내용) {
+                // 1) 줄 컨테이너
+                const 줄 = document.createElement("div");
+                줄.className = "밑줄 양쪽정렬";
+                줄.style.display = "flex";
+                줄.style.justifyContent = "space-between";
+                줄.style.alignItems = "center";   // ← 부모 컨테이너 내에서 세로 가운데
+                줄.style.width = "100%";
+
+                // 2) 왼쪽 셀
+                const leftDiv = document.createElement("div");
+                leftDiv.style.display = "flex";      // ← 내부 요소 정렬을 flex로
+                leftDiv.style.alignItems = "center"; // ← 아이콘+텍스트 세로 가운데
+                leftDiv.style.flex = "0 0 auto";
+                leftDiv.innerHTML = 왼쪽내용;
+
+                // 3) 오른쪽 셀
+                const rightDiv = document.createElement("div");
+                // rightDiv.style.display = "flex";
+                rightDiv.style.alignItems = "center"; // ← 텍스트 세로 가운데
+                rightDiv.style.flex = "1";
+                rightDiv.style.textAlign = "right";
+                rightDiv.innerHTML = 오른쪽내용;
+
+                // 4) 조립
+                줄.appendChild(leftDiv);
+                줄.appendChild(rightDiv);
+                컨테이너.appendChild(줄);
+            }
+
+            // — 여기 데이터 배열에 원하는 만큼 줄 정보를 추가 —
+            const 줄데이터 = [
+                { 왼쪽: `${마법의팔레트아이콘}(마법의팔레트)`, 오른쪽: "아이디를 색칠할 수 있습니다(1,100원)" },
+                { 왼쪽: `${플라워아이콘}(플라워)`, 오른쪽: "스킬을 초기화합니다(1,100원)" },
+                { 왼쪽: `${뼈다구아이콘}(뼈다구)`, 오른쪽: "직업을 초기화합니다(1,100원)" },
+                { 왼쪽: `${햄버거아이콘}(햄버거정기배송)`, 오른쪽: "매일 햄버거(스태미너+300) 배송(4,900원)" },
+                { 왼쪽: `${현질아이콘}(1억골드)`, 오른쪽: "랭커로 만들어 드립니다(1,000,000원)" },
+
+            ];
+
+            // — 배열 순회하며 자동으로 줄 추가 —
+            줄데이터.forEach(item => 줄추가(item.왼쪽, item.오른쪽));
+
+            화면해제();
+        });
+
+
         document.getElementById("장비").addEventListener("click", () => {
             if (!유저데이터) return;
             장비화면보여주기();
@@ -2413,6 +4754,13 @@
             if (!유저데이터) return;
             스킬화면보여주기();
         });
+
+        document.getElementById("스킬").addEventListener("click", () => {
+            if (!유저데이터) return;
+            스킬화면보여주기();
+        });
+
+
 
         function 스킬정보불러오기() {
             return {
@@ -3294,2271 +5642,6 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
                 컨테이너.appendChild(div);
             }
-            화면해제();
-        });
-
-
-        document.getElementById("타이틀을아이디로").addEventListener("click", async function 아이디변경시작() {
-            if (!유저데이터) return;
-
-            const 기존표시 = document.getElementById("타이틀을아이디로");
-            const 원래아이디 = 유저데이터.유저아이디;
-
-            // 입력창 생성
-            const 입력창 = document.createElement("input");
-            입력창.type = "text";
-            입력창.maxLength = 8;
-            입력창.placeholder = "새 아이디 입력";
-            입력창.style.background = "white";
-            입력창.style.color = "black";
-            입력창.style.border = "none";
-            입력창.style.fontSize = "14px";
-            입력창.size = 8;
-            입력창.style.outline = "none";
-            입력창.value = "";
-            기존표시.replaceWith(입력창);
-            입력창.focus();
-
-            // 외부 클릭 감지 핸들러
-            const 외부클릭취소 = (e) => {
-                if (!입력창.contains(e.target)) {
-                    const 복원 = document.createElement("div");
-                    복원.id = "타이틀을아이디로";
-                    복원.className = "커서호버";
-                    복원.innerText = 원래아이디;
-                    입력창.replaceWith(복원);
-                    복원.addEventListener("click", 아이디변경시작);
-                    document.removeEventListener("click", 외부클릭취소);
-                }
-            };
-
-            // 입력창 클릭 제외하고 바깥 클릭 시 취소
-            setTimeout(() => {
-                document.addEventListener("click", 외부클릭취소);
-            }, 0);
-
-            입력창.addEventListener("keydown", async (e) => {
-                if (e.key !== "Enter") return;
-
-                const 새아이디 = 입력창.value.trim();
-                if (!새아이디 || 새아이디.length > 6) {
-                    메시지표시(메시지표시박스, "", "1~6자 이내로 입력하세요", "");
-                    return;
-                }
-
-                화면잠금();
-
-                try {
-                    const 응답 = await fetch("/update-username", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            유저UID: 유저데이터.유저UID,
-                            새아이디
-                        })
-                    });
-
-                    const 결과 = await 응답.json();
-
-                    if (!응답.ok) {
-                        메시지표시(메시지표시박스, "", 결과.오류 || "아이디 변경 실패", "");
-                        화면해제();
-                        return;
-                    }
-
-                    유저데이터.유저아이디 = 새아이디;
-
-                    const 복원 = document.createElement("div");
-                    복원.id = "타이틀을아이디로";
-                    복원.className = "커서호버";
-                    복원.innerText = 새아이디;
-                    입력창.replaceWith(복원);
-                    복원.addEventListener("click", 아이디변경시작);
-
-                    document.getElementById("유저아이디").innerText = 새아이디;
-                    메시지표시(메시지표시박스, "✅", "아이디 변경 완료", "#00c851");
-
-                    document.removeEventListener("click", 외부클릭취소);
-                } catch (e) {
-                    메시지표시(메시지표시박스, "", "네트워크 오류", "");
-                } finally {
-                    화면해제();
-                }
-            });
-        });
-
-        // 🟡 무지개 타이틀 애니메이션
-        let 색상인덱스 = 0;
-        const 무지개색들 = ["#ff0000", "#ff7f00", "#ffff00", "#00ff00", "#0000ff", "#4b0082", "#9400d3"];
-        setInterval(() => {
-            const 타이틀 = document.getElementById("뽑기타이틀");
-            // 타이틀.style.display = "flex";
-            // 타이틀.style.alignItems = "center";
-            // 타이틀.style.gap = "6px";
-            타이틀.innerHTML = `${뽑기아이콘} 뽑기`;
-            if (타이틀) {
-                타이틀.style.color = 무지개색들[색상인덱스 % 무지개색들.length];
-                색상인덱스++;
-            }
-        }, 250);
-
-
-
-        //외부클릭시
-        document.addEventListener("click", (e) => {
-            const target = e.target;
-
-
-            if (target.id !== "반자동" && target.id !== "풀자동" && target.id !== "공격버튼" && target.id !== "레어몬스터") {
-                반자동실행 = false;
-                풀자동실행 = false;
-            }
-
-
-            const 뽑기창 = document.getElementById("뽑기창");
-            if (뽑기창.style.display !== "none" && !뽑기창.contains(target) && target.id !== "총골드") {
-                뽑기창.style.display = "none";
-            }
-
-            const 미니창 = document.getElementById("미니정보창");
-            if (미니창.style.display === "block" && !미니창.contains(target)) {
-                미니창.style.display = "none";
-            }
-
-            // 3) 기타 클릭 핸들링
-            switch (target.id) {
-                // case "객체아이디":
-                //   실행함수();
-                //   break;
-            }
-
-            //    총경험치 클릭 시 전직화면 열기
-            if (target.matches("#총경험치")) {
-                모든화면숨기기();
-                document.getElementById("전직화면").style.display = "block";
-                전직화면보여주기();
-            }
-        });
-
-
-        document.getElementById("총골드").addEventListener("click", () => {
-            if (!유저데이터) return;
-            const 뽑기창 = document.getElementById("뽑기창");
-            뽑기창.style.display = "block";
-        });
-
-
-
-        async function 장비뽑기시도(종류 = "일반") {
-            const 뽑기창 = document.getElementById("뽑기창");
-            const 네온박스 = document.getElementById("네온박스");
-            const 비용 = 100000;
-            const 등급외테두리 = document.getElementById("등급외테두리");
-
-            if (종류 === "일반") {
-                if (유저데이터.골드 < 비용) {
-                    메시지표시(뽑기창, "", "골드 부족!", "");
-                    return;
-                }
-            } else if (종류 === "고급") {
-                const 티켓 = 유저데이터.유물목록?.["티켓"] || 0;
-                if (티켓 < 1) {
-                    메시지표시(뽑기창, "", "유물. 티켓이 부족합니다!", "");
-                    return;
-                }
-            } else if (종류 === "연속일반") {
-                if (유저데이터.골드 < 10 * 비용) {
-                    메시지표시(뽑기창, "", "골드 부족!", "");
-                    return;
-                }
-            } else if (종류 === "연속고급") {
-                const 티켓 = 유저데이터.유물목록?.["티켓"] || 0;
-                if (티켓 < 10) {
-                    메시지표시(뽑기창, "", "유물. 티켓이 부족합니다!", "");
-                    return;
-                }
-            }
-
-            // confirm 메시지 확장
-            const 메시지 =
-                종류 === "일반"
-                    ? `일반장비뽑기을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`
-                    : 종류 === "고급"
-                        ? `고급장비뽑기을 티켓 1장으로 진행하시겠습니까?`
-                        : 종류 === "연속일반"
-                            ? `연속일반장비뽑기 10회를 총 ${(10 * 비용).toLocaleString()} 골드로 진행하시겠습니까?`
-                            : 종류 === "연속고급"
-                                ? `연속고급장비뽑기 10회를 티켓 10장으로 진행하시겠습니까?`
-                                : "";
-            const 확인 = confirm(메시지);
-            뽑기창.style.display = "none";
-            if (!확인) return;
-
-
-            화면잠금();
-            try {
-                const 응답 = await fetch("/gamble-Equipment", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 유저UID: 유저데이터.유저UID, 종류 })
-                });
-                const 결과 = await 응답.json();
-                if (!응답.ok || 결과.오류) {
-                    메시지표시(등급외테두리, "", 결과.오류 || "", "");
-                    return;
-                }
-                유저데이터 = 결과.유저데이터;
-                document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
-
-                const items = Array.isArray(결과.results) ? 결과.results : [결과];
-                items.forEach((item, i) => {
-                    setTimeout(() => {
-                        const 네온박스 = document.getElementById("네온박스");
-
-                        if (!item.장비) {
-                            메시지표시(등급외테두리, item.퍼즐발동 ? 퍼즐아이콘 : "", "뽑기에 실패했습니다!", "");
-                            return;
-                        }
-                        if (item.퍼즐발동) {
-                            메시지표시(등급외테두리, 퍼즐아이콘, "", "");
-                        }
-
-
-                        if (네온박스) {
-                            네온박스.style.display = "none";
-
-                            if (window.네온타이머) clearTimeout(window.네온타이머);
-                            네온박스.innerText = `${item.장비.이름}을(를) 획득했다!`;
-                            네온박스.style.display = "block";
-
-                            if (등급외테두리) {
-                                등급외테두리.style.position = "relative";
-                                등급외테두리.appendChild(네온박스);
-                                Object.assign(네온박스.style, {
-                                    position: "absolute",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                    zIndex: "100"
-                                });
-                            }
-                        }
-                        window.네온타이머 = setTimeout(() => {
-                            네온박스.style.display = "none";
-                        }, 3000);
-
-                    }, i * 500);
-                });
-
-            } catch (e) {
-                메시지표시(등급외테두리, "", "뽑기 중 오류: " + e.message, "");
-            } finally {
-                화면해제();
-            }
-        }
-
-        async function 현질(종류 = "팔레트") {
-            메시지표시(뽑기창, "", "오픈톡 '가글주인장'으로 문의하세요", "");
-        }
-
-        async function 유물뽑기시도(종류 = "일반") {
-            const 뽑기창 = document.getElementById("뽑기창");
-            const 비용 = 100000;
-            const 유물드랍박스 = document.getElementById("유물드랍박스");
-            const 유저테두리안표시 = document.getElementById("유저테두리안표시");
-
-            if (종류 === "일반") {
-                if (유저데이터.골드 < 비용) {
-                    메시지표시(뽑기창, "", "골드 부족!", "");
-                    return;
-                }
-            } else if (종류 === "연속일반") {
-                if (유저데이터.골드 < 10 * 비용) {
-                    메시지표시(뽑기창, "", "골드 부족!", "");
-                    return;
-                }
-            }
-
-            const 메시지 =
-                종류 === "일반"
-                    ? `유물뽑기을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`
-                    : 종류 === "연속일반"
-                        ? `유물뽑기 10회를 총 ${(10 * 비용).toLocaleString()} 골드로 진행하시겠습니까?`
-                        : "";
-            const 확인 = confirm(메시지);
-            뽑기창.style.display = "none";
-            if (!확인) return;
-
-            화면잠금();
-            try {
-                const 응답 = await fetch("/gamble-Relic", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        유저UID: 유저데이터.유저UID,
-                        종류, // 반드시 함께 전송해야 서버에서 1회/10회 구분 가능
-                    }),
-                });
-                const 결과 = await 응답.json();
-
-                if (!응답.ok || 결과.오류) {
-                    메시지표시(유저테두리안표시, "", 결과.오류 || "", "");
-                    return;
-                }
-
-                // 4) 서버가 반환한 최종 유저데이터로 업데이트
-                유저데이터 = 결과.유저데이터;
-                document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
-
-                // 5) 결과가 여러 회차인 경우, 순차적으로 띄워줌
-                const items = Array.isArray(결과.results) ? 결과.results : [결과];
-
-                items.forEach((item, i) => {
-                    setTimeout(() => {
-                        // 5-1) 퍼즐 발동 시 별도 표시 (원하는 아이콘 넣어주세요)
-                        if (item.퍼즐발동) {
-                            메시지표시(유저테두리안표시, 퍼즐아이콘, "", "");
-                        }
-
-                        // 5-2) 유물 획득 알림
-                        if (유물드랍박스) {
-                            // 기존에 떠 있던 박스를 숨김
-                            유물드랍박스.style.display = "none";
-                            if (window.유물드랍타이머) clearTimeout(window.유물드랍타이머);
-
-                            // 텍스트 설정
-                            if (item.유물이름) {
-                                유물드랍박스.innerText = `유물 [${item.유물이름}]을(를) 획득했다!`;
-                            } else {
-                                유물드랍박스.innerText = "뽑기에 실패했습니다!";
-                            }
-
-                            // 화면에 표시
-                            유물드랍박스.style.display = "block";
-
-                            // 위치 조정
-                            if (유저테두리안표시) {
-                                유저테두리안표시.style.position = "relative";
-                                유저테두리안표시.appendChild(유물드랍박스);
-                                Object.assign(유물드랍박스.style, {
-                                    position: "absolute",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                    zIndex: "100",
-                                });
-                            }
-
-                            // 3초 후 숨김
-                            window.유물드랍타이머 = setTimeout(() => {
-                                유물드랍박스.style.display = "none";
-                            }, 3000);
-                        }
-                    }, i * 500); // 회차마다 0.5초 간격으로 표시
-                });
-            } catch (e) {
-                메시지표시(유저테두리안표시, "", "뽑기 중 오류: " + e.message, "");
-            } finally {
-                화면해제();
-            }
-        }
-
-        document.getElementById("아래층으로").addEventListener("click", async () => {
-            if (!유저데이터) return;
-            if (유저데이터.현재층 <= 1) return 메시지표시(아래층으로, "", "지하로 내려갈 수 없습니다", "");
-
-            유저데이터.현재층--;
-            document.getElementById("현재층").innerText = `${유저데이터.현재층}층`;
-        });
-
-        document.getElementById("위층으로").addEventListener("click", async () => {
-            if (!유저데이터) return;
-
-            // if (유저데이터.현재층 >= 4) {
-            //     메시지표시(위층으로, 마법진아이콘, " 빛나는 마법진이 가로막습니다", "");
-            //     return;
-            // }
-
-            유저데이터.현재층++;
-            document.getElementById("현재층").innerText = `${유저데이터.현재층}층`;
-        });
-
-
-
-        async function 전직화면보여주기() {
-            화면잠금();
-            document.getElementById("화면설명").innerHTML =
-                "경험치를 소모하여 전직과 직업선택이 가능합니다<br>전직을 클릭 시 직업 초기화가 가능합니다<br>";
-
-            // 1) 서버에서 전직정보 + 경험치 가져오기
-            const 응답 = await fetch("/get-job-info", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-            });
-            const 결과 = await 응답.json();
-            if (!응답.ok) {
-                메시지표시(메시지표시박스, "", "전직정보 조회 실패: " + 결과.오류, "");
-                화면해제();
-                return;
-            }
-            const 전직정보 = 결과.전직정보;      // { "백인장":0, "오백인장":1, ... }
-            let 경험치 = 결과.경험치 ?? 0;
-
-            // 2) 서버에서 이미 선택된 계열(직업결정 JSON) 가져오기
-            const 둘째응답 = await fetch("/get-job-result", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-            });
-            const 둘째결과 = await 둘째응답.json();
-            if (!둘째응답.ok) {
-                메시지표시(메시지표시박스, "", "전직 결과 조회 실패: " + 둘째결과.오류, "");
-                화면해제();
-                return;
-            }
-            // 직업결정 컬럼 형식: null 또는 { "마술": 1 }, { "궁술": 2 } 등
-            const 직업결정JSON = 둘째결과.직업결정 || null;
-
-            // 3) 완료된 킹덤 전직 개수 계산
-            const 전직순서 = [
-                "백인장", "오백인장", "천인장", "만인장", "부장군", "장군",
-                "대장군", "대사마", "승상", "후", "공", "제후",
-                "왕", "황제", "천황", "제황", "태황", "천제"
-            ];
-            let 완료개수 = 0;
-            for (const 직위 of 전직순서) {
-                if (전직정보[직위] === 1) 완료개수++;
-                else break;
-            }
-            // 완료개수: 0~18
-
-            // 4) 컨테이너 비우기
-            const container = document.getElementById("전직컨테이너");
-            document.querySelectorAll(".전직항목").forEach(e => e.remove());
-
-            // 5) “경험치와포인트” 영역 업데이트
-            const 경험치div = document.getElementById("경험치와포인트");
-            경험치div.innerHTML = `
-        <div>경험치</div>
-        <div>${경험치.toLocaleString()} 포인트</div>
-    `;
-
-            // 6) 킹덤 전직(왕위)의 최상위 다음 후보 표시
-            if (완료개수 < 전직순서.length) {
-                const 다음킹덤 = 전직순서[완료개수];
-                const div = document.createElement("div");
-                div.className = "사백픽셀테두리 양쪽정렬 전직항목";
-                div.style.marginTop = "5px";
-
-                const 왼쪽 = document.createElement("div");
-                왼쪽.style.display = "flex";
-                왼쪽.style.flexDirection = "column";
-                왼쪽.style.fontWeight = "bold";
-
-                const 직위텍스트 = document.createElement("div");
-                직위텍스트.textContent = 다음킹덤;
-
-                const 효과텍스트 = document.createElement("div");
-                효과텍스트.textContent = `최종공격력 x${(1.1 + 완료개수 * 0.1).toFixed(1)}`;
-                효과텍스트.style.fontSize = "12px";
-                효과텍스트.style.color = "gray";
-                효과텍스트.style.marginTop = "3px";
-
-                왼쪽.appendChild(직위텍스트);
-                왼쪽.appendChild(효과텍스트);
-
-                const 오른쪽 = document.createElement("div");
-                오른쪽.style.borderRadius = "7px";
-                오른쪽.style.padding = "7px 10px";
-                오른쪽.style.fontSize = "13px";
-                const 비용 = (완료개수 + 1) * 50000;
-                오른쪽.textContent = `전직(${비용.toLocaleString()}p)`;
-                오른쪽.style.backgroundColor = "white";
-                오른쪽.style.color = "black";
-                오른쪽.style.cursor = "pointer";
-                오른쪽.onclick = () => {
-                    전직하기(다음킹덤, 왼쪽);
-                };
-
-                div.appendChild(왼쪽);
-                div.appendChild(오른쪽);
-                container.appendChild(div);
-            }
-
-            // 7) 각 계열별 직업 목록 및 설명 정의
-            const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
-            const 검술설명 = [
-                "추가공격(1~4회) 확률 10%",
-                "추가공격(1~4회) 확률 20%",
-                "추가공격(1~4회) 확률 30%",
-                "추가공격(1~4회) 확률 40%",
-                "추가공격(1~4회) 확률 50%",
-                "추가공격(1~4회) 확률 100%"
-            ];
-
-            const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
-            const 마술설명 = [
-                "추가데미지 20%",
-                "추가데미지 40%",
-                "추가데미지 60%",
-                "추가데미지 80%",
-                "추가데미지 100%",
-                "추가데미지 200%"
-            ];
-
-            const 신술 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
-            const 신술설명 = [
-                "턴당체력회복 확률 10%",
-                "턴당체력회복 확률 20%",
-                "턴당체력회복 확률 30%",
-                "턴당체력회복 확률 40%",
-                "턴당체력회복 확률 50%",
-                "턴당체력회복 확률 75%"
-            ];
-
-            const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
-            const 궁술설명 = [
-                "15% 방어력 무시",
-                "30% 방어력 무시",
-                "45% 방어력 무시",
-                "60% 방어력 무시",
-                "75% 방어력 무시",
-                "99% 방어력 무시"
-            ];
-
-            // helper: 한 개의 직업 항목을 만들어 container에 추가 (비용 매개변수 추가)
-            function 직업항목추가(직업명, 설명, 비용, onClickFn) {
-                const div = document.createElement("div");
-                div.className = "사백픽셀테두리 양쪽정렬 전직항목";
-                div.style.marginTop = "5px";
-
-                const 왼쪽 = document.createElement("div");
-                왼쪽.style.display = "flex";
-                왼쪽.style.flexDirection = "column";
-                왼쪽.style.fontWeight = "bold";
-
-                const 이름텍스트 = document.createElement("div");
-                이름텍스트.textContent = 직업명;
-
-                const 설명텍스트 = document.createElement("div");
-                설명텍스트.textContent = 설명;
-                설명텍스트.style.fontSize = "12px";
-                설명텍스트.style.color = "gray";
-                설명텍스트.style.marginTop = "3px";
-
-                왼쪽.appendChild(이름텍스트);
-                왼쪽.appendChild(설명텍스트);
-
-                const 오른쪽 = document.createElement("div");
-                오른쪽.style.borderRadius = "7px";
-                오른쪽.style.padding = "7px 10px";
-                오른쪽.style.fontSize = "13px";
-                오른쪽.textContent = `선택(${비용.toLocaleString()}p)`;
-                오른쪽.style.backgroundColor = "white";
-                오른쪽.style.color = "black";
-                오른쪽.style.cursor = "pointer";
-                오른쪽.onclick = onClickFn;
-
-                div.appendChild(왼쪽);
-                div.appendChild(오른쪽);
-                container.appendChild(div);
-            }
-
-            // a) 킹덤 완료개수 < 3: 계열 직업 노출 없음
-            if (완료개수 < 3) {
-                화면해제();
-                return;
-            }
-
-            // b) 직업결정이 아직 없는 상태 → 1차 직업을 “[계열] 직업명” 형태로 노출
-            if (!직업결정JSON) {
-                if (완료개수 >= 3) {
-                    const cost1 = 150000;
-                    직업항목추가(
-                        `[검술] ${검술[0]}`,  // ← “[검술] 나이트”
-                        검술설명[0],
-                        cost1,
-                        () => 계열선택("검술")
-                    );
-                    직업항목추가(
-                        `[마술] ${마술[0]}`,  // ← “[마술] 매지션”
-                        마술설명[0],
-                        cost1,
-                        () => 계열선택("마술")
-                    );
-                    직업항목추가(
-                        `[신술] ${신술[0]}`,  // ← “[신술] 클레릭”
-                        신술설명[0],
-                        cost1,
-                        () => 계열선택("신술")
-                    );
-                    직업항목추가(
-                        `[궁술] ${궁술[0]}`,  // ← “[궁술] 스나이퍼”
-                        궁술설명[0],
-                        cost1,
-                        () => 계열선택("궁술")
-                    );
-                }
-                화면해제();
-                return;
-            }
-
-            // c) 직업결정JSON이 존재하는 상태 → 계열 + 단계 정보 파싱
-            const 선택계열 = Object.keys(직업결정JSON)[0];   // ex) "마술"
-            const 선택단계 = 직업결정JSON[선택계열];           // ex) 1
-
-            // 계열별 목록과 설명을 결정
-            let 계열목록, 계열설명;
-            if (선택계열 === "검술") {
-                계열목록 = 검술;
-                계열설명 = 검술설명;
-            } else if (선택계열 === "마술") {
-                계열목록 = 마술;
-                계열설명 = 마술설명;
-            } else if (선택계열 === "신술") {
-                계열목록 = 신술;
-                계열설명 = 신술설명;
-            } else {
-                계열목록 = 궁술;
-                계열설명 = 궁술설명;
-            }
-
-            // 다음 단계 인덱스 (0-based)
-            const 다음Idx = 선택단계; // 예: 선택단계=1 이면 다음Idx=1
-
-            if (다음Idx < 계열목록.length) {
-                // → “[마술] 워록” 식으로 표시
-                const 다음직업명 = `[${선택계열}] ${계열목록[다음Idx]}`;
-                const 다음설명 = 계열설명[다음Idx];
-
-                // 필요한 킹덤 전직 완료 단계: (다음Idx + 1) * 3
-                const 필요한단계 = (다음Idx + 1) * 3;
-
-                // 경험치 비용 계산 (단계 1: 100,000p, 단계 2: 200,000p, …)
-                const cost = (다음Idx + 1) * 150000;
-
-                const 클릭함수 = () => {
-                    if (완료개수 < 필요한단계) {
-                        메시지표시(메시지표시박스, "", `${전직순서[필요한단계 - 1]} 전직 완료 시 선택할 수 있습니다.`, "");
-                        return;
-                    }
-                    계열선택(선택계열);
-                };
-
-                직업항목추가(다음직업명, 다음설명, cost, 클릭함수);
-            }
-
-            화면해제();
-        }
-
-
-
-
-        async function 계열선택(계열) {
-            화면잠금();
-            try {
-                // 서버에 선택된 계열을 저장
-                const 응답 = await fetch("/set-job-result", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        유저UID: 유저데이터.유저UID,
-                        계열선택: 계열  // ex) "궁술"
-                    })
-                });
-
-                const 결과 = await 응답.json();
-                if (!응답.ok) {
-                    // 오류가 있을 때 메시지 표시하고 화면 해제
-                    메시지표시(메시지표시박스, "", (결과.오류 || "알 수 없는 오류"), "");
-                    화면해제();
-                    return;
-                }
-
-                // 저장이 완료되었으면 전직화면을 다시 그리기
-                await 전직화면보여주기();
-            } catch (e) {
-                메시지표시(메시지표시박스, "", "서버 오류 발생", "");
-            } finally {
-                화면해제();
-            }
-        }
-
-
-
-        async function 전직하기(직위, 위치참조) {
-            화면잠금();
-
-            const 응답 = await fetch("/promote-job", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    유저UID: 유저데이터.유저UID,
-                    직위: 직위
-                })
-            });
-
-            const 결과 = await 응답.json();
-
-            if (!응답.ok) {
-                메시지표시(메시지표시박스, "", "전직 실패: " + 결과.오류, "");
-                화면해제();
-                return;
-            }
-            유저데이터.레벨 = 결과.레벨;
-            유저데이터.경험치 = 결과.경험치;
-            유저데이터.최종공격력 = 결과.최종공격력;
-
-            // 성공하면 화면 갱신
-            메시지표시(메시지표시박스, "", 직위 + " 전직 성공!", "");
-            전직화면보여주기();
-        }
-
-        const 일반유물데이터 = {
-            "소드": { 설명: "공격력이 증가합니다(*1%)" },
-            "하트플러스": { 설명: "체력이 증가합니다(*1%)" },
-            "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
-            "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
-            "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다(*0.1%)" },
-            "클로버": { 설명: "장비 뽑기확률이 증가합니다(*0.1%)" },
-            "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
-            "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
-            "퍼즐": { 설명: "뽑기비용을 무시합니다(0.1%)" },
-        };
-        const 레어유물데이터 = {
-            "소드": { 설명: "공격력이 증가합니다(*1%)" },
-            "하트플러스": { 설명: "체력이 증가합니다(*1%)" },
-            "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
-            "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
-            "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다(*0.1%)" },
-            "클로버": { 설명: "장비 뽑기확률이 증가합니다(*0.1%)" },
-            "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
-            "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
-            "퍼즐": { 설명: "뽑기비용을 무시합니다(0.1%)" },
-            "플라워": { 설명: "스킬을 초기화합니다" },
-            "뼈다구": { 설명: "직업을 초기화합니다" },
-            "티켓": { 설명: "고급장비뽑기에 사용됩니다" },
-            "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
-        };
-        const 신화유물데이터 = {
-            "소드": { 설명: "공격력이 증가합니다(*1%)" },
-            "하트플러스": { 설명: "체력이 증가합니다(*1%)" },
-            "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
-            "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
-            "하트마이너스": { 설명: "악마들의 체력을 감소시킵니다(*0.1%)" },
-            "클로버": { 설명: "장비 뽑기확률이 증가합니다(*0.1%)" },
-            "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
-            "암포라": { 설명: "보스전 스태미너 소모량을 감소시킵니다(1%)" },
-            "퍼즐": { 설명: "뽑기비용을 무시합니다(0.1%)" },
-            "플라워": { 설명: "스킬을 초기화합니다" },
-            "뼈다구": { 설명: "직업을 초기화합니다" },
-            "티켓": { 설명: "고급장비뽑기에 사용됩니다" },
-            "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
-            "마법의팔레트": { 설명: "아이디를 염색합니다" },
-            "햄버거": { 설명: "스태미너를 충전합니다(+300)" },
-        };
-
-        document.addEventListener("DOMContentLoaded", async () => {
-            const { data: { user }, error: 인증오류 } = await supabase.auth.getUser();
-
-            if (인증오류) {
-                return;
-            }
-
-            if (user && user.id) {
-                try {
-                    const 응답 = await fetch("/get-user", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ 유저UID: user.id })
-                    });
-                    const 결과 = await 응답.json();
-                    const 유저정보 = 결과.유저데이터;
-
-                    // if (결과.점검하자 == true) {
-                    //     document.body.style.display = 'none';
-                    // }
-
-
-                    if (결과.점검하자) {
-                        // 기존 내용 모두 제거
-                        document.body.innerHTML = '';
-                        Object.assign(document.body.style, {
-                            backgroundColor: '#000',
-                            margin: '0',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'flex-start',   // 위쪽 정렬
-                            alignItems: 'center',            // 가로 중앙
-                            height: '100vh',
-                            color: '#fff',
-                            paddingTop: '20vh'               // 화면 상단에서 20% 내려오기
-                        });
-                        const msg = document.createElement('div');
-                        msg.textContent = '점   검   중';
-                        msg.style.fontSize = '2rem';
-                        document.body.appendChild(msg);
-                        return;
-                    }
-
-
-
-
-                    if (결과.새로고침하자 == true) {
-                        location.reload();
-                    }
-
-                    // if (!유저정보 || 유저정보.버전업 !== 7) {
-                    //     await fetch("/delete-user", {
-                    //         method: "POST",
-                    //         headers: { "Content-Type": "application/json" },
-                    //         body: JSON.stringify({ 유저UID: user.id })
-                    //     });
-
-                    //     await supabase.auth.signOut();
-                    //     alert("드락실 벨고르 마하 투라크... 에이라스 노 크살. 메테오!");
-                    //     location.reload();
-                    //     alert("메테오를 맞고 새로 태어납니다.");
-                    //     return;
-                    // }
-
-                    유저데이터 = 유저정보;
-                    메시지표시(메시지표시박스, "", "자동로그인 완료", "#00c851");
-
-                    if (유저데이터.펫단계 >= 1) {
-                        let 색상코드;
-                        if (유저데이터.펫단계 === 1) 색상코드 = "#cd7f32"; // 동색
-                        else if (유저데이터.펫단계 === 2) 색상코드 = "#c0c0c0"; // 은색
-                        else 색상코드 = "#ffd700"; // 금색
-
-
-                        const 보스이름목록 = ["미노타우르스", "락골렘", "가고일", "그루트", "와이번", "아이스골렘"];
-                        const 보스번호 = ((유저데이터.보스넘버 ?? 0)) % 6;
-                        const 펫번호 = ((유저데이터.보스넘버 ?? 0) - 1 + 6) % 6;
-                        현재보스이름 = 보스이름목록[보스번호];
-                        const 펫아이콘 = 보스아이콘목록[펫번호] || 그루트아이콘;
-                        펫보여주기(펫아이콘, 색상코드);
-                    }
-
-                    try {
-                        const 응답 = await fetch("/refresh-stamina", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ 유저UID: 유저정보.유저UID })
-                        });
-
-                        const 결과 = await 응답.json();
-                        if (응답.ok && 결과.유저데이터) {
-                            유저정보.현재스태미너 = 결과.유저데이터.현재스태미너;
-                        }
-                    } catch (e) {
-                        console.warn("스태미너 갱신 실패", e);
-                    }
-
-                    전투화면보여주기(유저데이터);
-                    document.getElementById("메뉴얼").click();
-
-                } catch (e) {
-                    메시지표시(메시지표시박스, "", "자동 로그인 오류: " + e.message, "");
-                }
-            } else {
-                메시지표시(메시지표시박스, "", "로그인된 유저 없음", "");
-            }
-
-        });
-
-
-
-        function 모든화면숨기기() {
-            const 화면ID들 = [
-                "전투화면", "장비화면", "스킬화면", "전당화면", "인증화면",
-                "유물화면", "전직화면", "보스화면", "에너지박스",
-                "메뉴얼화면", "내정보화면", "캐시샵화면", "지하던전화면",
-            ];
-            화면ID들.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.style.display = "none";
-            });
-        }
-
-        const 정보버튼 = document.getElementById("정보");
-
-        const 정보툴팁 = document.createElement("div");
-        정보툴팁.id = "정보툴팁";
-        정보툴팁.style.position = "absolute";
-        정보툴팁.style.zIndex = "99999";
-        정보툴팁.style.display = "flex";
-        정보툴팁.style.flexDirection = "column";
-        정보툴팁.style.gap = "4px";
-        정보툴팁.style.background = "black";
-        정보툴팁.style.width = "fit-content";
-        정보툴팁.style.border = "0.2px solid #4b4b4b";
-        정보툴팁.style.borderRadius = "10px";
-        정보툴팁.style.boxSizing = "border-box";
-        정보툴팁.style.padding = "5px";
-
-        정보툴팁.innerHTML = `
-  <div style="display: flex; flex-direction: column; gap: 10px;">    
-    <div class="버튼" id="내정보">내정보</div>
-    <div class="버튼" id="메뉴얼">메뉴얼</div>
-    <div class="버튼" id="캐시샵">캐시샵</div>
-  </div>
-`;
-        // <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
-
-        정보툴팁.style.display = "none";
-        document.body.appendChild(정보툴팁);
-
-        정보버튼.addEventListener("mouseenter", () => {
-            const rect = 정보버튼.getBoundingClientRect();
-
-            // 먼저 보여줘야 offsetWidth를 읽을 수 있음
-            정보툴팁.style.display = "block";
-
-            const 툴팁너비 = 정보툴팁.offsetWidth;
-            정보툴팁.style.left = (rect.right - 툴팁너비) + "px";
-            정보툴팁.style.top = rect.bottom + "px";
-        });
-
-
-        // 마우스가 정보버튼과 정보툴팁 외부로 나가면 닫기
-        document.addEventListener("mouseover", (e) => {
-            if (
-                !정보툴팁.contains(e.target) &&
-                !정보버튼.contains(e.target)
-            ) {
-                정보툴팁.style.display = "none";
-            }
-        });
-
-
-
-
-        const 월드버튼 = document.getElementById("월드");
-
-        const 월드툴팁 = document.createElement("div");
-        월드툴팁.id = "월드툴팁";
-        월드툴팁.style.position = "absolute";
-        월드툴팁.style.zIndex = "99999";
-        월드툴팁.style.display = "flex";
-        월드툴팁.style.flexDirection = "column";
-        월드툴팁.style.gap = "4px";
-        월드툴팁.style.background = "black";
-        월드툴팁.style.width = "fit-content";
-        월드툴팁.style.border = "0.2px solid #4b4b4b";
-        월드툴팁.style.borderRadius = "10px";
-        월드툴팁.style.boxSizing = "border-box";
-        월드툴팁.style.padding = "5px";
-
-        월드툴팁.innerHTML = `
-  <div style="display: flex; flex-direction: column; gap: 10px;">    
-    <div class="버튼" id="보스">보스</div>
-    <div class="버튼" id="지하던전">지하던전</div>
-  </div>
-`;
-
-        월드툴팁.style.display = "none";
-        document.body.appendChild(월드툴팁);
-
-        월드버튼.addEventListener("mouseenter", () => {
-            const rect = 월드버튼.getBoundingClientRect();
-
-            // 먼저 보여줘야 offsetWidth를 읽을 수 있음
-            월드툴팁.style.display = "block";
-
-            const 툴팁너비 = 월드툴팁.offsetWidth;
-            월드툴팁.style.left = (rect.right - 툴팁너비) + "px";
-            월드툴팁.style.top = rect.bottom + "px";
-        });
-
-
-        // 마우스가 월드버튼 월드툴팁 외부로 나가면 닫기
-        document.addEventListener("mouseover", (e) => {
-            if (
-                !월드툴팁.contains(e.target) &&
-                !월드버튼.contains(e.target)
-            ) {
-                월드툴팁.style.display = "none";
-            }
-        });
-
-
-
-
-
-
-
-        function 한줄에두칸(왼쪽, 오른쪽) {
-            const row = document.createElement("div");
-            row.style.display = "flex";
-            row.style.width = "100%";
-            row.style.gap = "10px";
-
-            const left = document.createElement("div");
-            left.id = 왼쪽;
-            left.style.textAlign = "left";
-            left.style.flex = "1";
-
-            const right = document.createElement("div");
-            right.id = 오른쪽;
-            right.style.textAlign = "left";
-            right.style.flex = "1";
-
-            row.appendChild(left);
-            row.appendChild(right);
-            return row;
-        }
-
-        // 2) 3칸짜리 행(Row)을 생성해서 반환합니다.
-        //    칸: [id1, id2, id3] 형태로 세 개 요소의 id를 전달
-        //    클레스네임: 각 칸(div)에 적용할 공통 클래스 이름 (예: "기본테두리")
-        function 한줄에세칸(칸, 클레스네임) {
-            const row = document.createElement("div");
-            row.style.display = "flex";
-            row.style.width = "100%";
-            row.style.gap = "10px";
-            row.style.justifyContent = "center"; // 필요에 따라 가운데 정렬
-
-            칸.forEach(id => {
-                const div = document.createElement("div");
-                div.id = id;
-                if (클레스네임) div.className = 클레스네임;
-                div.style.flex = "1";
-                div.style.textAlign = "center"; // 칸 내부 텍스트 가운데 정렬
-                row.appendChild(div);
-            });
-
-            return row;
-        }
-
-
-
-
-
-        document.getElementById("내정보").addEventListener("click", async () => {
-            if (!유저데이터) return;
-            화면잠금();
-            document.getElementById("화면설명").innerHTML = "새로고침(F5)을 생활화하세요";
-
-            모든화면숨기기();
-            document.getElementById("내정보화면").style.display = "block";
-
-            const 컨테이너 = document.getElementById("내정보컨테이너");
-            컨테이너.innerHTML = "";
-
-            // ─── 첫째줄부터 넷째줄까지 2칸짜리 행 생성 ───
-            const 첫째줄행 = 한줄에두칸("첫째줄왼쪽", "첫째줄오른쪽");
-            const 둘째줄행 = 한줄에두칸("둘째줄왼쪽", "둘째줄오른쪽");
-            const 셋째줄행 = 한줄에두칸("셋째줄왼쪽", "셋째줄오른쪽");
-            const 넷째줄행 = 한줄에두칸("넷째줄왼쪽", "넷째줄오른쪽");
-            const 다섯째줄행 = 한줄에두칸("다섯째줄왼쪽", "다섯째줄오른쪽");
-            const 여섯째줄행 = 한줄에두칸("여섯째줄왼쪽", "여섯째줄오른쪽");
-
-            // ─── 다섯째줄(=열째줄) 3칸짜리 행 생성 ───
-            const 열째줄행 = 한줄에세칸(
-                ["열째줄왼쪽", "열째줄가운데", "열째줄오른쪽"],
-                "기본테두리"
-            );
-
-            const 열한째줄행 = 한줄에세칸(
-                ["열한째줄왼쪽", "열한째줄가운데", "열한째줄오른쪽"],
-                ""
-            );
-
-            // ─── 컨테이너에 차례대로 붙이기 ───
-            컨테이너.appendChild(첫째줄행);
-            컨테이너.appendChild(둘째줄행);
-            컨테이너.appendChild(셋째줄행);
-            컨테이너.appendChild(넷째줄행);
-            컨테이너.appendChild(다섯째줄행);
-            컨테이너.appendChild(여섯째줄행);
-            컨테이너.appendChild(열째줄행);
-            컨테이너.appendChild(열한째줄행);
-
-
-            // ─── (2) 서버에서 “전당” 순위만 가져오기 ───
-            try {
-                const 랭킹응답 = await fetch("/ranking", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-                });
-                const 랭킹결과 = await 랭킹응답.json();
-
-                // 서버에서 받은 랭킹결과는 { 유저들: [...] } 구조
-                const 유저들 = 랭킹결과.유저들 || [];
-
-                // 배열에서 “내 유저UID”와 같은 요소의 인덱스를 찾는다
-                const 내인덱스 = 유저들.findIndex(
-                    (u) => u.유저UID === 유저데이터.유저UID
-                );
-
-                // 인덱스가 -1이 아니면 “인덱스 + 1”이 내 순위
-                const 내전당순위 = 내인덱스 >= 0 ? 내인덱스 + 1 : "-";
-                document.getElementById("넷째줄왼쪽").innerHTML = `전당 : ${내전당순위}위`;
-            } catch (err) {
-                document.getElementById("넷째줄왼쪽").innerHTML = `전당 : 조회실패`;
-                console.error("전당순위 조회 실패:", err);
-            }
-
-            // ─── (3) 서버에서 “보스” 순위만 가져오기 ───
-            try {
-                const 보스응답 = await fetch("/boss-ranking", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-                });
-                const 보스결과 = await 보스응답.json();
-
-                // /boss-ranking 응답 예시: { 순위: [...], 누적데미지총합: n, 내정보: { 순위, 유저아이디, 보스누적데미지 } }
-                // 내 순위 정보는 보스결과.내정보.순위 필드에 들어 있다.
-                const 내보스순위 =
-                    보스결과.내정보 && typeof 보스결과.내정보.순위 === "number"
-                        ? 보스결과.내정보.순위
-                        : "-";
-
-                document.getElementById("다섯째줄왼쪽").innerHTML = `보스 : ${내보스순위}위`;
-            } catch (err) {
-                document.getElementById("다섯째줄왼쪽").innerHTML = `보스 : 조회실패`;
-                console.error("보스순위 조회 실패:", err);
-            }
-
-            // ─── 내용 채우기 ───
-            document.getElementById("첫째줄왼쪽").innerHTML = `아이디 : ${유저데이터.유저아이디}`;
-            document.getElementById("둘째줄왼쪽").innerHTML = `공격력 : ${유저데이터.최종공격력}`;
-            document.getElementById("셋째줄왼쪽").innerHTML = `최대체력 : ${유저데이터.최대체력}`;
-            // document.getElementById("넷째줄왼쪽").innerHTML = `전당 : 위`;
-            // document.getElementById("다섯째줄왼쪽").innerHTML = `보스 : 위`;
-
-            // document.getElementById("첫째줄오른쪽").innerHTML = `탈퇴`;
-            // <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
-            document.getElementById("열한째줄가운데").innerHTML =
-                `<div style="margin-top: 20px; cursor: pointer;" id="탈퇴" onclick="회원탈퇴()">{ 계 정 탈 퇴 }</div>`;
-
-            document.getElementById("둘째줄오른쪽").innerHTML = (유저데이터.현질기한 !== undefined && 유저데이터.현질기한 !== 0) ? `마법의팔레트 : ${유저데이터.현질기한}/30` : `마법의팔레트 : -`;
-            document.getElementById("셋째줄오른쪽").innerHTML = (유저데이터.햄버거현질기한 !== undefined && 유저데이터.햄버거현질기한 !== 0) ? `햄버거정기배송 : ${유저데이터.햄버거현질기한}/30` : `햄버거정기배송 : -`;
-            document.getElementById("넷째줄오른쪽").innerHTML = 유저데이터.생성일 ? `생성일 : ${유저데이터.생성일}` : `생성일 : -`;
-            document.getElementById("다섯째줄오른쪽").innerHTML = (유저데이터.스태미너소모총량 !== undefined && 유저데이터.스태미너소모총량 !== 0) ? `전적 : ${유저데이터.스태미너소모총량}전` : `전적 : -`;
-
-            // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
-            const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
-            const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
-            const 신술 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
-            const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
-
-            // … (유저데이터.직업결정은 { "신술": 6 } 같은 객체 형태로 들어있다고 가정)
-
-            const 결정객체 = 유저데이터.직업결정;  // 예: { "신술": 6 }
-            if (결정객체) {
-                // 첫 번째(유일한) 키만 꺼냅니다. → "신술"
-                const 계열키 = Object.keys(결정객체)[0];
-                // 해당 키의 값(단계)을 꺼냅니다. → 6
-                const 단계 = 결정객체[계열키];
-
-                // 단계(숫자)에 해당하는 실제 직업명을 찾아서 변수에 저장
-                let 직업이름;
-                if (계열키 === "검술") {
-                    직업이름 = 검술[단계 - 1];   // 예: 단계=1 → 검술[0] = "나이트"
-                } else if (계열키 === "마술") {
-                    직업이름 = 마술[단계 - 1];
-                } else if (계열키 === "신술") {
-                    직업이름 = 신술[단계 - 1];   // 단계=6 → 신술[5] = "퀸"
-                } else if (계열키 === "궁술") {
-                    직업이름 = 궁술[단계 - 1];
-                } else {
-                    직업이름 = "-";
-                }
-
-                // 화면에 “신술(퀸)” 형태로 표시
-                document.getElementById("여섯째줄왼쪽").innerHTML = `직업 : [${계열키}] ${직업이름}`;
-            } else {
-                // 아직 선택된 직업이 없으면 ‘-’만 표시
-                document.getElementById("여섯째줄왼쪽").innerHTML = "직업 : -";
-            }
-
-
-            const 목록 = 유저데이터.장비목록;
-            let bestWeapon = null;
-            if (Array.isArray(목록) && 목록.length) {
-                bestWeapon = 목록.reduce((prev, cur) =>
-                    Number(cur.공격력) > Number(prev.공격력) ? cur : prev
-                );
-            }
-
-            const 장비박스1 = document.getElementById("열째줄왼쪽");
-
-            if (bestWeapon) {
-                // 강화 수치 표시 문자열 생성
-                const 강화표시 = bestWeapon.강화 ? ` +${bestWeapon.강화}` : "";
-                // 예: "루시퍼의 심장 +3" (강화가 0이면 이름만)
-                장비박스1.innerText = `${bestWeapon.이름}${강화표시}`;
-                장비박스1.style.color = 색상맵[bestWeapon.등급] || "#fff";
-            } else {
-                장비박스1.innerText = "장비가 없습니다";
-                장비박스1.style.color = "#fff";
-            }
-
-            // 필요하다면 두 번째·세 번째 박스에도 같은 방식으로 내용 채우기
-            const 장비박스2 = document.getElementById("열째줄가운데");
-            장비박스2.innerHTML = "가장쎈방어구";
-            const 장비박스3 = document.getElementById("열째줄오른쪽");
-            장비박스3.innerHTML = "가장쎈장신구";
-
-            화면해제();
-        });
-
-
-
-
-        document.getElementById("지하던전").addEventListener("click", async () => {
-            if (!유저데이터) return;
-            화면잠금();
-
-            // document.getElementById("화면설명").innerHTML = "강함을 증명하세요<br>층당 티켓 한장이 보상으로 지급됩니다";
-            document.getElementById("화면설명").innerHTML = "구현중입니다";
-            모든화면숨기기();
-            document.getElementById("지하던전화면").style.display = "block";
-            document.getElementById("에너지박스").style.display = "block";
-
-            // const 컨테이너 = document.getElementById("지하던전컨테이너");
-            // 컨테이너.innerHTML = "";
-
-            const 아이콘컨테이너 = document.getElementById("던전아이콘");
-            아이콘컨테이너.innerHTML = 던전아이콘;
-
-            const level = 유저데이터.지하던전;
-            document.getElementById("지하층수").innerText = `지하${level}층`;
-            document.getElementById("지하승패").innerText = "";
-
-            화면해제();
-        });
-
-        //         document.getElementById("지하층수").addEventListener("click", async () => {
-        //             if (!유저데이터) return;
-        //             화면잠금();
-
-        //             const res = await fetch("/attack-dungeon", {
-        //                 method: "POST",
-        //                 headers: { "Content-Type": "application/json" },
-        //                 body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-        //             });
-        //             const data = await res.json();
-
-        //             // 승패 표시
-        //             document.getElementById("지하승패").innerText = data.결과;
-
-        //             // 다음 층수 표시
-        //             document.getElementById("지하층수").innerText = `지하${data.새로운레벨}층`;
-        //             유저데이터.지하던전 = data.새로운레벨;
-        //             유저데이터.유물목록 = data.유물목록;
-
-        //             // 티켓 드랍 효과
-        //             if (data.드랍티켓) {
-        //                 const 유물드랍박스 = document.getElementById("유물드랍박스");
-        //                 const 던전아이콘 = document.getElementById("던전아이콘");
-
-        //                 if (유물드랍박스) {
-        //                     // ✅ 먼저 기존에 떠 있는 박스를 숨김
-        //                     유물드랍박스.style.display = "none";
-
-        //                     // ✅ setTimeout 제거 방지: 이전 타이머 클리어 (선택 사항)
-        //                     if (window.유물드랍타이머) clearTimeout(window.유물드랍타이머);
-
-        //                     유물드랍박스.innerText = `유물 [티켓]을(를) 획득했다!`;
-        //                     유물드랍박스.style.display = "block";
-
-        //                     // 위치 조정용 부모 변경
-        //                     if (던전아이콘) {
-        //                         // 등급외테두리에 위치 기준 설정
-        //                         던전아이콘.style.position = "relative";
-
-        //                         // 유물드랍박스를 등급외테두리 내부로 이동
-        //                         던전아이콘.appendChild(유물드랍박스);
-
-        //                         // 전투화면용 위치 조정
-        //                         Object.assign(유물드랍박스.style, {
-        //                             position: "absolute",
-        //                             top: "50%",
-        //                             left: "50%",
-        //                             transform: "translate(-50%, -50%)",
-        //                             zIndex: "100"
-        //                         });
-        //                     }
-        //                 }
-        //                 // ✅ 새 타이머로 숨김 처리 (전역 변수로 저장)
-        //                 window.유물드랍타이머 = setTimeout(() => {
-        //                     유물드랍박스.style.display = "none";
-        //                 }, 3000);
-        //             }
-
-        //             // 기존 전투 로그 삭제
-        //             const 기존로그들 = document.querySelectorAll(".전투로그컨테이너");
-        //             기존로그들.forEach(e => e.remove());
-
-        //             // 새로운 로그 생성
-        //             if (data.전투로그 && Array.isArray(data.전투로그)) {
-        //                 data.전투로그.slice().reverse().forEach(로그 => {
-        //                     const 로그컨테이너 = document.createElement("div");
-        //                     로그컨테이너.className = "전투로그컨테이너";
-        //                     로그컨테이너.style.marginTop = "15px";
-        //                     로그컨테이너.style.border = "0.2px solid #4b4b4b";
-        //                     로그컨테이너.style.borderRadius = "10px";
-        //                     로그컨테이너.style.padding = "15px";
-
-        //                     const 아이콘HTML = (로그.아이콘 || []).map(이름 => 아이콘맵[이름] || "").join(" ");
-
-        //                     // 회복 로그는 데미지 표시 안 함
-        //                     let 데미지텍스트 = "";
-        //                     let 회복텍스트 = "";
-
-        //                     if (로그.타입 === "공격") {
-        //                         데미지텍스트 = `<span><span style="color: #f63b3b;">${로그.몬스터이름}</span>에게 ${로그.효과} 피해를 입혔다!</span>`;
-        //                     } else if (로그.타입 === "회복") {
-        //                         회복텍스트 = `<span><span style="color: #3b82f6;">${로그.유저아이디}</span> 체력 ${로그.효과} 회복</span>`;
-        //                     }
-
-        //                     let 추가횟수표시 = "";
-        //                     if (로그.타입 === "공격" && 로그.추가공격횟수 > 0) {
-        //                         // 실제 타격 횟수 = 1(기본) + 로그.추가공격횟수
-        //                         const 총공격횟수 = 1 + 로그.추가공격횟수;
-        //                         추가횟수표시 = `<span style="margin-left: 4px; color: #f63b3b;">x${총공격횟수}</span>`;
-        //                     }
-
-        //                     // (2) innerHTML에서 공격 텍스트 뒤에 추가횟수표시 붙이기
-        //                     로그컨테이너.innerHTML = `
-        //     <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-        //         <strong>Turn ${로그.턴}</strong>
-        //     </div>
-        //     <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
-        //         ${아이콘HTML}
-        //         ${로그.타입 === "공격" ? 데미지텍스트 + 추가횟수표시 : ""}
-        //         ${로그.타입 === "회복" ? 회복텍스트 : ""}
-        //     </div>
-        // <!-- 유저와 몬스터 정보 양쪽 정렬 -->
-        // <div class="가로정렬" style="margin-top: 10px; justify-content: space-between; align-items: center; gap: 12px;">
-        //     <div style="border: 0.2px solid #3b82f6; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
-        //         <div>${로그.유저아이디}</div>
-        //         <div>
-        //             <div>공격력 ${로그.유저최종공격력}</div>
-        //             <div>체력 ${로그.유저체력}/${로그.유저최대체력}</div>
-        //         </div>
-        //     </div>
-
-        //     <div style="border: 0.2px solid #f63b3b; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
-        //         <div>${로그.몬스터이름}</div>
-        //         <div>
-        //             <div>체력 ${Math.max(0, 로그.몬스터체력)}/${로그.몬스터최대체력}</div>
-        //             <div>방어력 ${로그.몬스터방어력}</div>
-        //         </div>
-        //     </div>
-        // </div>
-        //         `;
-
-        //                     const 타겟 = document.getElementById("지하등반");
-        //                     if (타겟 && 타겟.parentNode) {
-        //                         타겟.parentNode.insertBefore(로그컨테이너, 타겟.nextSibling);
-        //                     }
-        //                 });
-        //             }
-        //             화면해제();
-        //         });
-
-
-        // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-        // npm install -g nodemon
-        // nodemon index.js
-
-
-        document.getElementById("메뉴얼").addEventListener("click", () => {
-            if (!유저데이터) return;
-            document.getElementById("화면설명").innerHTML = "오늘도, 행복하세요";
-
-            모든화면숨기기();
-            document.getElementById("메뉴얼화면").style.display = "block";
-
-            const 컨테이너 = document.getElementById("메뉴얼컨테이너");
-            컨테이너.innerHTML = "";
-
-            const 문장들 = [
-                `${여름아이콘}`,
-                `
-1. '전투'를 클릭해서 전투화면으로 진입 후 100만골드를 클릭<br>
-2. 연속일반장비 뽑기를 통해 [태초] 사탄의 날개를 뽑으세요<br>
-3. 사탄의 날개가 나오지 않았다면 '정보'-'내정보'<br>
-4. 계정탈퇴 후 재가입하세요<br>
-5. 사탄의 날개가 등장할때까지 1,2,3,4를 반복하세요<br>
-6. 전투화면에서 악마성을 클릭하세요<br>
-6-1. 층수를 올려서 2층을 사냥해보세요<br>
-6-2. 유저의 체력을 1 소모해서 Trun 하나를 진행합니다<br>
-7. 반자동 버튼을 클릭해서 자동공격을 경험해보세요<br>
-8. 레어몬스터를 우선공격하는 풀자동 공격을 경험해보세요<br>
-9. 숙련도 500을 모았다면 전투화면에서 숙련도를 클릭하세요<br>
-10. 스킬창에서 숙련도를 소모하여, 인사이트 스킬을 습득하세요<br>
-11. 단톡에 참여하여 더 많은 정보를 구하세요<br>
-                `,
-                `
-ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-                `,
-                `${봄아이콘}`,
-                `
-25.06.12<br>
-
-                `,
-                `
-25.06.11<br>
-일반몬스터를 자동공격하는 반자동 버튼이 구현되었습니다<br>
-레어몬스터를 우선 자동공격하는 풀자동 버튼이 구현되었습니다<br>
-반자동 또는 풀자동을 재클릭하거나, 외부를 클릭 시 자동사냥이<br>
-정지됩니다<br>
-자동사냥 이슈로 인한 티켓 1장이 전 유저에게 지급되었습니다<br>
-검술직업의 추가공격 데미지가 보스 누적데미지에 적용되지않던<br>
-버그를 수정했습니다<br>
-                `,
-                `
-25.06.10<br>
-초기화면을 전투화면에서 메뉴얼 화면으로 수정했습니다<br>
-                `,
-                `
-25.06.09<br>
-유물뽑기로만 등장하는 '플라워', '뼈다구'를 9개 이상 보유 시<br>
-뽑기에서 더이상 등장하지 않습니다<br>
-'도박' 을 '뽑기'로 변경하였습니다<br>
-무기 '루시퍼의 심장'을 강화할 수 있습니다<br>
-캐시샵에 '1억골드'가 추가되었습니다<br>
-보스누적데미지 랭킹보상이 골드에서 티켓으로 변경되었습니다<br>
-대격변 기념 햄버거4개, 플라워1개, 뼈다구1개가 배송되었습니다<br>
-연속고급장비뽑기 10+1회 로직을 구현하였습니다<br>
-보스화면이 '월드'화면으로 통합되었습니다<br>
-직업초기화 시 유저아이디가 사라지는 버그 해결<br>
-전투화면 외에서도 단축키가 사용되던 버그 해결<br>
-신규유저 100만골 회원가입 이벤트 시작<br>
-  `,
-                `
-25.06.08<br>
-전당화면에서 유저정보가 빈칸으로 표시되던 문제를 해결했습니다<br>
-뽑기창에서 과금상품목록을 제거했습니다<br>
-과금상품 목록이 정보-캐시샵으로 이동되었습니다<br>
-유물. 플라워와 뼈다구의 판매기능이 삭제되었습니다<br>
-플라워와 뼈다구의 과금금액이 1,100원으로 변경되었습니다<br>
-전투화면(에너지바)에 모래시계의 발동효과가 추가되었습니다<br>
-장비효과가 개편되었습니다<br>
-지금부턴 최고공격력 장비만 자동 장착됩니다<br>
-장비 누적공격력 시스템이 삭제되었습니다<br>
-장비자동합성 기능이 구현되었습니다<br>
-장비화면 오른쪽 상단의 자동합성 버튼을 클릭하세요<br>
-  `,
-                `
-25.06.06<br>
-드디어, 모바일에서도 '풀자동' 사냥이 가능합니다<br>
-전당화면 미니장비창이 미니정보창으로 개선되었습니다<br>
-  `,
-                `
-25.06.05<br>
-직업이 구현되었습니다<br>
-유물. 뼈다구가 추가되었습니다(직업초기화)<br>
-과금상품에 플라워가 부활, 뼈다구가 추가되었습니다<br>
-전직화면에서 전직 타이틀 클릭 시 직업초기화가 가능합니다<br>
-전 유저에게 뼈다구 1개가 지급되었습니다<br>
-레벨당 공격력이 1로 너프되었습니다<br>
-전당화면에서 미니정보창 표시 로직을 개선했습니다<br>
-전당화면에 전직 대신 직업이 표시됩니다<br>
-무너진 악마성을 재건하였습니다. 4층 위로 올라갈 수 있습니다<br>
-  `,
-                `
-25.06.03<br>
-업데이트 시 자동새로고침<br>
-모바일 화면 최적화 업데이트<br>
-탈퇴 버튼을 정보-내정보 최하단으로 이동했습니다<br>
-  `,
-                `
-25.06.02<br>
-과금상품에서 유물. 플라워가 삭제되었습니다<br>
-정보-내정보 화면이 추가되었습니다<br>
-오늘부터 신규유저에겐 생성일이 등록됩니다
-  `,
-                `
-25.06.01<br>
-무료서버에서 유료서버 전환 기념 뽀나스 햄버거 1개 배송<br>
-<s>유물. 플라워가 과금상품에 추가되었습니다</s><br>
-유물화면에서 소모성 유물과 과금유물을 구분하였습니다<br>
-오늘은 오픈기념 이벤트 마지막 날이자, 주인장 생일입니다<br>기념으로 금일 햄버거는 1+1 배송됩니다<br>
-암포라 발동효과가 기존 9에서 5로 상향되었습니다<br>
-10연 유물뽑기이 구현되었습니다<br>
-보스 공통미션 보상 '펫'과 누적데미지 순위별 골드보상이<br>지급되었습니다
-  `,
-                `
-25.05.30<br>
-10연 고급장비뽑기 시 무료1회 추가기능은 실패했습니다<br>대신, 10연 고급장비뽑기 시 보너스 티켓 한장이 지급됩니다<br>
-10연 일반장비뽑기과 10연 고급장비뽑기 업데이트<br>
-유물. 암포라의 수치표기를 바르게 수정했습니다
-  `,
-                `
-25.05.29<br>
-주인장 득템 기념 햄버거 1+1 지급
-  `,
-                `
-25.05.28<br>
-이제 유물. 플라워(스킬초기화)를 판매할 수 있습니다<br>
-오픈기념 햄버거 1개가 6월1일까지 오후3시 경 배달됩니다<br>
-과금은 오픈톡 '가글주인장' 문의<br>
-과금상품. 햄버거정기배송(4900원). 한달간 매일 스태+300<br>
-과금상품. 마법의팔레트(1100원). 한달간 아이디 염색
-  `,
-                `
-25.05.27<br>
-<s>오픈기념 샐러드5개가 일주일간 오후3시에 배달됩니다</s>
-  `,
-                `
-25.05.26<br>
-유물설명에 1개 효과 기입<br>
-최대체력이 정상화됩니다<br>
-오후 3시 6분 정식출시<br>
-cbt 종료
-  `,
-                `
-25.05.25<br>
-신규유저 이벤트로 샐러드 5개가 지급됩니다<br>
-유물. 샐러드(스태미너회복)가 구현되었습니다<br>
-cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
-<s>1주차 보스 미노타우르스가 강림중입니다</s><br>
-<s>보스 2단계 보상 아이스골렘 펫이 구현되었습니다</s><br>
-악마성이 무너져 4층까지만 남았습니다
-  `,
-                `
-25.05.24<br>
-고급장비뽑기은 레어부터 타락까지 드랍됩니다<br>
-일반장비뽑기은 일반부터 태초까지 드랍됩니다<br>
-보스전 스태미너 소모가 10으로 너프되었습니다<br>
-유저의 최대체력은 고등급 장비(태초,타락)로만 증가합니다<br>
-유물. 티켓(고급장비뽑기)이 유물뽑기으로만 등장합니다<br>
-유물. 플라워(스킬초기화)가 유물뽑기으로만 등장합니다
-  `,
-                `
-25.05.23<br>
-각 화면에 대한 설명을 표시<br>
-보스화면 내 순위 별도 표시<br>
-클로버 유물효과 뽑기확률증가로 변경<br>
-<s>신규유저 이벤트 10만골드 뽑기 가즈ㅏㅏ</s><br>
-3시 10분 5월 26일 오픈 전 마지막 cbt 초기화 진행
-  `,
-                `
-25.05.22<br>
-보스 펫 보상 로직 변경<br>
-유물뽑기 업데이트
-  `,
-                `
-25.05.21<br>
-정보 버튼에서 전당 분리<br>
-보스컨텐츠 공통보상 '펫'구현 시작<br>
-보스컨텐츠 대충 구현 완료
-  `,
-                `
-25.05.20<br>
-메뉴얼,전당,탈퇴 버튼을 정보 버튼으로 통합<br>
-스킬초기화 안되게할랬찌만, 유물 소모로 구현<br>
-패치노트 기록하기로 결심
-  `,
-                "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
-                `${가을아이콘}`,
-                "가글(gagl)에 찾아와 주셔서 감사합니다",
-                "가글은 25년 3월 1일을 시작으로 25년 4월 15일 낮 12시 40분경",
-                "서비스를 종료 한 마글(magl)이란 게임의 팬게임으로",
-                "제작을 시작한 게임입니다",
-                "저는 코딩을 모르는 평범한 아재이며, 가글의 제작은",
-                "100% 챗지피티로 제작되고 있는 점 알아주시면 감사하겠습니다",
-                "최대한 노력하겠지만, 게임의 수명은 장담할 수 없는 점",
-                "심심한 이해를 부탁드립니다",
-                "주인장이 운영중인 오픈톡이 존재하지만, 귀찮으신분들은",
-                "오픈톡에 '가글주인장'을 검색하시면 제 프로필이 나옵니다",
-                "1:1채팅으로 문의를 주시면 최대한 빠르게 조치해드리도록",
-                "하겠습니다",
-                "최초버그를 제보해주시면, 소소한 스태미너 보상을 드리겠습니다",
-                "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ",
-                `${겨울아이콘}`,
-                "화면 최상단 아이디를 클릭하시면, 아이디 변경이 가능합니다",
-                "모든 팝업창은 외부를 클릭 시 닫힙니다",
-                "스태미너는 시간당 60씩 회복됩니다",
-                "가글은 기본적으로 자동사냥이 지원되며, 레어몬스터 등장 시",
-                "자동사냥이 멈추게 됩니다",
-                "스페이스바를 한번만 치시면 레어몬스터를 우선 공격하는",
-                "풀 자동사냥이 가능합니다",
-                "누르고 계시면 안됩니다",
-                `<s>레벨업당 5의 공격력이 증가합니다</s>`,
-                "뽑기은 최소 일반장비가 드랍됩니다",
-                "모든 스킬은 단계가 존재하며, 습득한 스킬 효과만 적용됩니다",
-                "전투로그의 아이콘으로 스킬의 발동여부를 확인하실 수 있습니다",
-                "유물의 효과는 대부분 개당 1%의 효과가 곱연산이지만,",
-                "밸런스상 예외로 0.1%거나 합연산, 소모성 유물도 존재합니다",
-                `<s>장비는 중복 드랍할수록 합성횟수가 증가하게되고,</s>`,
-                `<s>합성횟수당 유저의 최대체력 1과 공격력이 누적됩니다</s>`,
-                "보스 누적데미지 목표달성 전유저 공통보상은 펫입니다",
-                "목표달성에 따라 최종공격력을 10%, 20%, 30% 증가시켜주는",
-                "펫을 획득할 수 있으며, 다음 보스가 등장하기 전까지 가글의",
-                "모든 화면에 펫이 떠다니게됩니다",
-            ];
-
-            for (const 문장 of 문장들) {
-                const 줄 = document.createElement("div");
-                줄.innerHTML = 문장;
-                줄.style.margin = "5px 0"; // 줄 간격
-                줄.style.textAlign = "center";
-                컨테이너.appendChild(줄);
-            }
-
-        });
-
-
-        document.getElementById("전당").addEventListener("click", () => {
-            if (!유저데이터) return;
-            전당화면보여주기();
-        });
-
-        async function 전당화면보여주기() {
-            화면잠금();
-            모든화면숨기기();
-            document.getElementById("화면설명").innerHTML = "유저를 클릭하면 해당유저의 정보를 확인할 수 있습니다";
-
-            document.getElementById("전당화면").style.display = "block";
-
-            document.getElementById("획득로그").innerText = "";
-            document.getElementById("추가획득로그").innerText = "";
-            document.getElementById("레벨업표시").innerText = "";
-
-            const 컨테이너 = document.getElementById("전당컨테이너");
-            컨테이너.innerHTML = "";
-
-            const 응답 = await fetch("/ranking", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-            });
-
-            const 결과 = await 응답.json();
-            const 유저들 = 결과.유저들 || [];
-            // const 내순위 = 결과.내순위;
-            const 보스랭킹 = 결과.보스랭킹 || [];
-
-            유저들.forEach((유저, index) => {
-                const 줄 = document.createElement("div");
-                줄.className = "밑줄 양쪽정렬";
-                줄.style.display = "flex";
-                줄.style.justifyContent = "space-between";
-                줄.style.width = "100%";
-
-                if (유저.유저아이디 === 유저데이터.유저아이디) 줄.classList.add("내아이디강조");
-
-                let 왼쪽표시;
-                if (index === 0) {
-                    왼쪽표시 = `<svg class="lucide lucide-crown" style="color: gold;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
-                } else if (index === 1) {
-                    왼쪽표시 = `<svg class="lucide lucide-crown" style="color: silver;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
-                } else if (index === 2) {
-                    왼쪽표시 = `<svg class="lucide lucide-crown" style="color: peru;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>`;
-                } else {
-                    왼쪽표시 = `<span style="width:24px; display:inline-block;">${index + 1}</span>`;
-                }
-
-                const 왼쪽 = document.createElement("div");
-                왼쪽.innerHTML = 왼쪽표시;
-                왼쪽.style.flex = "0 0 auto";
-
-                const 오른쪽 = document.createElement("div");
-
-                let 닉네임표시 = 유저.유저아이디;
-
-                const 팔레트 = 유저.마법의팔레트;
-                if (팔레트 === "민초") {
-                    닉네임표시 = `<span class="마법의팔레트민초">${닉네임표시}</span>`;
-                } else if (팔레트 === "지옥") {
-                    닉네임표시 = `<span class="마법의팔레트지옥">${닉네임표시}</span>`;
-                } else if (팔레트 === "블라섬") {
-                    닉네임표시 = `<span class="마법의팔레트블라섬">${닉네임표시}</span>`;
-                } else if (팔레트 === "가글") {
-                    닉네임표시 = `<span class="마법의팔레트가글">${닉네임표시}</span>`;
-                } else if (팔레트 === "겨울") {
-                    닉네임표시 = `<span class="마법의팔레트겨울">${닉네임표시}</span>`;
-                } else if (팔레트 === "네온사인") {
-                    닉네임표시 = `<span class="마법의팔레트네온사인">${닉네임표시}</span>`;
-                } else if (팔레트 === "핑크오션") {
-                    닉네임표시 = `<span class="마법의팔레트핑크오션">${닉네임표시}</span>`;
-                } else if (팔레트 === "황혼하늘") {
-                    닉네임표시 = `<span class="마법의팔레트황혼하늘">${닉네임표시}</span>`;
-                } else if (팔레트 === "에메랄드숲") {
-                    닉네임표시 = `<span class="마법의팔레트에메랄드숲">${닉네임표시}</span>`;
-                }
-
-                // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
-                const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
-                const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
-                const 신술 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
-                const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
-
-                // … (유저데이터.직업결정은 { "신술": 6 } 같은 객체 형태로 들어있다고 가정)
-
-                const 결정객체 = 유저.직업결정;  // 예: { "신술": 6 }
-
-                if (결정객체) {
-                    // 첫 번째(유일한) 키만 꺼냅니다. → "신술"
-                    const 계열키 = Object.keys(결정객체)[0];
-                    // 해당 키의 값(단계)을 꺼냅니다. → 6
-                    const 단계 = 결정객체[계열키];
-
-                    // 단계(숫자)에 해당하는 실제 직업명을 찾아서 변수에 저장
-                    let 직업이름;
-                    if (계열키 === "검술") {
-                        직업이름 = 검술[단계 - 1];   // 예: 단계=1 → 검술[0] = "나이트"
-                    } else if (계열키 === "마술") {
-                        직업이름 = 마술[단계 - 1];
-                    } else if (계열키 === "신술") {
-                        직업이름 = 신술[단계 - 1];   // 단계=6 → 신술[5] = "퀸"
-                    } else if (계열키 === "궁술") {
-                        직업이름 = 궁술[단계 - 1];
-                    } else {
-                        직업이름 = "-";
-                    }
-
-
-                    오른쪽.innerHTML = `[${직업이름}] ${닉네임표시} (lv.${유저.레벨 || 1}) - 공격력 ${유저.최종공격력} / ${유저.현재층}층`;
-                } else {
-                    오른쪽.innerHTML = `${닉네임표시} (lv.${유저.레벨 || 1}) - 공격력 ${유저.최종공격력} / ${유저.현재층}층`;
-
-                }
-
-                오른쪽.style.flex = "1";
-                오른쪽.style.textAlign = "right";
-
-                줄.appendChild(왼쪽);
-                줄.appendChild(오른쪽);
-
-                줄.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    const 창 = document.getElementById("미니정보창");
-
-                    // 이미 떠 있으면 닫기만
-                    if (창.style.display === "block") {
-                        창.style.display = "none";
-                        return;
-                    }
-
-                    // 위치 계산 후 표시
-                    const rect = 줄.getBoundingClientRect();
-                    창.style.left = `${rect.left}px`;
-                    창.style.top = `${rect.bottom + 6}px`;
-                    창.style.display = "block";
-
-                    창.innerHTML = "";
-
-                    // ─── 첫째줄부터 넷째줄까지 2칸짜리 행 생성 ───
-                    const 첫째줄행 = 한줄에두칸("첫째줄왼쪽", "첫째줄오른쪽");
-                    const 둘째줄행 = 한줄에두칸("둘째줄왼쪽", "둘째줄오른쪽");
-                    const 셋째줄행 = 한줄에두칸("셋째줄왼쪽", "셋째줄오른쪽");
-                    const 넷째줄행 = 한줄에두칸("넷째줄왼쪽", "넷째줄오른쪽");
-                    const 다섯째줄행 = 한줄에두칸("다섯째줄왼쪽", "다섯째줄오른쪽");
-                    const 여섯째줄행 = 한줄에두칸("여섯째줄왼쪽", "여섯째줄오른쪽");
-
-                    // ─── 다섯째줄(=열째줄) 3칸짜리 행 생성 ───
-                    const 열째줄행 = 한줄에세칸(
-                        ["열째줄왼쪽", "열째줄가운데", "열째줄오른쪽"],
-                        "기본테두리"
-                    );
-
-                    const 열한째줄행 = 한줄에세칸(
-                        ["열한째줄왼쪽", "열한째줄가운데", "열한째줄오른쪽"],
-                        ""
-                    );
-
-                    // ─── 컨테이너에 차례대로 붙이기 ───
-                    창.appendChild(첫째줄행);
-                    창.appendChild(둘째줄행);
-                    창.appendChild(셋째줄행);
-                    창.appendChild(넷째줄행);
-                    창.appendChild(다섯째줄행);
-                    창.appendChild(여섯째줄행);
-                    창.appendChild(열째줄행);
-                    창.appendChild(열한째줄행);
-
-
-
-                    // ─── 내용 채우기 ───
-                    창.querySelector("#첫째줄왼쪽").innerHTML = `아이디 : ${유저.유저아이디}`;
-                    창.querySelector("#둘째줄왼쪽").innerHTML = `공격력 : ${유저.최종공격력}`;
-                    창.querySelector("#셋째줄왼쪽").innerHTML = `최대체력 : ${유저.최대체력}`;
-                    창.querySelector("#넷째줄왼쪽").innerHTML = `전당 : ${index + 1}위`;
-
-                    창.querySelector("#둘째줄오른쪽").innerHTML = (유저.현질기한 !== undefined && 유저.현질기한 !== 0) ? `마법의팔레트 : ${유저.현질기한}/30` : `마법의팔레트 : -`;
-                    창.querySelector("#셋째줄오른쪽").innerHTML = (유저.햄버거현질기한 !== undefined && 유저.햄버거현질기한 !== 0) ? `햄버거정기배송 : ${유저.햄버거현질기한}/30` : `햄버거정기배송 : -`;
-                    창.querySelector("#넷째줄오른쪽").innerHTML = 유저.생성일 ? `생성일 : ${유저.생성일}` : `생성일 : -`;
-
-                    const bossIndex = 보스랭킹.findIndex(u => u.유저UID === 유저.유저UID);
-
-                    if (bossIndex >= 0) {
-                        // 순위가 있으면 “XX위” 형식으로 표시
-                        const bossRank = bossIndex + 1;
-                        창.querySelector("#다섯째줄왼쪽").innerText = `보스 : ${bossRank}위`;
-                    } else {
-                        // 순위가 없으면 “-”만 표시
-                        창.querySelector("#다섯째줄왼쪽").innerText = `보스 : -`;
-                    }
-                    창.querySelector("#다섯째줄오른쪽").innerHTML = (유저.스태미너소모총량 !== undefined && 유저.스태미너소모총량 !== 0) ? `전적 : ${유저.스태미너소모총량}전` : `전적 : -`;
-
-                    // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
-                    const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
-                    const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
-                    const 신술 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
-                    const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
-
-                    // … (유저.직업결정은 { "신술": 6 } 같은 객체 형태로 들어있다고 가정)
-
-                    const 결정객체 = 유저.직업결정;  // 예: { "신술": 6 }
-                    if (결정객체) {
-                        // 첫 번째(유일한) 키만 꺼냅니다. → "신술"
-                        const 계열키 = Object.keys(결정객체)[0];
-                        // 해당 키의 값(단계)을 꺼냅니다. → 6
-                        const 단계 = 결정객체[계열키];
-
-                        // 단계(숫자)에 해당하는 실제 직업명을 찾아서 변수에 저장
-                        let 직업이름;
-                        if (계열키 === "검술") {
-                            직업이름 = 검술[단계 - 1];   // 예: 단계=1 → 검술[0] = "나이트"
-                        } else if (계열키 === "마술") {
-                            직업이름 = 마술[단계 - 1];
-                        } else if (계열키 === "신술") {
-                            직업이름 = 신술[단계 - 1];   // 단계=6 → 신술[5] = "퀸"
-                        } else if (계열키 === "궁술") {
-                            직업이름 = 궁술[단계 - 1];
-                        } else {
-                            직업이름 = "-";
-                        }
-
-                        // 화면에 “신술(퀸)” 형태로 표시
-                        창.querySelector("#여섯째줄왼쪽").innerHTML = `직업 : [${계열키}] ${직업이름}`;
-                    } else {
-                        // 아직 선택된 직업이 없으면 ‘-’만 표시
-                        창.querySelector("#여섯째줄왼쪽").innerHTML = "직업 : -";
-                    }
-
-
-                    // ─── “공격력 최댓값 장비” 찾기 및 표시 ───
-                    const 목록 = 유저.장비목록;
-                    let bestWeapon = null;
-                    if (Array.isArray(목록) && 목록.length) {
-                        bestWeapon = 목록.reduce((prev, cur) =>
-                            Number(cur.공격력) > Number(prev.공격력) ? cur : prev
-                        );
-                    }
-
-                    const 장비박스1 = 창.querySelector("#열째줄왼쪽");  // 첫 번째 칸 사용
-
-                    if (bestWeapon) {
-                        // 🔹 강화수치 있으면 "+n" 붙이기
-                        const 강화표시 = bestWeapon.강화 ? ` +${bestWeapon.강화}` : "";
-                        장비박스1.innerText = `${bestWeapon.이름}${강화표시}`;
-                        장비박스1.style.color = 색상맵[bestWeapon.등급] || "#fff";
-                    } else {
-                        장비박스1.innerText = "장비가 없습니다";
-                        장비박스1.style.color = "#fff";
-                    }
-
-
-                    // 필요하다면 두 번째·세 번째 박스에도 같은 방식으로 내용 채우기
-                    const 장비박스2 = 창.querySelector("#열째줄가운데");
-                    장비박스2.innerHTML = "가장쎈방어구";
-                    const 장비박스3 = 창.querySelector("#열째줄오른쪽");
-                    장비박스3.innerHTML = "가장쎈장신구";
-
-
-                    창.querySelector("#열한째줄가운데").innerHTML = ``;
-
-                });
-
-
-
-                컨테이너.appendChild(줄);
-            });
-            화면해제();
-        }
-
-
-
-
-        function 펫보여주기(아이콘HTML, 색상코드 = "#ffffff") {
-            const 펫 = document.getElementById("펫컨테이너");
-            펫.innerHTML = 아이콘HTML;
-            펫.style.display = "block";
-            펫.style.position = "fixed";
-            펫.style.transform = "scale(0.1)";
-            펫.style.pointerEvents = "none";
-            펫.style.zIndex = "9999";
-            펫.style.background = "transparent";
-
-            // ✅ 전달받은 색상코드로 path 채우기
-            const paths = 펫.querySelectorAll("path");
-            paths.forEach(p => p.setAttribute("fill", 색상코드));
-
-            const 중심X = window.innerWidth / 2;
-            const 최소X = 중심X - 500;
-            const 최대X = 중심X + 0;
-            const 최소Y = 0;
-            const 최대Y = 400;
-
-            let x = 중심X;
-            let y = 최대Y / 2;
-            let vx = (Math.random() - 0.5) * 2;
-            let vy = (Math.random() - 0.5) * 2;
-
-            function update() {
-                x += vx;
-                y += vy;
-
-                if (x < 최소X || x > 최대X) vx *= -1;
-                if (y < 최소Y || y > 최대Y) vy *= -1;
-
-                vx += (Math.random() - 0.5) * 0.1;
-                vy += (Math.random() - 0.5) * 0.1;
-
-                const 속도 = Math.sqrt(vx * vx + vy * vy);
-                const 최대속도 = 1.5;
-                if (속도 > 최대속도) {
-                    vx *= 최대속도 / 속도;
-                    vy *= 최대속도 / 속도;
-                }
-
-                펫.style.left = `${x}px`;
-                펫.style.top = `${y}px`;
-
-                requestAnimationFrame(update);
-            }
-
-            update();
-        }
-
-        let 현재보스이름 = "그루트"; // 이 줄만 수정하면 전부 연동됨
-
-        // 보스화면보여주기
-        document.getElementById("보스").addEventListener("click", () => {
-            if (!유저데이터) return;
-            화면잠금();
-            document.getElementById("화면설명").innerHTML =
-                "보스전에는 스태미너 10이 소모됩니다(월~금)<br>누적데미지 랭킹보상 1등부터 9등까지 티켓10장부터 차등지급";
-
-            const 보스버튼 = document.getElementById("보스");
-            fetch("/boss-ranking", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-            })
-                .then(res => res.json())
-                .then(결과 => {
-                    if (결과.오류) {
-                        return 메시지표시(보스, "", 결과.오류, "");
-                    }
-
-                    document.querySelectorAll(".전투로그컨테이너").forEach(e => e.remove());
-                    document.getElementById("최종데미지").innerText = "";
-
-                    모든화면숨기기();
-                    document.getElementById("에너지박스").style.display = "block";
-                    document.getElementById("보스화면").style.display = "block";
-
-                    const 보스컨테이너 = document.getElementById("보스컨테이너");
-                    보스컨테이너.style.marginTop = "15px";
-                    보스컨테이너.style.width = "400px";
-                    보스컨테이너.style.border = "0.2px solid #4b4b4b";
-                    보스컨테이너.style.borderRadius = "10px";
-                    보스컨테이너.style.padding = "15px";
-                    보스컨테이너.style.display = "flex";
-                    보스컨테이너.style.alignItems = "center";
-                    보스컨테이너.style.justifyContent = "flex-start";
-                    보스컨테이너.style.gap = "10px";
-
-                    const 보스아이콘 = document.getElementById("보스아이콘");
-                    보스아이콘.innerHTML = `
-    <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-        <div style="width: 200px; height: 200px;">
-            ${아이콘맵[현재보스이름 + "아이콘"]
-                            .replace(/height:\s*\d+px/, 'height: 200px')
-                            .replace(/width:\s*\d+px/, 'width: 200px')}
-        </div>
-    </div>
-`;
-
-                    const 목표1 = 999999;
-                    const 목표2 = 9999999;
-                    const 목표3 = 99999999;
-                    const 누적 = 결과.누적데미지총합 || 0;
-
-                    function 만들기단계라인(id, 현재값, 목표값) {
-                        const div = document.createElement("div");
-                        div.id = id;
-                        div.style.border = "0.2px solid #4b4b4b";
-                        div.style.display = "flex";
-                        div.style.alignItems = "center";
-                        div.style.justifyContent = "space-between";
-                        div.style.borderRadius = "6px";
-                        div.style.padding = "8px";
-
-                        // ✅ 달성한 경우, 현재값을 목표값으로 강제 표기
-                        const 표시값 = 현재값 >= 목표값 ? 목표값 : 현재값;
-
-                        const 숫자표시 = `${표시값.toLocaleString()}/${목표값.toLocaleString()}`;
-                        const 아이콘HTML = 현재값 >= 목표값 ? 아이콘맵["서클체크아이콘"] : "";
-
-                        div.innerHTML = `
-        <span>${숫자표시}</span>
-        <span>${아이콘HTML}</span>
-    `;
-                        return div;
-                    }
-
-                    // 단계별 줄 생성
-                    const 단계1 = 만들기단계라인("단계1", 누적, 목표1);
-                    const 단계2 = 만들기단계라인("단계2", 누적, 목표2);
-                    const 단계3 = 만들기단계라인("단계3", 누적, 목표3);
-
-                    // 화면에 추가할 박스 준비
-                    const 총합박스 = document.createElement("div");
-                    총합박스.id = "단계박스";
-                    총합박스.style.display = "flex";
-                    총합박스.style.flexDirection = "column";
-                    총합박스.style.gap = "10px";
-                    총합박스.style.marginTop = "10px";
-
-                    // 조건에 따라 단계별로 추가
-                    총합박스.appendChild(단계1);
-
-                    if (누적 >= 목표1) {
-                        총합박스.appendChild(단계2);
-                    }
-                    if (누적 >= 목표2) {
-                        총합박스.appendChild(단계3);
-                    }
-
-                    보스아이콘.appendChild(총합박스);
-
-                    const 보스몬스터 = document.getElementById("보스몬스터");
-                    보스몬스터.innerText = 현재보스이름;
-
-                    const 누적데미지순위 = document.getElementById("누적데미지순위");
-                    누적데미지순위.innerHTML = "";
-                    누적데미지순위.style.display = "flex";
-                    누적데미지순위.style.flexDirection = "column";
-                    누적데미지순위.style.alignItems = "flex-start";
-                    누적데미지순위.style.justifyContent = "flex-start";
-                    누적데미지순위.style.gap = "10px";
-                    누적데미지순위.style.textAlign = "left";
-
-                    const 제목 = document.createElement("div");
-                    제목.innerText = "누적데미지 순위";
-                    누적데미지순위.appendChild(제목);
-
-                    const 유저들 = 결과.순위 || [];
-                    유저들.forEach((유저, index) => {
-                        if (index >= 9) return;
-                        const div = document.createElement("div");
-                        div.innerText = `${index + 1}. ${유저.보스누적데미지.toLocaleString()} [${유저.유저아이디}]`;
-                        누적데미지순위.appendChild(div);
-                    });
-
-                    if (결과.내정보) {
-                        const div = document.createElement("div");
-                        div.innerText = `${결과.내정보.순위}. ${결과.내정보.보스누적데미지.toLocaleString()} [${결과.내정보.유저아이디}]`;
-                        div.style.marginTop = "8px";
-                        div.style.backgroundColor = "#505050";
-                        누적데미지순위.appendChild(div);
-                    }
-                    화면해제();
-
-                })
-                .catch(err => {
-                    console.error("보스 순위 조회 실패", err);
-                    화면해제();
-                });
-        });
-
-        document.getElementById("보스몬스터").addEventListener("click", async () => {
-            if (!유저데이터) return;
-            공격버튼잠금();
-
-            try {
-                const 응답 = await fetch("/attack-boss", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        유저데이터,
-                        보스이름: 현재보스이름
-                    })
-                });
-
-                if (!응답.ok) {
-                    const 에러결과 = await 응답.json();
-                    const 메시지 = 에러결과.오류 || "오류 발생";
-                    const 보스사냥컨테이너 = document.getElementById("보스사냥컨테이너");
-                    메시지표시(보스사냥컨테이너, "", 메시지, "");
-                    return;
-                }
-
-                const 결과 = await 응답.json();
-                const 등급외테두리 = document.getElementById("등급외테두리");
-                const 보스사냥컨테이너 = document.getElementById("보스사냥컨테이너");
-
-                if (결과.결과 === "불가") {
-                    메시지표시(보스사냥컨테이너, "", 결과.메시지 || "스태미너 부족", "");
-                    return;
-                }
-
-                유저데이터 = 결과.유저데이터;
-
-                // 기존 로그 제거
-                document.querySelectorAll(".전투로그컨테이너").forEach(e => e.remove());
-
-                // 전투 로그 출력
-                if (Array.isArray(결과.전투로그)) {
-                    결과.전투로그.slice().reverse().forEach(로그 => {
-                        const 로그컨테이너 = document.createElement("div");
-                        로그컨테이너.className = "전투로그컨테이너";
-                        로그컨테이너.style.marginTop = "15px";
-                        로그컨테이너.style.border = "0.2px solid #4b4b4b";
-                        로그컨테이너.style.borderRadius = "10px";
-                        로그컨테이너.style.padding = "15px";
-
-                        const 아이콘HTML = (로그.아이콘 || []).map(이름 => 아이콘맵[이름] || "").join(" ");
-
-                        let 데미지텍스트 = "";
-                        let 회복텍스트 = "";
-
-                        if (로그.타입 === "공격") {
-                            데미지텍스트 = `<span><span style="color: #f63b3b;">${로그.몬스터이름}</span>에게 ${로그.효과} 피해를 입혔다!</span>`;
-                        } else if (로그.타입 === "회복") {
-                            회복텍스트 = `<span><span style="color: #3b82f6;">${로그.유저아이디}</span> 체력 ${로그.효과} 회복</span>`;
-                        }
-
-                        let 추가횟수표시 = "";
-                        if (로그.타입 === "공격" && 로그.추가공격횟수 > 0) {
-                            // 실제 타격 횟수 = 1(기본) + 로그.추가공격횟수
-                            const 총공격횟수 = 1 + 로그.추가공격횟수;
-                            추가횟수표시 = `<span style="margin-left: 4px; color: #f63b3b;">x${총공격횟수}</span>`;
-                        }
-
-                        // (2) innerHTML에서 공격 텍스트 뒤에 추가횟수표시 붙이기
-                        로그컨테이너.innerHTML = `
-    <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-        <strong>Turn ${로그.턴}</strong>
-    </div>
-    <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
-        ${아이콘HTML}
-        ${로그.타입 === "공격" ? 데미지텍스트 + 추가횟수표시 : ""}
-        ${로그.타입 === "회복" ? 회복텍스트 : ""}
-    </div>
-    
-    <div class="가로정렬" style="margin-top: 10px; justify-content: space-between; align-items: center; gap: 12px;">
-                        <div style="border: 0.2px solid #3b82f6; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
-                            <div>${로그.유저아이디}</div>
-                            <div>
-                                <div>공격력 ${로그.유저최종공격력}</div>
-                                <div>체력 ${로그.유저체력}/${로그.유저최대체력}</div>
-                            </div>
-                        </div>
-                        <div style="border: 0.2px solid #f63b3b; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
-                            <div>${로그.몬스터이름}</div>
-                            <div>
-                                <div>체력 ${무한대아이콘}</div>
-                                <div>방어력 ${로그.몬스터방어력}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                        const 타겟 = document.getElementById("보스사냥컨테이너");
-                        if (타겟 && 타겟.parentNode) {
-                            타겟.parentNode.insertBefore(로그컨테이너, 타겟.nextSibling);
-                        }
-                    });
-                }
-
-                // 체력, 스태미너, 누적데미지 UI 업데이트
-                document.getElementById("악마이름").innerText = 결과.유저데이터?.보스이름 || 현재보스이름;
-                document.getElementById("악마체력").innerText = `체력 ???`;  // 보스는 체력 없음
-                document.getElementById("악마방어력").innerText = `방어력 0`;
-                document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}/${유저데이터.최대체력}`;
-                document.getElementById("최종데미지").innerText = `총피해량 : ${결과.누적데미지.toLocaleString()}`;
-
-                const 스태미너표시 = document.getElementById("스태미너표시");
-                const 에너지바 = document.querySelector(".에너지바");
-                if (스태미너표시 && 에너지바) {
-                    const 최대 = 유저데이터.최대스태미너 ?? 100;
-                    const 현재 = 유저데이터.현재스태미너 ?? 0;
-                    스태미너표시.innerText = `${현재}/${최대}`;
-                    에너지바.style.width = `${(현재 / 최대) * 100}%`;
-                }
-
-                document.getElementById("승리패배로그").innerText = "보스전 완료";
-                document.getElementById("승리패배로그").style.color = "#ffa500";
-            } catch (e) {
-                메시지표시(메시지표시박스, "", "보스전 오류: " + e.message, "");
-            } finally {
-                공격버튼잠금해제();
-            }
-        });
-
-
-        //캐시샵화면보여주기
-        document.getElementById("캐시샵").addEventListener("click", () => {
-            if (!유저데이터) return;
-
-            화면잠금();
-            모든화면숨기기();
-            document.getElementById("화면설명").innerHTML =
-                "gagl의 상품들은 소모성 또는 30일 기간제입니다<br>오픈톡 프로필 '가글주인장'에게 문의하세요";
-
-            document.getElementById("캐시샵화면").style.display = "block";
-
-            const 컨테이너 = document.getElementById("캐시샵컨테이너");
-            컨테이너.innerHTML = "";
-
-            function 줄추가(왼쪽내용, 오른쪽내용) {
-                // 1) 줄 컨테이너
-                const 줄 = document.createElement("div");
-                줄.className = "밑줄 양쪽정렬";
-                줄.style.display = "flex";
-                줄.style.justifyContent = "space-between";
-                줄.style.alignItems = "center";   // ← 부모 컨테이너 내에서 세로 가운데
-                줄.style.width = "100%";
-
-                // 2) 왼쪽 셀
-                const leftDiv = document.createElement("div");
-                leftDiv.style.display = "flex";      // ← 내부 요소 정렬을 flex로
-                leftDiv.style.alignItems = "center"; // ← 아이콘+텍스트 세로 가운데
-                leftDiv.style.flex = "0 0 auto";
-                leftDiv.innerHTML = 왼쪽내용;
-
-                // 3) 오른쪽 셀
-                const rightDiv = document.createElement("div");
-                // rightDiv.style.display = "flex";
-                rightDiv.style.alignItems = "center"; // ← 텍스트 세로 가운데
-                rightDiv.style.flex = "1";
-                rightDiv.style.textAlign = "right";
-                rightDiv.innerHTML = 오른쪽내용;
-
-                // 4) 조립
-                줄.appendChild(leftDiv);
-                줄.appendChild(rightDiv);
-                컨테이너.appendChild(줄);
-            }
-
-            // — 여기 데이터 배열에 원하는 만큼 줄 정보를 추가 —
-            const 줄데이터 = [
-                { 왼쪽: `${마법의팔레트아이콘}(마법의팔레트)`, 오른쪽: "아이디를 색칠할 수 있습니다(1,100원)" },
-                { 왼쪽: `${플라워아이콘}(플라워)`, 오른쪽: "스킬을 초기화합니다(1,100원)" },
-                { 왼쪽: `${뼈다구아이콘}(뼈다구)`, 오른쪽: "직업을 초기화합니다(1,100원)" },
-                { 왼쪽: `${햄버거아이콘}(햄버거정기배송)`, 오른쪽: "매일 햄버거(스태미너+300) 배송(4,900원)" },
-                { 왼쪽: `${현질아이콘}(1억골드)`, 오른쪽: "랭커로 만들어 드립니다(1,000,000원)" },
-
-            ];
-
-            // — 배열 순회하며 자동으로 줄 추가 —
-            줄데이터.forEach(item => 줄추가(item.왼쪽, item.오른쪽));
-
             화면해제();
         });
 
