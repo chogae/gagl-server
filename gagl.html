@@ -1121,6 +1121,7 @@
         const 공격력아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-swords-icon lucide-swords"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"/><line x1="5" x2="9" y1="14" y2="18"/><line x1="7" x2="4" y1="17" y2="20"/><line x1="3" x2="5" y1="19" y2="21"/></svg>`;
         const 체력아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-icon lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
         const 마법진아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-aperture-icon lucide-aperture"><circle cx="12" cy="12" r="10"/><path d="m14.31 8 5.74 9.94"/><path d="M9.69 8h11.48"/><path d="m7.38 12 5.74-9.94"/><path d="M9.69 16 3.95 6.06"/><path d="M14.31 16H2.83"/><path d="m16.62 12-5.74 9.94"/></svg>`;
+        const 무한대아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-infinity-icon lucide-infinity"><path d="M6 16c5 0 7-8 12-8a4 4 0 0 1 0 8c-5 0-7-8-12-8a4 4 0 1 0 0 8"/></svg>`;
 
         //루시드아이콘
         const 크리티컬아이콘 = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-axe-icon lucide-axe"><path d="m14 12-8.5 8.5a2.12 2.12 0 1 1-3-3L11 9"/><path d="M15 13 9 7l4-4 6 6h3a8 8 0 0 1-7 7z"/></svg>`;
@@ -2307,9 +2308,17 @@
                 if (hammerEl) {
 
                     hammerEl.addEventListener('click', async () => {
+                        const current = 장비.강화 || 0;                                       // 현재 강화 단계
+                        let successRate = 100 - Math.floor(current / 10) * 10;                // 1~10강:100%, 11~20강:90%...
+                        if (successRate < 10) successRate = 10;                              // 최소 10%
+                        const nextLevel = current + 1 > 100 ? 100 : current + 1;             // (+100강 이상은 100으로 표시)
 
-                        const 확인 = confirm(`루시퍼의 심장 1개를 소모해서 강화를 진행하시겠습니까? 공격력 증가량은 +360입니다`);
+                        const 확인 = confirm(
+                            `루시퍼의 심장 1개를 소모해서 ${nextLevel}강으로 강화하시겠습니까?\n` +
+                            `성공 확률: ${successRate}%  /  공격력 증가량: +360`
+                        );
                         if (!확인) return;
+
                         화면잠금();
                         try {
                             const res = await fetch("/upgrade-corrupted-item", {
@@ -2399,71 +2408,6 @@
 
 
 
-
-
-
-
-        async function 장비강화(이름, 등급, 박스) {
-            if (!유저데이터 || !유저데이터.유저UID) return;
-
-            const 강화비용 = {
-                "일반": 10000,
-                "레어": 30000,
-                "신화": 100000,
-                "고대": 200000,
-                "태초": 300000,
-                "타락": 400000,
-            }[등급];
-
-            const 비용 = 강화비용;
-
-            if ((유저데이터.골드 || 0) < 비용) {
-                메시지표시(메시지표시박스, "", `골드 부족: ${비용.toLocaleString()} 필요`, "");
-                return;
-            }
-
-            const 확인 = confirm(`[${등급}] 장비를 ${비용} Gold로 강화하시겠습니까?`);
-            if (!확인) return;
-
-            화면잠금();
-
-            try {
-                const 응답 = await fetch("/upgrade-item", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        유저UID: 유저데이터.유저UID,
-                        이름,
-                        등급
-                    })
-                });
-
-                const 결과 = await 응답.json();
-
-                if (!응답.ok || 결과.오류) {
-                    메시지표시(메시지표시박스, "", 결과.오류 || "강화 실패..", "");
-                    return;
-                }
-
-                메시지표시(박스, 결과.성공 ? "✅" : "", 결과.메시지, 결과.성공 ? "#00c851" : "#ef4444");
-
-                const 장비 = 유저데이터.장비목록.find(j => j.이름 === 이름 && j.등급 === 등급);
-                if (장비) {
-                    장비.강화 = 결과.강화;
-                    장비.공격력 = 결과.무기공격력;
-                }
-
-                유저데이터.장비공격력 = 결과.장비공격력;
-                유저데이터.최종공격력 = 결과.최종공격력;
-                유저데이터.골드 = 결과.골드;
-
-                장비화면보여주기();
-            } catch (e) {
-                메시지표시(메시지표시박스, "", "오류: " + e.message, "#ef4444");
-            } finally {
-                화면해제();
-            }
-        }
 
         document.getElementById("총숙련도").addEventListener("click", () => {
             if (!유저데이터) return;
@@ -3996,12 +3940,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
                 const 클릭함수 = () => {
                     if (완료개수 < 필요한단계) {
-                        메시지표시(
-                            메시지표시박스,
-                            "",
-                            `${전직순서[필요한단계 - 1]} 전직 완료 시 선택할 수 있습니다.`,
-                            ""
-                        );
+                        메시지표시(메시지표시박스, "", `${전직순서[필요한단계 - 1]} 전직 완료 시 선택할 수 있습니다.`, "");
                         return;
                     }
                     계열선택(선택계열);
@@ -4751,6 +4690,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 5. 사탄의 날개가 등장할때까지 1,2,3,4를 반복하세요<br>
 6. 전투화면에서 악마성을 클릭하세요<br>
 6-1. 층수를 올려서 2층을 사냥해보세요<br>
+6-2. 유저의 체력을 1 소모해서 Trun 하나를 진행합니다<br>
 7. 반자동 버튼을 클릭해서 자동공격을 경험해보세요<br>
 8. 레어몬스터를 우선공격하는 풀자동 공격을 경험해보세요<br>
 9. 숙련도 500을 모았다면 전투화면에서 숙련도를 클릭하세요<br>
@@ -4761,6 +4701,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                 `,
                 `${봄아이콘}`,
+                `
+25.06.12<br>
+
+                `,
                 `
 25.06.11<br>
 일반몬스터를 자동공격하는 반자동 버튼이 구현되었습니다<br>
@@ -5518,8 +5462,8 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                         <div style="border: 0.2px solid #f63b3b; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
                             <div>${로그.몬스터이름}</div>
                             <div>
-                                <div>체력 ???</div>
-                                <div>방어력 ???</div>
+                                <div>체력 ${무한대아이콘}</div>
+                                <div>방어력 ${로그.몬스터방어력}</div>
                             </div>
                         </div>
                     </div>
