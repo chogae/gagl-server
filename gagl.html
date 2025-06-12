@@ -3264,9 +3264,11 @@
             }
         });
 
-
+        //뽑기수정
         document.getElementById("뽑기").addEventListener("click", () => {
             if (!유저데이터) return;
+            전투화면보여주기(유저데이터);
+
             const 뽑기창 = document.getElementById("뽑기창");
             뽑기창.style.display = "block";
         });
