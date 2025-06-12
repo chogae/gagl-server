@@ -1594,6 +1594,7 @@
             document.getElementById("몬스터테두리안표시").style.display = "none";
             document.getElementById("레벨").innerText = `레벨 ${유저.레벨 || 1}`;
             document.getElementById("총경험치").innerText = 유저.경험치?.toLocaleString() || "0";
+            console.log(유저.경험치);
             document.getElementById("총골드").innerText = (유저.골드 || 0).toLocaleString();
             document.getElementById("총숙련도").innerText = (유저.숙련도 || 0).toLocaleString();
 
@@ -1674,6 +1675,27 @@
                 const 결과 = await 응답.json();
                 const 등급외테두리 = document.getElementById("등급외테두리");
 
+
+                if (결과.점검하자) {
+                    // 기존 내용 모두 제거
+                    document.body.innerHTML = '';
+                    Object.assign(document.body.style, {
+                        backgroundColor: '#000',
+                        margin: '0',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'flex-start',   // 위쪽 정렬
+                        alignItems: 'center',            // 가로 중앙
+                        height: '100vh',
+                        color: '#fff',
+                        paddingTop: '20vh'               // 화면 상단에서 20% 내려오기
+                    });
+                    const msg = document.createElement('div');
+                    msg.textContent = '점   검   중';
+                    msg.style.fontSize = '2rem';
+                    document.body.appendChild(msg);
+                    return;
+                }
 
                 if (결과.새로고침하자 == true) {
                     location.reload();
@@ -1894,9 +1916,9 @@
             } finally {
                 if (레어몬스터등장) {
                     반자동실행 = !반자동실행;
-                    await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
+                    // await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
                 } else {
-                    await new Promise(resolve => setTimeout(resolve, 500));
+                    // await new Promise(resolve => setTimeout(resolve, 500));
 
 
                 }
@@ -2198,9 +2220,9 @@
                 메시지표시(메시지표시박스, "", "레어 전투 오류: " + e.message, "");
             } finally {
                 if (레어몬스터등장) {
-                    await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
+                    // await new Promise(resolve => setTimeout(resolve, 1500)); // ✅ 1.5초 대기
                 } else {
-                    await new Promise(resolve => setTimeout(resolve, 500));
+                    // await new Promise(resolve => setTimeout(resolve, 500));
 
 
                 }
@@ -2897,6 +2919,11 @@
                     return;
                 }
 
+                유저데이터.경험치 = 결과.새로운경험치;     // 추가
+                유저데이터.레벨 = 결과.레벨;            // 추가
+                유저데이터.레벨공격력 = 결과.레벨공격력;      // 추가
+                유저데이터.최종공격력 = 결과.최종공격력;
+
                 // 저장이 완료되었으면 전직화면을 다시 그리기
                 await 전직화면보여주기();
             } catch (e) {
@@ -2927,8 +2954,10 @@
                 화면해제();
                 return;
             }
-            유저데이터.레벨 = 결과.레벨;
-            유저데이터.경험치 = 결과.경험치;
+            유저데이터.경험치 = 결과.경험치;     // 추가
+            console.log(유저데이터.경험치);
+            유저데이터.레벨 = 결과.레벨;            // 추가
+            유저데이터.레벨공격력 = 결과.레벨공격력;      // 추가
             유저데이터.최종공격력 = 결과.최종공격력;
 
             // 성공하면 화면 갱신
@@ -3696,7 +3725,6 @@
                 //보스보상표시
                 //광장
                 //보스스탯적용
-                //신술상향
                 `
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                 `,
@@ -3706,6 +3734,9 @@
 루시퍼의 심장 강화 시 10강마다 10%씩 확률이 감소합니다<br>
 공격에 필요한 체력소모를 무시하는 유물. 스탭이 추가되었습니다<br>
 전직, 뽑기, 스킬 화면들을 [성장] 타이틀로 통합했습니다<br>
+악마성 / 반자동 / 풀자동 딜레이를 삭제했습니다<br>
+직업. 신술의 효과가 재설정되었습니다<br>
+이제 전직과 직업 선택 시 레벨,경험치,공격력이 바르게 표시됩니다<br>
                 `,
                 `
 25.06.11<br>
