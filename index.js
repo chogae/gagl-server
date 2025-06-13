@@ -402,8 +402,8 @@ app.post("/attack-boss", async (req, res) => {
     const 보스 = {
         이름: 보스이름 || "BOSS",
         체력: 9999999,
-        방어력: Math.floor(유저.최종공격력 * 0.8),
-        // 방어력: 0,
+        // 방어력: Math.floor(유저.최종공격력 * 0.8),
+        방어력: 0,
     };
 
     const 전투결과 = 전투시뮬레이션(유저, 보스, 전투로그, 현재턴, true); // 보스전: true
