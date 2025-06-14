@@ -1068,7 +1068,7 @@
   z-index: 9998;
   padding: 20px;
   text-align: center;
-  width:auto;
+  width:300px;
 ">
         <div id="뽑기타이틀" style="font-size: 20px; font-weight: bold;"></div>
         <div style="margin-top: 15px;">
@@ -3497,6 +3497,9 @@
             document.getElementById("넷째줄오른쪽").innerHTML = 유저데이터.생성일 ? `생성일 : ${유저데이터.생성일}` : `생성일 : -`;
             document.getElementById("다섯째줄오른쪽").innerHTML = (유저데이터.스태미너소모총량 !== undefined && 유저데이터.스태미너소모총량 !== 0) ? `전적 : ${유저데이터.스태미너소모총량}전` : `전적 : -`;
 
+
+            document.getElementById("여섯째줄왼쪽").innerHTML = `지하던전 : 지하${유저데이터.지하던전}층`;
+
             // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
             const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
             const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
@@ -3527,10 +3530,10 @@
                 }
 
                 // 화면에 “신술(퀸)” 형태로 표시
-                document.getElementById("여섯째줄왼쪽").innerHTML = `직업 : [${계열키}] ${직업이름}`;
+                document.getElementById("여섯째줄오른쪽").innerHTML = `직업 : [${계열키}${단계}차] ${직업이름}`;
             } else {
                 // 아직 선택된 직업이 없으면 ‘-’만 표시
-                document.getElementById("여섯째줄왼쪽").innerHTML = "직업 : -";
+                document.getElementById("여섯째줄오른쪽").innerHTML = "직업 : -";
             }
 
 
@@ -3560,7 +3563,7 @@
             // const 장비박스2 = document.getElementById("열째줄가운데");
             // 장비박스2.innerHTML = "가장쎈방어구";
             const 장비박스3 = document.getElementById("열째줄오른쪽");
-            장비박스3.innerHTML = "가장쎈장신구";
+            장비박스3.innerHTML = "-";
 
             화면해제();
         });
@@ -3922,6 +3925,9 @@
 정보-'광장'이 추가되었습니다. 수다를 떨어주세요<br>
 광장에서 떠들 수 있는 유물. '스피커'가 추가되었습니다<br>
 스피커는 드랍과 뽑기에서 획득 가능하며, 9개 제한유물입니다<br>
+광장 오픈 기념 스피커 1개가 배송되었습니다<br>
+내정보에 지하던전 층수 표시가 추가되었습니다<br>
+내정보에 직업계열 몇번째 단계인지 표시가 추가되었습니다<br>
                 `,
                 `
 25.06.13<br>
@@ -4347,6 +4353,9 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 
                     // … (유저.직업결정은 { "신술": 6 } 같은 객체 형태로 들어있다고 가정)
 
+
+                    창.querySelector("#여섯째줄왼쪽").innerHTML = `지하던전 : 지하${유저.지하던전}층`;
+
                     const 결정객체 = 유저.직업결정;  // 예: { "신술": 6 }
                     if (결정객체) {
                         // 첫 번째(유일한) 키만 꺼냅니다. → "신술"
@@ -4369,10 +4378,10 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                         }
 
                         // 화면에 “신술(퀸)” 형태로 표시
-                        창.querySelector("#여섯째줄왼쪽").innerHTML = `직업 : [${계열키}] ${직업이름}`;
+                        창.querySelector("#여섯째줄오른쪽").innerHTML = `직업 : [${계열키}${단계}차] ${직업이름}`;
                     } else {
                         // 아직 선택된 직업이 없으면 ‘-’만 표시
-                        창.querySelector("#여섯째줄왼쪽").innerHTML = "직업 : -";
+                        창.querySelector("#여섯째줄오른쪽").innerHTML = "직업 : -";
                     }
 
 
@@ -4403,7 +4412,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                     // const 장비박스2 = 창.querySelector("#열째줄가운데");
                     // 장비박스2.innerHTML = "가장쎈방어구";
                     const 장비박스3 = 창.querySelector("#열째줄오른쪽");
-                    장비박스3.innerHTML = "가장쎈장신구";
+                    장비박스3.innerHTML = "-";
 
 
                     창.querySelector("#열한째줄가운데").innerHTML = ``;
