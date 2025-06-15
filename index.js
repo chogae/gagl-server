@@ -402,8 +402,8 @@ app.post("/attack-boss", async (req, res) => {
     const 보스 = {
         이름: 보스이름 || "BOSS",
         체력: 9999999,
-        // 방어력: Math.floor(유저.최종공격력 * 0.8),
-        방어력: 0,
+        방어력: Math.floor(유저.최종공격력 * 0.9),
+        // 방어력: 0,
     };
 
     const 전투결과 = 전투시뮬레이션(유저, 보스, 전투로그, 현재턴, true); // 보스전: true
@@ -775,7 +775,18 @@ app.post("/attack-rare", async (req, res) => {
             새유저.장비목록.push(드랍장비);
         }
 
+        if (드랍장비.등급 === "태초" || 드랍장비.등급 === "타락") {
+            const 문구 = `${드랍장비.이름}을(를) 드랍했다!`;
+            await 이벤트기록추가({
+                유저UID: 유저.유저UID,
+                유저아이디: 유저.유저아이디,
+                문구
+            });
+        }
+
     }
+
+
 
 
     const 장비목록 = 새유저.장비목록 || [];
@@ -1624,6 +1635,16 @@ app.post("/set-job-result", async (req, res) => {
             })
             .eq("유저UID", 유저UID);
 
+
+        const 문구 = `${계열선택} ${다음단계}차로 전직했다`;
+        await 이벤트기록추가({
+            유저UID: 유저.유저UID,
+            유저아이디: 유저.유저아이디,
+            문구
+        });
+
+
+
         if (업데이트에러) {
             return res.status(500).json({ 오류: "DB 업데이트 실패" });
         }
@@ -1685,6 +1706,7 @@ app.post("/promote-job", async (req, res) => {
         전직정보,
         전직공격력: 완료전직갯수 + 2
     };
+
 
     const { error: 업데이트오류 } = await supabaseAdmin
         .from("users")
@@ -1974,6 +1996,16 @@ app.post("/gamble-Equipment", async (req, res) => {
             // 유저.장비공격력 = (유저.장비공격력 || 0) + 드랍장비.공격력;
             유저.최종공격력 = 최종공격력계산(유저);
 
+
+            if (뽑힌등급 === "태초" || 뽑힌등급 === "타락") {
+                const 문구 = `${드랍장비.이름}을(를) 획득했다!`;
+                await 이벤트기록추가({
+                    유저UID: 유저.유저UID,
+                    유저아이디: 유저.유저아이디,
+                    문구
+                });
+            }
+
             results.push({
                 장비: { ...드랍장비, 등급: 뽑힌등급 },
                 퍼즐발동,
@@ -1981,6 +2013,10 @@ app.post("/gamble-Equipment", async (req, res) => {
                 남은티켓: 유저.유물목록?.["티켓"] || 0
             });
         }
+
+
+
+
 
         await supabaseAdmin
             .from("users")
@@ -2095,6 +2131,7 @@ app.post("/gamble-Relic", async (req, res) => {
             골드: 유저.골드,
             유물목록: 유저.유물목록,
         };
+
 
         return res.json({
             결과: "성공",
@@ -2265,6 +2302,15 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
         return res.status(500).json({ 오류: "강화 처리 중 오류 발생" });
     }
 
+
+    const 문구 = `루시퍼의 심장 +${대상.강화}강에 성공했다!`;
+    await 이벤트기록추가({
+        유저UID: 유저.유저UID,
+        유저아이디: 유저.유저아이디,
+        문구
+    });
+
+
     res.json({
         이름: 대상.이름,
         등급: 대상.등급,
@@ -2359,7 +2405,7 @@ app.post("/get-chat", async (req, res) => {
             .from("users")
             .select("유저아이디, 메시지, 메시지시각")   // to_char 제거
             .not("메시지", "is", null)
-            .order("메시지시각", { ascending: true });
+            .order("메시지시각", { ascending: false });
 
         if (error) {
             console.error("채팅 로드 오류:", error);
@@ -2382,8 +2428,6 @@ app.post("/save-chat", async (req, res) => {
         return res.status(400).json({ 오류: "유저UID 또는 메시지 누락" });
     }
 
-
-    //업뎃중
 
     const { data: 유저, error: userErr } = await supabaseAdmin
         .from("users")
@@ -2425,6 +2469,42 @@ app.post("/save-chat", async (req, res) => {
         return res.status(500).json({ 오류: "서버 오류 발생" });
     }
 });
+
+
+
+app.post("/get-events", async (req, res) => {
+    const { data, error } = await supabaseAdmin
+        .from("이벤트기록")
+        .select("유저아이디, 일어난일, 일어난일시각")
+        .order("일어난일시각", { ascending: false })
+        .limit(50);
+
+    if (error) {
+        return res.status(500).json({ 오류: "조회 실패", 상세: error.message });
+    }
+
+    res.json({ 기록: data });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2470,6 +2550,34 @@ app.listen(3000, () => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+async function 이벤트기록추가({ 유저UID, 유저아이디, 문구 }) {
+    const 실제문구 = `${유저아이디}이(가) ${문구}`;
+    const { error } = await supabaseAdmin.from("이벤트기록").insert([
+        { 유저UID, 유저아이디, 일어난일: 실제문구 }
+    ]);
+
+    if (error) {
+        console.error("이벤트기록 저장 실패:", error);
+    } else {
+        console.log("✅ 이벤트기록 저장 완료");
+    }
+}
 
 
 function 크리티컬배율계산(유저) {

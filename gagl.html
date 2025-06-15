@@ -774,18 +774,21 @@
     <div id="광장화면" style="display: none;">
         <div class="사백픽셀테두리 세로정렬" id="광장컨테이너">
 
-            <!-- 입력창
-            <input id="chat-input" type="text" maxlength="20" placeholder="글자 30자 제한 / 메시지를 입력하고 Enter"
-                style="width: 100%; margin-top: 8px; padding: 6px; box-sizing: border-box;" />
-
-
-            <div id="chat-list" class="세로정렬">
-
-            </div> -->
 
 
         </div>
     </div>
+
+
+    <div id="일어난일화면" style="display: none;">
+        <div class="사백픽셀테두리 세로정렬" id="일어난일컨테이너">
+
+
+
+        </div>
+    </div>
+
+
 
     <div id="지하던전화면" style="display: none;">
         <div class="세로정렬" id="지하던전컨테이너">
@@ -1070,14 +1073,14 @@
   text-align: center;
   width:300px;
 ">
-        <div id="뽑기타이틀" style="font-size: 20px; font-weight: bold;"></div>
-        <div style="margin-top: 15px;">
-            <div class="버튼" onclick="장비뽑기시도('일반')">일반장비뽑기 (10만)</div>
-            <div class="버튼" onclick="장비뽑기시도('연속일반')">연속일반장비뽑기 (100만)</div>
-            <div class="버튼" onclick="장비뽑기시도('고급')">고급장비뽑기 (티켓)</div>
-            <div class="버튼" onclick="장비뽑기시도('연속고급')">연속고급장비뽑기(10+1) (티켓열장)</div>
-            <div class="버튼" onclick="유물뽑기시도('일반')">유물뽑기 (10만)</div>
-            <div class="버튼" onclick="유물뽑기시도('연속일반')">연속유물뽑기 (100만)</div>
+        <div id="뽑기타이틀" style="font-size: 20px; font-weight: bold; margin-bottom: 15px;"></div>
+        <div>
+            <div class="버튼" style="margin-top: 10px;" onclick="장비뽑기시도('일반')">일반장비뽑기 (10만)</div>
+            <div class="버튼" style="margin-top: 10px;" onclick="장비뽑기시도('연속일반')">연속일반장비뽑기 (100만)</div>
+            <div class="버튼" style="margin-top: 10px;" onclick="장비뽑기시도('고급')">고급장비뽑기 (티켓)</div>
+            <div class="버튼" style="margin-top: 10px;" onclick="장비뽑기시도('연속고급')">연속고급장비뽑기(10+1) (티켓열장)</div>
+            <div class="버튼" style="margin-top: 10px;" onclick="유물뽑기시도('일반')">유물뽑기 (10만)</div>
+            <div class="버튼" style="margin-top: 10px;" onclick="유물뽑기시도('연속일반')">연속유물뽑기 (100만)</div>
         </div>
     </div>
 
@@ -3160,7 +3163,7 @@
                 "전투화면", "장비화면", "스킬화면", "전당화면", "인증화면",
                 "유물화면", "전직화면", "보스화면", "에너지박스",
                 "메뉴얼화면", "내정보화면", "캐시샵화면", "지하던전화면",
-                "정보툴팁", "성장툴팁", "월드툴팁", "광장화면",
+                "정보툴팁", "성장툴팁", "월드툴팁", "광장화면", "일어난일화면"
             ];
             화면ID들.forEach(id => {
                 const el = document.getElementById(id);
@@ -3186,10 +3189,11 @@
 
         정보툴팁.innerHTML = `
   <div style="display: flex; flex-direction: column; gap: 10px;">    
-    <div class="버튼" id="내정보">내정보</div>
-    <div class="버튼" id="메뉴얼">메뉴얼</div>
-    <div class="버튼" id="캐시샵">캐시샵</div>
-    <div class="버튼" id="광장">광장</div>
+    <div class="버튼" id="내정보">내 정 보</div>
+    <div class="버튼" id="메뉴얼">메 뉴 얼</div>
+    <div class="버튼" id="캐시샵">캐 시 샵</div>
+    <div class="버튼" id="광장">광 장</div>
+    <div class="버튼" id="일어난일">일어난일</div>
   </div>
 `;
         // <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
@@ -3240,7 +3244,7 @@
 
         월드툴팁.innerHTML = `
   <div style="display: flex; flex-direction: column; gap: 10px;">    
-    <div class="버튼" id="보스">보스</div>
+    <div class="버튼" id="보스">보 스</div>
     <div class="버튼" id="지하던전">지하던전</div>
   </div>
 `;
@@ -3292,11 +3296,11 @@
 
         성장툴팁.innerHTML = `
   <div style="display: flex; flex-direction: column; gap: 10px;">    
-    <div class="버튼" id="장비">장비</div>
-    <div class="버튼" id="유물">유물</div>
-    <div class="버튼" id="전직">전직</div>
-    <div class="버튼" id="스킬">스킬</div>
-    <div class="버튼" id="뽑기">뽑기</div>
+    <div class="버튼" id="장비">장 비</div>
+    <div class="버튼" id="유물">유 물</div>
+    <div class="버튼" id="전직">전 직</div>
+    <div class="버튼" id="스킬">스 킬</div>
+    <div class="버튼" id="뽑기">뽑 기</div>
   </div>
 `;
 
@@ -3605,7 +3609,7 @@
                 const list = Array.isArray(채팅) ? 채팅 : [];
                 const chatList = document.getElementById("chat-list");
                 chatList.innerHTML = list
-                    .reverse()
+                    // .reverse()
                     .map(row => {
                         // 로컬 타임존(KST)으로 포맷
                         const dt = new Date(row.메시지시각);
@@ -3664,6 +3668,49 @@
 
 
 
+
+
+            화면해제();
+        });
+
+
+        document.getElementById("일어난일").addEventListener("click", async () => {
+            if (!유저데이터) return;
+            화면잠금();
+            document.getElementById("화면설명").innerHTML = "최근에 일어난 일들입니다";
+
+            모든화면숨기기();
+            document.getElementById("일어난일화면").style.display = "block";
+
+
+
+            const container = document.getElementById("일어난일컨테이너");
+            container.innerHTML = ""; // 기존 내용 초기화
+
+            try {
+                const 응답 = await fetch("/get-events", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" }
+                });
+
+                const 결과 = await 응답.json();
+
+                if (!응답.ok) {
+                    throw new Error(결과.오류 || "서버 오류");
+                }
+
+                const 기록들 = 결과.기록 || [];
+
+                기록들.forEach(item => {
+                    const 줄 = document.createElement("div");
+                    줄.innerText = item.일어난일; // or `${item.유저아이디}님이 ${item.일어난일}`
+                    container.appendChild(줄);
+                });
+
+            } catch (e) {
+                console.error("일어난일 조회 오류:", e);
+                container.innerHTML = "<div>불러오기 실패</div>";
+            }
 
 
             화면해제();
@@ -3920,6 +3967,14 @@
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                 `,
                 `${봄아이콘}`,
+                `
+25.06.15<br>
+금주부터 보스에게 방어력이 부여됩니다<br>
+보스의 기본방어력은 본인 공격력의 90%입니다<br>
+정보탭에 '일어난일' 화면이 추가되었습니다<br>
+장비드랍/장비강화/장비뽑기/직업결정 시 일어난일에 등록됩니다<br>
+일어난일에 등록하고싶은 순간들이 있다면 건의해주세요<br>
+                `,
                 `
 25.06.14<br>
 정보-'광장'이 추가되었습니다. 수다를 떨어주세요<br>
