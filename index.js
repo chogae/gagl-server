@@ -1422,6 +1422,7 @@ app.post("/register-user", async (req, res) => {
         },
         마법의팔레트,
         생성일: today,
+        지하던전: 1,
     };
 
     const { error: 삽입오류 } = await supabaseAdmin
