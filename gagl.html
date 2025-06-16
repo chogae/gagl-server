@@ -1688,6 +1688,12 @@
         document.getElementById("공격버튼").addEventListener("click", async () => {
             if (!유저데이터) return;
 
+            if (유저데이터.현재스태미너 < 1) {
+                메시지표시(메시지표시박스, "", "스태미너가 없습니다", "");
+                반자동실행 = false;
+                풀자동실행 = false;
+                return;
+            }
 
             공격버튼잠금();
             let 레어몬스터등장 = false;
@@ -1971,6 +1977,12 @@
 
         document.getElementById("레어몬스터").addEventListener("click", async () => {
             if (!유저데이터) return;
+
+
+            if (유저데이터.현재스태미너 < 1) {
+                메시지표시(메시지표시박스, "", "스태미너가 없습니다", "");
+                return;
+            }
 
             const 이름 = document.getElementById("레어몬스터").innerText;
             공격버튼잠금();
@@ -2925,34 +2937,44 @@
 
 
 
-
         async function 계열선택(계열) {
             화면잠금();
             try {
-                // 서버에 선택된 계열을 저장
+                // 📌 경험치 사전 확인
+                const 현재단계 = 유저데이터.직업결정?.[계열] ?? 0;
+                const 다음단계 = 현재단계 + 1;
+                const 비용 = 다음단계 * 150000;
+                const 현재경험치 = 유저데이터.경험치 ?? 0;
+
+                if (현재경험치 < 비용) {
+                    메시지표시(메시지표시박스, "", `경험치가 부족합니다`, "");
+                    화면해제();
+                    return;
+                }
+
+                // ✅ 서버에 선택된 계열을 저장
                 const 응답 = await fetch("/set-job-result", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         유저UID: 유저데이터.유저UID,
-                        계열선택: 계열  // ex) "궁술"
+                        계열선택: 계열
                     })
                 });
 
                 const 결과 = await 응답.json();
                 if (!응답.ok) {
-                    // 오류가 있을 때 메시지 표시하고 화면 해제
                     메시지표시(메시지표시박스, "", (결과.오류 || "알 수 없는 오류"), "");
                     화면해제();
                     return;
                 }
 
-                유저데이터.경험치 = 결과.새로운경험치;     // 추가
-                유저데이터.레벨 = 결과.레벨;            // 추가
-                유저데이터.레벨공격력 = 결과.레벨공격력;      // 추가
+                // ✅ 반영
+                유저데이터.경험치 = 결과.새로운경험치;
+                유저데이터.레벨 = 결과.레벨;
+                유저데이터.레벨공격력 = 결과.레벨공격력;
                 유저데이터.최종공격력 = 결과.최종공격력;
 
-                // 저장이 완료되었으면 전직화면을 다시 그리기
                 await 전직화면보여주기();
             } catch (e) {
                 메시지표시(메시지표시박스, "", "서버 오류 발생", "");
@@ -2963,8 +2985,21 @@
 
 
 
+
         async function 전직하기(직위, 위치참조) {
             화면잠금();
+
+            // ✅ 1. 경험치 및 중복 여부 미리 체크
+            const 전직정보 = 유저데이터.전직정보 ?? {};
+            const 완료전직갯수 = Object.values(전직정보).filter(v => v === 1).length;
+            const 비용 = (완료전직갯수 + 1) * 50000;
+            const 현재경험치 = 유저데이터.경험치 ?? 0;
+
+            if (현재경험치 < 비용) {
+                메시지표시(메시지표시박스, "", `경험치가 부족합니다`, "");
+                화면해제();
+                return;
+            }
 
             const 응답 = await fetch("/promote-job", {
                 method: "POST",
@@ -3942,9 +3977,9 @@
 
 
             // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
-           
+
             // npm install -g nodemon
-        
+
             // nodemon index.js
 
             const 문장들 = [
@@ -3971,6 +4006,7 @@
 25.06.16<br>
 보스화면과 광장에 마법의팔레트가 적용되었습니다<br>
 신규유저에게 모든 유물목록이 표시됩니다<br>
+클라이언트 코드 리팩토링<br>
                 `,
                 `
 25.06.15<br>
@@ -4691,6 +4727,12 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 
         document.getElementById("보스몬스터").addEventListener("click", async () => {
             if (!유저데이터) return;
+
+            if (유저데이터.현재스태미너 < 10) {
+                메시지표시(메시지표시박스, "", "스태미너가 없습니다", "");
+                return;
+            }
+
             공격버튼잠금();
 
             try {
@@ -5026,6 +5068,20 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 
         document.getElementById("장비자동합성").addEventListener("click", async () => {
             if (!유저데이터 || !유저데이터.유저UID) return;
+
+            const 하위등급들 = ['일반', '레어', '신화', '고대', '태초'];
+            const 장비들 = 유저데이터.장비목록 || [];
+
+            const 합성가능 = 하위등급들.some(등급 => {
+                const 장비 = 장비들.find(e => e.등급 === 등급);
+                return 장비?.수량 >= 3;
+            });
+
+            if (!합성가능) {
+                메시지표시(메시지표시박스, "", "하위장비 3개가 필요합니다", "");
+                return;
+            }
+
             const 확인 = confirm(`하위장비 3개를 상위장비 1개로 합성하시겠습니까?`);
             if (!확인) return;
 
@@ -5596,6 +5652,52 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 줄.querySelectorAll(".버튼").forEach(버튼 => {
                     버튼.addEventListener("click", async () => {
                         const 행동 = 버튼.innerText.trim(); // "습득" 또는 "회수"
+
+                        const 스킬이름 = 계열명;
+                        const 스킬정보 = {
+                            버서커: 23,
+                            드레인: 23,
+                            발굴: 23,
+                            아이언바디: 23,
+                            인사이트: 1,
+                            크리티컬: 23,
+                            버닝: 23,
+                            인텔리전스: 23,
+                            브로큰: 23
+                        };
+
+                        const 최대레벨 = 스킬정보[스킬이름];
+                        if (!최대레벨) {
+                            메시지표시(메시지표시박스, "", "구현중입니다", "");
+                            return;
+                        }
+
+                        const 현재레벨 = 유저데이터.스킬?.[스킬이름] || 0;
+                        const 총투자 = Object.values(유저데이터.스킬 || {}).reduce((a, b) => a + b, 0);
+                        const 숙련도 = 유저데이터.숙련도 ?? 0;
+
+                        if (행동 === "습득") {
+                            if (현재레벨 >= 최대레벨) {
+                                메시지표시(메시지표시박스, "", "최종단계입니다", "");
+                                return;
+                            }
+
+                            const 필요한숙련도 = (총투자 + 1) * 500;
+                            if (숙련도 < 필요한숙련도) {
+                                메시지표시(메시지표시박스, "", `숙련도가 부족합니다`, "");
+                                return;
+                            }
+                        }
+
+                        if (행동 === "회수") {
+                            if (현재레벨 < 1) {
+                                메시지표시(메시지표시박스, "", "회수할 스킬이 없습니다", "");
+                                return;
+                            }
+                        }
+
+
+
                         화면잠금();
                         try {
                             const 응답 = await fetch("/update-skill", {
@@ -5611,7 +5713,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                             const 결과 = await 응답.json();
 
                             if (!응답.ok || 결과.오류) {
-                                메시지표시(줄, "", 결과.오류 || "실패", "");
+                                메시지표시(메시지표시박스, "", 결과.오류 || "실패", "");
                                 return;
                             }
 
@@ -5622,10 +5724,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                             const 메세지 = 행동 + " 완료";
                             const 아이콘 = 행동 === "습득" ? "✅" : "↩️";
 
-                            메시지표시(줄, 아이콘, 메세지, 색);
+                            메시지표시(메시지표시박스, 아이콘, 메세지, 색);
                             스킬화면보여주기(); // 갱신
                         } catch (e) {
-                            메시지표시(줄, "", "서버 오류: " + e.message, "");
+                            메시지표시(메시지표시박스, "", "서버 오류: " + e.message, "");
                         } finally {
                             화면해제();
                         }
@@ -5636,6 +5738,13 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
         }
 
         document.getElementById("보유숙련도").addEventListener("click", async () => {
+
+            const 플라워 = 유저데이터.유물목록?.["플라워"] || 0;
+            if (플라워 < 1) {
+                메시지표시(메시지표시박스, "", "유물. 플라워가 부족합니다!", "");
+                return;
+            }
+
             const 확인 = window.confirm("스킬 초기화에는 플라워 유물 1개가 소모됩니다.\n진행하시겠습니까?");
             if (!확인) return;
 
@@ -5674,6 +5783,14 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
         });
 
         document.getElementById("전직화면타이틀").addEventListener("click", async () => {
+
+            const 뼈다구 = 유저데이터.유물목록?.["뼈다구"] || 0;
+            if (뼈다구 < 1) {
+                메시지표시(메시지표시박스, "", "유물. 뼈다구가 부족합니다!", "");
+                return;
+            }
+
+
             const 확인 = window.confirm(
                 "직업 초기화에는 뼈다구 유물 1개가 소모됩니다.\n진행하시겠습니까?"
             );
@@ -5821,6 +5938,12 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
                 div.addEventListener("click", async () => {
                     if (유물이름 === "샐러드") {
+                        const 샐러드 = 유저데이터.유물목록?.["샐러드"] || 0;
+                        if (샐러드 < 1) {
+                            메시지표시(메시지표시박스, "", "샐러드가 없습니다", "");
+                            return;
+                        }
+
                         const 확인 = confirm("샐러드를 먹고 스태미너 60을 회복하시겠습니까?");
                         if (!확인) return;
 
@@ -5847,6 +5970,13 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                         화면해제();
                     }
                     else if (유물이름 === "햄버거") {
+
+                        const 햄버거 = 유저데이터.유물목록?.["햄버거"] || 0;
+                        if (햄버거 < 1) {
+                            메시지표시(메시지표시박스, "", "햄버거 정기배송을 신청하세요", "");
+                            return;
+                        }
+
                         const 확인 = confirm("햄버거를 먹고 스태미너 300을 회복하시겠습니까?");
                         if (!확인) return;
 
@@ -5873,6 +6003,14 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                         화면해제();
                     }
                     else if (유물이름 === "마법의팔레트") {
+
+                        const 마법의팔레트 = 유저데이터.유물목록?.["마법의팔레트"] || 0;
+                        if (마법의팔레트 < 1) {
+                            메시지표시(메시지표시박스, "", "주인장에게 문의하세요", "");
+                            return;
+                        }
+
+
                         const 확인 = confirm("마법의팔레트를 사용하여 아이디를 염색하시겠습니까?");
                         if (!확인) return;
 
