@@ -328,7 +328,7 @@ app.post("/boss-ranking", async (req, res) => {
         // ✅ 상위 10명 조회
         const { data: 유저들, error: 유저에러 } = await supabaseAdmin
             .from("users")
-            .select("유저아이디, 보스누적데미지, 유저UID")
+            .select("유저아이디, 보스누적데미지, 유저UID, 마법의팔레트")
             .gt("보스누적데미지", 0)
             .order("보스누적데미지", { ascending: false })
 
@@ -337,8 +337,10 @@ app.post("/boss-ranking", async (req, res) => {
         const 내정보 = 내순위 >= 0 ? {
             순위: 내순위 + 1,
             유저아이디: 유저들[내순위].유저아이디,
-            보스누적데미지: 유저들[내순위].보스누적데미지
+            보스누적데미지: 유저들[내순위].보스누적데미지,
+            마법의팔레트: 유저들[내순위].마법의팔레트
         } : null;
+
 
         if (유저에러) {
             return res.status(500).json({ 오류: "서버오류" });
@@ -2404,7 +2406,7 @@ app.post("/get-chat", async (req, res) => {
     try {
         const { data: 채팅, error } = await supabaseAdmin
             .from("users")
-            .select("유저아이디, 메시지, 메시지시각")   // to_char 제거
+            .select("유저아이디, 마법의팔레트, 메시지, 메시지시각")
             .not("메시지", "is", null)
             .order("메시지시각", { ascending: false });
 
