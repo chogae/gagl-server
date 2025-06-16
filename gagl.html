@@ -1378,10 +1378,15 @@
                 });
 
                 if (error || !data.user) {
-                    메시지표시(메시지표시박스, "", "회원가입 실패: " + error.message, "");
+                    if (error.message.includes("already registered")) {
+                        메시지표시(메시지표시박스, "", "존재하는 아이디입니다", "");
+                    } else {
+                        메시지표시(메시지표시박스, "", "회원가입 실패: " + error.message, "");
+                    }
                     화면해제();
                     return;
                 }
+
 
                 await supabase.auth.signOut();
                 await supabase.auth.signInWithPassword({ email: 이메일형식, password: 비번 });
@@ -3226,6 +3231,7 @@
     <div class="버튼" id="캐시샵">캐 시 샵</div>
     <div class="버튼" id="광장">광 장</div>
     <div class="버튼" id="일어난일">일어난일</div>
+    <div class="버튼" id="로그아웃">로그아웃</div>
   </div>
 `;
         // <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
@@ -3371,7 +3377,20 @@
         });
 
 
+        document.getElementById("로그아웃").addEventListener("click", async () => {
+            if (!유저데이터) return;
 
+            화면잠금();
+
+            try {
+                await supabase.auth.signOut();
+                localStorage.removeItem("기기ID");
+            } catch (e) {
+                console.error("로그아웃 오류:", e);
+            }
+
+            location.reload(); // ← 처음 접속한 상태로 완전히 초기화
+        });
 
 
 
@@ -4007,6 +4026,7 @@
 보스화면과 광장에 마법의팔레트가 적용되었습니다<br>
 신규유저에게 모든 유물목록이 표시됩니다<br>
 클라이언트 코드 리팩토링<br>
+정보탭에 로그아웃 버튼을 추가했습니다<br>
                 `,
                 `
 25.06.15<br>
