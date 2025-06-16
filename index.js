@@ -1354,27 +1354,19 @@ app.post("/register-user", async (req, res) => {
     const parts = formatter.formatToParts(now);
     const 현재시간 = Number(parts.find(p => p.type === "hour")?.value);
 
-    // ✅ 마법의팔레트 자동 지정 로직 추가
-    const 이메일팔레트맵 = {
-        "rkrmfrkt@gagl.com": "가글",
-        "johny87@gagl.com": "네온사인",
-        "pink@gagl.com": "핑크오션",
-        "1234qwer@gagl.com": "황혼하늘",
-        "saiha@gagl.com": "에메랄드숲",
-        "009900@gagl.com": "겨울",
-        "naataa@gagl.com": "민초",
-        "sibasrigal1@gagl.com": "블라섬",
-        "wlstjr1q2w@gagl.com": "지옥",
-    };
-    const 마법의팔레트 = 이메일팔레트맵[로그인이메일] || null;
-
-
     const kstNow = new Date(
         now.toLocaleString("en-US", { timeZone: "Asia/Seoul" })
     );
     const today = kstNow.toISOString().slice(0, 10);
 
 
+    const 유물목록 = Object.fromEntries(
+        Object.keys(신화유물데이터).map(이름 => [이름, 0])
+    );
+
+    // 원하는 기본 유물 수량 설정
+    유물목록["샐러드"] = 5;
+    유물목록["스피커"] = 1;
 
     //신규유저
     const 삽입값 = {
@@ -1396,7 +1388,7 @@ app.post("/register-user", async (req, res) => {
         현재층: 1,
         현재악마번호: Math.floor(Math.random() * 72) + 1,
         스킬: {},
-        유물목록: { "샐러드": 5, "스피커": 1 },
+        유물목록,
         장비목록: [],
         버전업: 8,
         현재스태미너: 1000,
@@ -1422,10 +1414,18 @@ app.post("/register-user", async (req, res) => {
             "태황": 0,
             "천제": 0
         },
-        마법의팔레트,
         생성일: today,
         지하던전: 1,
     };
+
+    const 문구 = `대륙에 등장했다`;
+    await 이벤트기록추가({
+        유저UID: 삽입값.유저UID,
+        유저아이디: 삽입값.유저아이디,
+        문구
+    });
+
+
 
     const { error: 삽입오류 } = await supabaseAdmin
         .from("users")
