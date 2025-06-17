@@ -549,6 +549,8 @@ app.post("/attack-normal", async (req, res) => {
     if (드랍유물) {
         새유저.유물목록 = 새유저.유물목록 || {};
         새유저.유물목록[드랍유물] = (새유저.유물목록[드랍유물] || 0) + 1;
+        await 로그기록(유저.유저아이디, `${드랍유물} 드랍`);
+
     }
 
     const 최종공격력 = 최종공격력계산(새유저);
@@ -558,9 +560,14 @@ app.post("/attack-normal", async (req, res) => {
 
     let 레어몬스터이름 = 레어몬스터등장판정(유저);
 
-    if (레어몬스터이름 && 현재스태미너 === 0) {
-        현재스태미너++;
+    if (레어몬스터이름) {
+        await 로그기록(유저.유저아이디, `'${레어몬스터이름}' 조우`);
+
+        if (현재스태미너 === 0) {
+            현재스태미너++;
+        }
     }
+
 
 
     let 새로고침하자 = false;
@@ -693,6 +700,8 @@ app.post("/attack-rare", async (req, res) => {
             현재스태미너
         };
 
+        await 로그기록(유저.유저아이디, `${몬스터.이름}에게 패배`);
+
         await supabaseAdmin.from("users").update({
             남은체력: 유저복구.남은체력,
             현재스태미너,
@@ -771,6 +780,8 @@ app.post("/attack-rare", async (req, res) => {
         const 키 = `${드랍장비.이름}|${드랍장비.등급}`;
         const 기존 = 새유저.장비목록.find(j => j.이름 === 드랍장비.이름 && j.등급 === 드랍장비.등급);
 
+        await 로그기록(유저.유저아이디, `${드랍장비.이름} 드랍`);
+
         if (기존) {
             기존.수량++;
         } else {
@@ -801,6 +812,8 @@ app.post("/attack-rare", async (req, res) => {
     if (드랍유물) {
         새유저.유물목록 = 새유저.유물목록 || {};
         새유저.유물목록[드랍유물] = (새유저.유물목록[드랍유물] || 0) + 1;
+        await 로그기록(유저.유저아이디, `'${드랍유물}' 드랍`);
+
     }
 
     const 최종공격력 = 최종공격력계산(새유저);
@@ -809,9 +822,18 @@ app.post("/attack-rare", async (req, res) => {
     새유저.최대체력 = 최대체력;
 
     let 새로운레어몬스터이름 = 레어몬스터등장판정(유저);
-    if (새로운레어몬스터이름 && 현재스태미너 === 0) {
-        현재스태미너++;
+
+
+    if (새로운레어몬스터이름) {
+        await 로그기록(유저.유저아이디, `'${새로운레어몬스터이름}' 조우`);
+
+        if (현재스태미너 === 0) {
+            현재스태미너++;
+        }
     }
+
+
+
 
     await supabaseAdmin.from("users").update({
         레벨: 새유저.레벨,
@@ -2583,13 +2605,24 @@ app.listen(3000, () => {
 
 // 로그 기록 함수
 async function 로그기록(유저아이디, 내용) {
+    const now = new Date().toLocaleString("ko-KR", {
+        timeZone: "Asia/Seoul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+
+    const 접두어 = `${now} | `;
     await supabaseAdmin.from("logs").insert([
         {
             유저아이디,
-            내용
+            내용: 접두어 + 내용
         }
     ]);
 }
+
 
 
 
