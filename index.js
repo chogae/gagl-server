@@ -1064,17 +1064,8 @@ app.post("/refresh-stamina", async (req, res) => {
     const { 유저UID } = req.body;
     if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
 
-    // ✅ 현재 한국 시각의 '시간 정수' 계산 (0~23)
-    const now = new Date();
-    const formatter = new Intl.DateTimeFormat("ko-KR", {
-        hour: "numeric",
-        hour12: false,
-        timeZone: "Asia/Seoul"
-    });
-    const parts = formatter.formatToParts(now);
-    const 현재시간정수 = Number(parts.find(p => p.type === "hour")?.value);
+    const 현재정각시간 = Math.floor(Date.now() / 1000 / 3600);
 
-    // ✅ 유저 정보 조회
     const { data: 유저, error } = await supabaseAdmin
         .from("users")
         .select("*")
@@ -1083,33 +1074,57 @@ app.post("/refresh-stamina", async (req, res) => {
 
     if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
 
-    const 저장된시간 = 유저.스태미너갱신시간 ?? 현재시간정수;
-    let 현재스태미너 = 유저.현재스태미너 ?? 1000;
+    const 유저아이디 = 유저.유저아이디;
+    const 저장된정각시간 = 유저.스태미너갱신시간 ?? 현재정각시간;
     const 최대스태미너 = 유저.최대스태미너 ?? 1000;
+    const 이전스태미너 = 유저.현재스태미너 ?? 1000;
 
-    // ✅ 시간 차이 계산 (자정 넘을 경우 보정)
-    let 시간차이 = 현재시간정수 - 저장된시간;
-    if (시간차이 < 0) 시간차이 += 24;
+    const 경과시간 = 현재정각시간 - 저장된정각시간;
+    const 회복량 = 경과시간 * 60;
+    const 회복후스태미너 = Math.min(이전스태미너 + 회복량, 최대스태미너);
 
-    // ✅ 스태미너 회복량 계산 및 적용
-    const 회복량 = 시간차이 * 60;
-    현재스태미너 = Math.min(현재스태미너 + 회복량, 최대스태미너);
-
-    // ✅ DB에 반영
     await supabaseAdmin.from("users").update({
-        현재스태미너,
-        스태미너갱신시간: 현재시간정수
+        현재스태미너: 회복후스태미너,
+        스태미너갱신시간: 현재정각시간
     }).eq("유저UID", 유저UID);
 
-    // ✅ 응답 반환
+    function 시간변환(정각시간) {
+        const ms = 정각시간 * 3600 * 1000;
+        return new Date(ms).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
+    }
+
+    const 현재KST = new Date().toLocaleString("ko-KR", {
+        timeZone: "Asia/Seoul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",   // ✅ 반드시 추가
+        second: "2-digit"    // ✅ 반드시 추가
+    });
+
+    await 로그기록(유저아이디,
+        `📘 스태미너 회복\n` +
+        `- 기존 저장 시각 (정수): ${저장된정각시간}\n` +
+        `- 기존 저장 시각 (KST): ${시간변환(저장된정각시간)}\n` +
+        `- 현재 정각 시각 (정수): ${현재정각시간}\n` +
+        `- 현재 정각 시각 (KST): ${시간변환(현재정각시간)}\n` +
+        `- 현재 접속 시각 (KST): ${현재KST}\n` +  // ✅ 이 줄 추가됨
+        `- 경과 시간 (시간): ${경과시간}\n` +
+        `- 회복량: ${회복량}\n` +
+        `- 기존 현재스태미너: ${이전스태미너}\n` +
+        `- 회복 적용 후 최종 스태미너: ${회복후스태미너}`
+    );
+
     return res.json({
         유저데이터: {
             ...유저,
-            현재스태미너,
-            스태미너갱신시간: 현재시간정수
+            현재스태미너: 회복후스태미너,
+            스태미너갱신시간: 현재정각시간
         }
     });
 });
+
 
 app.post("/upgrade-item", async (req, res) => {
     const { 유저UID, 이름, 등급 } = req.body;
@@ -2566,6 +2581,15 @@ app.listen(3000, () => {
 
 
 
+// 로그 기록 함수
+async function 로그기록(유저아이디, 내용) {
+    await supabaseAdmin.from("logs").insert([
+        {
+            유저아이디,
+            내용
+        }
+    ]);
+}
 
 
 
