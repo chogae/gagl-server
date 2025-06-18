@@ -152,8 +152,82 @@ app.post("/get-user", async (req, res) => {
 
 
 
+    // const { data: 전체유저, error: 유저에러 } = await supabaseAdmin
+    //     .from("users")
+    //     .select("유저UID, 장비목록");
+
+    // if (!유저에러 && 전체유저) {
+    //     for (const 유저 of 전체유저) {
+    //         let 변경 = false;
+    //         const 장비목록 = 유저.장비목록 || [];
+
+    //         for (const 장비 of 장비목록) {
+    //             if (장비.이름 === "루시퍼의 심장" && 장비.등급 === "타락") {
+    //                 const 기존강화 = 장비.강화 || 0;
+    //                 장비.공격력 = 1200;
+    //                 장비.수량 = (장비.수량 || 0) + 기존강화;
+    //                 장비.강화 = 0;
+    //                 변경 = true;
+    //             }
+    //         }
+
+    //         if (변경) {
+    //             const 장비공격력 = Math.max(...장비목록.map(e => e.공격력 || 0));
+    //             const 최종공격력 = 최종공격력계산({
+    //                 ...유저,
+    //                 장비공격력
+    //             });
+
+    //             await supabaseAdmin
+    //                 .from("users")
+    //                 .update({
+    //                     장비목록,
+    //                     장비공격력,
+    //                     최종공격력
+    //                 })
+    //                 .eq("유저UID", 유저.유저UID);
+    //         }
+    //     }
+    // }
 
 
+    // const { data: 싱글유저, error: 유저에러 } = await supabaseAdmin
+    //     .from("users")
+    //     .select("유저UID, 장비목록")
+    //     .eq("유저아이디", "xptmxm")
+    //     .single(); // ⬅️ 한 명만 조회
+
+    // if (!유저에러 && 싱글유저) {
+    //     const 장비목록 = 유저.장비목록 || [];
+    //     let 변경 = false;
+
+    //     for (const 장비 of 장비목록) {
+    //         if (장비.이름 === "루시퍼의 심장" && 장비.등급 === "타락") {
+    //             const 기존강화 = 장비.강화 || 0;
+    //             장비.공격력 = 1200;
+    //             장비.수량 = (장비.수량 || 0) + 기존강화;
+    //             장비.강화 = 0;
+    //             변경 = true;
+    //         }
+    //     }
+
+    //     if (변경) {
+    //         const 장비공격력 = Math.max(...장비목록.map(e => e.공격력 || 0));
+    //         const 최종공격력 = 최종공격력계산({
+    //             ...유저,
+    //             장비공격력
+    //         });
+
+    //         await supabaseAdmin
+    //             .from("users")
+    //             .update({
+    //                 장비목록,
+    //                 장비공격력,
+    //                 최종공격력
+    //             })
+    //             .eq("유저UID", 유저.유저UID);
+    //     }
+    // }
 
 
 
@@ -274,6 +348,8 @@ app.post("/get-user", async (req, res) => {
     유저.레벨 = calculatedLevel;                                // 추가
     // 1레벨 기본공격력 10, 레벨업당 +1
     유저.레벨공격력 = 10 + (calculatedLevel - 1);               // 추가
+    const 장비목록 = 유저.장비목록 || [];
+    유저.장비공격력 = Math.max(...장비목록.map(e => e.공격력 || 0));
 
     유저.최종공격력 = 최종공격력계산(유저);
 
@@ -1110,10 +1186,18 @@ app.post("/refresh-stamina", async (req, res) => {
         스태미너갱신시간: 현재정각시간
     }).eq("유저UID", 유저UID);
 
+
+    let 새로고침하자 = false;
+
+    if (회복량 > 0) {
+        새로고침하자 = true;
+    }
+
     function 시간변환(정각시간) {
         const ms = 정각시간 * 3600 * 1000;
         return new Date(ms).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
     }
+
 
     const 현재KST = new Date().toLocaleString("ko-KR", {
         timeZone: "Asia/Seoul",
@@ -1126,11 +1210,7 @@ app.post("/refresh-stamina", async (req, res) => {
     });
 
     await 로그기록(유저아이디,
-        `📘 스태미너 회복\n` +
-        `- 기존 저장 시각 (정수): ${저장된정각시간}\n` +
         `- 기존 저장 시각 (KST): ${시간변환(저장된정각시간)}\n` +
-        `- 현재 정각 시각 (정수): ${현재정각시간}\n` +
-        `- 현재 정각 시각 (KST): ${시간변환(현재정각시간)}\n` +
         `- 현재 접속 시각 (KST): ${현재KST}\n` +  // ✅ 이 줄 추가됨
         `- 경과 시간 (시간): ${경과시간}\n` +
         `- 회복량: ${회복량}\n` +
@@ -1138,11 +1218,13 @@ app.post("/refresh-stamina", async (req, res) => {
         `- 회복 적용 후 최종 스태미너: ${회복후스태미너}`
     );
 
+
     return res.json({
         유저데이터: {
             ...유저,
             현재스태미너: 회복후스태미너,
-            스태미너갱신시간: 현재정각시간
+            스태미너갱신시간: 현재정각시간,
+            새로고침하자
         }
     });
 });
@@ -1461,6 +1543,9 @@ app.post("/register-user", async (req, res) => {
         유저아이디: 삽입값.유저아이디,
         문구
     });
+
+
+    await 로그기록(삽입값.유저아이디, `회원가입`);
 
 
 
@@ -2280,7 +2365,6 @@ app.post('/synthesize-item', async (req, res) => {
 
 
 
-
 app.post("/upgrade-corrupted-item", async (req, res) => {
     const { 유저UID, 이름, 등급 } = req.body;
     if (!유저UID || !이름 || !등급) {
@@ -2307,17 +2391,19 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
     if ((대상.수량 || 0) < 1) {
         return res.status(400).json({ 오류: "수량이 부족합니다" });
     }
-    if ((대상.강화 || 0) >= 10) {
-        return res.status(400).json({ 오류: "최대 강화 단계입니다" });
+    const current = 대상.강화 || 0;
+
+    // ❌ 11강 이상 차단
+    if (current > 10) {
+        return res.status(400).json({ 오류: "더 이상 강화할 수 없습니다" });
     }
 
-    // ── 여기에 확률 계산 로직 추가 ──
-    const current = 대상.강화 || 0;
-    let successRate = 100 - Math.floor(current / 10) * 10;
-    if (successRate < 10) successRate = 10; // 최소 10%
+    // ✅ 확률 계산
+    let successRate = 100 - current * 10;
+    if (current === 10) successRate = 1;
 
     if (Math.random() * 100 > successRate) {
-        // 실패 시: 수량만 차감하고 DB에 반영한 뒤 에러 응답
+        // 실패 시: 수량만 차감
         대상.수량 -= 1;
         const { error: updFailErr } = await supabaseAdmin
             .from("users")
@@ -2326,18 +2412,53 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
         if (updFailErr) {
             return res.status(500).json({ 오류: "강화 실패 처리 중 오류 발생" });
         }
-        return res.status(400).json({ 오류: `강화 실패 (성공 확률: ${successRate}%)` });
-    }
-    // ── 확률 계산 로직 끝 ──
 
-    // 강화 성공 처리
+        await 로그기록(유저.유저아이디, `루시퍼의 심장 +${대상.강화 + 1}강 실패`);
+
+        const 문구 = (current === 10)
+            ? `루시퍼의 심장 진화 실패..`
+            : `루시퍼의 심장 +${대상.강화 + 1}강 실패..`;
+
+        await 이벤트기록추가({
+            유저UID: 유저.유저UID,
+            유저아이디: 유저.유저아이디,
+            문구
+        });
+        return res.status(400).json({
+            오류: `강화 실패. 재료가 증발했습니다`,
+            수량: 대상.수량
+        });
+    }
+
+    // ✅ 성공 처리
     대상.수량 -= 1;
-    대상.강화 = current + 1;
-    대상.공격력 += 360;
+
+    if (current === 10) {
+        const 기존 = 장비목록.find(e => e.이름 === "베히모스의 허물" && e.등급 === "진화");
+        if (기존) {
+            기존.수량 = (기존.수량 || 0) + 1;
+        } else {
+            장비목록.push({
+                이름: "베히모스의 허물",
+                등급: "진화",
+                강화: 0,
+                공격력: 10000,
+                수량: 1
+            });
+        }
+    } else {
+        // 일반 강화 성공
+        대상.강화 = current + 1;
+
+        const 기준공격력 = 1200;
+        const 증가비율 = 대상.강화 / 10;
+        대상.공격력 += 기준공격력 * 증가비율;
+    }
 
     const maxAtk = Math.max(...장비목록.map(e => e.공격력));
     유저.장비공격력 = maxAtk;
     유저.최종공격력 = 최종공격력계산(유저);
+
     const { error: updErr1 } = await supabaseAdmin
         .from("users")
         .update({ 장비목록, 장비공격력: 유저.장비공격력, 최종공격력: 유저.최종공격력 })
@@ -2346,14 +2467,24 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
         return res.status(500).json({ 오류: "강화 처리 중 오류 발생" });
     }
 
+    if (current === 10) {
+        await 로그기록(유저.유저아이디, `루시퍼의 심장 진화 성공`);
 
-    const 문구 = `루시퍼의 심장 +${대상.강화}강에 성공했다!`;
+    } else {
+        await 로그기록(유저.유저아이디, `루시퍼의 심장 +${대상.강화}강에 성공`);
+
+    }
+
+
+    const 문구 = (current === 10)
+        ? `루시퍼의 심장을 진화시켜 베히모스의 허물 획득!`
+        : `루시퍼의 심장 +${대상.강화}강에 성공했다!`;
+
     await 이벤트기록추가({
         유저UID: 유저.유저UID,
         유저아이디: 유저.유저아이디,
         문구
     });
-
 
     res.json({
         이름: 대상.이름,

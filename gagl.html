@@ -1119,6 +1119,7 @@
             "타락": "#ff0000",
             // "공허": "#ff0000",
             // "공허": "#CD7F32",
+            "진화": "#B87333",
 
             "빨": "#ff0000",
             "주": "#ff8000",
@@ -1481,6 +1482,25 @@
                     return;
                 }
 
+                try {
+                    const 스태미너응답 = await fetch("/refresh-stamina", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ 유저UID: 유저정보.유저UID })
+                    });
+
+                    const 스태미너결과 = await 스태미너응답.json();
+                    if (스태미너응답.ok && 스태미너결과.유저데이터) {
+                        유저정보.현재스태미너 = 스태미너결과.유저데이터.현재스태미너;
+                    }
+
+                    if (스태미너결과.새로고침하자 == true) {
+                        location.reload();
+                    }
+                } catch (e) {
+                    console.warn("스태미너 갱신 실패", e);
+                }
+
                 유저데이터 = {
                     ...유저정보,
                     스킬: 유저정보.스킬 || {},
@@ -1729,7 +1749,7 @@
                         paddingTop: '20vh'               // 화면 상단에서 20% 내려오기
                     });
                     const msg = document.createElement('div');
-                    msg.textContent = '점   검   중';
+                    msg.textContent = '점   검   중 >.<';
                     msg.style.fontSize = '2rem';
                     document.body.appendChild(msg);
                     return;
@@ -3093,20 +3113,23 @@
 
             if (user && user.id) {
                 try {
-                    const 응답 = await fetch("/get-user", {
+                    const 유저응답 = await fetch("/get-user", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ 유저UID: user.id })
                     });
-                    const 결과 = await 응답.json();
-                    const 유저정보 = 결과.유저데이터;
+                    const 유저결과 = await 유저응답.json();
+                    const 유저정보 = 유저결과.유저데이터;
 
                     // if (결과.점검하자 == true) {
                     //     document.body.style.display = 'none';
                     // }
 
+                    if (유저결과.새로고침하자 == true) {
+                        location.reload();
+                    }
 
-                    if (결과.점검하자) {
+                    if (유저결과.점검하자) {
                         // 기존 내용 모두 제거
                         document.body.innerHTML = '';
                         Object.assign(document.body.style, {
@@ -3128,13 +3151,29 @@
                     }
 
 
+                    try {
+                        const 스태미너응답 = await fetch("/refresh-stamina", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ 유저UID: 유저정보.유저UID })
+                        });
+
+                        const 스태미너결과 = await 스태미너응답.json();
+                        if (스태미너응답.ok && 스태미너결과.유저데이터) {
+                            유저정보.현재스태미너 = 스태미너결과.유저데이터.현재스태미너;
+                        }
 
 
-                    if (결과.새로고침하자 == true) {
-                        location.reload();
+                        if (스태미너결과.새로고침하자 == true) {
+                            location.reload();
+                        }
+
+                    } catch (e) {
+                        console.warn("스태미너 갱신 실패", e);
                     }
 
-                    // if (!유저정보 || 유저정보.버전업 !== 7) {
+
+                    // if (!유저정보 || 유저정보.버전업 !== 8) {
                     //     await fetch("/delete-user", {
                     //         method: "POST",
                     //         headers: { "Content-Type": "application/json" },
@@ -3166,20 +3205,6 @@
                         펫보여주기(펫아이콘, 색상코드);
                     }
 
-                    try {
-                        const 응답 = await fetch("/refresh-stamina", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ 유저UID: 유저정보.유저UID })
-                        });
-
-                        const 결과 = await 응답.json();
-                        if (응답.ok && 결과.유저데이터) {
-                            유저정보.현재스태미너 = 결과.유저데이터.현재스태미너;
-                        }
-                    } catch (e) {
-                        console.warn("스태미너 갱신 실패", e);
-                    }
 
                     전투화면보여주기(유저데이터);
                     document.getElementById("메뉴얼").click();
@@ -3994,6 +4019,13 @@
             //서버월정액7달러
             //로그남기기
             //스태미너갱신
+            //레어몬스터조우
+            //레어몬스터장비드랍
+            //유물드랍
+            //장비뽑
+            //유물뽑
+
+            //스태미너회복량있으면새로고침하게
 
             // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
@@ -4021,6 +4053,13 @@
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                 `,
                 `${봄아이콘}`,
+                `
+25.06.18<br>
+장비. 루시퍼의 심장이 초기화되었습니다<br>
+루시퍼의 심장 강화 시스템이 개편되었습니다<br>
+지금부턴 강화 수치에 따른 확률과 증가량이 적용됩니다<br>
+루시퍼의 심장 +10에서 강화 성공 시, 장비가 진화합니다<br>
+                `,
                 `
 25.06.17<br>
 로그기록 시스템을 적용중입니다<br>
@@ -4604,6 +4643,8 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
             update();
         }
 
+
+
         let 현재보스이름 = "그루트"; // 이 줄만 수정하면 전부 연동됨
 
         // 보스화면보여주기
@@ -4983,6 +5024,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                 "고대": 4,
                 "태초": 5,
                 "타락": 6,
+                "진화": 7,
             };
 
             // 등급별 정렬
@@ -5035,14 +5077,30 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                 if (hammerEl) {
 
                     hammerEl.addEventListener('click', async () => {
-                        const current = 장비.강화 || 0;                                       // 현재 강화 단계
-                        let successRate = 100 - Math.floor(current / 10) * 10;                // 1~10강:100%, 11~20강:90%...
-                        if (successRate < 10) successRate = 10;                              // 최소 10%
-                        const nextLevel = current + 1 > 100 ? 100 : current + 1;             // (+100강 이상은 100으로 표시)
+                        const current = 장비.강화 || 0; // 현재 강화 단계
+
+                        // 강화 제한 처리
+                        if (current > 10) {
+                            메시지표시(메시지표시박스, "", "강화할 수 없습니다", "");
+                            return;
+                        }
+
+                        // 강화 확률 계산
+                        let successRate = 100 - current * 10;
+                        if (current === 10) successRate = 1;
+
+                        // ✅ 서버와 동일한 공격력 증가량 계산
+                        const 기준공격력 = 1200;
+                        const nextLevel = current + 1;
+                        const 증가량 = 기준공격력 * (nextLevel / 10); // 누적 증가량을 += 하므로 이게 맞음
+                        const 증가량정수 = Math.round(증가량);
 
                         const 확인 = confirm(
-                            `루시퍼의 심장 1개를 소모해서 ${nextLevel}강으로 강화하시겠습니까?\n` +
-                            `성공 확률: ${successRate}%  /  공격력 증가량: +360`
+                            current === 10
+                                ? `루시퍼의 심장 1개를 소모해서 베히모스의 허물로 진화시키겠습니까?\n` +
+                                `성공 확률: ${successRate}%  /  베히모스의 허물 - 공격력: 10000`
+                                : `루시퍼의 심장 1개를 소모해서 +${nextLevel}강으로 강화하시겠습니까?\n` +
+                                `성공 확률: ${successRate}%  /  공격력 증가량: +${증가량정수}`
                         );
                         if (!확인) return;
 
@@ -5058,9 +5116,18 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                                 })
                             });
                             const data = await res.json();
-                            if (!res.ok) throw new Error(data.오류);
+                            if (!res.ok) {
+                                const item = 유저데이터.장비목록.find(e =>
+                                    e.이름 === 장비.이름 && e.등급 === 장비.등급
+                                );
+                                if (item) {
+                                    item.수량 = data.수량;
+                                }
+                                throw new Error(data.오류);
+                            }
 
-                            // 1) 전역 유저데이터의 해당 아이템만 업데이트
+                            유저데이터.장비목록 = data.유저데이터.장비목록;
+
                             const item = 유저데이터.장비목록.find(e =>
                                 e.이름 === data.이름 && e.등급 === data.등급
                             );
@@ -5070,14 +5137,13 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                                 item.공격력 = data.공격력;
                             }
 
-                            // 2) 전역 최종공격력 갱신
                             유저데이터.최종공격력 = data.최종공격력;
 
-                            // 3) 메시지 보여주고 화면 다시 그리기
                             메시지표시(메시지표시박스, "", "강화 성공", "");
                             장비화면보여주기();
                         } catch (e) {
                             메시지표시(메시지표시박스, "", e.message, "");
+                            장비화면보여주기();
                         } finally {
                             화면해제();
                         }
