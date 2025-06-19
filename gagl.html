@@ -3460,7 +3460,7 @@
         document.getElementById("내정보").addEventListener("click", async () => {
             if (!유저데이터) return;
             화면잠금();
-            document.getElementById("화면설명").innerHTML = "새로고침(F5)을 생활화하세요";
+            document.getElementById("화면설명").innerHTML = "추가하고싶은 정보가 있다면 주인장에게 문의하세요<br>장신구는 구현 예정입니다";
 
             모든화면숨기기();
             document.getElementById("내정보화면").style.display = "block";
@@ -4292,7 +4292,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                 "보스 누적데미지 목표달성 전유저 공통보상은 펫입니다",
                 "목표달성에 따라 최종공격력을 10%, 20%, 30% 증가시켜주는",
                 "펫을 획득할 수 있으며, 다음 보스가 등장하기 전까지 가글의",
-                "모든 화면에 펫이 떠다니게됩니다",
+                `<s>모든 화면에 펫이 떠다니게됩니다</s>`,
             ];
 
             for (const 문장 of 문장들) {
