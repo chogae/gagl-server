@@ -2344,6 +2344,9 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
     const 망치보정 = 망치개수 * 0.1;
     successRate += 망치보정;
 
+    const 실패카운트보정 = 유저.실패카운트 || 0;
+    successRate += 실패카운트보정;
+
     // 확률은 최대 100% 초과 불가
     if (successRate > 100) successRate = 100;
 
