@@ -2404,7 +2404,12 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
                 수량: 1
             });
         }
-    } else {
+
+        // ✅ 루시퍼 초기화
+        대상.강화 = 0;
+        대상.공격력 = 1200;
+    }
+    else {
         // 일반 강화 성공
         대상.강화 = current + 1;
 
