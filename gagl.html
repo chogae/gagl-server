@@ -1573,7 +1573,7 @@
             document.getElementById("전투화면").style.display = "block";
             document.getElementById("에너지박스").style.display = "block";
 
-            document.getElementById("화면설명").innerHTML = "스태미너는 정각을 기준으로 시간당 60씩 회복됩니다";
+            document.getElementById("화면설명").innerHTML = "스태미너는 정각을 기준으로 시간당 120씩 회복됩니다";
 
             if (유저.펫단계 >= 1) {
                 let 색상코드;
@@ -1594,7 +1594,7 @@
                 paths.forEach(p => p.setAttribute("fill", 색상코드));
             }
 
-            const 최대 = 유저.최대스태미너 ?? 100;
+            const 최대 = 유저.최대스태미너 ?? 2000;
             const 현재 = 유저.현재스태미너 ?? 0;
 
             const 스태미너표시 = document.getElementById("스태미너표시");
@@ -1967,7 +1967,7 @@
                 const 스태미너표시 = document.getElementById("스태미너표시");
                 const 에너지바 = document.querySelector(".에너지바");
                 if (스태미너표시 && 에너지바) {
-                    const 최대 = 유저데이터.최대스태미너 ?? 100;
+                    const 최대 = 유저데이터.최대스태미너 ?? 2000;
                     const 현재 = 유저데이터.현재스태미너 ?? 0;
                     스태미너표시.innerText = `${현재}/${최대}`;
                     에너지바.style.width = `${(현재 / 최대) * 100}%`;
@@ -2277,7 +2277,7 @@
                 const 스태미너표시 = document.getElementById("스태미너표시");
                 const 에너지바 = document.querySelector(".에너지바");
                 if (스태미너표시 && 에너지바) {
-                    const 최대 = 유저데이터.최대스태미너 ?? 100;
+                    const 최대 = 유저데이터.최대스태미너 ?? 2000;
                     const 현재 = 유저데이터.현재스태미너 ?? 0;
                     스태미너표시.innerText = `${현재}/${최대}`;
                     에너지바.style.width = `${(현재 / 최대) * 100}%`;
@@ -4009,8 +4009,6 @@
             //장신구구현
             //보스보상표시
             //서버월정액7달러
-            //신술회복최대안넘게
-            //신규유저스태미너회복시간
 
             // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
@@ -4045,6 +4043,8 @@
 신규유저 새로고침 시 스태미너가 최초 1회 회복되던 버그 수정<br>
 루시퍼의 심장 강화 확률에 실패횟수가 영구적으로 추가확률을<br>
 보정해줍니다<br>
+시간당 스태미너 회복량이 2배로 상향되었습니다<br>
+최대스태미너가 2배로 상향되었습니다<br>
                 `,
                 `
 25.06.19<br>
@@ -4287,7 +4287,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                 `${겨울아이콘}`,
                 "화면 최상단 아이디를 클릭하시면, 아이디 변경이 가능합니다",
                 "모든 팝업창은 외부를 클릭 시 닫힙니다",
-                "스태미너는 시간당 60씩 회복됩니다",
+                "스태미너는 시간당 120씩 회복됩니다",
                 "마글엔 존재하지 않았지만 편의를 위해 자동사냥을 구현했습니다",
                 `<s>레벨업당 5의 공격력이 증가합니다</s>`,
                 "레벨업당 1의 공격력이 증가합니다",
@@ -4913,7 +4913,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                 const 스태미너표시 = document.getElementById("스태미너표시");
                 const 에너지바 = document.querySelector(".에너지바");
                 if (스태미너표시 && 에너지바) {
-                    const 최대 = 유저데이터.최대스태미너 ?? 100;
+                    const 최대 = 유저데이터.최대스태미너 ?? 2000;
                     const 현재 = 유저데이터.현재스태미너 ?? 0;
                     스태미너표시.innerText = `${현재}/${최대}`;
                     에너지바.style.width = `${(현재 / 최대) * 100}%`;
