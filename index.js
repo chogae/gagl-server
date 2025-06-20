@@ -2401,7 +2401,7 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
                 등급: "진화",
                 강화: 0,
                 공격력: 10000,
-                수량: 1
+                수량: 0
             });
         }
 
