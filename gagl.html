@@ -5103,8 +5103,8 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                         // ✅ 클라이언트에서도 보정 적용
                         const 망치 = 유저데이터.유물목록?.["망치"] || 0;
                         const 실패카운트 = 유저데이터.실패카운트 || 0;
-
                         const 망치보정 = 망치 * 0.1;
+
                         successRate += 망치보정 + 실패카운트;
 
                         if (successRate > 100) successRate = 100;
@@ -5149,6 +5149,8 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                                 if (item) {
                                     item.수량 = data.수량;
                                 }
+                                유저데이터.실패카운트 = data.실패카운트
+
                                 throw new Error(data.오류);
                             }
 
