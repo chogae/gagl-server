@@ -1408,13 +1408,13 @@ app.post("/register-user", async (req, res) => {
         timeZone: "Asia/Seoul"
     });
     const parts = formatter.formatToParts(now);
-    const 현재시간 = Number(parts.find(p => p.type === "hour")?.value);
 
     const kstNow = new Date(
         now.toLocaleString("en-US", { timeZone: "Asia/Seoul" })
     );
     const today = kstNow.toISOString().slice(0, 10);
 
+    const 현재정각시간 = Math.floor(Date.now() / 1000 / 3600); // 시간 단위 기준 (정수)
 
     const 유물목록 = Object.fromEntries(
         Object.keys(신화유물데이터).map(이름 => [이름, 0])
@@ -1449,7 +1449,7 @@ app.post("/register-user", async (req, res) => {
         버전업: 8,
         현재스태미너: 1000,
         최대스태미너: 1000,
-        스태미너갱신시간: 현재시간,
+        스태미너갱신시간: 현재정각시간,
         전직정보: {
             "백인장": 0,
             "오백인장": 0,
@@ -1473,6 +1473,7 @@ app.post("/register-user", async (req, res) => {
         생성일: today,
         지하던전: 1,
     };
+
 
     const 문구 = `대륙에 등장했다`;
     await 이벤트기록추가({
@@ -2855,6 +2856,7 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴, 보�
             if (단계 >= 1 && 단계 <= 신술회복량.length) {
                 if (Math.random() < 신술성공확률) {
                     유저HP += 신술회복량[단계 - 1];
+                    유저HP = Math.min(유저HP, 유저.최대체력);
                 }
             }
         }
