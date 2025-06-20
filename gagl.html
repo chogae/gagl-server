@@ -855,7 +855,12 @@
     </div>
 
     <div id="인증화면" class="사백픽셀테두리 세로정렬">
-        <input id="이메일입력" type="text" placeholder="한글x, 영문아이디 입력" autocomplete="off" />
+        <input id="이메일입력" type="text" placeholder="한글x, 영문아이디 입력" autocomplete="off" oninput="
+    if (/[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(this.value)) {
+        메시지표시(메시지표시박스, '', '한글은 입력할 수 없습니다', '');
+    }
+    this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');
+  " />
         <input id="비번입력" type="password" placeholder="비밀번호 입력" autocomplete="off" />
         <button onclick="회원가입()">회원가입</button>
         <button onclick="로그인()">로그인</button>

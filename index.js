@@ -2614,6 +2614,7 @@ app.post("/get-events", async (req, res) => {
     const { data, error } = await supabaseAdmin
         .from("이벤트기록")
         .select("유저아이디, 일어난일, 일어난일시각")
+        .neq("유저아이디", "xptmxm")
         .order("일어난일시각", { ascending: false })
         .limit(50);
 
