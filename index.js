@@ -317,6 +317,34 @@ app.post("/get-user", async (req, res) => {
     }
 
 
+    const kstNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+    const 오늘날짜 = kstNow.toISOString().slice(0, 10); // ⬅️ 한국 날짜 (YYYY-MM-DD)
+
+    const 마지막지급날짜 = 유저.하루한번
+        ? new Date(new Date(유저.하루한번).toLocaleString("en-US", { timeZone: "Asia/Seoul" }))
+            .toISOString()
+            .slice(0, 10)
+        : null;
+
+    if (마지막지급날짜 !== 오늘날짜) {
+        const 새로운유물목록 = { ...유저.유물목록 };
+        새로운유물목록["스피커"] = 9;
+
+        const { error: 하루업데이트에러 } = await supabaseAdmin
+            .from("users")
+            .update({
+                유물목록: 새로운유물목록,
+                하루한번: kstNow.toISOString()
+            })
+            .eq("유저UID", 유저UID);
+
+        if (!하루업데이트에러) {
+            유저.유물목록 = 새로운유물목록;
+            유저.하루한번 = kstNow.toISOString();
+        }
+    }
+
+
     let 새로고침하자 = false;
 
     // ✅ 스태미너 회복 처리 (시간 기반)
@@ -1422,7 +1450,7 @@ app.post("/register-user", async (req, res) => {
 
     // 원하는 기본 유물 수량 설정
     유물목록["샐러드"] = 5;
-    유물목록["스피커"] = 1;
+    유물목록["스피커"] = 9;
 
     //신규유저
     const 삽입값 = {
@@ -2535,73 +2563,86 @@ app.post("/attack-dungeon", async (req, res) => {
 
 
 
-
-
 app.post("/get-chat", async (req, res) => {
     try {
         const { data: 채팅, error } = await supabaseAdmin
-            .from("users")
-            .select("유저아이디, 마법의팔레트, 메시지, 메시지시각")
-            .not("메시지", "is", null)
-            .order("메시지시각", { ascending: false });
+            .from("광장")
+            .select("유저아이디, 내용, 시각, 마법의팔레트")
+            .order("시각", { ascending: false })
+            .limit(50);
+
 
         if (error) {
-            console.error("채팅 로드 오류:", error);
+            console.error("쿼리 오류:", error);
             return res.status(500).json({ 오류: error.message });
         }
-        return res.json({ 채팅 });  // [{유저아이디, 메시지, 메시지시각}, …]
+
+        return res.json({ 채팅 });
     } catch (e) {
-        console.error("서버 오류:", e);
+        console.error("채팅 로드 오류:", e);
         return res.status(500).json({ 오류: "서버 오류 발생" });
     }
 });
 
 
 
-
 app.post("/save-chat", async (req, res) => {
-    const { 유저UID, 메시지 } = req.body;
-    // 1) 필수 값 검사
-    if (!유저UID || !메시지) {
-        return res.status(400).json({ 오류: "유저UID 또는 메시지 누락" });
+    const { 유저UID, 유저아이디, 메시지 } = req.body;
+    if (!유저UID || !유저아이디 || !메시지) {
+        return res.status(400).json({ 오류: "유저UID / 유저아이디 / 메시지 누락" });
     }
-
 
     const { data: 유저, error: userErr } = await supabaseAdmin
         .from("users")
-        .select("유물목록")
+        .select("유물목록, 마법의팔레트")
         .eq("유저UID", 유저UID)
         .single();
+
     if (userErr || !유저) {
-        console.error("유저 조회 실패:", userErr);
         return res.status(404).json({ 오류: "유저 정보 없음" });
     }
 
+    const 유물목록 = 유저.유물목록 || {};
+    const 스피커 = 유물목록["스피커"] || 0;
 
-    const 스피커 = 유저.유물목록?.["스피커"] || 0;
     if (스피커 < 1) {
         return res.status(400).json({ 오류: "스피커가 없습니다" });
     }
 
-
+    // 1개 차감
+    유물목록["스피커"] = 스피커 - 1;
 
     try {
-        // 2) 현재 시각 ISO 문자열로 생성
-        const now = new Date().toISOString();
-        // 3) users 테이블의 해당 유저 행을 업데이트
-        const { error } = await supabaseAdmin
-            .from("users")
-            .update({
-                메시지,
-                메시지시각: now     // TIMESTAMPTZ 컬럼에 직접 입력
-            })
-            .eq("유저UID", 유저UID);
-        if (error) {
-            console.error("메시지 저장 실패:", error);
-            return res.status(500).json({ 오류: error.message });
+        // 1) 광장 테이블에 메시지 저장
+        const { error: insertErr } = await supabaseAdmin
+            .from("광장")
+            .insert([{
+                유저아이디,
+                내용: 메시지,
+                마법의팔레트: 유저.마법의팔레트 || ""
+            }]);
+
+        if (insertErr) {
+            console.error("메시지 저장 실패:", insertErr);
+            return res.status(500).json({ 오류: insertErr.message });
         }
-        // 4) 성공 응답
-        return res.json({ 성공: true });
+
+        // 2) 유저 테이블에서 스피커 -1 반영
+        const { error: updateErr } = await supabaseAdmin
+            .from("users")
+            .update({ 유물목록 })
+            .eq("유저UID", 유저UID);
+
+        if (updateErr) {
+            console.error("스피커 차감 실패:", updateErr);
+            return res.status(500).json({ 오류: updateErr.message });
+        }
+
+        return res.json({
+            성공: true,
+            유물목록  // ← 클라이언트에서 사용할 수 있도록 함께 전송
+        });
+
     } catch (e) {
         console.error("서버 오류:", e);
         return res.status(500).json({ 오류: "서버 오류 발생" });
@@ -3250,7 +3291,7 @@ const 일반유물데이터 = {
     "암포라": { 설명: "보스전 스태미너 소모량 감소(1%)" },
     "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
     "스탭": { 설명: "화려한 발재간으로 체력소모 무시(0.1%)" },
-    "스피커": { 설명: "광장에서 소리칠 수 있습니다" },
+    // "스피커": { 설명: "광장에서 소리칠 수 있습니다" },
     "망치": { 설명: "루시퍼의 심장 강화확률 증가(+0.1%)" },
     "모루": { 설명: "증발되는 재료를 재조립합니다(0.1%)" },
 };
@@ -3270,7 +3311,7 @@ const 레어유물데이터 = {
     "티켓": { 설명: "고급장비도박에 사용됩니다" },
     "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
     "열쇠": { 설명: "지하던전에 진입합니다" },
-    "스피커": { 설명: "광장에서 소리칠 수 있습니다" },
+    // "스피커": { 설명: "광장에서 소리칠 수 있습니다" },
     "망치": { 설명: "루시퍼의 심장 강화확률 증가(+0.1%)" },
     "모루": { 설명: "증발되는 재료를 재조립합니다(0.1%)" },
 };
@@ -3290,7 +3331,7 @@ const 신화유물데이터 = {
     "티켓": { 설명: "고급장비도박에 사용됩니다" },
     "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
     "열쇠": { 설명: "지하던전에 진입합니다" },
-    "스피커": { 설명: "광장에서 소리칠 수 있습니다" },
+    // "스피커": { 설명: "광장에서 소리칠 수 있습니다" },
     "마법의팔레트": { 설명: "아이디를 염색합니다" },
     "햄버거": { 설명: "스태미너를 충전합니다(+300)" },
     "망치": { 설명: "루시퍼의 심장 강화확률 증가(+0.1%)" },

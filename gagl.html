@@ -3586,6 +3586,11 @@
 
             // … (유저데이터.직업결정은 { "신술": 6 } 같은 객체 형태로 들어있다고 가정)
 
+            const 직위 = 최고전직명(유저데이터.전직정보);
+
+            document.getElementById("여섯째줄오른쪽").innerHTML = `전직 : ${직위 ? `${직위} ` : '-'}`;
+
+
             const 결정객체 = 유저데이터.직업결정;  // 예: { "신술": 6 }
             if (결정객체) {
                 // 첫 번째(유일한) 키만 꺼냅니다. → "신술"
@@ -3608,10 +3613,10 @@
                 }
 
                 // 화면에 “신술(퀸)” 형태로 표시
-                document.getElementById("여섯째줄오른쪽").innerHTML = `직업 : [${계열키}${단계}차] ${직업이름}`;
+                document.getElementById("일곱째줄오른쪽").innerHTML = `직업 : [${계열키}${단계}차] ${직업이름}`;
             } else {
                 // 아직 선택된 직업이 없으면 ‘-’만 표시
-                document.getElementById("여섯째줄오른쪽").innerHTML = "직업 : -";
+                document.getElementById("일곱째줄오른쪽").innerHTML = "직업 : -";
             }
 
 
@@ -3666,6 +3671,7 @@
     <input id="chat-input" 
            type="text" 
            maxlength="50" 
+            autocomplete="off"
            placeholder="글자 50자 제한 / 메시지를 입력하고 Enter"
            style="width: 100%; margin-top: 8px; padding: 6px; box-sizing: border-box;" />
     <!-- 메시지 리스트 -->
@@ -3685,7 +3691,7 @@
                 const chatList = document.getElementById("chat-list");
                 chatList.innerHTML = list
                     .map(row => {
-                        const dt = new Date(row.메시지시각);
+                        const dt = new Date(row.시각);  // 메시지시각 → 시각
                         const pad = v => String(v).padStart(2, "0");
                         const yy = dt.getFullYear().toString().slice(2);
                         const MM = pad(dt.getMonth() + 1);
@@ -3694,9 +3700,9 @@
                         const mm = pad(dt.getMinutes());
                         const ts = `${yy}-${MM}-${dd} ${hh}:${mm}`;
 
-                        const 닉네임표시 = 팔레트적용(row.유저아이디, row.마법의팔레트);
+                        const 닉네임표시 = 팔레트적용(row.유저아이디, row.마법의팔레트 || "");
 
-                        return `<div>${ts} ${닉네임표시} : ${row.메시지}</div>`;
+                        return `<div>${ts} ${닉네임표시} : ${row.내용}</div>`;  // 메시지 → 내용
                     })
                     .join("");
             } catch (e) {
@@ -3722,8 +3728,10 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         유저UID: 유저데이터.유저UID,
+                        유저아이디: 유저데이터.유저아이디,
                         메시지: text
                     })
+
                 });
                 // ② JSON으로 파싱
                 const data = await res.json();
@@ -3738,8 +3746,13 @@
                 }
 
                 // ④ 성공 시
+                if (data.유물목록) {
+                    유저데이터.유물목록 = data.유물목록;
+                }
+                메시지표시(메시지표시박스, "", `스피커 1개를 소모합니다`, "");
                 e.target.value = "";
                 document.getElementById("광장").click();
+
             });
 
 
@@ -4015,6 +4028,9 @@
             //보스보상표시
             //서버월정액7달러
 
+            //전투화면보스아이콘
+            //일요일보스아이콘
+
             // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
             // npm install -g nodemon
@@ -4042,6 +4058,14 @@
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                 `,
                 `${여름아이콘}`,
+                `
+25.06.22<br>
+유물. 스피커가 더이상 드랍이나 뽑기로 등장하지 않습니다<br>
+매일, 하루 한 번 스피커가 9개로 셋팅됩니다<br>
+광장에서 수다를 누적할 수 있습니다<br>
+내정보화면과 미니정보창에 전직정보가 추가되었습니다<br>
+
+                `,
                 `
 25.06.20<br>
 직업. 신술의 회복량 버그 수정<br>
@@ -4526,6 +4550,12 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                     // … (유저.직업결정은 { "신술": 6 } 같은 객체 형태로 들어있다고 가정)
 
 
+                    const 직위 = 최고전직명(유저.전직정보);
+
+                    창.querySelector("#여섯째줄오른쪽").innerHTML = `전직 : ${직위 ? `${직위} ` : '-'}`;
+
+
+
                     창.querySelector("#여섯째줄왼쪽").innerHTML = `지하던전 : 지하${유저.지하던전}층`;
                     창.querySelector("#일곱째줄왼쪽").innerHTML = `강화실패 : ${유저.실패카운트 ?? 0}회`;
 
@@ -4551,10 +4581,10 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                         }
 
                         // 화면에 “신술(퀸)” 형태로 표시
-                        창.querySelector("#여섯째줄오른쪽").innerHTML = `직업 : [${계열키}${단계}차] ${직업이름}`;
+                        창.querySelector("#일곱째줄오른쪽").innerHTML = `직업 : [${계열키}${단계}차] ${직업이름}`;
                     } else {
                         // 아직 선택된 직업이 없으면 ‘-’만 표시
-                        창.querySelector("#여섯째줄오른쪽").innerHTML = "직업 : -";
+                        창.querySelector("#일곱째줄오른쪽").innerHTML = "직업 : -";
                     }
 
 
@@ -4826,7 +4856,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                     const 에러결과 = await 응답.json();
                     const 메시지 = 에러결과.오류 || "오류 발생";
                     const 보스사냥컨테이너 = document.getElementById("보스사냥컨테이너");
-                    메시지표시(보스사냥컨테이너, "", 메시지, "");
+                    메시지표시(메시지표시박스, "", 메시지, "");
                     return;
                 }
 
@@ -4835,7 +4865,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                 const 보스사냥컨테이너 = document.getElementById("보스사냥컨테이너");
 
                 if (결과.결과 === "불가") {
-                    메시지표시(보스사냥컨테이너, "", 결과.메시지 || "스태미너 부족", "");
+                    메시지표시(메시지표시박스, "", 결과.메시지 || "스태미너 부족", "");
                     return;
                 }
 
@@ -5218,7 +5248,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                 const 결과 = await 응답.json();
 
                 if (!응답.ok || 결과.오류) {
-                    메시지표시(합성버튼, "", 결과.오류 || "장비 합성에 실패했습니다.", "");
+                    메시지표시(메시지표시박스, "", 결과.오류 || "장비 합성에 실패했습니다.", "");
                     return;
                 }
 
@@ -5231,7 +5261,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 
             } catch (e) {
                 // 네트워크나 예외 발생 시
-                메시지표시(합성버튼, "", "구현중입니다", "");
+                메시지표시(메시지표시박스, "", "구현중입니다", "");
                 console.error(e);
             } finally {
                 화면해제();
@@ -5884,7 +5914,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 const 결과 = await 응답.json();
 
                 if (!응답.ok || 결과.오류) {
-                    메시지표시(보유숙련도, "", 결과.오류 || "초기화 실패", "");
+                    메시지표시(메시지표시박스, "", 결과.오류 || "초기화 실패", "");
                     return;
                 }
 
@@ -5893,10 +5923,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 유저데이터.스킬 = 결과.스킬;
                 유저데이터.유물목록 = 결과.유물목록;
 
-                메시지표시(스킬화면, "", "모든 스킬 초기화 완료", "");
+                메시지표시(메시지표시박스, "", "모든 스킬 초기화 완료", "");
                 스킬화면보여주기();
             } catch (e) {
-                메시지표시(스킬화면, "", "서버 오류: " + e.message, "");
+                메시지표시(메시지표시박스, "", "서버 오류: " + e.message, "");
             } finally {
                 화면해제();
             }
@@ -5931,7 +5961,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
                 if (!응답.ok || 결과.오류) {
                     메시지표시(
-                        전직화면타이틀,
+                        메시지표시박스,
                         "",
                         결과.오류 || "초기화 실패",
                         ""
@@ -5948,12 +5978,12 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 유저데이터.유물목록 = 결과.유물목록;
 
                 // 화면에 메시지 출력
-                메시지표시(전직화면타이틀, "", "직업 초기화 완료", "");
+                메시지표시(메시지표시박스, "", "직업 초기화 완료", "");
 
                 // 전직화면을 새로 불러와서 다시 렌더링
                 전직화면보여주기();
             } catch (e) {
-                메시지표시(전직화면타이틀, "", "서버 오류: " + e.message, "");
+                메시지표시(메시지표시박스, "", "서버 오류: " + e.message, "");
             } finally {
                 화면해제();
             }
@@ -6077,15 +6107,15 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                             const 결과 = await 응답.json();
 
                             if (결과.오류) {
-                                메시지표시(div, "", 결과.오류, "");
+                                메시지표시(메시지표시박스, "", 결과.오류, "");
                             } else {
                                 유저데이터.현재스태미너 = 결과.현재스태미너;
                                 유저데이터.유물목록 = 결과.유물목록;
-                                메시지표시(div, "", "샐러드를 먹고 스태미너가 회복됩니다", "");
+                                메시지표시(메시지표시박스, "", "샐러드를 먹고 스태미너가 회복됩니다", "");
                                 document.getElementById("유물").click();
                             }
                         } catch (e) {
-                            메시지표시(div, "", "서버 오류 발생", "");
+                            메시지표시(메시지표시박스, "", "서버 오류 발생", "");
                         }
                         화면해제();
                     }
@@ -6110,15 +6140,15 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                             const 결과 = await 응답.json();
 
                             if (결과.오류) {
-                                메시지표시(div, "", 결과.오류, "");
+                                메시지표시(메시지표시박스, "", 결과.오류, "");
                             } else {
                                 유저데이터.현재스태미너 = 결과.현재스태미너;
                                 유저데이터.유물목록 = 결과.유물목록;
-                                메시지표시(div, "", "햄버거 존맛!", "");
+                                메시지표시(메시지표시박스, "", "햄버거 존맛!", "");
                                 document.getElementById("유물").click();
                             }
                         } catch (e) {
-                            메시지표시(div, "", "서버 오류 발생", "");
+                            메시지표시(메시지표시박스, "", "서버 오류 발생", "");
                         }
                         화면해제();
                     }
@@ -6144,16 +6174,16 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                             const 결과 = await 응답.json();
 
                             if (결과.오류) {
-                                메시지표시(div, "", 결과.오류, "");
+                                메시지표시(메시지표시박스, "", 결과.오류, "");
                             } else {
                                 // 서버가 반환한 업데이트된 유물목록으로 갱신
                                 유저데이터.유물목록 = 결과.유물목록;
-                                메시지표시(div, "", 결과.마법의팔레트 + " 당첨. 새로고침하세요", "");
+                                메시지표시(메시지표시박스, "", 결과.마법의팔레트 + " 당첨. 새로고침하세요", "");
                                 // 화면 다시 렌더링
                                 document.getElementById("유물").click();
                             }
                         } catch (e) {
-                            메시지표시(div, "", "서버 오류 발생", "");
+                            메시지표시(메시지표시박스, "", "서버 오류 발생", "");
                         }
                         화면해제();
                     }
@@ -6171,17 +6201,17 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     //         const 결과 = await 응답.json();
 
                     //         if (결과.오류) {
-                    //             메시지표시(div, "", 결과.오류, "");
+                    //             메시지표시(메시지표시박스, "", 결과.오류, "");
                     //         } else {
                     //             // 서버가 반환한 업데이트된 유물목록으로 갱신
                     //             유저데이터.골드 = 결과.골드;
                     //             유저데이터.유물목록 = 결과.유물목록;
-                    //             메시지표시(div, "", "돈생겼다 뽑기하러 가즈ㅏㅏ", "");
+                    //             메시지표시(메시지표시박스, "", "돈생겼다 뽑기하러 가즈ㅏㅏ", "");
                     //             // 화면 다시 렌더링
                     //             document.getElementById("유물").click();
                     //         }
                     //     } catch (e) {
-                    //         메시지표시(div, "", "서버 오류 발생", "");
+                    //         메시지표시(메시지표시박스, "", "서버 오류 발생", "");
                     //     }
                     //     화면해제();
                     // }
@@ -6199,17 +6229,17 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     //         const 결과 = await 응답.json();
 
                     //         if (결과.오류) {
-                    //             메시지표시(div, "", 결과.오류, "");
+                    //             메시지표시(메시지표시박스, "", 결과.오류, "");
                     //         } else {
                     //             // 서버가 반환한 업데이트된 유물목록으로 갱신
                     //             유저데이터.골드 = 결과.골드;
                     //             유저데이터.유물목록 = 결과.유물목록;
-                    //             메시지표시(div, "", "돈생겼다 뽑기하러 가즈ㅏㅏ", "");
+                    //             메시지표시(메시지표시박스, "", "돈생겼다 뽑기하러 가즈ㅏㅏ", "");
                     //             // 화면 다시 렌더링
                     //             document.getElementById("유물").click();
                     //         }
                     //     } catch (e) {
-                    //         메시지표시(div, "", "서버 오류 발생", "");
+                    //         메시지표시(메시지표시박스, "", "서버 오류 발생", "");
                     //     }
                     //     화면해제();
                     // }
