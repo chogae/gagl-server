@@ -3654,7 +3654,7 @@
         document.getElementById("광장").addEventListener("click", async () => {
             if (!유저데이터) return;
             화면잠금();
-            document.getElementById("화면설명").innerHTML = "수다를 떨어주세요";
+            document.getElementById("화면설명").innerHTML = "수다를 떨어주세요<br>최신 50개만 표시됩니다";
 
             모든화면숨기기();
             document.getElementById("광장화면").style.display = "block";
@@ -3762,7 +3762,7 @@
         document.getElementById("일어난일").addEventListener("click", async () => {
             if (!유저데이터) return;
             화면잠금();
-            document.getElementById("화면설명").innerHTML = "최근에 일어난 일들입니다";
+            document.getElementById("화면설명").innerHTML = "최근에 일어난 일들입니다<br>최신 50개만 표시됩니다";
 
             모든화면숨기기();
             document.getElementById("일어난일화면").style.display = "block";
@@ -4056,6 +4056,7 @@
 보스 컨텐츠가 정상화 되었습니다<br>
 이제 지하던전 입장 시 체력을 최대로 회복합니다<br>
 자동합성으로 태초와 타락 획득 시 일어난일에 합성으로 표시됩니다<br>
+전투 시 '드랍', 뽑기 시 '획득', 합성 시 '합성'으로 표시됩니다<br>
                 `,
                 `
 25.06.22<br>
