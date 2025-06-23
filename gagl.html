@@ -3339,7 +3339,8 @@
 
         성장툴팁.innerHTML = `
   <div style="display: flex; flex-direction: column; gap: 10px;">    
-    <div class="버튼" id="장비">장 비</div>
+    <div class="버튼" id="장비">무 기</div>
+    <div class="버튼" id="악세">악 세</div>
     <div class="버튼" id="유물">유 물</div>
     <div class="버튼" id="전직">전 직</div>
     <div class="버튼" id="스킬">스 킬</div>
@@ -3380,6 +3381,16 @@
             const 뽑기창 = document.getElementById("뽑기창");
             뽑기창.style.display = "block";
         });
+
+
+        document.getElementById("악세").addEventListener("click", () => {
+            if (!유저데이터) return;
+            모든화면숨기기();
+            document.getElementById("화면설명").innerHTML = `악세 어려워요 뉴뉴`;
+
+            메시지표시(메시지표시박스, "", `구현중입니다`, "");
+        });
+
 
 
         document.getElementById("로그아웃").addEventListener("click", async () => {
@@ -4044,6 +4055,7 @@
 25.06.23<br>
 보스 컨텐츠가 정상화 되었습니다<br>
 이제 지하던전 입장 시 체력을 최대로 회복합니다<br>
+자동합성으로 태초와 타락 획득 시 일어난일에 합성으로 표시됩니다<br>
                 `,
                 `
 25.06.22<br>
