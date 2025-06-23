@@ -329,6 +329,11 @@ app.post("/get-user", async (req, res) => {
     if (마지막지급날짜 !== 오늘날짜) {
         const 새로운유물목록 = { ...유저.유물목록 };
         새로운유물목록["스피커"] = 9;
+        // const 현재열쇠 = 새로운유물목록["열쇠"] || 0;
+        // if (현재열쇠 < 9) {
+        //     새로운유물목록["열쇠"] = 현재열쇠 + 1;
+        // }
+
 
         const { error: 하루업데이트에러 } = await supabaseAdmin
             .from("users")
@@ -2246,7 +2251,6 @@ app.post("/gamble-Relic", async (req, res) => {
 
 
 
-// index.js 파일의 다른 POST 라우트 정의들 아래, app.listen 호출 위에 추가하세요.
 app.post('/synthesize-item', async (req, res) => {
     const { 유저UID } = req.body;
     if (!유저UID) {
@@ -2274,7 +2278,6 @@ app.post('/synthesize-item', async (req, res) => {
         타락: { 이름: '루시퍼의 심장', 공격력: 1200 }
     };
 
-    // 등급별 합성 처리
     for (let i = 0; i < gradeOrder.length - 1; i++) {
         const currentGrade = gradeOrder[i];
         const nextGrade = gradeOrder[i + 1];
@@ -2298,6 +2301,21 @@ app.post('/synthesize-item', async (req, res) => {
                     강화: 0,
                     수량: createdQty
                 });
+
+
+                if ((nextGrade === "태초" || nextGrade === "타락")) {
+                    const 문구 = `${gradeMap[nextGrade].이름}을(를) 합성했다!`;
+                    await 이벤트기록추가({
+                        유저UID,
+                        유저아이디: user.유저아이디,
+                        문구
+                    });
+
+                    await 로그기록(user.유저아이디, `${gradeMap[nextGrade].이름}을(를) 합성했다`);
+
+                }
+
+
             }
         }
     }
@@ -2523,6 +2541,8 @@ app.post("/attack-dungeon", async (req, res) => {
         체력: 5000 * level,
         방어력: 500 * level
     };
+
+    유저.남은체력 = 유저.최대체력;
 
     let 현재턴 = 1;
 
