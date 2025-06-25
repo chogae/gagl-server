@@ -2308,6 +2308,19 @@ app.post('/synthesize-item', async (req, res) => {
         if (synthCount > 0) {
             // 하위 장비 수량 차감
             currentItem.수량 -= synthCount * 3;
+
+            if ((nextGrade === "태초" || nextGrade === "타락")) {
+                const 문구 = `${gradeMap[nextGrade].이름}을(를) 합성했다!`;
+                await 이벤트기록추가({
+                    유저UID,
+                    유저아이디: user.유저아이디,
+                    문구
+                });
+
+                await 로그기록(user.유저아이디, `${gradeMap[nextGrade].이름}을(를) 합성했다`);
+
+            }
+
             if (nextItem) {
                 // 기존 상위 장비 수량 증가
                 nextItem.수량 += synthCount;
@@ -2321,20 +2334,6 @@ app.post('/synthesize-item', async (req, res) => {
                     강화: 0,
                     수량: createdQty
                 });
-
-
-                if ((nextGrade === "태초" || nextGrade === "타락")) {
-                    const 문구 = `${gradeMap[nextGrade].이름}을(를) 합성했다!`;
-                    await 이벤트기록추가({
-                        유저UID,
-                        유저아이디: user.유저아이디,
-                        문구
-                    });
-
-                    await 로그기록(user.유저아이디, `${gradeMap[nextGrade].이름}을(를) 합성했다`);
-
-                }
-
 
             }
         }
