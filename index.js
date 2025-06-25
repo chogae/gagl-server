@@ -1471,6 +1471,10 @@ app.post("/register-user", async (req, res) => {
     // 원하는 기본 유물 수량 설정
     유물목록["샐러드"] = 5;
     유물목록["스피커"] = 9;
+    유물목록["햄버거"] = 1;
+
+
+
 
     //신규유저
     const 삽입값 = {
@@ -1520,6 +1524,7 @@ app.post("/register-user", async (req, res) => {
         },
         생성일: today,
         지하던전: 1,
+        하루한번: today,
     };
 
 
