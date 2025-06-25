@@ -247,11 +247,13 @@ app.post("/get-user", async (req, res) => {
             if (new현질기한 >= 31) {
                 updates.현질기한 = 0;
                 updates.현질 = 0;
+                updates.현질기한체크 = null;
                 updates.마법의팔레트 = null;
                 // 메모리 상 객체에도 반영
                 유저.현질기한 = 0;
                 유저.현질 = 0;
                 유저.마법의팔레트 = null;
+                유저.현질기한체크 = null;
             } else {
                 updates.현질기한 = new현질기한;
                 // 메모리 상 객체에도 반영
@@ -286,9 +288,11 @@ app.post("/get-user", async (req, res) => {
             if (new햄버거현질기한 >= 31) {
                 updates.햄버거현질기한 = 0;
                 updates.햄버거현질 = 0;
+                updates.햄버거현질기한체크 = null;
                 // 메모리 상 객체에도 반영
                 유저.햄버거현질기한 = 0;
                 유저.햄버거현질 = 0;
+                유저.햄버거현질기한체크 = null;
             } else {
                 updates.햄버거현질기한 = new햄버거현질기한;
                 // 메모리 상 객체에도 반영
