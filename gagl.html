@@ -5954,6 +5954,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
             const 총투자 = Object.values(유저데이터.스킬 || {}).reduce((a, b) => a + b, 0);
             const 다음필요숙련도 = (총투자 + 1) * 500;
             document.getElementById("필요숙련도").innerText = "필요숙련도 " + 다음필요숙련도;
+            document.getElementById("필요숙련도").style.fontWeight = "bold";
 
             const 스킬정보 = 스킬정보불러오기();
 
