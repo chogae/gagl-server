@@ -232,8 +232,7 @@ app.post("/get-user", async (req, res) => {
     // }
 
 
-
-    if (유저.현질 === 1) {
+    if ((유저.현질 ?? 0) >= 1) {
         const now = new Date();
         const kstNow = new Date(
             now.toLocaleString("en-US", { timeZone: "Asia/Seoul" })
@@ -244,25 +243,29 @@ app.post("/get-user", async (req, res) => {
             // 1) 현질기한 1 증가
             let new현질기한 = (유저.현질기한 ?? 0) + 1;
 
-            // 2) 31일째(== new현질기한이 31) 도달 시 리셋
             const updates = { 현질기한체크: today };
+
+            // 2) 31일째 도달 시 현질 차감 또는 종료
             if (new현질기한 >= 31) {
+                const new현질 = (유저.현질 ?? 1) - 1;
+
                 updates.현질기한 = 0;
-                updates.현질 = 0;
-                updates.현질기한체크 = null;
-                updates.마법의팔레트 = null;
-                // 메모리 상 객체에도 반영
+                updates.현질 = new현질;
+                updates.현질기한체크 = new현질 === 0 ? null : today;
+                updates.마법의팔레트 = new현질 === 0 ? null : 유저.마법의팔레트 ?? null;
+
+                // 메모리 반영
                 유저.현질기한 = 0;
-                유저.현질 = 0;
-                유저.마법의팔레트 = null;
-                유저.현질기한체크 = null;
+                유저.현질 = new현질;
+                유저.현질기한체크 = new현질 === 0 ? null : today;
+                유저.마법의팔레트 = new현질 === 0 ? null : 유저.마법의팔레트 ?? null;
             } else {
+                // 3) 일반적인 날짜 증가만
                 updates.현질기한 = new현질기한;
-                // 메모리 상 객체에도 반영
                 유저.현질기한 = new현질기한;
             }
 
-            // 3) DB 업데이트
+            // 4) DB 업데이트
             const { error: incErr } = await supabaseAdmin
                 .from("users")
                 .update(updates)
@@ -274,7 +277,8 @@ app.post("/get-user", async (req, res) => {
         }
     }
 
-    if (유저.햄버거현질 === 1) {
+
+    if ((유저.햄버거현질 ?? 0) >= 1) {
         const now = new Date();
         const kstNow = new Date(
             now.toLocaleString("en-US", { timeZone: "Asia/Seoul" })
@@ -289,12 +293,13 @@ app.post("/get-user", async (req, res) => {
             const updates = { 햄버거현질기한체크: today };
             if (new햄버거현질기한 >= 31) {
                 updates.햄버거현질기한 = 0;
-                updates.햄버거현질 = 0;
-                updates.햄버거현질기한체크 = null;
+                const new햄버거현질 = (유저.햄버거현질 ?? 1) - 1;
+                updates.햄버거현질 = new햄버거현질;
+                updates.햄버거현질기한체크 = new햄버거현질 === 0 ? null : today;
                 // 메모리 상 객체에도 반영
                 유저.햄버거현질기한 = 0;
-                유저.햄버거현질 = 0;
-                유저.햄버거현질기한체크 = null;
+                유저.햄버거현질 = new햄버거현질;
+                유저.햄버거현질기한체크 = new햄버거현질 === 0 ? null : today;
             } else {
                 updates.햄버거현질기한 = new햄버거현질기한;
                 // 메모리 상 객체에도 반영
