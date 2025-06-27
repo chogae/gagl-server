@@ -442,6 +442,8 @@ app.post("/get-user", async (req, res) => {
 
     유저.최종공격력 = 최종공격력계산(유저);
 
+    유저.최대체력 = 최대체력계산(유저);
+
 
     const { error: 업데이트에러 } = await supabaseAdmin
         .from("users")
@@ -454,7 +456,8 @@ app.post("/get-user", async (req, res) => {
             레벨공격력: 유저.레벨공격력,
             최종공격력: 유저.최종공격력,
             현재스태미너: 유저.현재스태미너,
-            스태미너갱신시간: 유저.스태미너갱신시간
+            스태미너갱신시간: 유저.스태미너갱신시간,
+            최대체력: 유저.최대체력
         })
         .eq("유저UID", 유저UID);
 
@@ -1566,24 +1569,38 @@ app.post("/ranking", async (req, res) => {
             .eq("버전업", 8)
             .not("최종공격력", "is", null)
             .neq("유저아이디", "테스트아이디")
-            .order("최종공격력", { ascending: false })
+            .order("최종공격력", { ascending: false });
 
         if (error) {
             return res.status(500).json({ 오류: "서버오류" });
         }
 
-        for (const 유저 of 유저들) {
+        const kstToday = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+        const todayDateOnly = new Date(kstToday.getFullYear(), kstToday.getMonth(), kstToday.getDate());
+
+        // ✅ 하루한번 컬럼 기준으로 25일~27일 접속자만 필터링
+        const 최근접속유저들 = 유저들.filter(유저 => {
+            const 접속시각 = new Date(유저.하루한번);
+            const 접속KST = new Date(접속시각.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+            const 접속DateOnly = new Date(접속KST.getFullYear(), 접속KST.getMonth(), 접속KST.getDate());
+
+            const diff일수 = (todayDateOnly - 접속DateOnly) / (1000 * 60 * 60 * 24); // 밀리초 차이를 일수로
+            return diff일수 <= 2; // 오늘, 어제, 그제
+        });
+
+        // 직위 처리
+        for (const 유저 of 최근접속유저들) {
             유저.직위 = 최고전직명(유저.전직정보) || "";
         }
 
-        // ✅ 상위 10명 조회
+        // ✅ 보스랭킹은 그대로 유지
         const { data: 보스랭킹, error: 유저에러 } = await supabaseAdmin
             .from("users")
             .select("유저아이디, 보스누적데미지, 유저UID")
             .gt("보스누적데미지", 0)
-            .order("보스누적데미지", { ascending: false })
+            .order("보스누적데미지", { ascending: false });
 
-        return res.json({ 유저들, 보스랭킹 });
+        return res.json({ 유저들: 최근접속유저들, 보스랭킹 });
     } catch (e) {
         return res.status(500).json({ 오류: "서버오류" });
     }
@@ -2169,6 +2186,8 @@ app.post("/gamble-Relic", async (req, res) => {
         "뼈다구": 9,
         "열쇠": 9,
         "스피커": 9,
+        "안경": 9,
+        "샐러드": 0,
     };
     try {
         const { data: 유저, error } = await supabaseAdmin
@@ -2787,6 +2806,86 @@ app.post("/obtain-accessory", async (req, res) => {
 
 
 
+app.post("/equip-accessory", async (req, res) => {
+    const { 유저UID, 이름 } = req.body;
+    if (!유저UID || !이름) return res.status(400).json({ 오류: "필수 정보 누락" });
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("*")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
+
+
+    const 안경개수 = 유저.유물목록?.["안경"] || 0;
+    if (안경개수 < 1) {
+        return res.status(403).json({ 오류: "유물. 안경이 필요합니다" });
+    }
+
+
+    const 목록 = 유저.악세사리목록 || [];
+    let 변경됨 = false;
+
+    const 새목록 = 목록.map(a => {
+        if (a.이름 === 이름) {
+            if (a.장착 !== 1) {
+                변경됨 = true;
+                return { ...a, 장착: 1 };
+            }
+        } else if (a.장착 === 1) {
+            변경됨 = true;
+            return { ...a, 장착: 0 };
+        }
+        return a;
+    });
+
+    if (!변경됨) {
+        return res.status(200).json({ 메시지: "이미 장착됨", 업데이트된악세목록: 새목록 });
+    }
+
+    const 유저복사 = { ...유저, 악세사리목록: 새목록 };
+    const 최대체력 = 최대체력계산(유저복사); // 기존 함수 그대로 사용
+
+
+    const 유물복사 = { ...(유저.유물목록 || {}) };
+    유물복사["안경"] = Math.max(0, (유물복사["안경"] || 0) - 1);
+
+
+
+    // ✅ 서버에 저장
+    const { error: 업데이트오류 } = await supabaseAdmin
+        .from("users")
+        .update({
+            악세사리목록: 새목록,
+            최대체력: 최대체력,
+            유물목록: 유물복사
+        })
+        .eq("유저UID", 유저UID);
+
+    if (업데이트오류) return res.status(500).json({ 오류: "업데이트 실패" });
+
+
+    const 문구 = `악세사리 ${이름} 장착`;
+    await 이벤트기록추가({
+        유저UID: 유저.유저UID,
+        유저아이디: 유저.유저아이디,
+        문구
+    });
+
+
+
+    await 로그기록(유저UID, `${이름} 장착`);
+
+    // ✅ 클라이언트로도 반환
+    res.json({
+        메시지: "장착 완료",
+        업데이트된악세목록: 새목록,
+        최대체력,
+        갱신된유물목록: 유물복사
+    });
+});
 
 
 
@@ -3361,9 +3460,12 @@ function 최대체력계산(유저) {
     const 하트개수 = 유저.유물목록?.["하트플러스"] || 0;
     const 보정 = 1 + 0.01 * 하트개수;
 
-    return Math.round((10) * 보정);
-}
+    const 악세목록 = 유저.악세사리목록 || [];
+    const 캡틴 = 악세목록.find(a => a.이름 === "캡틴" && a.장착 === 1);
+    const 추가체력 = 캡틴 ? 캡틴.등급 : 0;
 
+    return Math.round((10 + 추가체력) * 보정);
+}
 
 function 레어몬스터등장판정(유저) {
     const 고스트개수 = 유저.유물목록?.["고스트"] || 0;
@@ -3410,6 +3512,7 @@ const 일반유물데이터 = {
     "망치": { 설명: "루시퍼의 심장 강화확률 증가(+0.1%)" },
     "모루": { 설명: "증발되는 재료를 재조립합니다(0.1%)" },
     "펜타그램": { 설명: "진화 확률을 증가시킵니다(+0.01%)" },
+    "안경": { 설명: "악세사리를 바꿔낄 수 있습니다" },
 };
 const 레어유물데이터 = {
     "소드": { 설명: "공격력이 증가합니다(*1%)" },
@@ -3425,12 +3528,12 @@ const 레어유물데이터 = {
     "플라워": { 설명: "스킬을 초기화합니다" },
     "뼈다구": { 설명: "직업을 초기화합니다" },
     "티켓": { 설명: "고급장비도박에 사용됩니다" },
-    "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
     "열쇠": { 설명: "지하던전에 진입합니다" },
     "스피커": { 설명: "광장에서 소리칠 수 있습니다" },
     "망치": { 설명: "루시퍼의 심장 강화확률 증가(+0.1%)" },
     "모루": { 설명: "증발되는 재료를 재조립합니다(0.1%)" },
     "펜타그램": { 설명: "진화 확률을 증가시킵니다(+0.01%)" },
+    "안경": { 설명: "악세사리를 바꿔낄 수 있습니다" },
 };
 const 신화유물데이터 = {
     "소드": { 설명: "공격력이 증가합니다(*1%)" },
@@ -3454,7 +3557,9 @@ const 신화유물데이터 = {
     "망치": { 설명: "루시퍼의 심장 강화확률 증가(+0.1%)" },
     "모루": { 설명: "증발되는 재료를 재조립합니다(0.1%)" },
     "펜타그램": { 설명: "진화 확률을 증가시킵니다(+0.01%)" },
+    "안경": { 설명: "악세사리를 바꿔낄 수 있습니다" },
 };
+
 
 // 🟡 정적 파일 경로 설정
 app.use(express.static(path.join(__dirname)));
