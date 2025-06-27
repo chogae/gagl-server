@@ -2188,6 +2188,7 @@ app.post("/gamble-Relic", async (req, res) => {
         "스피커": 9,
         "안경": 9,
         "샐러드": 0,
+        "스피커": 0,
     };
     try {
         const { data: 유저, error } = await supabaseAdmin
