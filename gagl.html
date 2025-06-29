@@ -733,7 +733,7 @@
     <!-- 로그인화면 -->
     <div class="사백픽셀 밑줄">
         <div id="화면설명" style="text-align: center;">
-            25년 5월 26일 오후 3시 정식오픈<br>행운을 빕니다
+            가글주인장은 코딩을 모르는 평범한 아재이며<br>가글은 100% ChatGPT로 개발되는 점 알립니다
         </div>
     </div>
 
@@ -1285,6 +1285,10 @@
 
 
         const 아이콘맵 = {
+            페어리아이콘,
+            그리핀아이콘,
+            하피아이콘,
+            노움아이콘,
             안경아이콘,
             펜타그램아이콘,
             망치아이콘,
@@ -2704,7 +2708,6 @@
                     return;
                 }
 
-                // 4) 서버가 반환한 최종 유저데이터로 업데이트
                 유저데이터 = 결과.유저데이터;
                 document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
 
@@ -2835,7 +2838,6 @@
             const container = document.getElementById("전직컨테이너");
             document.querySelectorAll(".전직항목").forEach(e => e.remove());
 
-            // 5) “경험치와포인트” 영역 업데이트
             const 경험치div = document.getElementById("경험치와포인트");
             경험치div.innerHTML = `
         <div>경험치</div>
@@ -2917,12 +2919,12 @@
 
             const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
             const 궁술설명 = [
-                "15% 방어력 무시",
-                "30% 방어력 무시",
-                "45% 방어력 무시",
-                "60% 방어력 무시",
-                "75% 방어력 무시",
-                "99% 방어력 무시"
+                "체력소모무시 5%",
+                "체력소모무시 10%",
+                "체력소모무시 15%",
+                "체력소모무시 20%",
+                "체력소모무시 25%",
+                "체력소모무시 40%",
             ];
 
             // helper: 한 개의 직업 항목을 만들어 container에 추가 (비용 매개변수 추가)
@@ -3230,26 +3232,26 @@
                         location.reload();
                     }
 
-                    if (유저결과.점검하자) {
-                        // 기존 내용 모두 제거
-                        document.body.innerHTML = '';
-                        Object.assign(document.body.style, {
-                            backgroundColor: '#000',
-                            margin: '0',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'flex-start',   // 위쪽 정렬
-                            alignItems: 'center',            // 가로 중앙
-                            height: '100vh',
-                            color: '#fff',
-                            paddingTop: '20vh'               // 화면 상단에서 20% 내려오기
-                        });
-                        const msg = document.createElement('div');
-                        msg.textContent = '점 검 중 >.<';
-                        msg.style.fontSize = '2rem';
-                        document.body.appendChild(msg);
-                        return;
-                    }
+                    // if (유저결과.점검하자) {
+                    //     // 기존 내용 모두 제거
+                    //     document.body.innerHTML = '';
+                    //     Object.assign(document.body.style, {
+                    //         backgroundColor: '#000',
+                    //         margin: '0',
+                    //         display: 'flex',
+                    //         flexDirection: 'column',
+                    //         justifyContent: 'flex-start',   // 위쪽 정렬
+                    //         alignItems: 'center',            // 가로 중앙
+                    //         height: '100vh',
+                    //         color: '#fff',
+                    //         paddingTop: '20vh'               // 화면 상단에서 20% 내려오기
+                    //     });
+                    //     const msg = document.createElement('div');
+                    //     msg.textContent = '점 검 중 >.<';
+                    //     msg.style.fontSize = '2rem';
+                    //     document.body.appendChild(msg);
+                    //     return;
+                    // }
 
 
                     // if (!유저정보 || 유저정보.버전업 !== 8) {
@@ -3474,7 +3476,7 @@
             if (!유저데이터) return;
             모든화면숨기기();
             document.getElementById("악세화면").style.display = "block";
-            document.getElementById("화면설명").innerHTML = `구 현 중 입 니 다`;
+            document.getElementById("화면설명").innerHTML = `습득한 악세사리는 장착해야 효과가 적용됩니다`;
 
             const 악세컨테이너 = document.getElementById("악세컨테이너");
             악세컨테이너.innerHTML = "";
@@ -3485,7 +3487,7 @@
                 { 이름: "캡틴", 설명: "최대체력", 아이콘: 캡틴 },
                 { 이름: "음양", 설명: "체력소모무시", 아이콘: 음양 },
                 { 이름: "아스클레피오스의 막대", 설명: "미정", 아이콘: 아스클레피오스의막대 },
-                { 이름: "드림캐처", 설명: "레어몬스터등장률", 아이콘: 드림캐처 },
+                { 이름: "드림캐처", 설명: "히든몬스터등장률", 아이콘: 드림캐처 },
                 { 이름: "카드세우스", 설명: "미정", 아이콘: 카드세우스 },
                 { 이름: "이스터에그", 설명: "미정", 아이콘: 이스터에그 },
             ];
@@ -3887,8 +3889,13 @@
                 console.error("보스순위 조회 실패:", err);
             }
 
+
+            const 닉네임표시 = 팔레트적용(유저데이터.유저아이디, 유저데이터.마법의팔레트);
+
+
+
             // ─── 내용 채우기 ───
-            document.getElementById("첫째줄왼쪽").innerHTML = `아이디 : ${유저데이터.유저아이디}`;
+            document.getElementById("첫째줄왼쪽").innerHTML = `아이디 : ${닉네임표시}`;
             document.getElementById("둘째줄왼쪽").innerHTML = `공격력 : ${유저데이터.최종공격력}`;
             document.getElementById("셋째줄왼쪽").innerHTML = `최대체력 : ${유저데이터.최대체력}`;
             // document.getElementById("넷째줄왼쪽").innerHTML = `전당 : 위`;
@@ -3983,7 +3990,6 @@
             const 장비박스3 = document.getElementById("열째줄오른쪽");
             장비박스3.innerHTML = "-";
 
-            // 🔽 여기에 추가
             const 장착악세 = (유저데이터.악세사리목록 || []).find(a => a.장착 === 1);
             if (장착악세) {
                 const 원본악세 = [
@@ -3998,23 +4004,16 @@
                 const 아이콘 = 원본악세.find(o => o.이름 === 장착악세.이름)?.아이콘 || "-";
 
                 장비박스3.innerHTML = 아이콘;
-                장비박스3.style.width = "54px";  // 또는 원하는 고정 크기
+                장비박스3.style.width = "54px";
                 장비박스3.style.height = "54px";
                 장비박스3.style.display = "flex";
                 장비박스3.style.alignItems = "center";
                 장비박스3.style.justifyContent = "center";
 
-                // const svg = 장비박스3.querySelector("svg");
-                // if (svg) {
-                //     svg.style.width = "22px";
-                //     svg.style.height = "22px";
-                //     // svg.style.display = "block"; // vertical-align 제거 효과
-                // }
                 const svg = 장비박스3.querySelector("svg");
                 if (svg) {
-                    svg.style.width = "150%";   // 부모 박스에 비례한 크기
+                    svg.style.width = "150%";
                     svg.style.height = "150%";
-                    // svg.style.display = "block";  // vertical-align 제거 효과
                 }
 
             }
@@ -4204,7 +4203,7 @@
             document.getElementById("화면설명").innerHTML = "지하던전 입장에는 '열쇠'가 필요합니다<br>강함을 증명하고 티켓을 드랍하세요";
             모든화면숨기기();
             document.getElementById("지하던전화면").style.display = "block";
-            document.getElementById("에너지박스").style.display = "block";
+            // document.getElementById("에너지박스").style.display = "block";
 
             // const 컨테이너 = document.getElementById("지하던전컨테이너");
             // 컨테이너.innerHTML = "";
@@ -4400,12 +4399,22 @@
 
 
 
+        document.getElementById("화면설명").onclick = () => {
+            const 메뉴얼화면 = document.getElementById("메뉴얼화면");
+            const 현재상태 = window.getComputedStyle(메뉴얼화면).display;
+
+            if (현재상태 === "block") {
+                window.open("https://open.kakao.com/o/gbnmdWvh", "_blank");
+            }
+        };
 
 
 
         document.getElementById("메뉴얼").addEventListener("click", () => {
             if (!유저데이터) return;
-            document.getElementById("화면설명").innerHTML = "오늘도, 행복하세요";
+            const 설명 = document.getElementById("화면설명");
+            설명.innerHTML = "여기를 클릭하시면 주인장이 운영중인<br>단톡으로 연결됩니다";
+            설명.style.cursor = "pointer";
 
             모든화면숨기기();
             document.getElementById("메뉴얼화면").style.display = "block";
@@ -4416,6 +4425,8 @@
             //장신구구현
             //보스보상표시
             //서버월정액7달러
+
+            //악세등급업
 
 
             // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
@@ -4436,7 +4447,7 @@
 층수를 올려서 2층을 사냥해보세요<br>
 유저의 체력을 1 소모해서 Trun 하나를 진행합니다<br>
 반자동 버튼을 클릭해서 자동공격을 경험해보세요<br>
-레어몬스터를 우선공격하는 풀자동 공격을 경험해보세요<br>
+히든몬스터를 우선공격하는 풀자동 공격을 경험해보세요<br>
 숙련도 500을 모았다면 성장 - 스킬 화면으로 이동하세요<br>
 스킬창에서 숙련도를 소모하여, 인사이트 스킬을 습득하세요<br>
 단톡에 참여하여 더 많은 정보를 구하세요<br>
@@ -4445,6 +4456,15 @@
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                 `,
                 `${여름아이콘}`,
+                `
+25.06.29<br>
+전당화면 미니정보창에 악세사리가 표시됩니다<br>
+지하던전 화면에서 표시되던 스태미너박스를 제거했습니다<br>
+등급과 혼돈방지를 위해 레어몬스터를 히든몬스터로 지칭하겠습니다<br>
+내정보화면과 전당화면미니정보창에도 마법의팔레트가 적용됩니다<br>
+직업. 궁술의 효과가 방어력무시에서 체력소모무시로 변경되었습니다<br>
+메뉴얼화면 상단의 화면설명을 클릭 시 단톡으로 연결됩니다<br>
+                `,
                 `
 25.06.27<br>
 루시퍼의 심장 진화 확률을 1%로 고정시켰습니다<br>
@@ -4557,8 +4577,8 @@
 유물. '열쇠'는 유물뽑기로만 획득 할 수 있습니다<br>
 유물. '열쇠'는 9개 초과 드랍되지 않습니다<br>
 루시퍼의 심장 강화시스템 개편하겠습니다(구상중)<br>
-일반공격과 반자동 시 간혹 레어몬스터를 무시하던 버그 해결<br>
-레어몬스터에 경험치를 증가시켜주는 경고블린이 추가되었습니다<br>
+일반공격과 반자동 시 간혹 히든몬스터를 무시하던 버그 해결<br>
+히든몬스터에 경험치를 증가시켜주는 경고블린이 추가되었습니다<br>
                 `,
                 `
 25.06.12<br>
@@ -4572,7 +4592,7 @@
                 `
 25.06.11<br>
 일반몬스터를 자동공격하는 반자동 버튼이 구현되었습니다<br>
-레어몬스터를 우선 자동공격하는 풀자동 버튼이 구현되었습니다<br>
+히든몬스터를 우선 자동공격하는 풀자동 버튼이 구현되었습니다<br>
 반자동 또는 풀자동을 재클릭하거나, 외부를 클릭 시 자동사냥이<br>
 정지됩니다<br>
 자동사냥 이슈로 인한 티켓 1장이 전 유저에게 지급되었습니다<br>
@@ -4648,7 +4668,7 @@
 유물화면에서 소모성 유물과 과금유물을 구분하였습니다<br>
 오늘은 오픈기념 이벤트 마지막 날이자, 주인장 생일입니다<br>기념으로 금일 햄버거는 1+1 배송됩니다<br>
 암포라 발동효과가 기존 9에서 5로 상향되었습니다<br>
-10연 유물뽑기이 구현되었습니다<br>
+10연 유물뽑기가 구현되었습니다<br>
 보스 공통미션 보상 '펫'과 누적데미지 순위별 골드보상이<br>지급되었습니다
   `,
                 `
@@ -4677,9 +4697,9 @@
 25.05.26<br>
 유물설명에 1개 효과 기입<br>
 최대체력이 정상화됩니다<br>
-오후 3시 6분 정식출시<br>
-cbt 종료
-  `,
+cbt 종료<br>
+오후 3시 6분 정식출시
+ `,
                 `
 25.05.25<br>
 신규유저 이벤트로 샐러드 5개가 지급됩니다<br>
@@ -4694,9 +4714,9 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 고급장비뽑기은 레어부터 타락까지 드랍됩니다<br>
 일반장비뽑기은 일반부터 태초까지 드랍됩니다<br>
 보스전 스태미너 소모가 10으로 너프되었습니다<br>
-유저의 최대체력은 고등급 장비(태초,타락)로만 증가합니다<br>
-유물. 티켓(고급장비뽑기)이 유물뽑기으로만 등장합니다<br>
-유물. 플라워(스킬초기화)가 유물뽑기으로만 등장합니다
+<s>유저의 최대체력은 고등급 장비(태초,타락)로만 증가합니다</s><br>
+유물. 티켓(고급장비뽑기)이 유물뽑기로만 등장합니다<br>
+유물. 플라워(스킬초기화)가 유물뽑기로만 등장합니다
   `,
                 `
 25.05.23<br>
@@ -4946,9 +4966,11 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                     창.appendChild(열한째줄행);
 
 
+                    const 닉네임표시 = 팔레트적용(유저.유저아이디, 유저.마법의팔레트);
+
 
                     // ─── 내용 채우기 ───
-                    창.querySelector("#첫째줄왼쪽").innerHTML = `아이디 : ${유저.유저아이디}`;
+                    창.querySelector("#첫째줄왼쪽").innerHTML = `아이디 : ${닉네임표시}`;
                     창.querySelector("#둘째줄왼쪽").innerHTML = `공격력 : ${유저.최종공격력}`;
                     창.querySelector("#셋째줄왼쪽").innerHTML = `최대체력 : ${유저.최대체력}`;
                     창.querySelector("#넷째줄왼쪽").innerHTML = `전당 : ${index + 1}위`;
@@ -5047,6 +5069,33 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                     const 장비박스3 = 창.querySelector("#열째줄오른쪽");
                     장비박스3.innerHTML = "-";
 
+                    const 장착악세 = (유저.악세사리목록 || []).find(a => a.장착 === 1);
+                    if (장착악세) {
+                        const 원본악세 = [
+                            { 이름: "룬검", 아이콘: 룬검 },
+                            { 이름: "캡틴", 아이콘: 캡틴 },
+                            { 이름: "음양", 아이콘: 음양 },
+                            { 이름: "아스클레피오스의 막대", 아이콘: 아스클레피오스의막대 },
+                            { 이름: "드림캐처", 아이콘: 드림캐처 },
+                            { 이름: "카드세우스", 아이콘: 카드세우스 },
+                            { 이름: "이스터에그", 아이콘: 이스터에그 }
+                        ];
+                        const 아이콘 = 원본악세.find(o => o.이름 === 장착악세.이름)?.아이콘 || "-";
+
+                        장비박스3.innerHTML = 아이콘;
+                        장비박스3.style.width = "54px";
+                        장비박스3.style.height = "54px";
+                        장비박스3.style.display = "flex";
+                        장비박스3.style.alignItems = "center";
+                        장비박스3.style.justifyContent = "center";
+
+                        const svg = 장비박스3.querySelector("svg");
+                        if (svg) {
+                            svg.style.width = "150%";
+                            svg.style.height = "150%";
+                        }
+
+                    }
 
                     창.querySelector("#열한째줄가운데").innerHTML = ``;
 
