@@ -3232,26 +3232,26 @@
                         location.reload();
                     }
 
-                    // if (유저결과.점검하자) {
-                    //     // 기존 내용 모두 제거
-                    //     document.body.innerHTML = '';
-                    //     Object.assign(document.body.style, {
-                    //         backgroundColor: '#000',
-                    //         margin: '0',
-                    //         display: 'flex',
-                    //         flexDirection: 'column',
-                    //         justifyContent: 'flex-start',   // 위쪽 정렬
-                    //         alignItems: 'center',            // 가로 중앙
-                    //         height: '100vh',
-                    //         color: '#fff',
-                    //         paddingTop: '20vh'               // 화면 상단에서 20% 내려오기
-                    //     });
-                    //     const msg = document.createElement('div');
-                    //     msg.textContent = '점 검 중 >.<';
-                    //     msg.style.fontSize = '2rem';
-                    //     document.body.appendChild(msg);
-                    //     return;
-                    // }
+                    if (유저결과.점검하자) {
+                        // 기존 내용 모두 제거
+                        document.body.innerHTML = '';
+                        Object.assign(document.body.style, {
+                            backgroundColor: '#000',
+                            margin: '0',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',   // 위쪽 정렬
+                            alignItems: 'center',            // 가로 중앙
+                            height: '100vh',
+                            color: '#fff',
+                            paddingTop: '20vh'               // 화면 상단에서 20% 내려오기
+                        });
+                        const msg = document.createElement('div');
+                        msg.textContent = '점 검 중 >.<';
+                        msg.style.fontSize = '2rem';
+                        document.body.appendChild(msg);
+                        return;
+                    }
 
 
                     // if (!유저정보 || 유저정보.버전업 !== 8) {
@@ -4408,16 +4408,15 @@
             }
         };
 
-
-
+  
         document.getElementById("메뉴얼").addEventListener("click", () => {
             if (!유저데이터) return;
-            const 설명 = document.getElementById("화면설명");
-            설명.innerHTML = "여기를 클릭하시면 주인장이 운영중인<br>단톡으로 연결됩니다";
-            설명.style.cursor = "pointer";
+
+            document.getElementById("화면설명").innerHTML = "여기를 클릭하시면 주인장이 운영중인<br>단톡으로 연결됩니다";
 
             모든화면숨기기();
             document.getElementById("메뉴얼화면").style.display = "block";
+
 
             const 컨테이너 = document.getElementById("메뉴얼컨테이너");
             컨테이너.innerHTML = "";
@@ -4427,6 +4426,7 @@
             //서버월정액7달러
 
             //악세등급업
+            //10연뽑한번에보이기
 
 
             // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
