@@ -78,7 +78,7 @@ app.post("/get-user", async (req, res) => {
 
                     const { data: 현재유물목록, error: fetchErr } = await supabaseAdmin
                         .from("users")
-                        .select("유물목록")
+                        .select("유물목록, 유저아이디") // ✅ 유저아이디도 함께 가져오기
                         .eq("유저UID", user.유저UID)
                         .single();
 
@@ -87,15 +87,14 @@ app.post("/get-user", async (req, res) => {
                         continue;
                     }
 
-                    // 2) 티켓 수 더해주기
                     const oldList = 현재유물목록.유물목록 || {};
                     const oldTicket = Number(oldList["티켓"] || 0);
+                    const newTicket = oldTicket + 지급티켓;
                     const newList = {
                         ...oldList,
-                        티켓: oldTicket + 지급티켓
+                        티켓: newTicket
                     };
 
-                    // 3) DB 업데이트
                     const { error: updateErr } = await supabaseAdmin
                         .from("users")
                         .update({ 유물목록: newList })
@@ -103,7 +102,11 @@ app.post("/get-user", async (req, res) => {
 
                     if (updateErr) {
                         console.error(`티켓 지급 실패 (${user.유저UID}):`, updateErr);
+                    } else {
+                        // ✅ 로그 기록 추가
+                        await 로그기록(현재유물목록.유저아이디, `티켓 ${지급티켓}장 지급 (기존: ${oldTicket} → 지급 후: ${newTicket})`);
                     }
+
                 }
             }
 
@@ -1544,6 +1547,8 @@ app.post("/register-user", async (req, res) => {
         생성일: today,
         지하던전: 1,
         하루한번: today,
+        악세사리장비칸: 1,
+
     };
 
 
@@ -2267,6 +2272,9 @@ app.post("/gamble-Relic", async (req, res) => {
             // 7) 유저 객체에도 유물목록 반영
             유저.유물목록 = 유물목록복사;
 
+
+            await 로그기록(유저.유저아이디, `${유물이름} 뽑기로 획득 =${유물목록복사[유물이름]}`);
+
             // 8) 더 이상 후보가 없으면 반복 종료
             if (후보.length === 0) break;
         }
@@ -2830,31 +2838,30 @@ app.post("/equip-accessory", async (req, res) => {
     if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
 
 
+    const 목록 = 유저.악세사리목록 || [];
+
+    // 현재 장착된 악세사리 개수
+    const 장착된수 = (유저.악세사리목록 || []).filter(a => a.장착 === 1).length;
+    const 장비칸수 = 유저.악세사리장비칸 ?? 1;
+
+
     const 안경개수 = 유저.유물목록?.["안경"] || 0;
     if (안경개수 < 1) {
         return res.status(403).json({ 오류: "유물. 안경이 필요합니다" });
     }
 
+    if (장착된수 >= 장비칸수) {
+        return res.status(403).json({ 오류: "장비칸이 부족합니다" });
+    }
 
-    const 목록 = 유저.악세사리목록 || [];
-    let 변경됨 = false;
 
+    // 새 목록 구성 (기존 장착 상태 유지, 새 장비만 장착)
     const 새목록 = 목록.map(a => {
         if (a.이름 === 이름) {
-            if (a.장착 !== 1) {
-                변경됨 = true;
-                return { ...a, 장착: 1 };
-            }
-        } else if (a.장착 === 1) {
-            변경됨 = true;
-            return { ...a, 장착: 0 };
+            return { ...a, 장착: 1 };
         }
         return a;
     });
-
-    if (!변경됨) {
-        return res.status(200).json({ 메시지: "이미 장착됨", 업데이트된악세목록: 새목록 });
-    }
 
     const 유저복사 = { ...유저, 악세사리목록: 새목록 };
     const 최대체력 = 최대체력계산(유저복사);
@@ -2897,9 +2904,242 @@ app.post("/equip-accessory", async (req, res) => {
         업데이트된악세목록: 새목록,
         최대체력,
         최종공격력,
-        갱신된유물목록: 유물복사
+        갱신된유물목록: 유물복사,
+        악세사리장비칸: 유저.악세사리장비칸 ?? 1
     });
 });
+
+app.post("/unequip-accessory", async (req, res) => {
+    const { 유저UID, 이름 } = req.body;
+    if (!유저UID || !이름) return res.status(400).json({ 오류: "필수 정보 누락" });
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("*")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
+
+    const 목록 = 유저.악세사리목록 || [];
+    let 변경됨 = false;
+
+    const 새목록 = 목록.map(a => {
+        if (a.이름 === 이름 && a.장착 === 1) {
+            변경됨 = true;
+            return { ...a, 장착: 0 };
+        }
+        return a;
+    });
+
+    if (!변경됨) {
+        return res.status(200).json({ 메시지: "이미 장착되지 않음", 업데이트된악세목록: 새목록 });
+    }
+
+    const 유저복사 = { ...유저, 악세사리목록: 새목록 };
+    const 최대체력 = 최대체력계산(유저복사);
+    const 최종공격력 = 최종공격력계산(유저복사);
+
+    const { error: 업데이트오류 } = await supabaseAdmin
+        .from("users")
+        .update({
+            악세사리목록: 새목록,
+            최대체력,
+            최종공격력
+        })
+        .eq("유저UID", 유저UID);
+
+    if (업데이트오류) return res.status(500).json({ 오류: "업데이트 실패" });
+
+    const 문구 = `악세사리 ${이름} 장착 해제`;
+    await 이벤트기록추가({
+        유저UID: 유저.유저UID,
+        유저아이디: 유저.유저아이디,
+        문구
+    });
+
+    await 로그기록(유저UID, `${이름} 장착 해제`);
+
+    res.json({
+        메시지: "장착 해제 완료",
+        업데이트된악세목록: 새목록,
+        최대체력,
+        최종공격력,
+        갱신된유물목록: 유저.유물목록,
+        악세사리장비칸: 유저.악세사리장비칸 ?? 1
+    });
+});
+
+
+
+app.post("/upgrade-accessory-slot", async (req, res) => {
+    const { 유저UID, 목표칸수 } = req.body;
+    if (!유저UID || !목표칸수) {
+        return res.status(400).json({ 오류: "필수 정보 누락" });
+    }
+
+    if (![2, 3].includes(목표칸수)) {
+        return res.status(400).json({ 오류: "잘못된 장비칸 수" });
+    }
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("악세사리장비칸, 골드, 유저아이디")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) {
+        return res.status(404).json({ 오류: "유저 정보 없음" });
+    }
+
+    const 현재칸수 = 유저.악세사리장비칸 ?? 1;
+    if (목표칸수 <= 현재칸수) {
+        return res.status(400).json({ 오류: "이미 확장되었거나 잘못된 요청입니다" });
+    }
+
+    const 비용 = 목표칸수 === 2 ? 10000000 : 20000000;
+    if ((유저.골드 || 0) < 비용) {
+        return res.status(403).json({ 오류: "골드가 부족합니다" });
+    }
+
+    const 새골드 = 유저.골드 - 비용;
+
+    const { error: 업데이트오류 } = await supabaseAdmin
+        .from("users")
+        .update({
+            악세사리장비칸: 목표칸수,
+            골드: 새골드
+        })
+        .eq("유저UID", 유저UID);
+
+    if (업데이트오류) {
+        return res.status(500).json({ 오류: "업데이트 실패" });
+    }
+
+    await 로그기록(유저UID, `악세사리 장비칸 ${목표칸수}칸으로 확장`);
+    await 이벤트기록추가({
+        유저UID,
+        유저아이디: 유저.유저아이디,
+        문구: `장비칸 ${목표칸수}칸으로 확장`
+    });
+
+    res.json({
+        메시지: "장비칸 확장 완료",
+        현재골드: 새골드,
+        악세사리장비칸: 목표칸수
+    });
+});
+
+app.post("/upgrade-accessory", async (req, res) => {
+    const { 유저UID, 이름, 비용 } = req.body;
+
+    if (!유저UID || !이름 || !비용) {
+        return res.status(400).json({ 오류: "필수 정보 누락" });
+    }
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("*")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) {
+        return res.status(404).json({ 오류: "유저 정보 없음" });
+    }
+
+    const 목록 = 유저.악세사리목록 || [];
+    const 대상 = 목록.find(a => a.이름 === 이름);
+
+    if (!대상) {
+        return res.status(404).json({ 오류: "악세사리를 보유하고 있지 않습니다" });
+    }
+
+    const 현재등급 = 대상.등급 || 1;
+
+    if (현재등급 >= 6) {
+        return res.status(400).json({ 오류: "최고 등급입니다" });
+    }
+
+    const 예상비용 = (현재등급 + 1) * 1000000;
+
+    if (비용 !== 예상비용) {
+        return res.status(400).json({ 오류: "비용 정보가 올바르지 않습니다" });
+    }
+
+    if ((유저.골드 || 0) < 비용) {
+        return res.status(403).json({ 오류: "골드가 부족합니다" });
+    }
+
+    // 등급 +1 적용
+    const 새목록 = 목록.map(a => {
+        if (a.이름 === 이름) {
+            return { ...a, 등급: (a.등급 || 0) + 1 };
+        }
+        return a;
+    });
+
+    const 새골드 = 유저.골드 - 비용;
+
+    const 유저복사 = { ...유저, 악세사리목록: 새목록 };
+    const 최대체력 = 최대체력계산(유저복사);
+    const 최종공격력 = 최종공격력계산(유저복사);
+
+    const 등급이름매핑 = {
+        1: "일반",
+        2: "레어",
+        3: "신화",
+        4: "고대",
+        5: "태초",
+        6: "타락"
+    };
+    const 현재등급이름 = 등급이름매핑[현재등급 + 1] || `${현재등급 + 1}단계`;
+
+    const { error: 업데이트에러 } = await supabaseAdmin
+        .from("users")
+        .update({
+            악세사리목록: 새목록,
+            골드: 새골드,
+            최대체력,
+            최종공격력
+        })
+        .eq("유저UID", 유저UID);
+
+    if (업데이트에러) {
+        return res.status(500).json({ 오류: "업데이트 실패" });
+    }
+
+    await 로그기록(유저UID, `${이름} 등급업 (+${현재등급 + 1})`);
+    await 이벤트기록추가({
+        유저UID,
+        유저아이디: 유저.유저아이디,
+        문구: `${이름} 악세사리 ${현재등급이름}으(로) 등급업`
+    });
+
+    return res.json({
+        메시지: "등급업 성공",
+        업데이트된악세목록: 새목록,
+        현재골드: 새골드,
+        최대체력,
+        최종공격력,
+        현재등급: 현재등급 + 1,
+        현재등급이름
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3465,7 +3705,7 @@ function 최종공격력계산(유저) {
     const 소드개수 = 유저.유물목록?.["소드"] || 0;
 
     const 룬검 = 유저.악세사리목록?.find(a => a.이름 === "룬검" && a.장착 === 1);
-    const 룬검배율 = 룬검 ? (1 + 룬검.등급 * 0.1) : 1;
+    const 룬검배율 = 룬검 ? (1 + 룬검.등급 * 0.05) : 1;
 
 
     const 최종공격력 = (레벨공격력 + 장비공격력)
@@ -3492,9 +3732,8 @@ function 레어몬스터등장판정(유저) {
     const 고스트개수 = 유저.유물목록?.["고스트"] || 0;
     const 고스트보정 = 1 + 0.01 * 고스트개수;
 
-    // ✅ 드림캐처 장착 시 보정 배율 (등급당 +10%)
     const 드림캐처 = 유저.악세사리목록?.find(a => a.이름 === "드림캐처" && a.장착 === 1);
-    const 드림캐처보정 = 드림캐처 ? (1 + 0.1 * 드림캐처.등급) : 1;
+    const 드림캐처보정 = 드림캐처 ? (1 + 0.05 * 드림캐처.등급) : 1;
 
     const 보정 = 고스트보정 * 드림캐처보정;
 
