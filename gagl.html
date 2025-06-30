@@ -3713,6 +3713,10 @@
                             return;
                         }
 
+                        if ((유저데이터.골드 || 0) < 등급업비용) {
+                            메시지표시(메시지표시박스, "", `${등급업비용.toLocaleString()} 골드가 필요합니다`, "");
+                            return;
+                        }
 
                         const 확인 = confirm(`${악세.이름}의 등급을 올리시겠습니까?\n\n[비용] ${등급업비용.toLocaleString()} 골드`);
 
@@ -4696,10 +4700,8 @@
             const 컨테이너 = document.getElementById("메뉴얼컨테이너");
             컨테이너.innerHTML = "";
 
-            //장신구구현
             //보스보상표시
             //서버월정액7달러
-
 
             // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
