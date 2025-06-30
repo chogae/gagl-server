@@ -789,7 +789,7 @@
     </div>
 
     <div id="가글사전화면" style="display: none;">
-        <div class="사백픽셀테두리 세로정렬" id="가글사전컨테이너">
+        <div class="사백픽셀테두리 세로정렬" id="가글사전컨테이너" style="align-items: flex-start;">
 
 
 
@@ -4452,6 +4452,90 @@
             화면해제();
         });
 
+
+        const 가글사전데이터 = {
+            "직업": {
+                "검술": {
+                    "1차 나이트": "추가공격(1~4회(25%)) 확률 10%",
+                    "2차 글라디에이터": "추가공격(1~4회(25%)) 확률 20%",
+                    "3차 엠퍼러": "추가공격(1~4회(25%)) 확률 30%",
+                    "4차 로열가드": "추가공격(1~4회(25%)) 확률 40%",
+                    "5차 그랑스워드": "추가공격(1~4회(25%)) 확률 50%",
+                    "6차 카이저": "추가공격(1~4회(25%)) 확률 100%",
+                },
+                // "마술": {
+                //     "1차 직업 매지션": "추가데미지 20%",
+                //     "2차 직업 워록": "추가데미지 20%",
+                //     "3차 직업 아크메이지": "추가데미지 20%",
+                //     "4차 직업 소서러": "추가데미지 20%",
+                //     "5차 직업 그랑에이지": "추가데미지 20%",
+                //     "6차 직업 자베러": "추가데미지 20%",
+                // },
+                // "신술": {
+                //     "1차 직업 클레릭": "턴당체력회복+1 확률 15%",
+                //     "2차 직업 프리스트": "턴당체력회복+1 확률 15%",
+                //     "3차 직업 비숍": "턴당체력회복+1 확률 15%",
+                //     "4차 직업 프린세스": "턴당체력회복+1 확률 15%",
+                //     "5차 직업 그랑세이지": "턴당체력회복+1 확률 15%",
+                //     "6차 직업 퀸": "턴당체력회복+1 확률 15%",
+                // },
+                // "궁술": {
+                //     "1차 직업 스나이퍼": "체력소모무시 5%",
+                //     "2차 직업 레인저": "체력소모무시 10%",
+                //     "3차 직업 헌터": "체력소모무시 10%",
+                //     "4차 직업 하이랜더": "체력소모무시 10%",
+                //     "5차 직업 그랑아처": "체력소모무시 10%",
+                //     "6차 직업 제너럴": "체력소모무시 10%",
+                // },
+            },
+            "무기": {
+
+            }
+        };
+
+        function 가글사전렌더링(데이터, 컨테이너ID) {
+            const container = document.getElementById(컨테이너ID);
+            container.innerHTML = "";
+            container.style.textAlign = "left";
+            container.style.alignItems = "flex-start";
+
+            function 재귀생성(노드, 부모, 들여쓰기 = 0) {
+                for (const key in 노드) {
+                    const 값 = 노드[key];
+
+                    const 항목 = document.createElement("div");
+                    항목.style.cursor = "pointer";
+                    항목.style.marginTop = "5px";
+                    항목.style.textAlign = "left";
+                    항목.textContent = `${"　".repeat(들여쓰기)}${key}`;
+
+                    if (typeof 값 === "string") {
+                        // 최하단 설명 노드
+                        항목.textContent = `${"　".repeat(들여쓰기)}- ${key}: ${값}`;
+                        부모.appendChild(항목);
+                        continue;
+                    }
+
+                    const 하위 = document.createElement("div");
+                    하위.style.display = "none";
+                    하위.style.marginLeft = "20px";
+                    하위.style.textAlign = "left";
+
+                    항목.addEventListener("click", () => {
+                        하위.style.display = 하위.style.display === "none" ? "block" : "none";
+                    });
+
+                    부모.appendChild(항목);
+                    부모.appendChild(하위);
+                    재귀생성(값, 하위, 들여쓰기 + 1);
+                }
+            }
+
+            재귀생성(데이터, container);
+        }
+
+
+
         document.getElementById("가글사전").addEventListener("click", async () => {
             if (!유저데이터) return;
             화면잠금();
@@ -4465,6 +4549,7 @@
             const container = document.getElementById("가글사전컨테이너");
             container.innerHTML = ""; // 기존 내용 초기화
 
+            가글사전렌더링(가글사전데이터, "가글사전컨테이너");
 
             화면해제();
         });
@@ -4660,8 +4745,6 @@
             // document.getElementById("승리패배로그").style.color = "#ffa500";
             화면해제();
         });
-
-
 
 
 
