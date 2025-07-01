@@ -3057,6 +3057,52 @@ app.post("/upgrade-accessory", async (req, res) => {
 });
 
 
+app.post("/use-Sword", async (req, res) => {
+    const { 유저UID } = req.body;
+    if (!유저UID) {
+        return res.status(400).json({ 오류: "유저UID 누락" });
+    }
+
+    const { data: 유저, error: 조회에러 } = await supabaseAdmin
+        .from("users")
+        .select("*")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (조회에러 || !유저) {
+        return res.status(404).json({ 오류: "유저 정보 없음" });
+    }
+
+    const 유물목록 = { ...유저.유물목록 };
+    const 소드수량 = 유물목록["소드"] || 0;
+
+    if (소드수량 < 3) {
+        return res.status(400).json({ 오류: "소드가 부족합니다" });
+    }
+
+    // ✅ 유물 변경
+    유물목록["소드"] = 소드수량 - 3;
+    유물목록["스피어"] = (유물목록["스피어"] || 0) + 1;
+
+    // ✅ 변경 적용 후 공격력 재계산
+    유저.유물목록 = 유물목록;
+    const 최종공격력 = 최종공격력계산(유저);
+
+    const { error: 저장에러 } = await supabaseAdmin
+        .from("users")
+        .update({
+            유물목록,
+            최종공격력
+        })
+        .eq("유저UID", 유저UID);
+
+    if (저장에러) {
+        return res.status(500).json({ 오류: "공격력 저장 실패" });
+    }
+
+    return res.json({ 유물목록, 최종공격력 });
+});
+
 
 
 
@@ -3632,20 +3678,26 @@ function 최종공격력계산(유저) {
     const 전직공격력 = 유저.전직공격력 || 1;
     const 펫단계원본 = 유저.펫단계 || 0;
     const 펫배율 = 1 + 0.1 * 펫단계원본;
+
     const 소드개수 = 유저.유물목록?.["소드"] || 0;
+    const 스피어개수 = 유저.유물목록?.["스피어"] || 0;
 
     const 룬검 = 유저.악세사리목록?.find(a => a.이름 === "룬검" && a.장착 === 1);
     const 룬검배율 = 룬검 ? (1 + 룬검.등급 * 0.05) : 1;
 
+    const 소드배율 = 1 + 0.01 * 소드개수;
+    const 스피어배율 = 1 + 0.02 * 스피어개수;
 
     const 최종공격력 = (레벨공격력 + 장비공격력)
         * (전직공격력 * 0.1 + 0.9)
-        * (1 + 0.01 * 소드개수)
+        * 소드배율
+        * 스피어배율
         * 펫배율
         * 룬검배율;
 
     return Math.round(최종공격력);
 }
+
 
 function 최대체력계산(유저) {
     const 하트개수 = 유저.유물목록?.["하트플러스"] || 0;
