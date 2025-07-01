@@ -1175,7 +1175,11 @@ app.post("/use-magic-palette", async (req, res) => {
         "네온사인",
         "핑크오션",
         "황혼하늘",
-        "에메랄드숲"
+        "에메랄드숲",
+        "노랭",
+        "초록",
+        "보라",
+        "핑크",
     ];
     const 랜덤색 = 팔레트목록[Math.floor(Math.random() * 팔레트목록.length)];
 

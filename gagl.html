@@ -595,6 +595,51 @@
             animation: 무지개흐름 3s linear infinite;
         }
 
+        .마법의팔레트노랭 {
+            background: linear-gradient(90deg, #fca235, #fbeb36, #c3fa37, #92f938, #fca235);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            animation: 무지개흐름 3s linear infinite;
+        }
+
+        .마법의팔레트초록 {
+            background: linear-gradient(90deg, #39f84f, #3af799, #3bf6d1, #3cf2f5, #39f84f);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            animation: 무지개흐름 3s linear infinite;
+        }
+
+        .마법의팔레트보라 {
+            background: linear-gradient(90deg, #447ced, #465ceb, #6847ea, #9047ea, #447ced);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            animation: 무지개흐름 3s linear infinite;
+        }
+
+        .마법의팔레트핑크 {
+            background: linear-gradient(90deg, #da47ea, #ea47c7, #ea4796, #ea4762, #da47ea);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            animation: 무지개흐름 3s linear infinite;
+        }
+
+
         @keyframes 무지개흐름 {
             to {
                 background-position: 200% center;
@@ -1627,7 +1672,11 @@
                 "네온사인": "마법의팔레트네온사인",
                 "핑크오션": "마법의팔레트핑크오션",
                 "황혼하늘": "마법의팔레트황혼하늘",
-                "에메랄드숲": "마법의팔레트에메랄드숲"
+                "에메랄드숲": "마법의팔레트에메랄드숲",
+                "노랭": "마법의팔레트노랭",
+                "초록": "마법의팔레트초록",
+                "보라": "마법의팔레트보라",
+                "핑크": "마법의팔레트핑크",
             };
             const 클래스 = 팔레트클래스[팔레트];
             return 클래스 ? `<span class="${클래스}">${닉네임}</span>` : 닉네임;
