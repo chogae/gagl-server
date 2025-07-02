@@ -472,7 +472,9 @@ app.post("/get-user", async (req, res) => {
         return res.status(500).json({ 오류: "서버오류" });
     }
 
-    return res.json({ 유저데이터: { ...유저 }, 새로고침하자, 점검하자 });
+    const 주인장인가 = 유저.유저아이디 === "나주인장아니다";
+
+    return res.json({ 유저데이터: { ...유저 }, 새로고침하자, 점검하자, 주인장인가 });
 });
 
 
@@ -3159,6 +3161,39 @@ app.post("/refresh-mailbox", async (req, res) => {
 });
 
 
+app.post("/send-mail-to-user", async (req, res) => {
+    const { 유저아이디, 이름, 수량 } = req.body;
+    if (!유저아이디 || !이름 || !수량 || 수량 <= 0) {
+        return res.status(400).json({ 오류: "입력값 누락 또는 잘못됨" });
+    }
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("유저UID, 우편함")
+        .eq("유저아이디", 유저아이디)
+        .single();
+
+    if (error || !유저) {
+        return res.status(404).json({ 오류: "해당 유저를 찾을 수 없습니다" });
+    }
+
+    const 기존우편함 = 유저.우편함 || [];
+    const 새우편 = { 이름, 수량 };
+    const 갱신된우편함 = [...기존우편함, 새우편];
+
+    const { error: updateErr } = await supabaseAdmin
+        .from("users")
+        .update({ 우편함: 갱신된우편함 })
+        .eq("유저UID", 유저.유저UID);
+
+    if (updateErr) {
+        return res.status(500).json({ 오류: "우편 저장 실패" });
+    }
+
+    await 로그기록(유저아이디, `에게 ${이름} x${수량} 우편 발송`);
+
+    return res.json({ 메시지: "우편 발송 성공" });
+});
 
 
 

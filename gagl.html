@@ -1196,6 +1196,8 @@
             }, 3000);
         });
 
+        let 주인장인가 = false;
+
         const 색상맵 = {
             "일반": "#c8c8c8",
             "레어": "#00c000",
@@ -1603,6 +1605,8 @@
 
                 const 결과 = await 응답.json();
                 const 유저정보 = 결과.유저데이터;
+
+                주인장인가 = 결과.주인장인가;
 
                 if (!유저정보) {
                     메시지표시(메시지표시박스, "", "유저 정보가 존재하지 않습니다", "");
@@ -3293,6 +3297,8 @@
                     const 유저결과 = await 유저응답.json();
                     const 유저정보 = 유저결과.유저데이터;
 
+                    주인장인가 = 유저결과.주인장인가;
+
                     // if (결과.점검하자 == true) {
                     //     document.body.style.display = 'none';
                     // }
@@ -3400,20 +3406,114 @@
 `;
 
 
-
         정보툴팁.style.display = "none";
         document.body.appendChild(정보툴팁);
 
+        // 정보버튼.addEventListener("mouseenter", () => {
+        //     const rect = 정보버튼.getBoundingClientRect();
+
+        //     // 먼저 보여줘야 offsetWidth를 읽을 수 있음
+        //     정보툴팁.style.display = "block";
+
+        //     const 툴팁너비 = 정보툴팁.offsetWidth;
+        //     정보툴팁.style.left = (rect.right - 툴팁너비) + "px";
+        //     정보툴팁.style.top = rect.bottom + "px";
+        // });
+
         정보버튼.addEventListener("mouseenter", () => {
             const rect = 정보버튼.getBoundingClientRect();
-
-            // 먼저 보여줘야 offsetWidth를 읽을 수 있음
             정보툴팁.style.display = "block";
+
+            // ✅ 내부 div 요소 가져오기 (첫 자식 요소)
+            const 내부컨테이너 = 정보툴팁.firstElementChild;
+
+            if (주인장인가 && !document.getElementById("주인장")) {
+                const 주버튼 = document.createElement("div");
+                주버튼.className = "버튼";
+                주버튼.id = "주인장";
+                주버튼.textContent = "주 인 장";
+
+                // ✅ 이벤트 리스너 여기서 바로 붙이기
+                주버튼.addEventListener("click", async () => {
+                    if (!유저데이터) return;
+                    화면잠금();
+
+                    document.getElementById("화면설명").innerHTML = "주인장전용화면";
+
+                    모든화면숨기기();
+                    document.getElementById("주인장화면").style.display = "block";
+
+                    const 컨테이너 = document.getElementById("주인장컨테이너");
+                    컨테이너.innerHTML = "";
+
+
+                    const form = document.createElement("div");
+                    form.style.display = "flex";
+                    form.style.flexDirection = "column";
+                    form.style.gap = "10px";
+                    form.style.marginTop = "20px";
+
+                    form.innerHTML = `
+  <div>
+    <div>🎯 유저아이디</div>
+    <input id="우편유저입력" type="text" placeholder="예: 김채빈" style="width: 200px;" />
+  </div>
+  <div>
+    <div>📦 아이템 이름</div>
+    <input id="우편이름입력" type="text" placeholder="예: 햄버거" style="width: 200px;" />
+  </div>
+  <div>
+    <div>🔢 수량</div>
+    <input id="우편수량입력" type="number" placeholder="예: 3" style="width: 100px;" />
+  </div>
+  <button id="우편보내기버튼" class="버튼">💌 우편 보내기</button>
+`;
+
+                    컨테이너.appendChild(form);
+
+
+                    document.getElementById("우편보내기버튼").addEventListener("click", async () => {
+                        const 유저아이디 = document.getElementById("우편유저입력").value.trim();
+                        const 이름 = document.getElementById("우편이름입력").value.trim();
+                        const 수량 = parseInt(document.getElementById("우편수량입력").value.trim(), 10);
+
+                        if (!유저아이디 || !이름 || isNaN(수량) || 수량 <= 0) {
+                            메시지표시(메시지표시박스, "", "입력값이 올바르지 않습니다", "");
+                            return;
+                        }
+
+                        화면잠금();
+
+                        const 응답 = await fetch("/send-mail-to-user", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ 유저아이디, 이름, 수량 })
+                        });
+
+                        const 결과 = await 응답.json();
+
+                        if (!응답.ok) {
+                            메시지표시(메시지표시박스, "", 결과.오류 || "우편 발송 실패", "");
+                        } else {
+                            메시지표시(메시지표시박스, "", "우편을 성공적으로 발송했습니다!", "");
+                        }
+
+                        화면해제();
+                    });
+
+
+                    화면해제();
+                });
+
+                내부컨테이너.appendChild(주버튼);
+            }
+
 
             const 툴팁너비 = 정보툴팁.offsetWidth;
             정보툴팁.style.left = (rect.right - 툴팁너비) + "px";
             정보툴팁.style.top = rect.bottom + "px";
         });
+
 
 
         // 마우스가 정보버튼과 정보툴팁 외부로 나가면 닫기
@@ -4111,7 +4211,7 @@
             const 결과 = await 응답.json();
 
             if (!응답.ok) {
-                메시지표시(null, "", 결과.오류 || "우편함 불러오기 실패", "");
+                메시지표시(메시지표시박스, "", 결과.오류 || "우편함 불러오기 실패", "");
                 화면해제();
                 return;
             }
@@ -4198,24 +4298,6 @@
             // 다시 렌더링
             document.getElementById("우편함").click();
         }
-
-
-        // document.getElementById("주인장").addEventListener("click", async () => {
-        //     if (!유저데이터) return;
-        //     화면잠금();
-
-        //     document.getElementById("화면설명").innerHTML = "주인장전용화면";
-
-        //     모든화면숨기기();
-        //     document.getElementById("주인장화면").style.display = "block";
-
-        //     const 컨테이너 = document.getElementById("주인장컨테이너");
-        //     컨테이너.innerHTML = "";
-
-
-
-        //     화면해제();
-        // });
 
 
 
