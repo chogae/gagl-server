@@ -815,6 +815,18 @@
         </div>
     </div>
 
+    <div id="우편함화면" style="display: none;">
+        <div class="사백픽셀테두리" id="우편함컨테이너">
+
+        </div>
+    </div>
+
+    <div id="주인장화면" style="display: none;">
+        <div class="사백픽셀테두리" id="주인장컨테이너">
+
+        </div>
+    </div>
+
 
     <div id="광장화면" style="display: none;">
         <div class="사백픽셀테두리 세로정렬" id="광장컨테이너">
@@ -3348,7 +3360,7 @@
                 "유물화면", "전직화면", "보스화면", "에너지박스",
                 "메뉴얼화면", "내정보화면", "캐시샵화면", "지하던전화면",
                 "정보툴팁", "성장툴팁", "월드툴팁", "광장화면", "일어난일화면",
-                "악세화면", "가글사전화면",
+                "악세화면", "가글사전화면", "우편함화면", "주인장화면",
             ];
             화면ID들.forEach(id => {
                 const el = document.getElementById(id);
@@ -3377,6 +3389,7 @@
         정보툴팁.innerHTML = `
   <div style="display: flex; flex-direction: column; gap: 10px;">    
     <div class="버튼" id="내정보">내 정 보</div>
+    <div class="버튼" id="우편함">우 편 함</div>
     <div class="버튼" id="메뉴얼">메 뉴 얼</div>
     <div class="버튼" id="캐시샵">캐 시 샵</div>
     <div class="버튼" id="광장">광 장</div>
@@ -3385,7 +3398,8 @@
     <div class="버튼" id="로그아웃">로그아웃</div>
   </div>
 `;
-        // <div class="버튼" id="탈퇴" onclick="회원탈퇴()">탈퇴</div>
+
+
 
         정보툴팁.style.display = "none";
         document.body.appendChild(정보툴팁);
@@ -4084,6 +4098,124 @@
         }
 
 
+        //우편함화면보여주기
+        document.getElementById("우편함").addEventListener("click", async () => {
+            if (!유저데이터) return;
+            화면잠금();
+
+            const 응답 = await fetch("/refresh-mailbox", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+            });
+            const 결과 = await 응답.json();
+
+            if (!응답.ok) {
+                메시지표시(null, "", 결과.오류 || "우편함 불러오기 실패", "");
+                화면해제();
+                return;
+            }
+
+            유저데이터.우편함 = 결과.우편함;
+
+            document.getElementById("화면설명").innerHTML = "받기를 클릭하시면 해당 수량 전부가 수령됩니다";
+
+            모든화면숨기기();
+            document.getElementById("우편함화면").style.display = "block";
+
+            const 컨테이너 = document.getElementById("우편함컨테이너");
+            컨테이너.innerHTML = "";
+
+
+            const 우편함목록 = 유저데이터.우편함 || [];
+
+            if (우편함목록.length === 0) {
+                const 안내 = document.createElement("div");
+                안내.textContent = "받은 우편이 없습니다";
+                안내.style.textAlign = "center";
+                안내.style.padding = "15px 0";
+                // 안내.style.color = "#aaa";
+                컨테이너.appendChild(안내);
+            } else {
+                우편함목록.forEach((우편, 인덱스) => {
+                    const 행 = document.createElement("div");
+                    행.style.display = "flex";
+                    행.style.justifyContent = "space-between";
+                    행.style.alignItems = "center";
+                    행.style.margin = "0";
+                    행.style.padding = "8px 12px";
+                    행.style.borderBottom = "1px solid rgba(255, 255, 255, 0.2)";
+                    행.style.fontSize = "14px";
+
+                    const 텍스트 = document.createElement("div");
+                    텍스트.textContent = `${우편.이름} x${우편.수량}`;
+                    텍스트.style.flex = "1";
+
+                    const 받기버튼 = document.createElement("div");
+                    받기버튼.textContent = "받기";
+                    받기버튼.style.cursor = "pointer";
+                    받기버튼.style.padding = "4px 10px";
+                    받기버튼.style.border = "1px solid #4b4b4b";
+                    받기버튼.style.borderRadius = "4px";
+
+                    받기버튼.addEventListener("mouseenter", () => {
+                        받기버튼.style.opacity = "0.8";
+                    });
+                    받기버튼.addEventListener("mouseleave", () => {
+                        받기버튼.style.opacity = "1";
+                    });
+                    받기버튼.addEventListener("click", () => {
+                        우편받기(인덱스);
+                    });
+
+                    행.appendChild(텍스트);
+                    행.appendChild(받기버튼);
+                    컨테이너.appendChild(행);
+                });
+            }
+
+
+            화면해제();
+        });
+
+        async function 우편받기(인덱스) {
+            화면잠금();
+            const 응답 = await fetch("/receive-mail", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 유저UID: 유저데이터.유저UID, 우편인덱스: 인덱스 })
+            });
+            const 결과 = await 응답.json();
+            if (!응답.ok) {
+                메시지표시(메시지표시박스, "", 결과.오류 || "우편 수령 실패", "");
+                화면해제();
+                return;
+            }
+
+            유저데이터.유물목록 = 결과.유물목록;
+            유저데이터.우편함 = 결과.우편함;
+            메시지표시(메시지표시박스, "", "우편 수령 완료!", "");
+            // 다시 렌더링
+            document.getElementById("우편함").click();
+        }
+
+
+        // document.getElementById("주인장").addEventListener("click", async () => {
+        //     if (!유저데이터) return;
+        //     화면잠금();
+
+        //     document.getElementById("화면설명").innerHTML = "주인장전용화면";
+
+        //     모든화면숨기기();
+        //     document.getElementById("주인장화면").style.display = "block";
+
+        //     const 컨테이너 = document.getElementById("주인장컨테이너");
+        //     컨테이너.innerHTML = "";
+
+
+
+        //     화면해제();
+        // });
 
 
 
@@ -5016,6 +5148,14 @@
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                 `,
                 `${여름아이콘}`,
+                `
+25.07.02<br>
+신규유저에게 마법의팔레트를 제외한 모든 유물이 1개로 셋팅됩니다<br>
+정보탭에 우편함이 구현되었습니다<br>
+우편함 개발 기념으로 전 유저에게 샐러드1개가 배송되었습니다<br>
+우편함에서 수령하세요<br>
+이제 일요일에 보스전 랭킹보상 티켓이 우편함으로 지급됩니다<br>
+                `,
                 `
 25.07.01<br>
 가글사전에 여러 데이터들이 입력되었습니다<br>

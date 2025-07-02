@@ -70,43 +70,37 @@ app.post("/get-user", async (req, res) => {
                 .order("보스누적데미지", { ascending: false })
                 .limit(9);
 
-            // 기존 금드 지급 부분을 대체할 코드 예시
             if (!순위에러) {
                 for (let i = 0; i < 상위유저들.length; i++) {
                     const user = 상위유저들[i];
                     const 지급티켓 = 10 - i;
 
-                    const { data: 현재유물목록, error: fetchErr } = await supabaseAdmin
+                    const { data: 현재유저, error: fetchErr } = await supabaseAdmin
                         .from("users")
-                        .select("유물목록, 유저아이디") // ✅ 유저아이디도 함께 가져오기
+                        .select("우편함, 유저아이디") // ✅ 우편함도 함께 가져오기
                         .eq("유저UID", user.유저UID)
                         .single();
 
-                    if (fetchErr || !현재유물목록) {
-                        console.error(`유물목록 조회 실패 (${user.유저UID}):`, fetchErr);
+                    if (fetchErr || !현재유저) {
+                        console.error(`우편함 조회 실패 (${user.유저UID}):`, fetchErr);
                         continue;
                     }
 
-                    const oldList = 현재유물목록.유물목록 || {};
-                    const oldTicket = Number(oldList["티켓"] || 0);
-                    const newTicket = oldTicket + 지급티켓;
-                    const newList = {
-                        ...oldList,
-                        티켓: newTicket
-                    };
+                    const oldMail = 현재유저.우편함 || [];
+                    const 새우편 = { 이름: "티켓", 수량: 지급티켓 };
+                    const newMail = [...oldMail, 새우편];
 
                     const { error: updateErr } = await supabaseAdmin
                         .from("users")
-                        .update({ 유물목록: newList })
+                        .update({ 우편함: newMail })
                         .eq("유저UID", user.유저UID);
 
                     if (updateErr) {
-                        console.error(`티켓 지급 실패 (${user.유저UID}):`, updateErr);
+                        console.error(`우편 지급 실패 (${user.유저UID}):`, updateErr);
+                        await 로그기록(현재유저.유저아이디, `❌ 티켓 ${지급티켓}장 우편 지급 실패`);
                     } else {
-                        // ✅ 로그 기록 추가
-                        await 로그기록(현재유물목록.유저아이디, `티켓 ${지급티켓}장 지급 (기존: ${oldTicket} → 지급 후: ${newTicket})`);
+                        await 로그기록(현재유저.유저아이디, `티켓 ${지급티켓}장 우편 지급`);
                     }
-
                 }
             }
 
@@ -971,7 +965,7 @@ app.post("/attack-rare", async (req, res) => {
         }
 
         if (드랍장비.등급 === "태초" || 드랍장비.등급 === "타락") {
-            const 문구 = `${드랍장비.이름}을(를) 드랍했다!`;
+            const 문구 = `${드랍장비.이름}(을)를 드랍했다!`;
             await 이벤트기록추가({
                 유저UID: 유저.유저UID,
                 유저아이디: 유저.유저아이디,
@@ -1419,13 +1413,11 @@ app.post("/register-user", async (req, res) => {
     const 현재정각시간 = Math.floor(Date.now() / 1000 / 3600); // 시간 단위 기준 (정수)
 
     const 유물목록 = Object.fromEntries(
-        Object.keys(신화유물데이터).map(이름 => [이름, 0])
+        Object.keys(신화유물데이터).map(이름 => [이름, 1])
     );
 
-    // 원하는 기본 유물 수량 설정
-    유물목록["샐러드"] = 5;
     유물목록["스피커"] = 9;
-    유물목록["햄버거"] = 1;
+    유물목록["마법의팔레트"] = 0;
 
 
 
@@ -2082,7 +2074,7 @@ app.post("/gamble-Equipment", async (req, res) => {
 
 
             if (뽑힌등급 === "태초" || 뽑힌등급 === "타락") {
-                const 문구 = `${드랍장비.이름}을(를) 획득했다!`;
+                const 문구 = `${드랍장비.이름}(을)를 획득했다!`;
                 await 이벤트기록추가({
                     유저UID: 유저.유저UID,
                     유저아이디: 유저.유저아이디,
@@ -2302,7 +2294,7 @@ app.post('/synthesize-item', async (req, res) => {
 
 
             if ((nextGrade === "태초" || nextGrade === "타락")) {
-                const 문구 = `${gradeMap[nextGrade].이름}을(를) 합성했다!`;
+                const 문구 = `${gradeMap[nextGrade].이름}(을)를 합성했다!`;
                 await 이벤트기록추가({
                     유저UID,
                     유저아이디: user.유저아이디,
@@ -2728,7 +2720,7 @@ app.post("/obtain-accessory", async (req, res) => {
         장착: 0
     });
 
-    const 문구 = `악세사리 ${이름}을(를) 획득했다!`;
+    const 문구 = `악세사리 ${이름}(을)를 획득했다!`;
     await 이벤트기록추가({
         유저UID: 유저.유저UID,
         유저아이디: 유저.유저아이디,
@@ -3103,8 +3095,66 @@ app.post("/use-Sword", async (req, res) => {
 });
 
 
+app.post("/receive-mail", async (req, res) => {
+    const { 유저UID, 우편인덱스 } = req.body;
+    if (유저UID == null || 우편인덱스 == null) {
+        return res.status(400).json({ 오류: "필수 값 누락" });
+    }
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("우편함, 유물목록")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) return res.status(404).json({ 오류: "유저 없음" });
+
+    const 우편함 = 유저.우편함 || [];
+    if (우편인덱스 < 0 || 우편인덱스 >= 우편함.length)
+        return res.status(400).json({ 오류: "잘못된 인덱스" });
 
 
+    const 우편 = 우편함[우편인덱스];
+    const 유물목록 = { ...유저.유물목록 };
+
+    if (!(우편.이름 in 신화유물데이터)) {
+        return res.status(400).json({ 오류: "잘못된 우편입니다. 주인장에게 문의하세요" });
+    }
+
+
+    유물목록[우편.이름] = (유물목록[우편.이름] || 0) + (우편.수량 || 1);
+    우편함.splice(우편인덱스, 1); // 수령한 우편 삭제
+
+    const { error: updateErr } = await supabaseAdmin
+        .from("users")
+        .update({ 유물목록, 우편함 })
+        .eq("유저UID", 유저UID);
+
+    if (updateErr) return res.status(500).json({ 오류: "업데이트 실패" });
+
+    return res.json({ 유물목록, 우편함 });
+});
+
+
+app.post("/refresh-mailbox", async (req, res) => {
+    const { 유저UID } = req.body;
+
+    if (!유저UID) {
+        return res.status(400).json({ 오류: "유저UID 누락" });
+    }
+
+    const { data: 유저, error } = await supabaseAdmin
+        .from("users")
+        .select("우편함") // 🎯 우편함만 선택
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (error || !유저) {
+        return res.status(404).json({ 오류: "유저 없음" });
+    }
+
+    return res.json({ 우편함: 유저.우편함 || [] });
+});
 
 
 
@@ -3210,7 +3260,7 @@ async function 로그기록(유저아이디, 내용) {
 
 
 async function 이벤트기록추가({ 유저UID, 유저아이디, 문구 }) {
-    const 실제문구 = `${유저아이디} 이(가) ${문구}`;
+    const 실제문구 = `${유저아이디} (이)가 ${문구}`;
     const { error } = await supabaseAdmin.from("이벤트기록").insert([
         { 유저UID, 유저아이디, 일어난일: 실제문구 }
     ]);
