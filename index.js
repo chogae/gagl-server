@@ -3103,7 +3103,7 @@ app.post("/receive-mail", async (req, res) => {
 
     const { data: 유저, error } = await supabaseAdmin
         .from("users")
-        .select("우편함, 유물목록")
+        .select("우편함, 유물목록, 유저아이디")
         .eq("유저UID", 유저UID)
         .single();
 
@@ -3131,6 +3131,8 @@ app.post("/receive-mail", async (req, res) => {
         .eq("유저UID", 유저UID);
 
     if (updateErr) return res.status(500).json({ 오류: "업데이트 실패" });
+
+    await 로그기록(유저.유저아이디, `우편 수령: ${우편.이름} x${우편.수량 || 1}`);
 
     return res.json({ 유물목록, 우편함 });
 });
