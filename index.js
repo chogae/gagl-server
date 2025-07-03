@@ -1437,7 +1437,7 @@ app.post("/register-user", async (req, res) => {
         장비공격력: 0,
         펫단계: 0,
         경험치: 0,
-        골드: 1000000,
+        골드: 0,
         최대체력: 10,
         남은체력: 10,
         숙련도: 0,
@@ -1445,6 +1445,7 @@ app.post("/register-user", async (req, res) => {
         현재악마번호: Math.floor(Math.random() * 72) + 1,
         스킬: {},
         유물목록,
+        // 장비목록: [{ "이름": "루시퍼의 심장", "공격력": 1200, "등급": "타락", "강화": 0, "수량": 0 }],
         장비목록: [],
         버전업: 8,
         현재스태미너: 2000,
@@ -1474,7 +1475,7 @@ app.post("/register-user", async (req, res) => {
         지하던전: 1,
         하루한번: today,
         악세사리장비칸: 1,
-
+        우편함: [{ "수량": 1, "이름": "햄버거" }, { "수량": 1, "이름": "사탄의 날개" },],
     };
 
 
@@ -2038,15 +2039,7 @@ app.post("/gamble-Equipment", async (req, res) => {
                 }
             }
 
-            // 4-4) 장비 드랍·합성
-            const 장비맵 = {
-                "일반": { 이름: "릴리트의 독니", 공격력: 30 },
-                "레어": { 이름: "디아블로의 뿔", 공격력: 63 },
-                "신화": { 이름: "레비아탄의 비늘", 공격력: 132 },
-                "고대": { 이름: "벨제부브의 꼬리", 공격력: 276 },
-                "태초": { 이름: "사탄의 날개", 공격력: 576 },
-                "타락": { 이름: "루시퍼의 심장", 공격력: 1200 }
-            };
+
             const 드랍장비 = 장비맵[뽑힌등급];
 
             const 장비목록 = 유저.장비목록 || [];
@@ -3096,6 +3089,50 @@ app.post("/use-Sword", async (req, res) => {
     return res.json({ 유물목록, 최종공격력 });
 });
 
+app.post("/use-shieldban", async (req, res) => {
+    const { 유저UID } = req.body;
+    if (!유저UID) {
+        return res.status(400).json({ 오류: "유저UID 누락" });
+    }
+
+    const { data: 유저, error: 조회에러 } = await supabaseAdmin
+        .from("users")
+        .select("*")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (조회에러 || !유저) {
+        return res.status(404).json({ 오류: "유저 정보 없음" });
+    }
+
+    const 유물목록 = { ...유저.유물목록 };
+    const 쉴드밴수량 = 유물목록["쉴드밴"] || 0;
+
+    if (쉴드밴수량 < 3) {
+        return res.status(400).json({ 오류: "쉴드밴이 부족합니다" });
+    }
+
+    // ✅ 유물 변경
+    유물목록["쉴드밴"] = 쉴드밴수량 - 3;
+    유물목록["쉴드배앤"] = (유물목록["쉴드배앤"] || 0) + 1;
+
+    // ✅ 변경 적용 후 공격력 재계산
+    유저.유물목록 = 유물목록;
+
+    const { error: 저장에러 } = await supabaseAdmin
+        .from("users")
+        .update({
+            유물목록,
+        })
+        .eq("유저UID", 유저UID);
+
+    if (저장에러) {
+        return res.status(500).json({ 오류: "공격력 저장 실패" });
+    }
+
+    return res.json({ 유물목록 });
+});
+
 
 app.post("/receive-mail", async (req, res) => {
     const { 유저UID, 우편인덱스 } = req.body;
@@ -3105,7 +3142,7 @@ app.post("/receive-mail", async (req, res) => {
 
     const { data: 유저, error } = await supabaseAdmin
         .from("users")
-        .select("우편함, 유물목록, 유저아이디")
+        .select("*")
         .eq("유저UID", 유저UID)
         .single();
 
@@ -3115,29 +3152,58 @@ app.post("/receive-mail", async (req, res) => {
     if (우편인덱스 < 0 || 우편인덱스 >= 우편함.length)
         return res.status(400).json({ 오류: "잘못된 인덱스" });
 
-
     const 우편 = 우편함[우편인덱스];
-    const 유물목록 = { ...유저.유물목록 };
+    const 수량 = 우편.수량 || 1;
 
-    if (!(우편.이름 in 신화유물데이터)) {
-        return res.status(400).json({ 오류: "잘못된 우편입니다. 주인장에게 문의하세요" });
+    const 유물목록 = { ...유저.유물목록 };
+    const 장비목록 = Array.isArray(유저.장비목록) ? [...유저.장비목록] : [];
+
+    // ✅ 유물 처리
+    if (우편.이름 in 신화유물데이터) {
+        유물목록[우편.이름] = (유물목록[우편.이름] || 0) + 수량;
     }
 
+    // ✅ 장비 처리 (장비맵 역탐색)
+    else {
+        const 등급 = Object.keys(장비맵).find(key => 장비맵[key].이름 === 우편.이름);
+        if (!등급) {
+            return res.status(400).json({ 오류: "잘못된 우편입니다. 주인장에게 문의하세요" });
+        }
 
-    유물목록[우편.이름] = (유물목록[우편.이름] || 0) + (우편.수량 || 1);
-    우편함.splice(우편인덱스, 1); // 수령한 우편 삭제
+        const 장비정보 = 장비맵[등급]; // { 이름, 공격력 }
+
+        const 기존 = 장비목록.find(x => x.이름 === 우편.이름);
+        if (기존) {
+            기존.수량 += 수량;
+        } else {
+            장비목록.push({
+                이름: 우편.이름,
+                공격력: 장비정보.공격력,
+                등급,
+                강화: 0,
+                수량: 0,
+            });
+        }
+    }
+
+    우편함.splice(우편인덱스, 1);
+
+    유저.장비공격력 = Math.max(0, ...장비목록.map(e => e.공격력 || 0));
+    유저.최종공격력 = 최종공격력계산(유저);
+
 
     const { error: updateErr } = await supabaseAdmin
         .from("users")
-        .update({ 유물목록, 우편함 })
+        .update({ 유물목록, 장비목록, 우편함, 장비공격력: 유저.장비공격력, 최종공격력: 유저.최종공격력 })
         .eq("유저UID", 유저UID);
 
     if (updateErr) return res.status(500).json({ 오류: "업데이트 실패" });
 
-    await 로그기록(유저.유저아이디, `우편 수령: ${우편.이름} x${우편.수량 || 1}`);
+    await 로그기록(유저.유저아이디, `우편 수령: ${우편.이름} x${수량}`);
 
-    return res.json({ 유물목록, 우편함 });
+    return res.json({ 유물목록, 장비목록, 우편함, 장비공격력: 유저.장비공격력, 최종공격력: 유저.최종공격력 });
 });
+
 
 
 app.post("/refresh-mailbox", async (req, res) => {
@@ -3196,6 +3262,42 @@ app.post("/send-mail-to-user", async (req, res) => {
 });
 
 
+app.post("/send-mail-to-all-users", async (req, res) => {
+    const { 이름, 수량 } = req.body;
+    if (!이름 || !수량 || 수량 <= 0) {
+        return res.status(400).json({ 오류: "입력값 누락 또는 잘못됨" });
+    }
+
+    const { data: 유저들, error } = await supabaseAdmin
+        .from("users")
+        .select("유저UID, 유저아이디, 우편함");
+
+    if (error || !유저들 || 유저들.length === 0) {
+        return res.status(500).json({ 오류: "유저 목록 조회 실패" });
+    }
+
+    const 새우편 = { 이름, 수량 };
+    const 업데이트작업 = [];
+
+    for (const 유저 of 유저들) {
+        const 기존우편함 = 유저.우편함 || [];
+        const 갱신된우편함 = [...기존우편함, 새우편];
+
+        업데이트작업.push(
+            supabaseAdmin
+                .from("users")
+                .update({ 우편함: 갱신된우편함 })
+                .eq("유저UID", 유저.유저UID)
+        );
+
+        await 로그기록(유저.유저아이디, `에게 ${이름} x${수량} 전체발송중`);
+    }
+
+    // 병렬 처리
+    await Promise.all(업데이트작업);
+
+    return res.json({ 메시지: "전체 유저에게 발송 완료" });
+});
 
 
 
@@ -3348,12 +3450,14 @@ function 데미지계산(유저, 몬스터, 스킬결과) {
 
     // 1) 쉴드밴 보정
     const 쉴드밴개수 = 유저.유물목록?.["쉴드밴"] || 0;
+    const 쉴드배앤개수 = 유저.유물목록?.["쉴드배앤"] || 0;
     const 보정 = 1 - 0.01 * 쉴드밴개수;
+    const 보정투 = 1 - 0.01 * 쉴드배앤개수;
 
     if (스킬결과.방어무시율 > 0) {
-        방어력 = Math.floor(방어력 * (1 - 스킬결과.방어무시율) * 보정);
+        방어력 = Math.floor(방어력 * (1 - 스킬결과.방어무시율) * 보정 * 보정투);
     } else {
-        방어력 = Math.floor(방어력 * 보정);
+        방어력 = Math.floor(방어력 * 보정 * 보정투);
     }
 
     // 3) 랜덤 보정 및 기본/랜덤 데미지 계산
@@ -3892,7 +3996,19 @@ const 신화유물데이터 = {
     "펜타그램": { 설명: "진화 확률을 증가시킵니다(+0.01%)" },
     "안경": { 설명: "악세사리를 바꿔낄 수 있습니다" },
     "스피어": { 설명: "공격력이 증가합니다(*2%)" },
+    "쉴드배앤": { 설명: "악마들의 방어력을 더 감소시킵니다(*1%)" },
 };
+
+const 장비맵 = {
+    "일반": { 이름: "릴리트의 독니", 공격력: 30 },
+    "레어": { 이름: "디아블로의 뿔", 공격력: 63 },
+    "신화": { 이름: "레비아탄의 비늘", 공격력: 132 },
+    "고대": { 이름: "벨제부브의 꼬리", 공격력: 276 },
+    "태초": { 이름: "사탄의 날개", 공격력: 576 },
+    "타락": { 이름: "루시퍼의 심장", 공격력: 1200 },
+    "진화": { 이름: "베히모스의 허물", 공격력: 10000 },
+};
+
 
 
 // 🟡 정적 파일 경로 설정
