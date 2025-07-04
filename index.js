@@ -240,6 +240,8 @@ app.post("/get-user", async (req, res) => {
             let new현질기한 = (유저.현질기한 ?? 0) + 1;
             const updates = { 현질기한체크: today };
 
+            await 로그기록(유저.유저아이디, `현질기한 +1됨`);
+
             // 2) 31일 도달 시 초기화
             if (new현질기한 >= 31) {
                 const new현질 = (유저.현질 ?? 1) - 1;
@@ -276,20 +278,20 @@ app.post("/get-user", async (req, res) => {
 
     if ((유저.햄버거현질 ?? 0) >= 1) {
         const now = new Date();
-        const kstNow = new Date(
-            now.toLocaleString("en-US", { timeZone: "Asia/Seoul" })
-        );
+        const kstNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
         const today = kstNow.toISOString().slice(0, 10);
 
         if (유저.햄버거현질기한체크 !== today) {
-            // 1) 햄버거현질기한 1 증가
             let new햄버거현질기한 = (유저.햄버거현질기한 ?? 0) + 1;
             const updates = { 햄버거현질기한체크: today };
 
-            // 2) 31일째 도달 시 리셋
+            await 로그기록(유저.유저아이디, `햄버거현질기한 +1됨`); // ✅ 로그 기록 ①
+
+            const oldMails = 유저.우편함 ?? [];
+            const 햄버거우편 = { 이름: "햄버거", 수량: 1 };
+
             if (new햄버거현질기한 >= 31) {
                 const new햄버거현질 = (유저.햄버거현질 ?? 1) - 1;
-
                 const next기한 = new햄버거현질 >= 1 ? 1 : 0;
                 const next체크 = new햄버거현질 >= 1 ? today : null;
 
@@ -301,29 +303,25 @@ app.post("/get-user", async (req, res) => {
                 유저.햄버거현질기한 = next기한;
                 유저.햄버거현질기한체크 = next체크;
 
-                // ✅ 줄어든 값이 1 이상이면 햄버거 유물도 지급
                 if (new햄버거현질 >= 1) {
-                    const new목록 = { ...유저.유물목록 };
-                    const current = Number(new목록["햄버거"] || 0);
-                    new목록["햄버거"] = current + 1;
-                    updates.유물목록 = new목록;
-                    유저.유물목록 = new목록;
+                    const newMails = [...oldMails, 햄버거우편];
+                    updates.우편함 = newMails;
+                    유저.우편함 = newMails;
+
+                    await 로그기록(유저.유저아이디, `햄버거지급완료`); // ✅ 로그 기록 ②
                 }
 
             } else {
-                // 3) 일반적인 날짜 증가 및 유물 지급
                 updates.햄버거현질기한 = new햄버거현질기한;
                 유저.햄버거현질기한 = new햄버거현질기한;
 
-                const new목록 = { ...유저.유물목록 };
-                const current = Number(new목록["햄버거"] || 0);
-                new목록["햄버거"] = current + 1;
-                updates.유물목록 = new목록;
-                유저.유물목록 = new목록;
+                const newMails = [...oldMails, 햄버거우편];
+                updates.우편함 = newMails;
+                유저.우편함 = newMails;
+
+                await 로그기록(유저.유저아이디, `햄버거지급완료`); // ✅ 로그 기록 ②
             }
 
-
-            // 4) DB 업데이트
             const { error: incErr } = await supabaseAdmin
                 .from("users")
                 .update(updates)
@@ -334,6 +332,8 @@ app.post("/get-user", async (req, res) => {
             }
         }
     }
+
+
 
 
     const kstNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
@@ -555,6 +555,7 @@ app.post("/attack-boss", async (req, res) => {
         return res.status(403).json({ 오류: "새로운 보스의 강림으로 대지가 갈라지는 중입니다" });
     }
 
+    //패치
     const { data: 유저, error } = await supabaseAdmin
         .from("users")
         .select("*")
@@ -591,12 +592,14 @@ app.post("/attack-boss", async (req, res) => {
     유저.보스누적데미지 += 전투결과.누적데미지;
     유저.남은체력 = 유저.최대체력;
 
-    await supabaseAdmin.from("users").update({
-        현재스태미너,
-        남은체력: 유저.최대체력,
-        스태미너소모총량: 유저.스태미너소모총량,
-        보스누적데미지: 유저.보스누적데미지
-    }).eq("유저UID", 유저UID);
+    if (유저.유저아이디 !== "테스트아이디") {
+        await supabaseAdmin.from("users").update({
+            현재스태미너,
+            남은체력: 유저.최대체력,
+            스태미너소모총량: 유저.스태미너소모총량,
+            보스누적데미지: 유저.보스누적데미지
+        }).eq("유저UID", 유저UID);
+    }
 
     return res.json({
         결과: "완료",
