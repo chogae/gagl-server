@@ -71,13 +71,16 @@ app.post("/get-user", async (req, res) => {
                 .limit(9);
 
             if (!순위에러) {
+                const kstNow = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
+                const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " ");
+
                 for (let i = 0; i < 상위유저들.length; i++) {
                     const user = 상위유저들[i];
                     const 지급티켓 = 10 - i;
 
                     const { data: 현재유저, error: fetchErr } = await supabaseAdmin
                         .from("users")
-                        .select("우편함, 유저아이디") // ✅ 우편함도 함께 가져오기
+                        .select("우편함, 유저아이디")
                         .eq("유저UID", user.유저UID)
                         .single();
 
@@ -87,7 +90,12 @@ app.post("/get-user", async (req, res) => {
                     }
 
                     const oldMail = 현재유저.우편함 || [];
-                    const 새우편 = { 이름: "티켓", 수량: 지급티켓 };
+                    const 새우편 = {
+                        이름: "티켓",
+                        수량: 지급티켓,
+                        날짜,
+                        메모: `보스 주간 랭킹 ${i + 1}위 보상`
+                    };
                     const newMail = [...oldMail, 새우편];
 
                     const { error: updateErr } = await supabaseAdmin
@@ -280,15 +288,23 @@ app.post("/get-user", async (req, res) => {
         const now = new Date();
         const kstNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
         const today = kstNow.toISOString().slice(0, 10);
+        const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " "); // YYYY-MM-DD HH:mm
 
         if (유저.햄버거현질기한체크 !== today) {
             let new햄버거현질기한 = (유저.햄버거현질기한 ?? 0) + 1;
             const updates = { 햄버거현질기한체크: today };
 
-            await 로그기록(유저.유저아이디, `햄버거현질기한 +1됨`); // ✅ 로그 기록 ①
+            await 로그기록(유저.유저아이디, `햄버거현질기한 +1됨`);
 
             const oldMails = 유저.우편함 ?? [];
-            const 햄버거우편 = { 이름: "햄버거", 수량: 1 };
+
+            const 햄버거우편 = {
+                이름: "햄버거",
+                수량: 1,
+                날짜,
+                메모: `햄버거 정기배송 ${new햄버거현질기한}일째`
+            };
+
 
             if (new햄버거현질기한 >= 31) {
                 const new햄버거현질 = (유저.햄버거현질 ?? 1) - 1;
@@ -308,7 +324,7 @@ app.post("/get-user", async (req, res) => {
                     updates.우편함 = newMails;
                     유저.우편함 = newMails;
 
-                    await 로그기록(유저.유저아이디, `햄버거지급완료`); // ✅ 로그 기록 ②
+                    await 로그기록(유저.유저아이디, `햄버거지급완료`);
                 }
 
             } else {
@@ -319,7 +335,7 @@ app.post("/get-user", async (req, res) => {
                 updates.우편함 = newMails;
                 유저.우편함 = newMails;
 
-                await 로그기록(유저.유저아이디, `햄버거지급완료`); // ✅ 로그 기록 ②
+                await 로그기록(유저.유저아이디, `햄버거지급완료`);
             }
 
             const { error: incErr } = await supabaseAdmin
@@ -332,7 +348,6 @@ app.post("/get-user", async (req, res) => {
             }
         }
     }
-
 
 
 
@@ -1473,29 +1488,17 @@ app.post("/register-user", async (req, res) => {
     }
 
     const now = new Date();
-    const formatter = new Intl.DateTimeFormat("ko-KR", {
-        hour: "numeric",
-        hour12: false,
-        timeZone: "Asia/Seoul"
-    });
-    const parts = formatter.formatToParts(now);
-
-    const kstNow = new Date(
-        now.toLocaleString("en-US", { timeZone: "Asia/Seoul" })
-    );
+    const kstNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
     const today = kstNow.toISOString().slice(0, 10);
+    const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " "); // YYYY-MM-DD HH:mm
 
     const 현재정각시간 = Math.floor(Date.now() / 1000 / 3600); // 시간 단위 기준 (정수)
 
     const 유물목록 = Object.fromEntries(
         Object.keys(신화유물데이터).map(이름 => [이름, 1])
     );
-
     유물목록["스피커"] = 9;
     유물목록["마법의팔레트"] = 0;
-
-
-
 
     //신규유저
     const 삽입값 = {
@@ -1518,7 +1521,6 @@ app.post("/register-user", async (req, res) => {
         현재악마번호: Math.floor(Math.random() * 72) + 1,
         스킬: {},
         유물목록,
-        // 장비목록: [{ "이름": "루시퍼의 심장", "공격력": 1200, "등급": "타락", "강화": 0, "수량": 0 }],
         장비목록: [],
         버전업: 8,
         현재스태미너: 2000,
@@ -1549,20 +1551,16 @@ app.post("/register-user", async (req, res) => {
         하루한번: today,
         악세사리장비칸: 1,
         우편함: [
-            { 이름: "햄버거", 수량: 1 },
-            { 이름: "사탄의 날개", 수량: 1 }
-        ],
+            { 이름: "햄버거", 수량: 1, 날짜, 메모: "신규유저 이벤트보상" },
+            { 이름: "사탄의 날개", 수량: 2, 날짜, 메모: "신규유저 이벤트보상" }
+        ]
     };
-
 
     await 이벤트기록추가({
         유저UID: 삽입값.유저UID,
         유저아이디: 삽입값.유저아이디,
         문구: `대륙에 등장했다`
     });
-
-
-
 
     const { error: 삽입오류 } = await supabaseAdmin
         .from("users")
