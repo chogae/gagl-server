@@ -2188,11 +2188,10 @@ app.post("/gamble-Relic", async (req, res) => {
     const maxCounts = {
         "플라워": 9,
         "뼈다구": 9,
-        "열쇠": 9,
-        "스피커": 9,
         "안경": 9,
         "샐러드": 0,
         "스피커": 0,
+        "열쇠": 9,
     };
     try {
         const { data: 유저, error } = await supabaseAdmin
