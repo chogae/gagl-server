@@ -2081,7 +2081,14 @@ app.post("/gamble-Equipment", async (req, res) => {
             }
 
             const 클로버 = 유저.유물목록?.["클로버"] || 0;
-            const 보정 = 1 + 0.001 * 클로버;
+            const 클로버보정 = 1 + 0.001 * 클로버;
+
+            const 월계수 = 유저.유물목록?.["월계수"] || 0;
+            const 월계수보정 = 1 + 0.001 * 월계수;
+
+            const 보정 = 클로버보정 * 월계수보정;
+
+
             let 확률표;
             if (종류 === "고급" || 종류 === "연속고급") {
                 확률표 = [
@@ -3195,6 +3202,94 @@ app.post("/use-shieldban", async (req, res) => {
     return res.json({ 유물목록 });
 });
 
+app.post("/use-ghost", async (req, res) => {
+    const { 유저UID } = req.body;
+    if (!유저UID) {
+        return res.status(400).json({ 오류: "유저UID 누락" });
+    }
+
+    const { data: 유저, error: 조회에러 } = await supabaseAdmin
+        .from("users")
+        .select("*")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (조회에러 || !유저) {
+        return res.status(404).json({ 오류: "유저 정보 없음" });
+    }
+
+    const 유물목록 = { ...유저.유물목록 };
+    const 고스트수량 = 유물목록["고스트"] || 0;
+
+    if (고스트수량 < 3) {
+        return res.status(400).json({ 오류: "고스트이 부족합니다" });
+    }
+
+    // ✅ 유물 변경
+    유물목록["고스트"] = 고스트수량 - 3;
+    유물목록["고오스"] = (유물목록["고오스"] || 0) + 1;
+
+    // ✅ 변경 적용 후 공격력 재계산
+    유저.유물목록 = 유물목록;
+
+    const { error: 저장에러 } = await supabaseAdmin
+        .from("users")
+        .update({
+            유물목록,
+        })
+        .eq("유저UID", 유저UID);
+
+    if (저장에러) {
+        return res.status(500).json({ 오류: "공격력 저장 실패" });
+    }
+
+    return res.json({ 유물목록 });
+});
+
+app.post("/use-Clover", async (req, res) => {
+    const { 유저UID } = req.body;
+    if (!유저UID) {
+        return res.status(400).json({ 오류: "유저UID 누락" });
+    }
+
+    const { data: 유저, error: 조회에러 } = await supabaseAdmin
+        .from("users")
+        .select("*")
+        .eq("유저UID", 유저UID)
+        .single();
+
+    if (조회에러 || !유저) {
+        return res.status(404).json({ 오류: "유저 정보 없음" });
+    }
+
+    const 유물목록 = { ...유저.유물목록 };
+    const 클로버수량 = 유물목록["클로버"] || 0;
+
+    if (클로버수량 < 3) {
+        return res.status(400).json({ 오류: "클로버가 부족합니다" });
+    }
+
+    // ✅ 유물 변경
+    유물목록["클로버"] = 클로버수량 - 3;
+    유물목록["월계수"] = (유물목록["월계수"] || 0) + 1;
+
+    // ✅ 변경 적용 후 공격력 재계산
+    유저.유물목록 = 유물목록;
+
+    const { error: 저장에러 } = await supabaseAdmin
+        .from("users")
+        .update({
+            유물목록,
+        })
+        .eq("유저UID", 유저UID);
+
+    if (저장에러) {
+        return res.status(500).json({ 오류: "공격력 저장 실패" });
+    }
+
+    return res.json({ 유물목록 });
+});
+
 
 app.post("/receive-mail", async (req, res) => {
     const { 유저UID, 우편인덱스 } = req.body;
@@ -3984,10 +4079,13 @@ function 레어몬스터등장판정(유저) {
     const 고스트개수 = 유저.유물목록?.["고스트"] || 0;
     const 고스트보정 = 1 + 0.01 * 고스트개수;
 
+    const 고오스개수 = 유저.유물목록?.["고오스"] || 0;
+    const 고오스보정 = 1 + 0.01 * 고오스개수;
+
     const 드림캐처 = 유저.악세사리목록?.find(a => a.이름 === "드림캐처" && a.장착 === 1);
     const 드림캐처보정 = 드림캐처 ? (1 + 0.05 * 드림캐처.등급) : 1;
 
-    const 보정 = 고스트보정 * 드림캐처보정;
+    const 보정 = 고스트보정 * 고오스보정 * 드림캐처보정;
 
     const 후보 = [
         { 이름: "루시퍼", 확률: 보정 * (1 / 25600) },
@@ -4014,6 +4112,7 @@ function 레어몬스터등장판정(유저) {
     }
     return null;
 }
+
 
 const 일반유물데이터 = {
     "소드": { 설명: "공격력이 증가합니다(*1%)" },
@@ -4077,6 +4176,8 @@ const 신화유물데이터 = {
     "안경": { 설명: "악세사리를 바꿔낄 수 있습니다" },
     "스피어": { 설명: "공격력이 증가합니다(*2%)" },
     "쉴드배앤": { 설명: "악마들의 방어력을 더 감소시킵니다(*1%)" },
+    "고오스": { 설명: "히든몬스터 등장률이 더 증가합니다(*1%)" },
+    "월계수": { 설명: "장비 뽑기확률이 더 증가합니다(*0.1%)" },
 };
 
 const 장비맵 = {
