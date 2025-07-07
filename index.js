@@ -2215,6 +2215,17 @@ app.post("/gamble-Relic", async (req, res) => {
             return res.status(400).json({ 오류: "더 이상 획득 가능한 유물이 없습니다" });
         }
 
+        // ✅ 일반유물 포화 검사 추가
+        const 일반유물이름들 = Object.keys(일반유물데이터);
+        const 일반유물포화 = 일반유물이름들.every(이름 => {
+            const 보유 = 유저.유물목록?.[이름] || 0;
+            return 보유 >= (maxCounts[이름] ?? 99);
+        });
+
+        if (일반유물포화) {
+            return res.status(400).json({ 오류: "패시브 유물 수량이 최대입니다. 유물화면에서 합성 후 시도하세요" });
+        }
+
         const 횟수 = 종류 === "연속일반" ? 10 : 1;
         const results = [];
 
