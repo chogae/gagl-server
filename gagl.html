@@ -2032,6 +2032,10 @@
                     document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}/${유저데이터.최대체력}`;
                     document.getElementById("승리패배로그").innerText = "패배";
                     document.getElementById("승리패배로그").style.color = "#ef4444";
+
+                    반자동실행 = false;
+                    풀자동실행 = false;
+
                 } else {
                     const { 유저데이터: 새유저, 몬스터, 보상, 레벨업, 회복 } = 결과;
                     유저데이터 = 새유저;
@@ -2301,6 +2305,10 @@
                     document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}/${유저데이터.최대체력}`;
                     document.getElementById("승리패배로그").innerText = "패배";
                     document.getElementById("승리패배로그").style.color = "#ef4444";
+
+                    반자동실행 = false;
+                    풀자동실행 = false;
+
                 } else {
                     const { 유저데이터: 새유저, 몬스터, 보상, 레벨업, 회복 } = 결과;
                     유저데이터 = 새유저;
@@ -5357,6 +5365,8 @@
 기존에 사용되던 레벨공격력은 10으로 고정됩니다<br>
 다음주 보스부턴 최종데미지를 1/1000 시키겠습니다<br>
 (이번주부터 적용할랬는데 계곡가느라 깜박함)<br>
+이제 패배했을 때, 자동사냥이 정지됩니다<br>
+패치노트 미확인으로 발생하는 불이익은 책임지지 않습니다<br>
                 `,
                 `
 25.07.04<br>
