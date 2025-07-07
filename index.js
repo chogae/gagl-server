@@ -3298,7 +3298,13 @@ app.post("/send-mail-to-user", async (req, res) => {
     }
 
     const 기존우편함 = 유저.우편함 || [];
-    const 새우편 = { 이름, 수량 };
+
+    const kstNow = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
+    const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " "); // "2025-07-07 17:20"
+    const 메모 = req.body.메모 || "";  // 클라에서 입력받은 메모
+
+    const 새우편 = { 이름, 수량, 날짜, 메모 };
+
     const 갱신된우편함 = [...기존우편함, 새우편];
 
     const { error: updateErr } = await supabaseAdmin
@@ -3330,7 +3336,11 @@ app.post("/send-mail-to-all-users", async (req, res) => {
         return res.status(500).json({ 오류: "유저 목록 조회 실패" });
     }
 
-    const 새우편 = { 이름, 수량 };
+    const 메모 = req.body.메모 || "";
+    const kstNow = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
+    const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " ");
+
+    const 새우편 = { 이름, 수량, 날짜, 메모 };
     const 업데이트작업 = [];
 
     for (const 유저 of 유저들) {

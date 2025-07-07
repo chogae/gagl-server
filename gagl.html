@@ -3493,6 +3493,10 @@
     <div>🔢 수량</div>
     <input id="우편수량입력" type="number" placeholder="예: 3" style="width: 100px;" />
   </div>
+  <div>
+    <div>📝 메모</div>
+    <input id="우편메모입력" type="text" placeholder="예: 7월 7일 기념버거" style="width: 300px;" />
+  </div>
   <button id="우편보내기버튼" class="버튼">💌 우편 보내기</button>
   <button id="전체발송버튼" class="버튼">📢 전체 유저에게 발송</button>
 `;
@@ -3505,6 +3509,7 @@
                         const 유저아이디 = document.getElementById("우편유저입력").value.trim();
                         const 이름 = document.getElementById("우편이름입력").value.trim();
                         const 수량 = parseInt(document.getElementById("우편수량입력").value.trim(), 10);
+                        const 메모 = document.getElementById("우편메모입력").value.trim();
 
                         if (!유저아이디 || !이름 || isNaN(수량) || 수량 <= 0) {
                             메시지표시(메시지표시박스, "", "입력값이 올바르지 않습니다", "");
@@ -3516,7 +3521,7 @@
                         const 응답 = await fetch("/send-mail-to-user", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ 유저아이디, 이름, 수량 })
+                            body: JSON.stringify({ 유저아이디, 이름, 수량, 메모 })
                         });
 
                         const 결과 = await 응답.json();
@@ -3533,6 +3538,7 @@
                     document.getElementById("전체발송버튼").addEventListener("click", async () => {
                         const 이름 = document.getElementById("우편이름입력").value.trim();
                         const 수량 = parseInt(document.getElementById("우편수량입력").value.trim(), 10);
+                        const 메모 = document.getElementById("우편메모입력").value.trim();
 
                         if (!이름 || isNaN(수량) || 수량 <= 0) {
                             메시지표시(메시지표시박스, "", "입력값이 올바르지 않습니다", "");
@@ -3547,7 +3553,7 @@
                             const 응답 = await fetch("/send-mail-to-all-users", {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ 이름, 수량 })
+                                body: JSON.stringify({ 이름, 수량, 메모 })
                             });
 
                             const 결과 = await 응답.json();
@@ -4333,8 +4339,18 @@
                     행.style.fontSize = "14px";
 
                     const 텍스트 = document.createElement("div");
-                    텍스트.textContent = `${우편.이름} x${우편.수량}`;
+                    const 날짜 = 우편.날짜 || "";
+                    const 메모 = 우편.메모 ? `(${우편.메모})` : "";
+
+                    텍스트.innerHTML = `
+    <span style="color: #aaa; min-width: 110px;">${날짜}</span>
+    <span style="margin-left: 12px;">${우편.이름} x${우편.수량}</span>
+    <span style="display: block; color: #888; font-weight: bold;">${메모}</span>
+`;
+
+
                     텍스트.style.flex = "1";
+
 
                     const 받기버튼 = document.createElement("div");
                     받기버튼.textContent = "받기";
@@ -5328,6 +5344,7 @@
             //자동전직
             //만렙천
             //일요일에 보스데미지 1/1000 적용
+            //히든몬스터 배율 사전등록
 
             // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
@@ -5367,6 +5384,7 @@
 (이번주부터 적용할랬는데 계곡가느라 깜박함)<br>
 이제 패배했을 때, 자동사냥이 정지됩니다<br>
 패치노트 미확인으로 발생하는 불이익은 책임지지 않습니다<br>
+우편함에 날짜와 간단한 메모가 추가되었습니다<br>
                 `,
                 `
 25.07.04<br>
