@@ -1582,7 +1582,7 @@ app.post("/ranking", async (req, res) => {
             .select("*")
             .eq("버전업", 8)
             .not("최종공격력", "is", null)
-            .neq("유저아이디", "테스트아이디")
+            .not("유저아이디", "in", ["테스트아이디", "나주인장아니다"])
             .order("최종공격력", { ascending: false });
 
         if (error) {
@@ -2746,7 +2746,7 @@ app.post("/get-events", async (req, res) => {
     const { data, error } = await supabaseAdmin
         .from("이벤트기록")
         .select("유저아이디, 일어난일, 일어난일시각")
-        .neq("유저아이디", "테스트아이디")
+        .not("유저아이디", "in", ["테스트아이디", "나주인장아니다"])
         .order("일어난일시각", { ascending: false })
         .limit(50);
 
