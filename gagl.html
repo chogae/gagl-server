@@ -743,6 +743,29 @@
         }
 
 
+        @keyframes 불꽃 {
+            0% {
+                text-shadow: 0 0 5px red, 0 0 10px orange;
+                transform: scale(1);
+            }
+
+            50% {
+                text-shadow: 0 0 15px red, 0 0 25px yellow;
+                transform: scale(1.05);
+            }
+
+            100% {
+                text-shadow: 0 0 5px red, 0 0 10px orange;
+                transform: scale(1);
+            }
+        }
+
+        .불꽃텍스트 {
+            animation: 불꽃 1.2s infinite;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
 
         /* css추가 */
     </style>
@@ -872,6 +895,14 @@
 
                 </div>
             </div>
+
+        </div>
+    </div>
+
+    <div id="마왕전화면" style="display: none;">
+        <div class="사백픽셀테두리 세로정렬" id="마왕전컨테이너">
+
+
 
         </div>
     </div>
@@ -3416,6 +3447,7 @@
                 "메뉴얼화면", "내정보화면", "캐시샵화면", "지하던전화면",
                 "정보툴팁", "성장툴팁", "월드툴팁", "광장화면", "일어난일화면",
                 "악세화면", "가글사전화면", "우편함화면", "주인장화면",
+                "마왕전화면",
             ];
             화면ID들.forEach(id => {
                 const el = document.getElementById(id);
@@ -3662,6 +3694,7 @@
   <div style="display: flex; flex-direction: column; gap: 10px;">    
     <div class="버튼" id="보스">보 스</div>
     <div class="버튼" id="지하던전">지하던전</div>
+    <div class="버튼" id="마왕전">마 왕</div>
   </div>
 `;
 
@@ -4452,7 +4485,7 @@
             const 다섯째줄행 = 한줄에두칸("다섯째줄왼쪽", "다섯째줄오른쪽");
             const 여섯째줄행 = 한줄에두칸("여섯째줄왼쪽", "여섯째줄오른쪽");
             const 일곱째줄행 = 한줄에두칸("일곱째줄왼쪽", "일곱째줄오른쪽");
-            const 여덟째줄행 = 한줄에두칸("여덟곱째줄왼쪽", "여덟째줄오른쪽");
+            const 여덟째줄행 = 한줄에두칸("여덟째줄왼쪽", "여덟째줄오른쪽");
 
             // ─── 다섯째줄(=열째줄) 3칸짜리 행 생성 ───
             // const 열째줄행 = 한줄에세칸(
@@ -4552,8 +4585,9 @@
             document.getElementById("셋째줄오른쪽").innerHTML = (유저데이터.햄버거현질기한 !== undefined && 유저데이터.햄버거현질기한 !== 0) ? `햄버거정기배송 : ${유저데이터.햄버거현질기한}/30` : `햄버거정기배송 : -`;
 
 
-            document.getElementById("여섯째줄왼쪽").innerHTML = `지하던전 : 지하${유저데이터.지하던전}층`;
-            document.getElementById("일곱째줄왼쪽").innerHTML = `강화실패 : ${유저데이터.실패카운트 ?? 0}회`;
+            document.getElementById("여섯째줄왼쪽").innerHTML = 유저데이터.마왕전방어 ? `마왕전방어 : ${유저데이터.마왕전방어}회` : `마왕전방어 : -회`;
+            document.getElementById("일곱째줄왼쪽").innerHTML = `지하던전 : 지하${유저데이터.지하던전}층`;
+            document.getElementById("여덟째줄왼쪽").innerHTML = `강화실패 : ${유저데이터.실패카운트 ?? 0}회`;
 
 
 
@@ -5171,6 +5205,49 @@
         });
 
 
+        document.getElementById("마왕전").addEventListener("click", async () => {
+            if (!유저데이터) return;
+            화면잠금();
+
+            document.getElementById("화면설명").innerHTML = "구 현 중 입 니 다 >.<";
+            모든화면숨기기();
+            document.getElementById("마왕전화면").style.display = "block";
+
+            const 컨테이너 = document.getElementById("마왕전컨테이너");
+            컨테이너.innerHTML = "";
+
+
+            // 👑 마왕 타이틀
+            const 타이틀 = document.createElement("div");
+            타이틀.textContent = "마 왕";
+            타이틀.style.fontSize = "36px";
+            타이틀.style.marginBottom = "16px";
+            컨테이너.appendChild(타이틀);
+
+            // 🧑 마왕 닉네임 영역
+            const 닉네임 = document.createElement("div");
+            닉네임.id = "마왕닉네임";
+            닉네임.textContent = "공석입니다";
+            닉네임.style.fontSize = "24px";
+            닉네임.style.marginBottom = "20px";
+            컨테이너.appendChild(닉네임);
+
+            //패치중
+            const 버튼 = document.createElement("div");
+            버튼.id = "마왕도전";
+            버튼.textContent = "도전";
+            버튼.style.cursor = "pointer";
+            버튼.style.padding = "8px 20px";
+            버튼.style.border = "0.2px solid #4b4b4b";
+            버튼.style.borderRadius = "8px";
+            버튼.style.background = "black";
+            버튼.style.color = "white";
+            컨테이너.appendChild(버튼);
+
+            화면해제();
+        });
+
+
 
 
 
@@ -5376,8 +5453,7 @@
             //서버월정액7달러
 
             //일요일에 보스데미지 1/1000 적용
-
-            //합성하기 빡세니까 그냥 뽑기로
+            //펫정보가글사전
 
             // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
@@ -5407,6 +5483,14 @@
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                 `,
                 `${여름아이콘}`,
+                `
+25.07.08<br>
+주인장이 모든 랭킹화면에서 제외되었습니다<br>
+하지만 주인장은 영원히 여러분들의 가슴속에 살아갈겁니다<br>
+정보창에 마왕전방어횟수가 추가되었습니다<br>
+신규컨텐츠, 마왕전을 구현중입니다<br>
+
+                `,
                 `
 25.07.07<br>
 가글사전에 전직정보가 추가되었습니다<br>
@@ -6004,9 +6088,10 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                     창.querySelector("#여섯째줄오른쪽").innerHTML = `전직 : ${직위 ? `${직위} ` : '-'}`;
 
 
+                    창.querySelector("#여섯째줄왼쪽").innerHTML = 유저데이터.마왕전방어 ? `마왕전방어 : ${유저데이터.마왕전방어}회` : `마왕전방어 : -회`;
 
-                    창.querySelector("#여섯째줄왼쪽").innerHTML = `지하던전 : 지하${유저.지하던전}층`;
-                    창.querySelector("#일곱째줄왼쪽").innerHTML = `강화실패 : ${유저.실패카운트 ?? 0}회`;
+                    창.querySelector("#일곱째줄왼쪽").innerHTML = `지하던전 : 지하${유저.지하던전}층`;
+                    창.querySelector("#여덟째줄왼쪽").innerHTML = `강화실패 : ${유저.실패카운트 ?? 0}회`;
 
                     const 결정객체 = 유저.직업결정;  // 예: { "신술": 6 }
                     if (결정객체) {
