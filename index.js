@@ -3468,8 +3468,85 @@ app.post("/send-mail-to-all-users", async (req, res) => {
 });
 
 
+app.post("/get-mawang", async (req, res) => {
+    try {
+        const { data, error } = await supabaseAdmin
+            .from("users")
+            .select("*")
+            .eq("마왕전랭킹", 1)
+            .limit(1)
+            .single();
+
+        if (error || !data) {
+            return res.json({ 존재함: false });
+        }
+
+        return res.json({
+            존재함: true,
+            마왕정보: data,
+        });
+    } catch (e) {
+        console.error("마왕정보 조회 실패:", e);
+        return res.status(500).json({ 오류: "서버 오류" });
+    }
+});
 
 
+app.post("/challenge-mawang", async (req, res) => {
+    const { 유저UID } = req.body;
+
+    if (!유저UID) {
+        return res.status(400).json({ 오류: "유저UID 누락" });
+    }
+
+    try {
+        // ① 도전자 정보 조회
+        const { data: 도전자, error: err1 } = await supabaseAdmin
+            .from("users")
+            .select("*")
+            .eq("유저UID", 유저UID)
+            .single();
+
+        if (err1 || !도전자) {
+            return res.status(404).json({ 오류: "도전자 정보 없음" });
+        }
+
+        // ② 마왕 정보 조회
+        const { data: 마왕, error: err2 } = await supabaseAdmin
+            .from("users")
+            .select("*")
+            .eq("마왕전랭킹", 1)
+            .single();
+
+        if (err2 || !마왕) {
+            return res.status(404).json({ 오류: "마왕이 존재하지 않습니다" });
+        }
+
+        // ③ 공격력, 체력 보정
+        도전자.최종공격력 = Math.floor(도전자.최종공격력 * 0.01);
+        마왕.최종공격력 = Math.floor(마왕.최종공격력 * 0.01);
+
+        도전자.최대체력 = (도전자.최대체력 || 10) * 1000;
+        마왕.최대체력 = (마왕.최대체력 || 10) * 1000;
+
+        // ④ 전투 실행 (선공자 판단 포함)
+        const 결과 = 마왕전전투시뮬레이션(도전자, 마왕);
+
+        // ⑤ 응답 반환
+        return res.json({
+            결과메시지: `${도전자.유저아이디} 님이 ${마왕.유저아이디} 와(과) 전투를 벌였습니다!`,
+            승리자UID: 결과.승리자UID,
+            패배자UID: 결과.패배자UID,
+            전투로그: 결과.전투로그,
+            도전자: 도전자.유저아이디,
+            마왕: 마왕.유저아이디,
+        });
+
+    } catch (e) {
+        console.error("마왕 도전 에러:", e);
+        return res.status(500).json({ 오류: "서버 내부 오류" });
+    }
+});
 
 
 
@@ -3539,8 +3616,69 @@ app.listen(3000, () => {
 
 
 
+function 마왕전전투시뮬레이션(도전자, 마왕) {
+    const 전투로그 = [];
+
+    let 도전자HP = 도전자.최대체력;
+    let 마왕HP = 마왕.최대체력;
+    let 현재턴 = 1;
+    let 도전자턴 = Math.random() < 0.5;
+
+    const 신술회복량 = [1, 2, 3, 4, 5, 8];
+    const 신술성공확률 = 0.11;
+    const 검술확률 = [0.10, 0.20, 0.30, 0.40, 0.50, 0.80];
+    const 궁술무시확률 = [0.07, 0.14, 0.21, 0.28, 0.35, 0.56];
+    const 마술배율 = [1.2, 1.4, 1.6, 1.8, 2.0, 2.6];
+
+    const 마왕계열 = Object.keys(마왕.직업결정 || {})[0];
+    const 마왕단계 = 마왕.직업결정?.[마왕계열] || 0;
+
+    const 마왕스탭 = 마왕.유물목록?.["스탭"] || 0;
+    const 마왕무시확률 = 마왕스탭 * 0.001;
+
+    const 마왕음양 = 마왕.악세사리목록?.find(a => a.이름 === "음양" && a.장착 === 1);
+    const 마왕음양확률 = 마왕음양 ? 마왕음양.등급 * 0.05 : 0;
+
+    let 마왕궁술확률 = 0;
+    if (마왕계열 === "궁술" && 마왕단계 >= 1 && 마왕단계 <= 궁술무시확률.length) {
+        마왕궁술확률 = 궁술무시확률[마왕단계 - 1];
+    }
+
+    const 마왕무시총확률 = 마왕무시확률 + 마왕음양확률 + 마왕궁술확률;
 
 
+    const 도전자계열 = Object.keys(도전자.직업결정 || {})[0];
+    const 도전자단계 = 도전자.직업결정?.[도전자계열] || 0;
+
+    const 도전자스탭 = 도전자.유물목록?.["스탭"] || 0;
+    const 도전자무시확률 = 도전자스탭 * 0.001;
+
+    const 도전자음양 = 도전자.악세사리목록?.find(a => a.이름 === "음양" && a.장착 === 1);
+    const 도전자음양확률 = 도전자음양 ? 도전자음양.등급 * 0.05 : 0;
+
+    let 도전자궁술확률 = 0;
+    if (도전자계열 === "궁술" && 도전자단계 >= 1 && 도전자단계 <= 궁술무시확률.length) {
+        도전자궁술확률 = 궁술무시확률[도전자단계 - 1];
+    }
+
+    const 도전자무시총확률 = 도전자무시확률 + 도전자음양확률 + 도전자궁술확률;
+
+
+    while (도전자HP > 0 && 마왕HP > 0) {
+        if (도전자턴) {
+
+
+            if (Math.random() < 마왕무시총확률) {
+
+            }
+
+
+
+
+
+        }
+    }
+}
 
 
 // 로그 기록 함수
