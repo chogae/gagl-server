@@ -5213,7 +5213,7 @@
                     const 총줄수 = 15;
 
                     const 가운데만줄 = [1, 2, 3, 4, 5, 9];
-                    const 양옆만줄 = [7, 8];
+                    const 양옆만줄 = [];
                     const 전체줄 = Array.from({ length: 총줄수 }, (_, i) => i + 1).filter(i => !가운데만줄.includes(i) && !양옆만줄.includes(i));
 
                     for (let i = 1; i <= 총줄수; i++) {
@@ -5283,6 +5283,22 @@
 
 
                     document.getElementById("6가운데").innerHTML = 결과.마왕정보.마왕전방어 ? `마왕전방어 : ${결과.마왕정보.마왕전방어}회` : `마왕전방어 : 0회`;
+                    try {
+                        const 스킬원본 = 결과.마왕정보.스킬;
+                        const 스킬 = typeof 스킬원본 === "string" ? JSON.parse(스킬원본) : 스킬원본;
+
+                        const 크리 = 스킬["크리티컬"] ?? 0;
+                        const 버닝 = 스킬["버닝"] ?? 0;
+                        const 버서커 = 스킬["버서커"] ?? 0;
+
+                        document.getElementById("7왼쪽").innerHTML = `크리티컬 : ${크리}단계`;
+                        document.getElementById("7가운데").innerHTML = `버닝 : ${버닝}단계`;
+                        document.getElementById("7오른쪽").innerHTML = `버서커 : ${버서커}단계`;
+                    } catch (e) {
+                        document.getElementById("7왼쪽").innerHTML = "크리티컬 : -";
+                        document.getElementById("7가운데").innerHTML = "버닝 : -";
+                        document.getElementById("7오른쪽").innerHTML = "버서커 : -";
+                    }
 
 
 
@@ -5426,10 +5442,15 @@
                                 return;
                             }
 
+
                             유저데이터.유물목록 = 결과.유물목록;
 
                             메시지표시(메시지표시박스, "", 결과.결과메시지 || "전투 완료", "");
                             document.getElementById("마왕전").click();
+
+                            if (결과.전투로그) {
+                                마왕전전투로그표시(결과.전투로그);
+                            }
 
                         } catch (e) {
                             console.error("도전 실패:", e);
@@ -5462,7 +5483,105 @@
 
 
 
+        function 마왕전전투로그표시(전투로그) {
+            // 기존 로그 제거
+            const 기존 = document.querySelectorAll(".마왕전투로그");
+            기존.forEach(e => e.remove());
 
+            const 타겟 = document.getElementById("마왕전컨테이너");
+            if (!타겟 || !타겟.parentNode) return;
+
+            전투로그.slice().reverse().forEach(턴로그 => {
+                const 컨테이너 = document.createElement("div");
+                컨테이너.className = "마왕전투로그";
+                컨테이너.style.marginTop = "12px";
+                컨테이너.style.border = "0.2px solid #4b4b4b";
+                컨테이너.style.borderRadius = "10px";
+                컨테이너.style.padding = "10px";
+
+                // 턴 헤더
+                const 헤더 = document.createElement("div");
+                헤더.style.textAlign = "center";
+                헤더.style.background = "#4b4b4b";
+                헤더.style.borderTopLeftRadius = "10px";
+                헤더.style.borderTopRightRadius = "10px";
+                헤더.style.margin = "-10px -10px 10px -10px";
+                헤더.style.padding = "6px";
+                헤더.innerHTML = `<strong>Turn ${턴로그.턴}</strong>`;
+                컨테이너.appendChild(헤더);
+
+                // 도전자 줄 (왼쪽 정렬)
+                const 도전자줄 = document.createElement("div");
+                도전자줄.className = "가로정렬";
+                도전자줄.style.justifyContent = "flex-start";
+                도전자줄.style.alignItems = "center";
+                도전자줄.style.gap = "6px";
+
+                (턴로그.도전자행동 || []).forEach(log => {
+                    const 키 = Object.keys(log)[0];
+                    const 값 = log[키];
+                    const 아이콘 = 아이콘맵[값 + "아이콘"] || "";
+
+                    const span = document.createElement("span");
+                    span.innerHTML = 아이콘;
+                    도전자줄.appendChild(span);
+
+                    if (키 === "데미지" || 키 === "효과") {
+                        const 텍스트 = document.createElement("span");
+                        텍스트.innerText = typeof 값 === "string" ? 값 : JSON.stringify(값);
+                        // 텍스트.style.color = "#f87171"; // 붉은색
+                        도전자줄.appendChild(텍스트);
+                    }
+                });
+                컨테이너.appendChild(도전자줄);
+
+                // 마왕 줄 (오른쪽 정렬)
+                const 마왕줄 = document.createElement("div");
+                마왕줄.className = "가로정렬";
+                마왕줄.style.justifyContent = "flex-end";
+                마왕줄.style.alignItems = "center";
+                마왕줄.style.gap = "6px";
+
+                (턴로그.마왕행동 || []).forEach(log => {
+                    const 키 = Object.keys(log)[0];
+                    const 값 = log[키];
+                    const 아이콘 = 아이콘맵[값 + "아이콘"] || "";
+
+                    const span = document.createElement("span");
+                    span.innerHTML = 아이콘;
+                    마왕줄.appendChild(span);
+
+                    if (키 === "데미지" || 키 === "효과") {
+                        const 텍스트 = document.createElement("span");
+                        텍스트.innerText = typeof 값 === "string" ? 값 : JSON.stringify(값);
+                        텍스트.style.color = "#f87171"; // 붉은색
+                        마왕줄.appendChild(텍스트);
+                    }
+                });
+                컨테이너.appendChild(마왕줄);
+
+                // 체력 줄 (도전자 왼쪽, 마왕 오른쪽)
+                const 체력줄 = document.createElement("div");
+                체력줄.className = "가로정렬";
+                체력줄.style.marginTop = "6px";
+                체력줄.style.justifyContent = "space-between";
+
+                const 도전자체력 = document.createElement("span");
+                도전자체력.style.color = "#3b82f6";
+                도전자체력.innerText = `체력 ${턴로그.체력.도전자}`;
+
+                const 마왕체력 = document.createElement("span");
+                마왕체력.style.color = "#ef4444";
+                마왕체력.innerText = `체력 ${턴로그.체력.마왕}`;
+
+                체력줄.appendChild(도전자체력);
+                체력줄.appendChild(마왕체력);
+                컨테이너.appendChild(체력줄);
+
+                // 바깥에 붙이기
+                타겟.parentNode.insertBefore(컨테이너, 타겟.nextSibling);
+            });
+        }
 
 
 
@@ -5709,7 +5828,7 @@
 로그구현과 어느정도 밸런스가 조정이 되었다 싶을 때,<br>
 방어횟수 초기화 하고 정식오픈하겠습니다<br>
 공격력 1만 이상부터 마왕에게 도전할 수 있습니다<br>
-
+마왕전에 마왕의 공격스킬 정보를 추가했습니다<br>
                 `,
                 `
 25.07.10<br>
