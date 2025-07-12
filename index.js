@@ -38,45 +38,56 @@ app.post("/get-user", async (req, res) => {
         return res.status(404).json({ 오류: "유저 정보 없음" });
     }
 
-
-
-
-    const now = new Date();
+    const now = new Date(); // ✅ 추가
     const formatter = new Intl.DateTimeFormat("ko-KR", {
         weekday: "short",
         timeZone: "Asia/Seoul"
     });
     const parts = formatter.formatToParts(now);
-    const 요일 = parts.find(p => p.type === "weekday")?.value;
+    const 오늘요일 = parts.find(p => p.type === "weekday")?.value;
 
-    if (요일 === "일") {
+    const { data: 대표유저, error: 대표에러 } = await supabaseAdmin
+        .from("users")
+        .select("보스정산요일")
+        .eq("유저아이디", "나주인장아니다")
+        .single();
+
+    if (!대표에러 && 대표유저 && 대표유저.보스정산요일 !== 오늘요일) {
         const { data: 전체합, error: 합계에러 } = await supabaseAdmin
             .from("users")
             .select("보스누적데미지");
 
-        if (합계에러 || !전체합) {
-            return res.status(500).json({ 오류: "펫단계 계산 실패 (총합 조회 에러)" });
-        }
+        if (!합계에러 && 전체합) {
+            const 누적데미지총합 = 전체합
+                .filter(u => u.보스누적데미지 > 0)
+                .reduce((합, u) => 합 + Number(u.보스누적데미지), 0);
 
-        const 누적데미지총합 = 전체합
-            .filter(u => u.보스누적데미지 > 0)
-            .reduce((합, u) => 합 + Number(u.보스누적데미지), 0);
+            if (누적데미지총합 !== 0) {
+                const { data: 상위유저들, error: 순위에러 } = await supabaseAdmin
+                    .from("users")
+                    .select("유저UID")
+                    .gt("보스누적데미지", 0)
+                    .order("보스누적데미지", { ascending: false })
+                    .limit(9);
 
-        if (누적데미지총합 != 0) {
-            const { data: 상위유저들, error: 순위에러 } = await supabaseAdmin
-                .from("users")
-                .select("유저UID, 골드")
-                .gt("보스누적데미지", 0)               // 보스누적데미지가 0초과인 유저만
-                .order("보스누적데미지", { ascending: false })
-                .limit(9);
+                const 보상목록 = [
+                    { 이름: "루시퍼의 심장", 수량: 2 },
+                    { 이름: "루시퍼의 심장", 수량: 1 },
+                    { 이름: "사탄의 날개", 수량: 2 },
+                    { 이름: "사탄의 날개", 수량: 1 },
+                    { 이름: "벨제부브의 꼬리", 수량: 2 },
+                    { 이름: "벨제부브의 꼬리", 수량: 1 },
+                    { 이름: "레비아탄의 비늘", 수량: 2 },
+                    { 이름: "레비아탄의 비늘", 수량: 1 },
+                    { 이름: "디아블로의 뿔", 수량: 2 }
+                ];
 
-            if (!순위에러) {
                 const kstNow = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
                 const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " ");
 
                 for (let i = 0; i < 상위유저들.length; i++) {
                     const user = 상위유저들[i];
-                    const 지급티켓 = 10 - i;
+                    const 보상 = 보상목록[i];
 
                     const { data: 현재유저, error: fetchErr } = await supabaseAdmin
                         .from("users")
@@ -84,78 +95,203 @@ app.post("/get-user", async (req, res) => {
                         .eq("유저UID", user.유저UID)
                         .single();
 
-                    if (fetchErr || !현재유저) {
-                        console.error(`우편함 조회 실패 (${user.유저UID}):`, fetchErr);
-                        continue;
-                    }
-                    //패치중
-                    const oldMail = 현재유저.우편함 || [];
-                    const 새우편 = {
-                        이름: "티켓",
-                        수량: 지급티켓,
-                        날짜,
-                        메모: `보스 주간 랭킹 ${i + 1}위 보상`
-                    };
-                    const newMail = [...oldMail, 새우편];
+                    if (fetchErr || !현재유저) continue;
 
-                    const { error: updateErr } = await supabaseAdmin
+                    const 새우편 = {
+                        이름: 보상.이름,
+                        수량: 보상.수량,
+                        날짜,
+                        메모: `보스 랭킹 ${i + 1}위 보상`
+                    };
+
+                    const newMail = [...(현재유저.우편함 || []), 새우편];
+
+                    await supabaseAdmin
                         .from("users")
                         .update({ 우편함: newMail })
                         .eq("유저UID", user.유저UID);
-
-                    if (updateErr) {
-                        console.error(`우편 지급 실패 (${user.유저UID}):`, updateErr);
-                        await 로그기록(현재유저.유저아이디, `❌ 티켓 ${지급티켓}장 우편 지급 실패`);
-                    } else {
-                        await 로그기록(현재유저.유저아이디, `티켓 ${지급티켓}장 우편 지급`);
-                    }
                 }
+
+                // 2. 펫단계 계산
+                let 펫단계 = 0;
+                if (누적데미지총합 >= 99_999_999) 펫단계 = 3;
+                else if (누적데미지총합 >= 9_999_999) 펫단계 = 2;
+                else if (누적데미지총합 >= 999_999) 펫단계 = 1;
+
+                await supabaseAdmin
+                    .from("users")
+                    .update({ 펫단계 })
+                    .neq("펫단계", 펫단계);
+
+                // 3. 보스누적데미지 초기화
+                await supabaseAdmin
+                    .from("users")
+                    .update({ 보스누적데미지: 0 })
+                    .neq("보스누적데미지", 0);
+
+                // 4. 보스넘버 증가
+                const { data: 대표보스유저 } = await supabaseAdmin
+                    .from("users")
+                    .select("보스넘버")
+                    .eq("유저아이디", "나주인장아니다")
+                    .single();
+
+                const 현재보스번호 = 대표보스유저?.보스넘버 ?? 0;
+                const 다음보스번호 = (현재보스번호 + 1) % 10;
+
+                await supabaseAdmin
+                    .from("users")
+                    .update({ 보스넘버: 다음보스번호 })
+                    .neq("보스넘버", 다음보스번호);
+
             }
 
-            let 펫단계 = 0;
-            if (누적데미지총합 >= 99_999_999) {
-                펫단계 = 3;
-            } else if (누적데미지총합 >= 9_999_999) {
-                펫단계 = 2;
-            } else if (누적데미지총합 >= 999_999) {
-                펫단계 = 1;
-            }
 
-            await supabaseAdmin
-                .from("users")
-                .update({ 펫단계 })
-                .neq("펫단계", 펫단계);
-
-            await supabaseAdmin
-                .from("users")
-                .update({ 보스누적데미지: 0 })
-                .neq("보스누적데미지", 0); // 0이 아닌 유저만 업데이트 (불필요한 쓰기 방지)
-
-
-            const { data: 대표유저, error: 보스에러 } = await supabaseAdmin
-                .from("users")
-                .select("보스넘버")
-                .not("보스넘버", "is", null)
-                .eq("유저아이디", "나주인장아니다")
-                .single();
-
-            if (!대표유저 || 보스에러) {
-                return res.status(500).json({ 오류: "보스넘버 조회 실패" });
-            }
-
-
-            //보스추가
-            const 현재보스번호 = 대표유저.보스넘버 ?? 0;
-            const 다음보스번호 = (현재보스번호 + 1) % 10;
-
-            await supabaseAdmin
-                .from("users")
-                .update({ 보스넘버: 다음보스번호 })
-                .neq("보스넘버", 다음보스번호);
 
         }
+        await supabaseAdmin
+            .from("users")
+            .update({ 보스정산요일: 오늘요일 })
+            .or(`보스정산요일.is.null,보스정산요일.neq.${오늘요일}`);
 
     }
+
+
+    // const now = new Date();
+    // const formatter = new Intl.DateTimeFormat("ko-KR", {
+    //     weekday: "short",
+    //     timeZone: "Asia/Seoul"
+    // });
+    // const parts = formatter.formatToParts(now);
+    // const 오늘요일 = parts.find(p => p.type === "weekday")?.value;
+
+    // if (요일 === "일") {
+    //     const { data: 전체합, error: 합계에러 } = await supabaseAdmin
+    //         .from("users")
+    //         .select("보스누적데미지");
+
+    //     if (합계에러 || !전체합) {
+    //         return res.status(500).json({ 오류: "펫단계 계산 실패 (총합 조회 에러)" });
+    //     }
+
+    //     const 누적데미지총합 = 전체합
+    //         .filter(u => u.보스누적데미지 > 0)
+    //         .reduce((합, u) => 합 + Number(u.보스누적데미지), 0);
+
+    //     if (누적데미지총합 != 0) {
+    //         const { data: 상위유저들, error: 순위에러 } = await supabaseAdmin
+    //             .from("users")
+    //             .select("유저UID, 골드")
+    //             .gt("보스누적데미지", 0)               // 보스누적데미지가 0초과인 유저만
+    //             .order("보스누적데미지", { ascending: false })
+    //             .limit(9);
+
+    //         if (!순위에러) {
+    //             const kstNow = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
+    //             const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " ");
+
+
+    //             //패치중
+    //             const 보상목록 = [
+    //                 { 이름: "루시퍼의 심장", 수량: 2 },
+    //                 { 이름: "루시퍼의 심장", 수량: 1 },
+    //                 { 이름: "사탄의 날개", 수량: 2 },
+    //                 { 이름: "사탄의 날개", 수량: 1 },
+    //                 { 이름: "벨제부브의 꼬리", 수량: 2 },
+    //                 { 이름: "벨제부브의 꼬리", 수량: 1 },
+    //                 { 이름: "레비아탄의 비늘", 수량: 2 },
+    //                 { 이름: "레비아탄의 비늘", 수량: 1 },
+    //                 { 이름: "디아블로의 뿔", 수량: 2 },
+    //             ];
+
+
+
+    //             for (let i = 0; i < 상위유저들.length; i++) {
+
+    //                 const user = 상위유저들[i];
+    //                 const 보상 = 보상목록[i];
+
+
+    //                 const { data: 현재유저, error: fetchErr } = await supabaseAdmin
+    //                     .from("users")
+    //                     .select("우편함, 유저아이디")
+    //                     .eq("유저UID", user.유저UID)
+    //                     .single();
+
+    //                 if (fetchErr || !현재유저) {
+    //                     console.error(`우편함 조회 실패 (${user.유저UID}):`, fetchErr);
+    //                     continue;
+    //                 }
+    //                 //패치중
+    //                 const oldMail = 현재유저.우편함 || [];
+
+    //                 const 새우편 = {
+    //                     이름: 보상.이름,
+    //                     수량: 보상.수량,
+    //                     날짜,
+    //                     메모: `보스 랭킹 ${i + 1}위 보상`
+    //                 };
+
+    //                 const newMail = [...oldMail, 새우편];
+
+    //                 const { error: updateErr } = await supabaseAdmin
+    //                     .from("users")
+    //                     .update({ 우편함: newMail })
+    //                     .eq("유저UID", user.유저UID);
+
+    //                 if (updateErr) {
+    //                     console.error(`우편 지급 실패 (${user.유저UID}):`, updateErr);
+    //                     await 로그기록(현재유저.유저아이디, `❌ 티켓 ${지급티켓}장 우편 지급 실패`);
+    //                 } else {
+    //                     await 로그기록(현재유저.유저아이디, `티켓 ${지급티켓}장 우편 지급`);
+    //                 }
+    //             }
+    //         }
+
+    //         let 펫단계 = 0;
+    //         if (누적데미지총합 >= 99_999_999) {
+    //             펫단계 = 3;
+    //         } else if (누적데미지총합 >= 9_999_999) {
+    //             펫단계 = 2;
+    //         } else if (누적데미지총합 >= 999_999) {
+    //             펫단계 = 1;
+    //         }
+
+    //         await supabaseAdmin
+    //             .from("users")
+    //             .update({ 펫단계 })
+    //             .neq("펫단계", 펫단계);
+
+    //         await supabaseAdmin
+    //             .from("users")
+    //             .update({ 보스누적데미지: 0 })
+    //             .neq("보스누적데미지", 0); // 0이 아닌 유저만 업데이트 (불필요한 쓰기 방지)
+
+
+    //         const { data: 대표유저, error: 보스에러 } = await supabaseAdmin
+    //             .from("users")
+    //             .select("보스넘버")
+    //             .not("보스넘버", "is", null)
+    //             .eq("유저아이디", "나주인장아니다")
+    //             .single();
+
+    //         if (!대표유저 || 보스에러) {
+    //             return res.status(500).json({ 오류: "보스넘버 조회 실패" });
+    //         }
+
+
+    //         //보스추가
+    //         const 현재보스번호 = 대표유저.보스넘버 ?? 0;
+    //         const 다음보스번호 = (현재보스번호 + 1) % 10;
+
+    //         await supabaseAdmin
+    //             .from("users")
+    //             .update({ 보스넘버: 다음보스번호 })
+    //             .neq("보스넘버", 다음보스번호);
+
+    //     }
+
+    // }
 
 
     // const { data: 전체유저, error: 유저에러 } = await supabaseAdmin
@@ -610,21 +746,6 @@ app.post("/attack-boss", async (req, res) => {
     if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
 
 
-    const now = new Date();
-    const formatter = new Intl.DateTimeFormat("ko-KR", {
-        weekday: "short",
-        timeZone: "Asia/Seoul"
-    });
-    const parts = formatter.formatToParts(now);
-    const 요일 = parts.find(p => p.type === "weekday")?.value;
-
-    if (요일 === "토") {
-        return res.status(403).json({ 오류: "보스가 점점 멀어집니다" });
-    }
-    if (요일 === "일") {
-        return res.status(403).json({ 오류: "새로운 보스의 강림으로 대지가 갈라지는 중입니다" });
-    }
-
     const { data: 유저, error } = await supabaseAdmin
         .from("users")
         .select("*")
@@ -661,14 +782,12 @@ app.post("/attack-boss", async (req, res) => {
     유저.보스누적데미지 += 전투결과.누적데미지;
     유저.남은체력 = 유저.최대체력;
 
-    if (유저.유저아이디 !== "나주인장아니다") {
-        await supabaseAdmin.from("users").update({
-            현재스태미너,
-            남은체력: 유저.최대체력,
-            스태미너소모총량: 유저.스태미너소모총량,
-            보스누적데미지: 유저.보스누적데미지
-        }).eq("유저UID", 유저UID);
-    }
+    await supabaseAdmin.from("users").update({
+        현재스태미너,
+        남은체력: 유저.최대체력,
+        스태미너소모총량: 유저.스태미너소모총량,
+        보스누적데미지: 유저.보스누적데미지
+    }).eq("유저UID", 유저UID);
 
     return res.json({
         결과: "완료",
@@ -4632,13 +4751,13 @@ const 레어유물데이터 = {
     "플라워": { 설명: "스킬을 초기화합니다" },
     "뼈다구": { 설명: "직업을 초기화합니다" },
     "티켓": { 설명: "고급장비도박에 사용됩니다" },
-    "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
     "열쇠": { 설명: "지하던전에 진입합니다" },
-    "스피커": { 설명: "광장에서 소리칠 수 있습니다" },
     "망치": { 설명: "루시퍼의 심장 강화확률 증가(+0.1%)" },
     "모루": { 설명: "증발되는 재료를 재조립합니다(0.1%)" },
     "펜타그램": { 설명: "진화 확률을 증가시킵니다(+0.01%)" },
     "안경": { 설명: "악세사리를 바꿔낄 수 있습니다" },
+    "샐러드": { 설명: "스태미너를 충전합니다(+60)" },
+    "스피커": { 설명: "광장에서 소리칠 수 있습니다" },
     "데빌마스크": { 설명: "마왕에게 도전할 수 있습니다" },
 };
 const 신화유물데이터 = {
