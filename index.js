@@ -1585,7 +1585,7 @@ app.post("/ranking", async (req, res) => {
             .eq("버전업", 8)
             .not("최종공격력", "is", null)
             .neq("유저아이디", "테스트아이디")
-            .neq("유저아이디", "나주인장아니다")
+            // .neq("유저아이디", "나주인장아니다")
             .order("최종공격력", { ascending: false });
 
         if (error) {
@@ -1610,7 +1610,6 @@ app.post("/ranking", async (req, res) => {
             유저.직위 = 최고전직명(유저.전직정보) || "";
         }
 
-        // ✅ 보스랭킹은 그대로 유지
         const { data: 보스랭킹, error: 유저에러 } = await supabaseAdmin
             .from("users")
             .select("유저아이디, 보스누적데미지, 유저UID")
@@ -4150,9 +4149,8 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴, 보�
             몬스터HP = Math.max(0, 몬스터HP);
         }
 
-        누적데미지 += 데미지;
-        // 누적데미지 += Math.ceil(데미지 / 1000);
-        //패치중
+        // 누적데미지 += 데미지;
+        누적데미지 += Math.ceil(데미지 / 1000);
 
         const 발동아이콘 = [];
         if (크리티컬배율 > 1) 발동아이콘.push("크리티컬아이콘");
