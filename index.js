@@ -592,7 +592,6 @@ app.post("/get-user", async (req, res) => {
 
     const calculatedLevel = Math.floor(유저.경험치 / 1000) + 1;
     유저.레벨 = calculatedLevel;
-    유저.레벨공격력 = 10;
 
     const 장비목록 = 유저.장비목록 || [];
     유저.장비공격력 = Math.max(0, ...장비목록.map(e => e.공격력 || 0));
@@ -609,7 +608,6 @@ app.post("/get-user", async (req, res) => {
             버전업: 유저.버전업,
             점검: 유저.점검,
             레벨: 유저.레벨,
-            레벨공격력: 유저.레벨공격력,
             최종공격력: 유저.최종공격력,
             현재스태미너: 유저.현재스태미너,
             스태미너갱신시간: 유저.스태미너갱신시간,
@@ -888,30 +886,7 @@ app.post("/attack-normal", async (req, res) => {
     const 인텔리전스발동 = 인텔리전스추가경험치배율(유저) > 1;
     const 발굴발동 = 획득금화발굴(유저) > 1;
 
-
     const 레벨업 = 레벨업판정(유저.경험치 + 보상.경험치, 유저.레벨);
-
-    // const 전직정보 = 새유저.전직정보 ?? {};
-    // const 완료전직갯수 = Object.values(전직정보).filter(v => v === 1).length;
-    // const 자동전직비용 = (완료전직갯수 + 1) * 50000;
-
-    // if (새유저.경험치 >= 자동전직비용) {
-    //     const 남은직위들 = ["A", "B", "C", "D"].filter(x => 전직정보[x] !== 1); // 직위 목록에서 미완료 항목
-    //     const 자동전직대상 = 남은직위들[0]; // 순서대로 자동 전직
-
-    //     if (자동전직대상) {
-    //         전직정보[자동전직대상] = 1;
-    //         새유저.전직정보 = 전직정보;
-    //         새유저.경험치 -= 자동전직비용;
-    //         새유저.전직공격력 = 완료전직갯수 + 2 + 1; // 새 전직 포함
-    //         새유저.레벨 = Math.floor(새유저.경험치 / 1000) + 1;
-    //         새유저.레벨공격력 = 10;
-    //         새유저.최종공격력 = 최종공격력계산(새유저);
-
-    //     }
-    // }
-
-
     const 드레인 = 드레인회복(유저);
 
     if (드레인 > 0) {
@@ -983,11 +958,9 @@ app.post("/attack-normal", async (req, res) => {
         // 유저.점검 = false;
     }
 
-
-
     await supabaseAdmin.from("users").update({
+        레벨공격력: 새유저.레벨공격력,
         레벨: 새유저.레벨,
-        레벨공격력: 10,
         최종공격력: 최종공격력,
         경험치: 새유저.경험치,
         골드: 새유저.골드,
@@ -1012,9 +985,6 @@ app.post("/attack-normal", async (req, res) => {
         보상,
         레벨업,
         회복: 드레인,
-        추가경험치: 보상.추가경험치 || 0,
-        추가골드: 보상.추가골드 || 0,
-        추가숙련도: 보상.추가숙련도 || 0,
         유저데이터: {
             ...새유저,
             현재스태미너
@@ -1247,8 +1217,8 @@ app.post("/attack-rare", async (req, res) => {
 
 
     await supabaseAdmin.from("users").update({
+        레벨공격력: 새유저.레벨공격력,
         레벨: 새유저.레벨,
-        레벨공격력: 10,
         장비공격력: 새유저.장비공격력,
         최종공격력: 최종공격력,
         경험치: 새유저.경험치,
@@ -1940,7 +1910,6 @@ app.post("/set-job-result", async (req, res) => {
 
         const calculatedLevel = Math.floor(새로운경험치 / 1000) + 1;      // 추가
         유저.레벨 = calculatedLevel;                                      // 추가
-        유저.레벨공격력 = 10;                     // 추가
         유저.최종공격력 = 최종공격력계산(유저);
 
         // 8) users 테이블의 직업결정 + 경험치 컬럼 업데이트
@@ -1950,7 +1919,6 @@ app.post("/set-job-result", async (req, res) => {
                 직업결정: 새로운직업결정,
                 경험치: 새로운경험치,
                 레벨: 유저.레벨,
-                레벨공격력: 유저.레벨공격력,
                 최종공격력: 유저.최종공격력
             })
             .eq("유저UID", 유저UID);
@@ -1969,7 +1937,7 @@ app.post("/set-job-result", async (req, res) => {
             return res.status(500).json({ 오류: "DB 업데이트 실패" });
         }
 
-        return res.json({ 성공: true, 새로운경험치, 레벨: 유저.레벨, 레벨공격력: 유저.레벨공격력, 최종공격력: 유저.최종공격력 });
+        return res.json({ 성공: true, 새로운경험치, 레벨: 유저.레벨, 최종공격력: 유저.최종공격력 });
     } catch (e) {
         return res.status(500).json({ 오류: "서버 예외 발생" });
     }
@@ -2012,14 +1980,10 @@ app.post("/promote-job", async (req, res) => {
     유저.전직공격력 = 완료전직갯수 + 2;
     const 새레벨 = Math.floor((경험치 - 비용) / 1000) + 1;
 
-    const 새레벨공격력 = 10 + (새레벨 - 1) * 1;
-    유저.레벨공격력 = 10;
-
     const 최종공격력 = 최종공격력계산(유저);
     유저.최종공격력 = 최종공격력;
 
     const 업데이트 = {
-        레벨공격력: 10,
         최종공격력: 최종공격력,
         경험치: 경험치 - 비용,
         레벨: 새레벨,
@@ -2037,7 +2001,7 @@ app.post("/promote-job", async (req, res) => {
         return res.status(500).json({ 오류: "서버오류" });
     }
 
-    return res.json({ 성공: true, 전직정보: 전직정보, 경험치: 경험치 - 비용, 레벨: 새레벨, 최종공격력: 최종공격력, 레벨공격력: 10 });
+    return res.json({ 성공: true, 전직정보: 전직정보, 경험치: 경험치 - 비용, 레벨: 새레벨, 최종공격력: 최종공격력, });
 });
 
 function calc전직환급(expInfo) {
@@ -2065,7 +2029,6 @@ function calc직업환급(jobDecision) {
     return total;
 }
 
-// index.js (기존 코드에서 /reset-job 핸들러만 발췌하여 수정한 예시)
 
 app.post('/reset-job', async (req, res) => {
     const { 유저UID } = req.body;
@@ -2124,13 +2087,11 @@ app.post('/reset-job', async (req, res) => {
 
         const 새레벨 = Math.floor(환급후경험치 / 1000) + 1;
 
-        const 새레벨공격력 = 10 + (새레벨 - 1);
 
         user.경험치 = 환급후경험치;
         user.전직정보 = 초기전직정보;
         user.전직공격력 = 새전직공격력;
         user.레벨 = 새레벨;
-        user.레벨공격력 = 10;
         user.유물목록 = updated유물목록;
 
         const 새최종공격력 = 최종공격력계산(user);  // :contentReference[oaicite:2]{index=2}
@@ -2144,7 +2105,6 @@ app.post('/reset-job', async (req, res) => {
                 유물목록: updated유물목록,
                 전직공격력: 새전직공격력,
                 레벨: 새레벨,
-                레벨공격력: 10,
                 최종공격력: 새최종공격력
             })
             .eq('유저UID', 유저UID);
@@ -2158,7 +2118,6 @@ app.post('/reset-job', async (req, res) => {
             경험치: 환급후경험치,
             레벨: 새레벨,
             전직공격력: 새전직공격력,
-            레벨공격력: 10,
             최종공격력: 새최종공격력,
             유물목록: updated유물목록
         });
@@ -2526,7 +2485,7 @@ app.post('/synthesize-item', async (req, res) => {
     // 필요한 필드 함께 조회
     const { data: user, error: fetchError } = await supabaseAdmin
         .from('users')
-        .select('유저아이디, 장비목록, 레벨공격력, 전직공격력, 펫단계, 유물목록')
+        .select('*')
         .eq('유저UID', 유저UID)
         .single();
     if (fetchError || !user) {
@@ -2588,17 +2547,12 @@ app.post('/synthesize-item', async (req, res) => {
         }
     }
 
-    // 장비공격력(최댓값) 계산
-    const 장비공격력 = equipmentList.reduce(
-        (maxAttack, item) => item.공격력 > maxAttack ? item.공격력 : maxAttack,
-        0
-    );
-    // 유저 객체에 장비공격력 반영
+
+
+    const 장비공격력 = Math.max(...equipmentList.map(e => e.공격력 || 0));
     user.장비공격력 = 장비공격력;
-    // 최종공격력 계산 함수 사용
     const 최종공격력 = 최종공격력계산(user);
 
-    // DB 업데이트
     const { error: updateError } = await supabaseAdmin
         .from('users')
         .update({ 장비목록: equipmentList, 장비공격력, 최종공격력 })
@@ -4506,23 +4460,13 @@ function 보상계산(층, 유저, 몬스터) {
 }
 
 function 레벨업판정(현재경험치, 현재레벨) {
-    // if (현재레벨 >= 1000) {
-    //     return {
-    //         새레벨: 현재레벨,
-    //         증가한레벨: 0,
-    //         증가한공격력: 0,
-    //         레벨공격력: 현재레벨 * 1
-    //     };
-    // }
     const 새레벨 = Math.floor(현재경험치 / 1000) + 1;
 
     const 증가량 = 새레벨 - 현재레벨;
-    const 레벨공격력 = 증가량 * 1;
     return {
         새레벨,
         증가한레벨: 증가량,
         증가한공격력: 증가량 * 1,
-        레벨공격력: 10
     };
 }
 
@@ -4573,11 +4517,18 @@ function 전투보상반영(유저, 보상, 회복량, 레벨업정보, 전투�
     새유저.숙련도 += 보상.숙련도;
 
     새유저.레벨 += 레벨업정보.증가한레벨;
-    새유저.레벨공격력 = 10;
     새유저.남은체력 = Math.min(
         새유저.최대체력,
         전투체력 + 회복량
     );
+
+    if ((새유저.전직공격력 ?? 0) === 27) {
+        const 전환가능량 = Math.floor(새유저.경험치 / 100000);
+        if (전환가능량 > 0) {
+            새유저.경험치 -= 전환가능량 * 100000;
+            새유저.레벨공격력 += (유저.레벨공격력 ?? 10) + 전환가능량 * 10;
+        }
+    }
 
     return 새유저;
 }
@@ -4643,7 +4594,7 @@ function 레어악마불러오기(층, 이름) {
 }
 
 function 최종공격력계산(유저) {
-    const 레벨공격력 = 10;
+    const 레벨공격력 = 유저.레벨공격력 || 10;
     const 장비공격력 = 유저.장비공격력 || 0;
     const 전직공격력 = 유저.전직공격력 || 1;
     const 펫단계원본 = 유저.펫단계 || 0;
