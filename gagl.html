@@ -3451,8 +3451,8 @@
     <div class="버튼" id="가글사전">가글사전</div>
   </div>
 `;
-    // <div class="버튼" id="캐시샵">캐 시 샵</div>
-    // <div class="버튼" id="로그아웃">로그아웃</div>
+        // <div class="버튼" id="캐시샵">캐 시 샵</div>
+        // <div class="버튼" id="로그아웃">로그아웃</div>
 
 
         정보툴팁.style.display = "none";
@@ -3664,8 +3664,8 @@
   </div>
 `;
 
-    // <div class="버튼" id="지하던전">지하던전</div>
-    // <div class="버튼" id="마왕전">마 왕</div>
+        // <div class="버튼" id="지하던전">지하던전</div>
+        // <div class="버튼" id="마왕전">마 왕</div>
 
         월드툴팁.style.display = "none";
         document.body.appendChild(월드툴팁);
@@ -5589,163 +5589,163 @@
 
 
 
-    //     document.getElementById("지하층수").addEventListener("click", async () => {
-    //         if (!유저데이터) return;
+        //     document.getElementById("지하층수").addEventListener("click", async () => {
+        //         if (!유저데이터) return;
 
 
-    //         const 열쇠 = 유저데이터.유물목록?.["열쇠"] || 0;
-    //         if (열쇠 < 1) {
-    //             메시지표시(지하층수, "", "열쇠를 구해오세요", "");
-    //             return;
-    //         }
+        //         const 열쇠 = 유저데이터.유물목록?.["열쇠"] || 0;
+        //         if (열쇠 < 1) {
+        //             메시지표시(지하층수, "", "열쇠를 구해오세요", "");
+        //             return;
+        //         }
 
 
-    //         화면잠금();
+        //         화면잠금();
 
-    //         const res = await fetch("/attack-dungeon", {
-    //             method: "POST",
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-    //         });
-    //         const data = await res.json();
-
-
-    //         if (!res.ok || data.오류) {
-    //             메시지표시(지하층수, "", data.오류 || "", "");
-    //             화면해제();
-    //             return;
-    //         }
+        //         const res = await fetch("/attack-dungeon", {
+        //             method: "POST",
+        //             headers: { "Content-Type": "application/json" },
+        //             body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+        //         });
+        //         const data = await res.json();
 
 
-
-    //         document.getElementById("지하승패").innerText = data.결과;
-
-    //         document.getElementById("지하층수").innerText = `지하${data.새로운레벨}층`;
-
-
-    //         유저데이터 = data.유저데이터;
-    //         유저데이터.지하던전 = data.새로운레벨;
-    //         유저데이터.유물목록 = data.유물목록;
-
-    //         // 티켓 드랍 효과
-    //         if (data.드랍티켓) {
-    //             const 유물드랍박스 = document.getElementById("유물드랍박스");
-    //             const 던전아이콘 = document.getElementById("던전아이콘");
-
-    //             if (유물드랍박스) {
-    //                 // ✅ 먼저 기존에 떠 있는 박스를 숨김
-    //                 유물드랍박스.style.display = "none";
-
-    //                 // ✅ setTimeout 제거 방지: 이전 타이머 클리어 (선택 사항)
-    //                 if (window.유물드랍타이머) clearTimeout(window.유물드랍타이머);
-
-    //                 유물드랍박스.innerText = `유물 [티켓]을(를) 획득했다!`;
-    //                 유물드랍박스.style.display = "block";
-
-    //                 // 위치 조정용 부모 변경
-    //                 if (던전아이콘) {
-    //                     // 등급외테두리에 위치 기준 설정
-    //                     던전아이콘.style.position = "relative";
-
-    //                     // 유물드랍박스를 등급외테두리 내부로 이동
-    //                     던전아이콘.appendChild(유물드랍박스);
-
-    //                     // 전투화면용 위치 조정
-    //                     Object.assign(유물드랍박스.style, {
-    //                         position: "absolute",
-    //                         top: "50%",
-    //                         left: "50%",
-    //                         transform: "translate(-50%, -50%)",
-    //                         zIndex: "100"
-    //                     });
-    //                 }
-    //             }
-    //             // ✅ 새 타이머로 숨김 처리 (전역 변수로 저장)
-    //             window.유물드랍타이머 = setTimeout(() => {
-    //                 유물드랍박스.style.display = "none";
-    //             }, 3000);
-    //         }
+        //         if (!res.ok || data.오류) {
+        //             메시지표시(지하층수, "", data.오류 || "", "");
+        //             화면해제();
+        //             return;
+        //         }
 
 
-    //         // 기존 로그 제거
-    //         document.querySelectorAll(".전투로그컨테이너").forEach(e => e.remove());
 
-    //         // 전투 로그 출력
-    //         if (Array.isArray(data.전투로그)) {
-    //             data.전투로그.slice().reverse().forEach(로그 => {
-    //                 const 로그컨테이너 = document.createElement("div");
-    //                 로그컨테이너.className = "전투로그컨테이너";
-    //                 로그컨테이너.style.marginTop = "15px";
-    //                 로그컨테이너.style.border = "0.2px solid #4b4b4b";
-    //                 로그컨테이너.style.borderRadius = "10px";
-    //                 로그컨테이너.style.padding = "15px";
-    //                 로그컨테이너.style.width = "400px";
+        //         document.getElementById("지하승패").innerText = data.결과;
 
-    //                 const 아이콘HTML = (로그.아이콘 || []).map(이름 => 아이콘맵[이름] || "").join(" ");
+        //         document.getElementById("지하층수").innerText = `지하${data.새로운레벨}층`;
 
-    //                 let 데미지텍스트 = "";
-    //                 let 회복텍스트 = "";
 
-    //                 if (로그.타입 === "공격") {
-    //                     데미지텍스트 = `<span><span style="color: #f63b3b;">${로그.몬스터이름}</span>에게 ${로그.효과} 피해를 입혔다!</span>`;
-    //                 } else if (로그.타입 === "회복") {
-    //                     회복텍스트 = `<span><span style="color: #3b82f6;">${로그.유저아이디}</span> 체력 ${로그.효과} 회복</span>`;
-    //                 }
+        //         유저데이터 = data.유저데이터;
+        //         유저데이터.지하던전 = data.새로운레벨;
+        //         유저데이터.유물목록 = data.유물목록;
 
-    //                 let 추가횟수표시 = "";
-    //                 if (로그.타입 === "공격" && 로그.추가공격횟수 > 0) {
-    //                     // 실제 타격 횟수 = 1(기본) + 로그.추가공격횟수
-    //                     const 총공격횟수 = 1 + 로그.추가공격횟수;
-    //                     추가횟수표시 = `<span style="margin-left: 4px; color: #f63b3b;">x${총공격횟수}</span>`;
-    //                 }
+        //         // 티켓 드랍 효과
+        //         if (data.드랍티켓) {
+        //             const 유물드랍박스 = document.getElementById("유물드랍박스");
+        //             const 던전아이콘 = document.getElementById("던전아이콘");
 
-    //                 // (2) innerHTML에서 공격 텍스트 뒤에 추가횟수표시 붙이기
-    //                 로그컨테이너.innerHTML = `
-    // <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-    //     <strong>Turn ${로그.턴}</strong>
-    // </div>
-    // <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
-    //     ${아이콘HTML}
-    //     ${로그.타입 === "공격" ? 데미지텍스트 + 추가횟수표시 : ""}
-    //     ${로그.타입 === "회복" ? 회복텍스트 : ""}
-    // </div>
-    
-    // <div class="가로정렬" style="margin-top: 10px; justify-content: space-between; align-items: center; gap: 12px;">
-    //                     <div style="border: 0.2px solid #3b82f6; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
-    //                         <div>${로그.유저아이디}</div>
-    //                         <div>
-    //                             <div>공격력 ${로그.유저최종공격력}</div>
-    //                             <div>체력 ${로그.유저체력}/${로그.유저최대체력}</div>
-    //                         </div>
-    //                     </div>
-    //                     <div style="border: 0.2px solid #f63b3b; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
-    //                         <div>${로그.몬스터이름}</div>
-    //                         <div>
-    //                             <div>체력 ${로그.몬스터체력}</div>
-    //                             <div>방어력 ${로그.몬스터방어력}</div>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //             `;
+        //             if (유물드랍박스) {
+        //                 // ✅ 먼저 기존에 떠 있는 박스를 숨김
+        //                 유물드랍박스.style.display = "none";
 
-    //                 const 타겟 = document.getElementById("지하등반");
-    //                 if (타겟 && 타겟.parentNode) {
-    //                     타겟.parentNode.insertBefore(로그컨테이너, 타겟.nextSibling);
-    //                 }
-    //             });
-    //         }
+        //                 // ✅ setTimeout 제거 방지: 이전 타이머 클리어 (선택 사항)
+        //                 if (window.유물드랍타이머) clearTimeout(window.유물드랍타이머);
 
-    //         // 체력, 스태미너, 누적데미지 UI 업데이트
-    //         // document.getElementById("악마이름").innerText = data.유저데이터?.보스이름 || 현재보스이름;
-    //         // document.getElementById("악마체력").innerText = `체력 ???`;  // 보스는 체력 없음
-    //         // document.getElementById("악마방어력").innerText = `방어력 0`;
-    //         // document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}/${유저데이터.최대체력}`;
-    //         // document.getElementById("최종데미지").innerText = `총피해량 : ${data.누적데미지.toLocaleString()}`;
+        //                 유물드랍박스.innerText = `유물 [티켓]을(를) 획득했다!`;
+        //                 유물드랍박스.style.display = "block";
 
-    //         // document.getElementById("승리패배로그").innerText = "보스전 완료";
-    //         // document.getElementById("승리패배로그").style.color = "#ffa500";
-    //         화면해제();
-    //     });
+        //                 // 위치 조정용 부모 변경
+        //                 if (던전아이콘) {
+        //                     // 등급외테두리에 위치 기준 설정
+        //                     던전아이콘.style.position = "relative";
+
+        //                     // 유물드랍박스를 등급외테두리 내부로 이동
+        //                     던전아이콘.appendChild(유물드랍박스);
+
+        //                     // 전투화면용 위치 조정
+        //                     Object.assign(유물드랍박스.style, {
+        //                         position: "absolute",
+        //                         top: "50%",
+        //                         left: "50%",
+        //                         transform: "translate(-50%, -50%)",
+        //                         zIndex: "100"
+        //                     });
+        //                 }
+        //             }
+        //             // ✅ 새 타이머로 숨김 처리 (전역 변수로 저장)
+        //             window.유물드랍타이머 = setTimeout(() => {
+        //                 유물드랍박스.style.display = "none";
+        //             }, 3000);
+        //         }
+
+
+        //         // 기존 로그 제거
+        //         document.querySelectorAll(".전투로그컨테이너").forEach(e => e.remove());
+
+        //         // 전투 로그 출력
+        //         if (Array.isArray(data.전투로그)) {
+        //             data.전투로그.slice().reverse().forEach(로그 => {
+        //                 const 로그컨테이너 = document.createElement("div");
+        //                 로그컨테이너.className = "전투로그컨테이너";
+        //                 로그컨테이너.style.marginTop = "15px";
+        //                 로그컨테이너.style.border = "0.2px solid #4b4b4b";
+        //                 로그컨테이너.style.borderRadius = "10px";
+        //                 로그컨테이너.style.padding = "15px";
+        //                 로그컨테이너.style.width = "400px";
+
+        //                 const 아이콘HTML = (로그.아이콘 || []).map(이름 => 아이콘맵[이름] || "").join(" ");
+
+        //                 let 데미지텍스트 = "";
+        //                 let 회복텍스트 = "";
+
+        //                 if (로그.타입 === "공격") {
+        //                     데미지텍스트 = `<span><span style="color: #f63b3b;">${로그.몬스터이름}</span>에게 ${로그.효과} 피해를 입혔다!</span>`;
+        //                 } else if (로그.타입 === "회복") {
+        //                     회복텍스트 = `<span><span style="color: #3b82f6;">${로그.유저아이디}</span> 체력 ${로그.효과} 회복</span>`;
+        //                 }
+
+        //                 let 추가횟수표시 = "";
+        //                 if (로그.타입 === "공격" && 로그.추가공격횟수 > 0) {
+        //                     // 실제 타격 횟수 = 1(기본) + 로그.추가공격횟수
+        //                     const 총공격횟수 = 1 + 로그.추가공격횟수;
+        //                     추가횟수표시 = `<span style="margin-left: 4px; color: #f63b3b;">x${총공격횟수}</span>`;
+        //                 }
+
+        //                 // (2) innerHTML에서 공격 텍스트 뒤에 추가횟수표시 붙이기
+        //                 로그컨테이너.innerHTML = `
+        // <div style="background: #4b4b4b; width: calc(100% + 30px); margin: -15px 0 0 -15px; padding: 6px 0; text-align: center; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+        //     <strong>Turn ${로그.턴}</strong>
+        // </div>
+        // <div class="가로정렬" style="margin: 4px 0; align-items: center; gap: 6px;">
+        //     ${아이콘HTML}
+        //     ${로그.타입 === "공격" ? 데미지텍스트 + 추가횟수표시 : ""}
+        //     ${로그.타입 === "회복" ? 회복텍스트 : ""}
+        // </div>
+
+        // <div class="가로정렬" style="margin-top: 10px; justify-content: space-between; align-items: center; gap: 12px;">
+        //                     <div style="border: 0.2px solid #3b82f6; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
+        //                         <div>${로그.유저아이디}</div>
+        //                         <div>
+        //                             <div>공격력 ${로그.유저최종공격력}</div>
+        //                             <div>체력 ${로그.유저체력}/${로그.유저최대체력}</div>
+        //                         </div>
+        //                     </div>
+        //                     <div style="border: 0.2px solid #f63b3b; border-radius: 10px; padding: 6px 12px; flex: 1; display: flex; justify-content: space-between; color: white;">
+        //                         <div>${로그.몬스터이름}</div>
+        //                         <div>
+        //                             <div>체력 ${로그.몬스터체력}</div>
+        //                             <div>방어력 ${로그.몬스터방어력}</div>
+        //                         </div>
+        //                     </div>
+        //                 </div>
+        //             `;
+
+        //                 const 타겟 = document.getElementById("지하등반");
+        //                 if (타겟 && 타겟.parentNode) {
+        //                     타겟.parentNode.insertBefore(로그컨테이너, 타겟.nextSibling);
+        //                 }
+        //             });
+        //         }
+
+        //         // 체력, 스태미너, 누적데미지 UI 업데이트
+        //         // document.getElementById("악마이름").innerText = data.유저데이터?.보스이름 || 현재보스이름;
+        //         // document.getElementById("악마체력").innerText = `체력 ???`;  // 보스는 체력 없음
+        //         // document.getElementById("악마방어력").innerText = `방어력 0`;
+        //         // document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}/${유저데이터.최대체력}`;
+        //         // document.getElementById("최종데미지").innerText = `총피해량 : ${data.누적데미지.toLocaleString()}`;
+
+        //         // document.getElementById("승리패배로그").innerText = "보스전 완료";
+        //         // document.getElementById("승리패배로그").style.color = "#ffa500";
+        //         화면해제();
+        //     });
 
 
 
@@ -5789,6 +5789,8 @@
             //일요일에 보스데미지 1/1000 적용
             //팝업
             //경험치로공격력구매
+            //일반유물상위유물추가
+
 
             // git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
@@ -5834,6 +5836,8 @@
 캐시샵이 삭제됨에 따라 모든랭킹화면에 주인장이 다시 참여합니다<br>
 정보. 로그아웃 기능이 삭제되었습니다<br>
 이제 합성 가능한 유물은 필드드랍이나 뽑기 시 자동으로 합성됩니다<br>
+스킬화면에 '최대' 버튼이 구현되었습니다<br>
+현재 보유한 숙련도를 기준으로 최대 단계까지 한콤에 습득됩니다<br>
 
                 `,
                 `
@@ -7790,6 +7794,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
   </div>
   <div class="가로정렬">
     <div class="버튼">습득</div>
+     <div class="버튼">최대</div>
   </div>
 `;
                 // <div class="버튼">회수</div>
@@ -7886,9 +7891,20 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                             유저데이터.스킬 = 결과.스킬;
                             유저데이터.숙련도 = 결과.숙련도;
 
-                            const 색 = 행동 === "습득" ? "#00c851" : "#3b82f6";
-                            const 메세지 = 행동 + " 완료";
-                            const 아이콘 = 행동 === "습득" ? "✅" : "↩️";
+                            let 색, 메세지, 아이콘;
+                            if (행동 === "습득") {
+                                색 = "#00c851";
+                                메세지 = "습득 완료";
+                                아이콘 = "✅";
+                            } else if (행동 === "회수") {
+                                색 = "#3b82f6";
+                                메세지 = "회수 완료";
+                                아이콘 = "↩️";
+                            } else if (행동 === "최대") {
+                                색 = "#f97316"; // 주황색
+                                메세지 = "최대 습득 완료";
+                                아이콘 = "🚀";
+                            }
 
                             메시지표시(메시지표시박스, 아이콘, 메세지, 색);
                             스킬화면보여주기(); // 갱신
