@@ -2203,6 +2203,15 @@ app.post("/gamble-Relic", async (req, res) => {
         "열쇠": 9,
         "데빌마스크": 0,
     };
+
+    const 진화체인맵 = {
+        "소드": ["소드", "스피어", "해머", "로켓"],
+        "쉴드밴": ["쉴드밴", "쉴드배앤", "쉴드블레이커", "쉴드익스플로더"],
+        "고스트": ["고스트", "고오스", "고오스트", "팬텀"],
+        "클로버": ["클로버", "월계수", "황금잎", "무지개잎"],
+    };
+
+
     try {
         const { data: 유저, error } = await supabaseAdmin
             .from("users")
@@ -2262,6 +2271,31 @@ app.post("/gamble-Relic", async (req, res) => {
             // 4) 유물목록 업데이트 (최대 99개까지)
             const 유물목록복사 = { ...유저.유물목록 };
             유물목록복사[유물이름] = (유물목록복사[유물이름] || 0) + 1;
+
+
+
+            // 이번에 뽑힌 유물이름만 포함하는 체인만 찾음
+            const 해당체인 = Object.values(진화체인맵).find(체인 => 체인.includes(유물이름));
+
+            if (해당체인) {
+                for (let j = 0; j < 해당체인.length - 1; j++) {
+                    const 현재 = 해당체인[j];
+                    const 상위 = 해당체인[j + 1];
+                    const 보유 = 유물목록복사[현재] || 0;
+
+                    if (보유 >= 99) {
+                        유물목록복사[현재] -= 3;
+                        유물목록복사[상위] = (유물목록복사[상위] || 0) + 1;
+
+                        const 상위최대 = maxCounts[상위] ?? 99;
+                        if (유물목록복사[상위] >= 상위최대) {
+                            const idx = 후보.indexOf(상위);
+                            if (idx !== -1) 후보.splice(idx, 1);
+                        }
+                    }
+                }
+            }
+
 
 
             // 5) 결과 배열에 저장
@@ -2464,9 +2498,9 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
         const 펜타그램보정 = 펜타그램개수 * 0.01;
         successRate += 펜타그램보정;
 
-        if (유저.마왕전랭킹 === 1) {
-            successRate += 1;
-        }
+        // if (유저.마왕전랭킹 === 1) {
+        //     successRate += 1;
+        // }
 
     } else {
         // 일반 강화는 보정 포함
@@ -3497,136 +3531,136 @@ app.post("/send-mail-to-all-users", async (req, res) => {
 });
 
 
-app.post("/get-mawang", async (req, res) => {
-    try {
-        const { data, error } = await supabaseAdmin
-            .from("users")
-            .select("*")
-            .eq("마왕전랭킹", 1)
-            .limit(1)
-            .single();
+// app.post("/get-mawang", async (req, res) => {
+//     try {
+//         const { data, error } = await supabaseAdmin
+//             .from("users")
+//             .select("*")
+//             .eq("마왕전랭킹", 1)
+//             .limit(1)
+//             .single();
 
-        if (error || !data) {
-            return res.json({ 존재함: false });
-        }
+//         if (error || !data) {
+//             return res.json({ 존재함: false });
+//         }
 
-        return res.json({
-            존재함: true,
-            마왕정보: data,
-        });
-    } catch (e) {
-        console.error("마왕정보 조회 실패:", e);
-        return res.status(500).json({ 오류: "서버 오류" });
-    }
-});
-
-
-app.post("/challenge-mawang", async (req, res) => {
-    const { 유저UID } = req.body;
-
-    if (!유저UID) {
-        return res.status(400).json({ 오류: "유저UID 누락" });
-    }
-
-    try {
-        // ① 도전자 정보 조회
-        const { data: 도전자, error: err1 } = await supabaseAdmin
-            .from("users")
-            .select("*")
-            .eq("유저UID", 유저UID)
-            .single();
-
-        if (err1 || !도전자) {
-            return res.status(404).json({ 오류: "도전자 정보 없음" });
-        }
-
-        // ② 마왕 정보 조회
-        const { data: 마왕, error: err2 } = await supabaseAdmin
-            .from("users")
-            .select("*")
-            .eq("마왕전랭킹", 1)
-            .single();
-
-        if (err2 || !마왕) {
-            return res.status(404).json({ 오류: "마왕이 존재하지 않습니다" });
-        }
-
-        if (마왕.유저UID === 도전자.유저UID) {
-            return res.status(400).json({ 오류: "마왕이시여, 도전자를 기다리세요" });
-        }
-
-        const 유물목록 = 도전자.유물목록 || {};
-        const 데빌마스크개수 = (유물목록['데빌마스크'] ?? 0);
-        if (데빌마스크개수 < 1) {
-            return res.status(400).json({ 오류: '도전장이 부족합니다' });
-        }
+//         return res.json({
+//             존재함: true,
+//             마왕정보: data,
+//         });
+//     } catch (e) {
+//         console.error("마왕정보 조회 실패:", e);
+//         return res.status(500).json({ 오류: "서버 오류" });
+//     }
+// });
 
 
-        let 결과;
-        try {
-            결과 = 마왕전전투시뮬레이션(도전자, 마왕);
-        } catch (e) {
-            return res.status(500).json({ 오류: "전투 시뮬레이션 실패" });
-        }
+// app.post("/challenge-mawang", async (req, res) => {
+//     const { 유저UID } = req.body;
 
-        if (결과.승리자 === "도전자") {
-            await supabaseAdmin
-                .from("users")
-                .update({ 마왕전랭킹: 0 })
-                .eq("유저UID", 마왕.유저UID);
+//     if (!유저UID) {
+//         return res.status(400).json({ 오류: "유저UID 누락" });
+//     }
 
-            await supabaseAdmin
-                .from("users")
-                .update({ 마왕전랭킹: 1 })
-                .eq("유저UID", 도전자.유저UID);
+//     try {
+//         // ① 도전자 정보 조회
+//         const { data: 도전자, error: err1 } = await supabaseAdmin
+//             .from("users")
+//             .select("*")
+//             .eq("유저UID", 유저UID)
+//             .single();
 
-        } else {
-            await supabaseAdmin
-                .from("users")
-                .update({
-                    마왕전방어: (마왕.마왕전방어 || 0) + 1
-                })
-                .eq("유저UID", 마왕.유저UID);
-        }
+//         if (err1 || !도전자) {
+//             return res.status(404).json({ 오류: "도전자 정보 없음" });
+//         }
 
-        const 갱신유물 = { ...도전자.유물목록 };
-        갱신유물["데빌마스크"] = Math.max((갱신유물["데빌마스크"] || 0) - 1, 0);
+//         // ② 마왕 정보 조회
+//         const { data: 마왕, error: err2 } = await supabaseAdmin
+//             .from("users")
+//             .select("*")
+//             .eq("마왕전랭킹", 1)
+//             .single();
 
-        await supabaseAdmin
-            .from("users")
-            .update({ 유물목록: 갱신유물 })
-            .eq("유저UID", 도전자.유저UID);
+//         if (err2 || !마왕) {
+//             return res.status(404).json({ 오류: "마왕이 존재하지 않습니다" });
+//         }
 
-        const 문구 = 결과.승리자 === "도전자"
-            ? `체력차${결과.도전자HP}로 새로운 마왕에 등극합니다!`
-            : `체력차${결과.마왕HP}로 마왕에게 패배..`;
+//         if (마왕.유저UID === 도전자.유저UID) {
+//             return res.status(400).json({ 오류: "마왕이시여, 도전자를 기다리세요" });
+//         }
 
-
-        if (도전자.유저아이디 !== "나주인장아니다") {
-            await 이벤트기록추가({
-                유저UID: 도전자.유저UID,
-                유저아이디: 도전자.유저아이디,
-                문구
-            });
-        }
+//         const 유물목록 = 도전자.유물목록 || {};
+//         const 데빌마스크개수 = (유물목록['데빌마스크'] ?? 0);
+//         if (데빌마스크개수 < 1) {
+//             return res.status(400).json({ 오류: '도전장이 부족합니다' });
+//         }
 
 
-        return res.json({
-            결과메시지: 결과.승리자 === "도전자" ? `체력차${결과.도전자HP}로 마왕을 물리치고 새로운 마왕에 등극합니다!` : `체력차${결과.마왕HP}로 패배했습니다`,
-            승리자: 결과.승리자,
-            도전자HP: 결과.도전자HP,
-            마왕HP: 결과.마왕HP,
-            유물목록: 갱신유물,
-            전투로그: 결과.전투로그
-        });
+//         let 결과;
+//         try {
+//             결과 = 마왕전전투시뮬레이션(도전자, 마왕);
+//         } catch (e) {
+//             return res.status(500).json({ 오류: "전투 시뮬레이션 실패" });
+//         }
+
+//         if (결과.승리자 === "도전자") {
+//             await supabaseAdmin
+//                 .from("users")
+//                 .update({ 마왕전랭킹: 0 })
+//                 .eq("유저UID", 마왕.유저UID);
+
+//             await supabaseAdmin
+//                 .from("users")
+//                 .update({ 마왕전랭킹: 1 })
+//                 .eq("유저UID", 도전자.유저UID);
+
+//         } else {
+//             await supabaseAdmin
+//                 .from("users")
+//                 .update({
+//                     마왕전방어: (마왕.마왕전방어 || 0) + 1
+//                 })
+//                 .eq("유저UID", 마왕.유저UID);
+//         }
+
+//         const 갱신유물 = { ...도전자.유물목록 };
+//         갱신유물["데빌마스크"] = Math.max((갱신유물["데빌마스크"] || 0) - 1, 0);
+
+//         await supabaseAdmin
+//             .from("users")
+//             .update({ 유물목록: 갱신유물 })
+//             .eq("유저UID", 도전자.유저UID);
+
+//         const 문구 = 결과.승리자 === "도전자"
+//             ? `체력차${결과.도전자HP}로 새로운 마왕에 등극합니다!`
+//             : `체력차${결과.마왕HP}로 마왕에게 패배..`;
+
+
+//         if (도전자.유저아이디 !== "나주인장아니다") {
+//             await 이벤트기록추가({
+//                 유저UID: 도전자.유저UID,
+//                 유저아이디: 도전자.유저아이디,
+//                 문구
+//             });
+//         }
+
+
+//         return res.json({
+//             결과메시지: 결과.승리자 === "도전자" ? `체력차${결과.도전자HP}로 마왕을 물리치고 새로운 마왕에 등극합니다!` : `체력차${결과.마왕HP}로 패배했습니다`,
+//             승리자: 결과.승리자,
+//             도전자HP: 결과.도전자HP,
+//             마왕HP: 결과.마왕HP,
+//             유물목록: 갱신유물,
+//             전투로그: 결과.전투로그
+//         });
 
 
 
-    } catch (e) {
-        console.error("마왕 도전 에러:", e);
-        return res.status(500).json({ 오류: "서버 내부 오류" });
-    }
-});
+//     } catch (e) {
+//         console.error("마왕 도전 에러:", e);
+//         return res.status(500).json({ 오류: "서버 내부 오류" });
+//     }
+// });
 
 
 
@@ -4565,12 +4599,8 @@ const 레어유물데이터 = {
     "데빌마스크": { 설명: "마왕에게 도전할 수 있습니다" },
 };
 const 신화유물데이터 = {
-    "소드": { 설명: "공격력이 증가합니다(*1%)" },
     "하트플러스": { 설명: "체력이 증가합니다(*1%)" },
-    "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
-    "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
     "하트마이너스": { 설명: "악마들의 체력 감소(*0.1%)" },
-    "클로버": { 설명: "장비 뽑기확률이 증가합니다(*0.1%)" },
     "모래시계": { 설명: "스태미너 소모를 무시합니다(0.1%)" },
     "암포라": { 설명: "보스전 스태미너 소모량 감소(1%)" },
     "퍼즐": { 설명: "도박비용을 무시합니다(0.1%)" },
@@ -4587,9 +4617,13 @@ const 신화유물데이터 = {
     "모루": { 설명: "증발되는 재료를 재조립합니다(0.1%)" },
     "펜타그램": { 설명: "진화 확률을 증가시킵니다(+0.01%)" },
     "안경": { 설명: "악세사리를 바꿔낄 수 있습니다" },
+    "소드": { 설명: "공격력이 증가합니다(*1%)" },
     "스피어": { 설명: "공격력이 더 증가합니다(*1%)" },
+    "쉴드밴": { 설명: "악마들의 방어력을 감소시킵니다(*1%)" },
     "쉴드배앤": { 설명: "악마들의 방어력을 더 감소시킵니다(*1%)" },
+    "고스트": { 설명: "히든몬스터 등장률이 증가합니다(*1%)" },
     "고오스": { 설명: "히든몬스터 등장률이 더 증가합니다(*1%)" },
+    "클로버": { 설명: "장비 뽑기확률이 증가합니다(*0.1%)" },
     "월계수": { 설명: "장비 뽑기확률이 더 증가합니다(*0.1%)" },
     "데빌마스크": { 설명: "마왕에게 도전할 수 있습니다" },
 };
