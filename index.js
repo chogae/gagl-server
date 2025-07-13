@@ -5,9 +5,24 @@ const path = require("path");
 const { createClient } = require("@supabase/supabase-js"); // 🟡 Supabase Admin용
 
 const app = express();
+app.set("trust proxy", true);
+
+const 차단된IP목록 = ["58.125.214.149",];
+app.use((req, res, next) => {
+    const clientIP = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "")
+        .toString()
+        .split(",")[0]
+        .trim();
+
+    if (차단된IP목록.includes(clientIP)) {
+        return res.status(403).send("🚫 접속이 차단된 IP입니다.");
+    }
+
+    next();
+});
+
 app.use(cors());
 app.use(express.json());
-app.set("trust proxy", true);
 
 // 🟡 gagl.html 요청 시 해당 파일 반환
 app.get("/gagl.html", (req, res) => {
