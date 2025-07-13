@@ -1740,11 +1740,17 @@ app.post("/ranking", async (req, res) => {
 });
 
 app.post("/delete-user", async (req, res) => {
-    const { 유저UID } = req.body;
+    const { 유저UID, 유저아이디 } = req.body;
 
     if (!유저UID) {
         return res.status(400).json({ 오류: "UID 누락됨" });
     }
+
+    const clientIP = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "")
+        .toString()
+        .split(",")[0]
+        .trim();
+    await 로그기록(유저아이디, `접속 IP: ${clientIP}`);
 
     try {
         // 1. users 테이블 삭제
