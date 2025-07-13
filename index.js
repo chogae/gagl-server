@@ -7,6 +7,7 @@ const { createClient } = require("@supabase/supabase-js"); // 🟡 Supabase Admi
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.set("trust proxy", true);
 
 // 🟡 gagl.html 요청 시 해당 파일 반환
 app.get("/gagl.html", (req, res) => {
@@ -37,6 +38,9 @@ app.post("/get-user", async (req, res) => {
     if (error || !유저) {
         return res.status(404).json({ 오류: "유저 정보 없음" });
     }
+
+    const clientIP = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    await 로그기록(유저.유저아이디, `접속 IP: ${clientIP}`);
 
     const now = new Date(); // ✅ 추가
     const formatter = new Intl.DateTimeFormat("ko-KR", {

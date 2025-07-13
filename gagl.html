@@ -3482,11 +3482,11 @@
     <div class="버튼" id="메뉴얼">메 뉴 얼</div>
     <div class="버튼" id="일어난일">일어난일</div>
     <div class="버튼" id="가글사전">가글사전</div>
-         <div class="버튼" id="광장">광 장</div>
  </div>
 `;
         // <div class="버튼" id="캐시샵">캐 시 샵</div>
         // <div class="버튼" id="로그아웃">로그아웃</div>
+        //  <div class="버튼" id="광장">광 장</div>
 
 
         정보툴팁.style.display = "none";
@@ -4745,113 +4745,113 @@
 
 
 
-        document.getElementById("광장").addEventListener("click", async () => {
-            if (!유저데이터) return;
-            화면잠금();
-            document.getElementById("화면설명").innerHTML = "수다를 떨어주세요<br>최신 50개만 표시됩니다";
+        // document.getElementById("광장").addEventListener("click", async () => {
+        //     if (!유저데이터) return;
+        //     화면잠금();
+        //     document.getElementById("화면설명").innerHTML = "수다를 떨어주세요<br>최신 50개만 표시됩니다";
 
-            모든화면숨기기();
-            document.getElementById("광장화면").style.display = "block";
-
-
-
-            const container = document.getElementById("광장컨테이너");
-            container.innerHTML = `
-            <!-- 입력창 -->
-            <input id="chat-input" 
-                   type="text" 
-                   maxlength="50" 
-                    autocomplete="off"
-                   placeholder="글자 50자 제한 / 메시지를 입력하고 Enter"
-                   style="width: 100%; margin-top: 8px; padding: 6px; box-sizing: border-box;" />
-            <!-- 메시지 리스트 -->
-            <div id="chat-list" class="세로정렬"  style=" align-self: flex-start;  width: 100%;  display: flex;  align-items: flex-start;"></div>
-          `;
+        //     모든화면숨기기();
+        //     document.getElementById("광장화면").style.display = "block";
 
 
 
-
-            try {
-                const res = await fetch("/get-chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" }
-                });
-                const { 채팅 } = await res.json();
-                const list = Array.isArray(채팅) ? 채팅 : [];
-                const chatList = document.getElementById("chat-list");
-                chatList.innerHTML = list
-                    .map(row => {
-                        const dt = new Date(row.시각);  // 메시지시각 → 시각
-                        const pad = v => String(v).padStart(2, "0");
-                        const yy = dt.getFullYear().toString().slice(2);
-                        const MM = pad(dt.getMonth() + 1);
-                        const dd = pad(dt.getDate());
-                        const hh = pad(dt.getHours());
-                        const mm = pad(dt.getMinutes());
-                        const ts = `${yy}-${MM}-${dd} ${hh}:${mm}`;
-
-                        const 닉네임표시 = 팔레트적용(row.유저아이디, row.마법의팔레트 || "");
-
-                        return `<div>${ts} ${닉네임표시} : ${row.내용}</div>`;  // 메시지 → 내용
-                    })
-                    .join("");
-            } catch (e) {
-                console.error("채팅 로드 실패:", e);
-            }
+        //     const container = document.getElementById("광장컨테이너");
+        //     container.innerHTML = `
+        //     <!-- 입력창 -->
+        //     <input id="chat-input" 
+        //            type="text" 
+        //            maxlength="50" 
+        //             autocomplete="off"
+        //            placeholder="글자 50자 제한 / 메시지를 입력하고 Enter"
+        //            style="width: 100%; margin-top: 8px; padding: 6px; box-sizing: border-box;" />
+        //     <!-- 메시지 리스트 -->
+        //     <div id="chat-list" class="세로정렬"  style=" align-self: flex-start;  width: 100%;  display: flex;  align-items: flex-start;"></div>
+        //   `;
 
 
-            document.getElementById("chat-input").addEventListener("keydown", async e => {
-                if (e.key !== "Enter") return;
 
-                if (유저데이터.최종공격력 < 10000) {
-                    메시지표시(메시지표시박스, "", "공격력 1만 이상 유저부터 채팅이 가능합니다", "");
-                    return;
-                }
 
-                const 스피커 = 유저데이터.유물목록?.["스피커"] || 0;
-                if (스피커 < 1) {
-                    메시지표시(메시지표시박스, "", "스피커가 없습니다", "");
-                    return;
-                }
+        //     try {
+        //         const res = await fetch("/get-chat", {
+        //             method: "POST",
+        //             headers: { "Content-Type": "application/json" }
+        //         });
+        //         const { 채팅 } = await res.json();
+        //         const list = Array.isArray(채팅) ? 채팅 : [];
+        //         const chatList = document.getElementById("chat-list");
+        //         chatList.innerHTML = list
+        //             .map(row => {
+        //                 const dt = new Date(row.시각);  // 메시지시각 → 시각
+        //                 const pad = v => String(v).padStart(2, "0");
+        //                 const yy = dt.getFullYear().toString().slice(2);
+        //                 const MM = pad(dt.getMonth() + 1);
+        //                 const dd = pad(dt.getDate());
+        //                 const hh = pad(dt.getHours());
+        //                 const mm = pad(dt.getMinutes());
+        //                 const ts = `${yy}-${MM}-${dd} ${hh}:${mm}`;
 
-                const text = e.target.value.trim();
-                if (!text) return;
+        //                 const 닉네임표시 = 팔레트적용(row.유저아이디, row.마법의팔레트 || "");
 
-                // ① 응답을 res에 저장
-                const res = await fetch("/save-chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        유저UID: 유저데이터.유저UID,
-                        유저아이디: 유저데이터.유저아이디,
-                        메시지: text
-                    })
+        //                 return `<div>${ts} ${닉네임표시} : ${row.내용}</div>`;  // 메시지 → 내용
+        //             })
+        //             .join("");
+        //     } catch (e) {
+        //         console.error("채팅 로드 실패:", e);
+        //     }
 
-                });
-                // ② JSON으로 파싱
-                const data = await res.json();
 
-                // ③ 오류 검사
-                if (!res.ok || data.오류) {
-                    // 메시지표시박스는 미리 DOM에서 꺼내놓은 <div>나
-                    // 적절한 요소 ID로 바꿔주세요
-                    메시지표시(메시지표시박스, "", data.오류 || "메시지 저장 실패", "");
-                    화면해제();
-                    return;
-                }
+        //     document.getElementById("chat-input").addEventListener("keydown", async e => {
+        //         if (e.key !== "Enter") return;
 
-                // ④ 성공 시
-                if (data.유물목록) {
-                    유저데이터.유물목록 = data.유물목록;
-                }
-                메시지표시(메시지표시박스, "", `스피커 1개를 소모합니다`, "");
-                e.target.value = "";
-                document.getElementById("광장").click();
+        //         if (유저데이터.최종공격력 < 10000) {
+        //             메시지표시(메시지표시박스, "", "공격력 1만 이상 유저부터 채팅이 가능합니다", "");
+        //             return;
+        //         }
 
-            });
+        //         const 스피커 = 유저데이터.유물목록?.["스피커"] || 0;
+        //         if (스피커 < 1) {
+        //             메시지표시(메시지표시박스, "", "스피커가 없습니다", "");
+        //             return;
+        //         }
 
-            화면해제();
-        });
+        //         const text = e.target.value.trim();
+        //         if (!text) return;
+
+        //         // ① 응답을 res에 저장
+        //         const res = await fetch("/save-chat", {
+        //             method: "POST",
+        //             headers: { "Content-Type": "application/json" },
+        //             body: JSON.stringify({
+        //                 유저UID: 유저데이터.유저UID,
+        //                 유저아이디: 유저데이터.유저아이디,
+        //                 메시지: text
+        //             })
+
+        //         });
+        //         // ② JSON으로 파싱
+        //         const data = await res.json();
+
+        //         // ③ 오류 검사
+        //         if (!res.ok || data.오류) {
+        //             // 메시지표시박스는 미리 DOM에서 꺼내놓은 <div>나
+        //             // 적절한 요소 ID로 바꿔주세요
+        //             메시지표시(메시지표시박스, "", data.오류 || "메시지 저장 실패", "");
+        //             화면해제();
+        //             return;
+        //         }
+
+        //         // ④ 성공 시
+        //         if (data.유물목록) {
+        //             유저데이터.유물목록 = data.유물목록;
+        //         }
+        //         메시지표시(메시지표시박스, "", `스피커 1개를 소모합니다`, "");
+        //         e.target.value = "";
+        //         document.getElementById("광장").click();
+
+        //     });
+
+        //     화면해제();
+        // });
 
 
         document.getElementById("일어난일").addEventListener("click", async () => {
@@ -5864,8 +5864,8 @@
 유물. 하트마이너스의 합성등급이 신화등급까지 구현되었습니다<br>
 악세사리. 카드세우스가 구현되었습니다(방어력감소효과5%)<br>
 월드탭을 삭제하고 보스탭으로 변경했습니다<br>
-광장이 재건되었습니다. 광장 도배를 막기위해<br>
-공격력 1만이상부터 채팅이 가능합니다<br>
+<s>광장이 재건되었습니다. 광장 도배를 막기위해</s><br>
+<s>공격력 1만이상부터 채팅이 가능합니다</s><br>
                 `,
                 `
 25.07.12<br>
