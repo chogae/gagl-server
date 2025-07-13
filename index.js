@@ -1603,6 +1603,13 @@ app.post("/register-user", async (req, res) => {
         "마법의팔레트": 0
     };
 
+    const clientIP = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "")
+        .toString()
+        .split(",")[0]
+        .trim();
+
+    await 로그기록(유저아이디, `접속 IP: ${clientIP}`);
+
     //신규유저
     const 삽입값 = {
         유저UID,
