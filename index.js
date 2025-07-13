@@ -3468,7 +3468,7 @@ app.post("/receive-mail", async (req, res) => {
                 공격력: 장비정보.공격력,
                 등급,
                 강화: 0,
-                수량: 0,
+                수량: Math.max(0, 수량 - 1)
             });
         }
     }
