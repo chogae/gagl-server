@@ -458,7 +458,7 @@ app.post("/get-user", async (req, res) => {
                     updates.우편함 = newMails;
                     유저.우편함 = newMails;
 
-                    await 로그기록(유저.유저아이디, `햄버거지급완료`);
+                    await 로그기록(유저.유저아이디, ` ${new햄버거현질기한}일차 햄버거지급완료`);
                 }
 
             } else {
@@ -469,7 +469,7 @@ app.post("/get-user", async (req, res) => {
                 updates.우편함 = newMails;
                 유저.우편함 = newMails;
 
-                await 로그기록(유저.유저아이디, `햄버거지급완료`);
+                await 로그기록(유저.유저아이디, ` ${new햄버거현질기한}일차 햄버거지급완료`);
             }
 
             const { error: incErr } = await supabaseAdmin
@@ -623,65 +623,6 @@ app.post("/get-user", async (req, res) => {
 
     return res.json({ 유저데이터: { ...유저 }, 새로고침하자, 점검하자, 주인장인가 });
 });
-
-
-// app.post("/refresh-stamina", async (req, res) => {
-//     const { 유저UID } = req.body;
-//     if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
-
-//     const { data: 유저, error } = await supabaseAdmin
-//         .from("users")
-//         .select("유저아이디, 현재스태미너, 최대스태미너, 스태미너갱신시간")
-//         .eq("유저UID", 유저UID)
-//         .single();
-
-//     if (error || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
-
-//     const 현재정각시간 = Math.floor(Date.now() / 1000 / 3600); // 시간 단위
-//     const 저장된정각시간 = 유저.스태미너갱신시간 ?? 현재정각시간;
-//     const 최대스태미너 = 유저.최대스태미너 ?? 2000;
-//     const 이전스태미너 = 유저.현재스태미너 ?? 2000;
-
-//     const 경과시간 = 현재정각시간 - 저장된정각시간;
-//     const 회복량 = 경과시간 * 120;
-//     const 회복후스태미너 = Math.min(이전스태미너 + 회복량, 최대스태미너);
-
-//     const 업데이트 = {
-//         현재스태미너: 회복후스태미너,
-//         스태미너갱신시간: 현재정각시간
-//     };
-
-//     await supabaseAdmin
-//         .from("users")
-//         .update(업데이트)
-//         .eq("유저UID", 유저UID);
-
-//     const 유저아이디 = 유저.유저아이디;
-
-//     function 시간변환(정각시간) {
-//         const ms = 정각시간 * 3600 * 1000;
-//         return new Date(ms).toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
-//     }
-
-//     const 현재KST = new Date().toLocaleString("ko-KR", {
-//         timeZone: "Asia/Seoul",
-//         year: "numeric", month: "2-digit", day: "2-digit",
-//         hour: "2-digit", minute: "2-digit", second: "2-digit"
-//     });
-
-//     await 로그기록(유저아이디,
-//         `\n- 기존 저장 시각 (KST): ${시간변환(저장된정각시간)}` +
-//         `\n- 현재 접속 시각 (KST): ${현재KST}` +
-//         `\n- 경과 시간 (시간): ${경과시간}` +
-//         `\n- 회복량: ${회복량}` +
-//         `\n- 기존 현재스태미너: ${이전스태미너}` +
-//         `\n- 회복 적용 후 최종 스태미너: ${회복후스태미너}`
-//     );
-
-//     return res.json({ 현재스태미너: 회복후스태미너 });
-// });
-
-
 
 
 
