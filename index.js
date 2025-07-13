@@ -1643,7 +1643,6 @@ app.post("/register-user", async (req, res) => {
         "마법의팔레트": 0
     };
 
-
     //신규유저
     const 삽입값 = {
         유저UID,
