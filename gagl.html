@@ -748,7 +748,8 @@
                         <!-- <div class="버튼" id="장비">장비</div>
                         <div class="버튼" id="유물">유물</div> -->
                         <div class="버튼" id="성장">성장</div>
-                        <div class="버튼" id="월드">월드</div>
+                        <!-- <div class="버튼" id="월드">월드</div> -->
+                        <div class="버튼" id="보스">보스</div>
                         <div class="버튼" id="전당">전당</div>
                         <div class="버튼" id="정보">정보</div>
                     </div>
@@ -3675,55 +3676,55 @@
 
 
 
-        const 월드버튼 = document.getElementById("월드");
+        //         const 월드버튼 = document.getElementById("월드");
 
-        const 월드툴팁 = document.createElement("div");
-        월드툴팁.id = "월드툴팁";
-        월드툴팁.style.position = "absolute";
-        월드툴팁.style.zIndex = "99999";
-        월드툴팁.style.display = "flex";
-        월드툴팁.style.flexDirection = "column";
-        월드툴팁.style.gap = "4px";
-        월드툴팁.style.background = "black";
-        월드툴팁.style.width = "fit-content";
-        월드툴팁.style.border = "0.2px solid #4b4b4b";
-        월드툴팁.style.borderRadius = "10px";
-        월드툴팁.style.boxSizing = "border-box";
-        월드툴팁.style.padding = "5px";
+        //         const 월드툴팁 = document.createElement("div");
+        //         월드툴팁.id = "월드툴팁";
+        //         월드툴팁.style.position = "absolute";
+        //         월드툴팁.style.zIndex = "99999";
+        //         월드툴팁.style.display = "flex";
+        //         월드툴팁.style.flexDirection = "column";
+        //         월드툴팁.style.gap = "4px";
+        //         월드툴팁.style.background = "black";
+        //         월드툴팁.style.width = "fit-content";
+        //         월드툴팁.style.border = "0.2px solid #4b4b4b";
+        //         월드툴팁.style.borderRadius = "10px";
+        //         월드툴팁.style.boxSizing = "border-box";
+        //         월드툴팁.style.padding = "5px";
 
-        월드툴팁.innerHTML = `
-  <div style="display: flex; flex-direction: column; gap: 10px;">    
-    <div class="버튼" id="보스">보 스</div>
-  </div>
-`;
+        //         월드툴팁.innerHTML = `
+        //   <div style="display: flex; flex-direction: column; gap: 10px;">    
+        //     <div class="버튼" id="보스">보 스</div>
+        //   </div>
+        // `;
 
         // <div class="버튼" id="지하던전">지하던전</div>
         // <div class="버튼" id="마왕전">마 왕</div>
 
-        월드툴팁.style.display = "none";
-        document.body.appendChild(월드툴팁);
+        // 월드툴팁.style.display = "none";
+        // document.body.appendChild(월드툴팁);
 
-        월드버튼.addEventListener("mouseenter", () => {
-            const rect = 월드버튼.getBoundingClientRect();
+        // 월드버튼.addEventListener("mouseenter", () => {
+        //     const rect = 월드버튼.getBoundingClientRect();
 
-            // 먼저 보여줘야 offsetWidth를 읽을 수 있음
-            월드툴팁.style.display = "block";
+        //     // 먼저 보여줘야 offsetWidth를 읽을 수 있음
+        //     월드툴팁.style.display = "block";
 
-            const 툴팁너비 = 월드툴팁.offsetWidth;
-            월드툴팁.style.left = (rect.right - 툴팁너비) + "px";
-            월드툴팁.style.top = rect.bottom + "px";
-        });
+        //     const 툴팁너비 = 월드툴팁.offsetWidth;
+        //     월드툴팁.style.left = (rect.right - 툴팁너비) + "px";
+        //     월드툴팁.style.top = rect.bottom + "px";
+        // });
 
 
-        // 마우스가 월드버튼 월드툴팁 외부로 나가면 닫기
-        document.addEventListener("mouseover", (e) => {
-            if (
-                !월드툴팁.contains(e.target) &&
-                !월드버튼.contains(e.target)
-            ) {
-                월드툴팁.style.display = "none";
-            }
-        });
+        // // 마우스가 월드버튼 월드툴팁 외부로 나가면 닫기
+        // document.addEventListener("mouseover", (e) => {
+        //     if (
+        //         !월드툴팁.contains(e.target) &&
+        //         !월드버튼.contains(e.target)
+        //     ) {
+        //         월드툴팁.style.display = "none";
+        //     }
+        // });
 
 
 
@@ -5861,6 +5862,7 @@
 유물. 하트플러스의 합성등급이 타락등급까지 구현되었습니다<br>
 유물. 하트마이너스의 합성등급이 신화등급까지 구현되었습니다<br>
 악세사리. 카드세우스가 구현되었습니다(방어력감소효과5%)<br>
+월드탭을 삭제하고 보스탭으로 변경했습니다<br>
                 `,
                 `
 25.07.12<br>
