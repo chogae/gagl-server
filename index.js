@@ -1611,7 +1611,7 @@ app.post("/register-user", async (req, res) => {
         .split(",")[0]
         .trim();
 
-    await 로그기록(유저아이디, `접속 IP: ${clientIP}`);
+    await 로그기록(유저아이디, `신규 IP: ${clientIP}`);
 
     //신규유저
     const 삽입값 = {
@@ -1750,7 +1750,7 @@ app.post("/delete-user", async (req, res) => {
         .toString()
         .split(",")[0]
         .trim();
-    await 로그기록(유저아이디, `접속 IP: ${clientIP}`);
+    await 로그기록(유저아이디, `탈퇴 IP: ${clientIP}`);
 
     try {
         // 1. users 테이블 삭제
