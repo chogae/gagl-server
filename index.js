@@ -7,7 +7,7 @@ const { createClient } = require("@supabase/supabase-js"); // 🟡 Supabase Admi
 const app = express();
 app.set("trust proxy", true);
 
-const 차단된IP목록 = ["58.125.214.149",];
+const 차단된IP목록 = ["",];
 app.use((req, res, next) => {
     const clientIP = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "")
         .toString()
@@ -54,7 +54,10 @@ app.post("/get-user", async (req, res) => {
         return res.status(404).json({ 오류: "유저 정보 없음" });
     }
 
-    const clientIP = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    const clientIP = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "")
+        .toString()
+        .split(",")[0]
+        .trim();
     await 로그기록(유저.유저아이디, `접속 IP: ${clientIP}`);
 
     const now = new Date(); // ✅ 추가
