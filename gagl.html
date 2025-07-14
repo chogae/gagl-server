@@ -1735,21 +1735,6 @@
 
             document.getElementById("화면설명").innerHTML = "스태미너는 정각을 기준으로 시간당 120씩 회복됩니다";
 
-            // // 서버에서 최신 스태미너 가져오기
-            // try {
-            //     const 응답 = await fetch("/refresh-stamina", {
-            //         method: "POST",
-            //         headers: { "Content-Type": "application/json" },
-            //         body: JSON.stringify({ 유저UID: 유저.유저UID })
-            //     });
-            //     const 결과 = await 응답.json();
-            //     if (결과.현재스태미너 !== undefined) {
-            //         유저.현재스태미너 = 결과.현재스태미너;
-            //     }
-            // } catch (e) {
-            //     console.error("스태미너 갱신 실패", e);
-            // }
-
 
             if (유저.펫단계 >= 1) {
                 let 색상코드;
@@ -5828,9 +5813,7 @@
 
             //팝업
             //일반유물상위유물추가
-            //탈퇴이벤트기록추가
             //주인장기준상위하위보상추가
-            //클라에서루시퍼인자로보낼수있는지확인
 
             //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
