@@ -3469,13 +3469,13 @@
   <div style="display: flex; flex-direction: column; gap: 10px;">    
     <div class="버튼" id="내정보">내 정 보</div>
     <div class="버튼" id="우편함">우 편 함</div>
-    <div class="버튼" id="메뉴얼">메 뉴 얼</div>
+           <div class="버튼" id="캐시샵">캐 시 샵</div>
+ <div class="버튼" id="메뉴얼">메 뉴 얼</div>
     <div class="버튼" id="일어난일">일어난일</div>
     <div class="버튼" id="가글사전">가글사전</div>
           <div class="버튼" id="광장">광 장</div>
 </div>
 `;
-        // <div class="버튼" id="캐시샵">캐 시 샵</div>
         // <div class="버튼" id="로그아웃">로그아웃</div>
 
 
@@ -5856,6 +5856,7 @@
 아주 오랜만에 신규스킬이 구현되었습니다<br>
 스킬. 홀리워터(최대체력증가)가 구현되었습니다<br>
 이제 스킬화면에서 현재 습득중인 스킬의 효과가 표시됩니다<br>
+캐시샵이 다시 오픈되었습니다. 주인장은 사라지지 않습니다<br>
                 `,
                 `
 25.07.13<br>
@@ -7023,66 +7024,66 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
         });
 
 
-        // //캐시샵화면보여주기
-        // document.getElementById("캐시샵").addEventListener("click", () => {
-        //     if (!유저데이터) return;
+        //캐시샵화면보여주기
+        document.getElementById("캐시샵").addEventListener("click", () => {
+            if (!유저데이터) return;
 
-        //     화면잠금();
-        //     모든화면숨기기();
-        //     document.getElementById("화면설명").innerHTML =
-        //         "gagl의 상품들은 소모성 또는 30일 기간제입니다<br>오픈톡 프로필 '가글주인장'에게 문의하세요";
+            화면잠금();
+            모든화면숨기기();
+            document.getElementById("화면설명").innerHTML =
+                "gagl의 상품들은 소모성 또는 30일 기간제입니다<br>오픈톡 프로필 '가글주인장'에게 문의하세요";
 
-        //     document.getElementById("캐시샵화면").style.display = "block";
+            document.getElementById("캐시샵화면").style.display = "block";
 
-        //     const 컨테이너 = document.getElementById("캐시샵컨테이너");
-        //     컨테이너.innerHTML = "";
+            const 컨테이너 = document.getElementById("캐시샵컨테이너");
+            컨테이너.innerHTML = "";
 
-        //     function 줄추가(왼쪽내용, 오른쪽내용) {
-        //         // 1) 줄 컨테이너
-        //         const 줄 = document.createElement("div");
-        //         줄.className = "밑줄 양쪽정렬";
-        //         줄.style.display = "flex";
-        //         줄.style.justifyContent = "space-between";
-        //         줄.style.alignItems = "center";   // ← 부모 컨테이너 내에서 세로 가운데
-        //         줄.style.width = "100%";
+            function 줄추가(왼쪽내용, 오른쪽내용) {
+                // 1) 줄 컨테이너
+                const 줄 = document.createElement("div");
+                줄.className = "밑줄 양쪽정렬";
+                줄.style.display = "flex";
+                줄.style.justifyContent = "space-between";
+                줄.style.alignItems = "center";   // ← 부모 컨테이너 내에서 세로 가운데
+                줄.style.width = "100%";
 
-        //         // 2) 왼쪽 셀
-        //         const leftDiv = document.createElement("div");
-        //         leftDiv.style.display = "flex";      // ← 내부 요소 정렬을 flex로
-        //         leftDiv.style.alignItems = "center"; // ← 아이콘+텍스트 세로 가운데
-        //         leftDiv.style.flex = "0 0 auto";
-        //         leftDiv.innerHTML = 왼쪽내용;
+                // 2) 왼쪽 셀
+                const leftDiv = document.createElement("div");
+                leftDiv.style.display = "flex";      // ← 내부 요소 정렬을 flex로
+                leftDiv.style.alignItems = "center"; // ← 아이콘+텍스트 세로 가운데
+                leftDiv.style.flex = "0 0 auto";
+                leftDiv.innerHTML = 왼쪽내용;
 
-        //         // 3) 오른쪽 셀
-        //         const rightDiv = document.createElement("div");
-        //         // rightDiv.style.display = "flex";
-        //         rightDiv.style.alignItems = "center"; // ← 텍스트 세로 가운데
-        //         rightDiv.style.flex = "1";
-        //         rightDiv.style.textAlign = "right";
-        //         rightDiv.innerHTML = 오른쪽내용;
+                // 3) 오른쪽 셀
+                const rightDiv = document.createElement("div");
+                // rightDiv.style.display = "flex";
+                rightDiv.style.alignItems = "center"; // ← 텍스트 세로 가운데
+                rightDiv.style.flex = "1";
+                rightDiv.style.textAlign = "right";
+                rightDiv.innerHTML = 오른쪽내용;
 
-        //         // 4) 조립
-        //         줄.appendChild(leftDiv);
-        //         줄.appendChild(rightDiv);
-        //         컨테이너.appendChild(줄);
-        //     }
+                // 4) 조립
+                줄.appendChild(leftDiv);
+                줄.appendChild(rightDiv);
+                컨테이너.appendChild(줄);
+            }
 
-        //     // — 여기 데이터 배열에 원하는 만큼 줄 정보를 추가 —
-        //     const 줄데이터 = [
-        //         { 왼쪽: `${마법의팔레트아이콘}(마법의팔레트)`, 오른쪽: "아이디를 색칠할 수 있습니다(1,100원)" },
-        //         { 왼쪽: `${플라워아이콘}(플라워)`, 오른쪽: "스킬을 초기화합니다(1,100원)" },
-        //         { 왼쪽: `${뼈다구아이콘}(뼈다구)`, 오른쪽: "직업을 초기화합니다(1,100원)" },
-        //         { 왼쪽: `${안경아이콘}(안경)`, 오른쪽: "악세사리를 교체합니다(1,100원)" },
-        //         { 왼쪽: `${햄버거아이콘}(햄버거정기배송)`, 오른쪽: "매일 햄버거(스태미너+300) 배송(4,900원)" },
-        //         { 왼쪽: `${현질아이콘}(현질)`, 오른쪽: "1억골드(1,000,000원)" },
+            // — 여기 데이터 배열에 원하는 만큼 줄 정보를 추가 —
+            const 줄데이터 = [
+                { 왼쪽: `${마법의팔레트아이콘}(마법의팔레트)`, 오른쪽: "아이디를 색칠할 수 있습니다(1,100원)" },
+                { 왼쪽: `${플라워아이콘}(플라워)`, 오른쪽: "스킬을 초기화합니다(1,100원)" },
+                { 왼쪽: `${뼈다구아이콘}(뼈다구)`, 오른쪽: "직업을 초기화합니다(1,100원)" },
+                { 왼쪽: `${안경아이콘}(안경)`, 오른쪽: "악세사리를 교체합니다(1,100원)" },
+                { 왼쪽: `${햄버거아이콘}(햄버거정기배송)`, 오른쪽: "매일 햄버거(스태미너+300) 배송(4,900원)" },
+                // { 왼쪽: `${현질아이콘}(현질)`, 오른쪽: "1억골드(1,000,000원)" },
 
-        //     ];
+            ];
 
-        //     // — 배열 순회하며 자동으로 줄 추가 —
-        //     줄데이터.forEach(item => 줄추가(item.왼쪽, item.오른쪽));
+            // — 배열 순회하며 자동으로 줄 추가 —
+            줄데이터.forEach(item => 줄추가(item.왼쪽, item.오른쪽));
 
-        //     화면해제();
-        // });
+            화면해제();
+        });
 
 
         document.getElementById("장비").addEventListener("click", () => {
