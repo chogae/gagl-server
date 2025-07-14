@@ -900,6 +900,11 @@ app.post("/attack-normal", async (req, res) => {
 
     if (레어몬스터이름) {
 
+        await supabaseAdmin
+            .from("users")
+            .update({ 히든몬스터이름: 레어몬스터이름 })
+            .eq("유저UID", 유저UID);
+
         if (현재스태미너 === 0) {
             현재스태미너++;
         }
@@ -978,6 +983,15 @@ app.post("/attack-rare", async (req, res) => {
         .select("*")
         .eq("유저UID", 유저UID)
         .single();
+
+    //패치중
+
+    // ✅ 레어몬스터 조우 여부 확인
+    if (유저.히든몬스터이름 !== 레어몬스터이름) {
+        await 로그기록(유저.유저아이디, `콘솔로장난질`);
+
+        return res.status(403).json({ 오류: "장난질하다 걸리면 뒤집니다" });
+    }
 
     let 현재스태미너 = 유저.현재스태미너 ?? 1000;
     if (현재스태미너 <= 0) {
