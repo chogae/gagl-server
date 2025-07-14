@@ -7,7 +7,7 @@ const { createClient } = require("@supabase/supabase-js"); // 🟡 Supabase Admi
 const app = express();
 app.set("trust proxy", true);
 
-const 차단된IP목록 = ["117.3.0.137",];
+const 차단된IP목록 = ["117.3.0.137", "1.245.24.156",];
 app.use((req, res, next) => {
     const clientIP = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "")
         .toString()
