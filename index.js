@@ -1275,7 +1275,7 @@ app.post("/update-skill", async (req, res) => {
 
     const { data: 유저, error } = await supabaseAdmin
         .from("users")
-        .select("스킬, 숙련도, 유물목록")
+        .select("*")
         .eq("유저UID", 유저UID)
         .single();
 
@@ -1297,16 +1297,17 @@ app.post("/update-skill", async (req, res) => {
         숙련도 += 환급;
         스킬 = {};
 
-        const 유물목록 = { ...유저.유물목록, 플라워: 플라워 - 1 }; // 1개 차감
+        const 최대체력 = 최대체력계산({ ...유저, 스킬 });
+        const 유물목록 = { ...유저.유물목록, 플라워: 플라워 - 1 };
 
         const { error: 저장오류 } = await supabaseAdmin
             .from("users")
-            .update({ 스킬, 숙련도, 유물목록 })  // ← 유물목록도 같이 저장
+            .update({ 스킬, 숙련도, 유물목록, 최대체력 })
             .eq("유저UID", 유저UID);
 
         if (저장오류) return res.status(500).json({ 오류: "서버오류" });
 
-        return res.json({ 성공: true, 스킬, 숙련도, 스킬상태: {}, 유물목록 }); // ← 유물목록도 같이 반환
+        return res.json({ 성공: true, 스킬, 숙련도, 스킬상태: {}, 유물목록, 최대체력 });
     }
 
     const 스킬정보 = {
@@ -1319,6 +1320,7 @@ app.post("/update-skill", async (req, res) => {
         버닝: { 단계: Array(23).fill(0) },
         인텔리전스: { 단계: Array(23).fill(0) },
         브로큰: { 단계: Array(23).fill(0) },
+        홀리워터: { 단계: Array(23).fill(0) },
     };
 
     if (!스킬정보[스킬이름]) {
@@ -1395,14 +1397,17 @@ app.post("/update-skill", async (req, res) => {
         }
     }
 
+    const 최대체력 = 최대체력계산({ ...유저, 스킬 });
+
+
     const { error: 저장오류 } = await supabaseAdmin
         .from("users")
-        .update({ 스킬, 숙련도 })
+        .update({ 스킬, 숙련도, 최대체력 })
         .eq("유저UID", 유저UID);
 
     if (저장오류) return res.status(500).json({ 오류: "서버오류" });
 
-    return res.json({ 성공: true, 스킬, 숙련도, 스킬상태 });
+    return res.json({ 성공: true, 스킬, 숙련도, 스킬상태, 최대체력 });
 });
 
 
@@ -4449,7 +4454,10 @@ function 최대체력계산(유저) {
     const 캡틴 = 악세목록.find(a => a.이름 === "캡틴" && a.장착 === 1);
     const 추가체력 = 캡틴 ? 캡틴.등급 : 0;
 
-    return Math.round((10 + 추가체력) * 하트플러스 * 하트비트 * 소망 * 물약 * 하트윙 * 테크놀로지아);
+    const 스킬 = 유저.스킬 || {};
+    const 홀리워터 = 스킬["홀리워터"] || 0;
+
+    return Math.round((10 + 추가체력 + 홀리워터) * 하트플러스 * 하트비트 * 소망 * 물약 * 하트윙 * 테크놀로지아);
 }
 
 function 레어몬스터등장판정(유저) {
