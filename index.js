@@ -7,7 +7,7 @@ const { createClient } = require("@supabase/supabase-js"); // 🟡 Supabase Admi
 const app = express();
 app.set("trust proxy", true);
 
-const 차단된IP목록 = ["117.3.0.137", "",];
+const 차단된IP목록 = ["117.3.0.137", "14.42.235.78",];
 app.use((req, res, next) => {
     const clientIP = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "")
         .toString()
@@ -60,7 +60,13 @@ app.post("/get-user", async (req, res) => {
         .trim();
     await 로그기록(유저.유저아이디, `접속 IP: ${clientIP}`);
 
-    const now = new Date(); // ✅ 추가
+    const now = new Date();
+    const kstNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+    const 오늘날짜 = kstNow.toISOString().slice(0, 10);
+    const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " ");
+
+
+
     const formatter = new Intl.DateTimeFormat("ko-KR", {
         weekday: "short",
         timeZone: "Asia/Seoul"
@@ -104,8 +110,6 @@ app.post("/get-user", async (req, res) => {
                     { 이름: "디아블로의 뿔", 수량: 2 }
                 ];
 
-                const kstNow = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
-                const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " ");
 
                 for (let i = 0; i < 상위유저들.length; i++) {
                     const user = 상위유저들[i];
@@ -125,6 +129,9 @@ app.post("/get-user", async (req, res) => {
                         날짜,
                         메모: `보스 랭킹 ${i + 1}위 보상`
                     };
+
+                    await 로그기록(현재유저.유저아이디, `보스 랭킹 ${i + 1}위 보상 ${보상.이름}(${보상.수량})`);
+
 
                     const newMail = [...(현재유저.우편함 || []), 새우편];
 
@@ -181,16 +188,11 @@ app.post("/get-user", async (req, res) => {
 
 
     if ((유저.현질 ?? 0) >= 1) {
-        const now = new Date();
-        const kstNow = new Date(
-            now.toLocaleString("en-US", { timeZone: "Asia/Seoul" })
-        );
-        const today = kstNow.toISOString().slice(0, 10);
 
-        if (유저.현질기한체크 !== today) {
+        if (유저.현질기한체크 !== 오늘날짜) {
             // 1) 현질기한 1 증가
             let new현질기한 = (유저.현질기한 ?? 0) + 1;
-            const updates = { 현질기한체크: today };
+            const updates = { 현질기한체크: 오늘날짜 };
 
             await 로그기록(유저.유저아이디, `현질기한 +1됨`);
 
@@ -199,7 +201,7 @@ app.post("/get-user", async (req, res) => {
                 const new현질 = (유저.현질 ?? 1) - 1;
 
                 const next현질기한 = new현질 >= 1 ? 1 : 0;
-                const next현질기한체크 = new현질 >= 1 ? today : null;
+                const next현질기한체크 = new현질 >= 1 ? 오늘날짜 : null;
                 const next팔레트 = new현질 >= 1 ? (유저.마법의팔레트 ?? null) : null;
 
                 updates.현질 = new현질;
@@ -229,14 +231,10 @@ app.post("/get-user", async (req, res) => {
 
 
     if ((유저.햄버거현질 ?? 0) >= 1) {
-        const now = new Date();
-        const kstNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
-        const today = kstNow.toISOString().slice(0, 10);
-        const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " "); // YYYY-MM-DD HH:mm
 
-        if (유저.햄버거현질기한체크 !== today) {
+        if (유저.햄버거현질기한체크 !== 오늘날짜) {
             let new햄버거현질기한 = (유저.햄버거현질기한 ?? 0) + 1;
-            const updates = { 햄버거현질기한체크: today };
+            const updates = { 햄버거현질기한체크: 오늘날짜 };
 
             await 로그기록(유저.유저아이디, `햄버거현질기한 +1됨`);
 
@@ -253,7 +251,7 @@ app.post("/get-user", async (req, res) => {
             if (new햄버거현질기한 >= 31) {
                 const new햄버거현질 = (유저.햄버거현질 ?? 1) - 1;
                 const next기한 = new햄버거현질 >= 1 ? 1 : 0;
-                const next체크 = new햄버거현질 >= 1 ? today : null;
+                const next체크 = new햄버거현질 >= 1 ? 오늘날짜 : null;
 
                 updates.햄버거현질 = new햄버거현질;
                 updates.햄버거현질기한 = next기한;
@@ -295,9 +293,6 @@ app.post("/get-user", async (req, res) => {
 
 
 
-    const kstNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
-    const 오늘날짜 = kstNow.toISOString().slice(0, 10); // ⬅️ 한국 날짜 (YYYY-MM-DD)
-    const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " "); // ✅ 추가
 
     const 마지막지급날짜 = 유저.하루한번
         ? new Date(new Date(유저.하루한번).toLocaleString("en-US", { timeZone: "Asia/Seoul" }))
@@ -324,7 +319,7 @@ app.post("/get-user", async (req, res) => {
             const 내순위 = 유저들.findIndex(u => u.유저UID === 나UID);
             const 주인장순위 = 유저들.findIndex(u => u.유저아이디 === "나주인장아니다");
 
-            if (내순위 !== -1 && 주인장순위 !== -1) {
+            if (내순위 !== -1 && 주인장순위 !== -1 && 유저.유저아이디 !== "나주인장아니다") {
                 const 우편 = {
                     이름: "티켓",
                     수량: 내순위 < 주인장순위 ? 1 : 3,
@@ -332,7 +327,7 @@ app.post("/get-user", async (req, res) => {
                     메모: 내순위 < 주인장순위 ? "주인장기준 전당 상위보상" : "주인장기준 전당 하위보상",
                 };
                 새우편함 = [...새우편함, 우편]; // ✅ 우편 추가
-                await 로그기록(유저들.유저아이디, `전당보상 ${우편}`);
+                await 로그기록(유저.유저아이디, `전당보상 ${우편.이름}(${우편.수량})`);
 
             }
         }
@@ -421,8 +416,6 @@ app.post("/get-user", async (req, res) => {
         점검하자 = true;
         // 유저.점검 = false;
     }
-
-
 
 
 
@@ -1300,14 +1293,16 @@ app.post("/update-skill", async (req, res) => {
         const 최대체력 = 최대체력계산({ ...유저, 스킬 });
         const 유물목록 = { ...유저.유물목록, 플라워: 플라워 - 1 };
 
+        const 최종공격력 = 최종공격력계산({ ...유저, 스킬 });
+
         const { error: 저장오류 } = await supabaseAdmin
             .from("users")
-            .update({ 스킬, 숙련도, 유물목록, 최대체력 })
+            .update({ 스킬, 숙련도, 유물목록, 최대체력, 최종공격력 })
             .eq("유저UID", 유저UID);
 
         if (저장오류) return res.status(500).json({ 오류: "서버오류" });
 
-        return res.json({ 성공: true, 스킬, 숙련도, 스킬상태: {}, 유물목록, 최대체력 });
+        return res.json({ 성공: true, 스킬, 숙련도, 스킬상태: {}, 유물목록, 최대체력, 최종공격력 });
     }
 
     const 스킬정보 = {
@@ -1321,6 +1316,7 @@ app.post("/update-skill", async (req, res) => {
         인텔리전스: { 단계: Array(23).fill(0) },
         브로큰: { 단계: Array(23).fill(0) },
         홀리워터: { 단계: Array(23).fill(0) },
+        도핑: { 단계: Array(23).fill(0) },
     };
 
     if (!스킬정보[스킬이름]) {
@@ -1398,16 +1394,17 @@ app.post("/update-skill", async (req, res) => {
     }
 
     const 최대체력 = 최대체력계산({ ...유저, 스킬 });
+    const 최종공격력 = 최종공격력계산({ ...유저, 스킬 });
 
 
     const { error: 저장오류 } = await supabaseAdmin
         .from("users")
-        .update({ 스킬, 숙련도, 최대체력 })
+        .update({ 스킬, 숙련도, 최대체력, 최종공격력 })
         .eq("유저UID", 유저UID);
 
     if (저장오류) return res.status(500).json({ 오류: "서버오류" });
 
-    return res.json({ 성공: true, 스킬, 숙련도, 스킬상태, 최대체력 });
+    return res.json({ 성공: true, 스킬, 숙련도, 스킬상태, 최대체력, 최종공격력 });
 });
 
 
@@ -3088,208 +3085,6 @@ app.post("/upgrade-accessory", async (req, res) => {
 });
 
 
-app.post("/use-Sword", async (req, res) => {
-    const { 유저UID } = req.body;
-    if (!유저UID) {
-        return res.status(400).json({ 오류: "유저UID 누락" });
-    }
-
-    const { data: 유저, error: 조회에러 } = await supabaseAdmin
-        .from("users")
-        .select("*")
-        .eq("유저UID", 유저UID)
-        .single();
-
-    if (조회에러 || !유저) {
-        return res.status(404).json({ 오류: "유저 정보 없음" });
-    }
-
-    const 유물목록 = { ...유저.유물목록 };
-    const 소드수량 = 유물목록["소드"] || 0;
-    const 스피어수량 = 유물목록["스피어"] || 0;
-    if (스피어수량 >= 99) {
-        return res.status(400).json({ 오류: "스피어는 99개 이상 보유할 수 없습니다" });
-    }
-
-
-    if (소드수량 < 3) {
-        return res.status(400).json({ 오류: "소드가 부족합니다" });
-    }
-
-    // ✅ 유물 변경
-    유물목록["소드"] = 소드수량 - 3;
-    유물목록["스피어"] = (유물목록["스피어"] || 0) + 1;
-
-    // ✅ 변경 적용 후 공격력 재계산
-    유저.유물목록 = 유물목록;
-    const 최종공격력 = 최종공격력계산(유저);
-
-    const { error: 저장에러 } = await supabaseAdmin
-        .from("users")
-        .update({
-            유물목록,
-            최종공격력
-        })
-        .eq("유저UID", 유저UID);
-
-    if (저장에러) {
-        return res.status(500).json({ 오류: "공격력 저장 실패" });
-    }
-
-    return res.json({ 유물목록, 최종공격력 });
-});
-
-app.post("/use-shieldban", async (req, res) => {
-    const { 유저UID } = req.body;
-    if (!유저UID) {
-        return res.status(400).json({ 오류: "유저UID 누락" });
-    }
-
-    const { data: 유저, error: 조회에러 } = await supabaseAdmin
-        .from("users")
-        .select("*")
-        .eq("유저UID", 유저UID)
-        .single();
-
-    if (조회에러 || !유저) {
-        return res.status(404).json({ 오류: "유저 정보 없음" });
-    }
-
-    const 유물목록 = { ...유저.유물목록 };
-    const 쉴드밴수량 = 유물목록["쉴드밴"] || 0;
-
-    const 쉴드배앤수량 = 유물목록["쉴드배앤"] || 0;
-    if (쉴드배앤수량 >= 99) {
-        return res.status(400).json({ 오류: "쉴드배앤은 99개 이상 보유할 수 없습니다" });
-    }
-
-
-    if (쉴드밴수량 < 3) {
-        return res.status(400).json({ 오류: "쉴드밴이 부족합니다" });
-    }
-
-    // ✅ 유물 변경
-    유물목록["쉴드밴"] = 쉴드밴수량 - 3;
-    유물목록["쉴드배앤"] = (유물목록["쉴드배앤"] || 0) + 1;
-
-    // ✅ 변경 적용 후 공격력 재계산
-    유저.유물목록 = 유물목록;
-
-    const { error: 저장에러 } = await supabaseAdmin
-        .from("users")
-        .update({
-            유물목록,
-        })
-        .eq("유저UID", 유저UID);
-
-    if (저장에러) {
-        return res.status(500).json({ 오류: "공격력 저장 실패" });
-    }
-
-    return res.json({ 유물목록 });
-});
-
-app.post("/use-ghost", async (req, res) => {
-    const { 유저UID } = req.body;
-    if (!유저UID) {
-        return res.status(400).json({ 오류: "유저UID 누락" });
-    }
-
-    const { data: 유저, error: 조회에러 } = await supabaseAdmin
-        .from("users")
-        .select("*")
-        .eq("유저UID", 유저UID)
-        .single();
-
-    if (조회에러 || !유저) {
-        return res.status(404).json({ 오류: "유저 정보 없음" });
-    }
-
-    const 유물목록 = { ...유저.유물목록 };
-    const 고스트수량 = 유물목록["고스트"] || 0;
-
-    const 고오스수량 = 유물목록["고오스"] || 0;
-    if (고오스수량 >= 99) {
-        return res.status(400).json({ 오류: "고오스는 99개 이상 보유할 수 없습니다" });
-    }
-
-
-    if (고스트수량 < 3) {
-        return res.status(400).json({ 오류: "고스트이 부족합니다" });
-    }
-
-    // ✅ 유물 변경
-    유물목록["고스트"] = 고스트수량 - 3;
-    유물목록["고오스"] = (유물목록["고오스"] || 0) + 1;
-
-    // ✅ 변경 적용 후 공격력 재계산
-    유저.유물목록 = 유물목록;
-
-    const { error: 저장에러 } = await supabaseAdmin
-        .from("users")
-        .update({
-            유물목록,
-        })
-        .eq("유저UID", 유저UID);
-
-    if (저장에러) {
-        return res.status(500).json({ 오류: "공격력 저장 실패" });
-    }
-
-    return res.json({ 유물목록 });
-});
-
-app.post("/use-Clover", async (req, res) => {
-    const { 유저UID } = req.body;
-    if (!유저UID) {
-        return res.status(400).json({ 오류: "유저UID 누락" });
-    }
-
-    const { data: 유저, error: 조회에러 } = await supabaseAdmin
-        .from("users")
-        .select("*")
-        .eq("유저UID", 유저UID)
-        .single();
-
-    if (조회에러 || !유저) {
-        return res.status(404).json({ 오류: "유저 정보 없음" });
-    }
-
-    const 유물목록 = { ...유저.유물목록 };
-    const 클로버수량 = 유물목록["클로버"] || 0;
-
-    const 월계수수량 = 유물목록["월계수"] || 0;
-    if (월계수수량 >= 99) {
-        return res.status(400).json({ 오류: "월계수는 99개 이상 보유할 수 없습니다" });
-    }
-
-
-    if (클로버수량 < 3) {
-        return res.status(400).json({ 오류: "클로버가 부족합니다" });
-    }
-
-    // ✅ 유물 변경
-    유물목록["클로버"] = 클로버수량 - 3;
-    유물목록["월계수"] = (유물목록["월계수"] || 0) + 1;
-
-    // ✅ 변경 적용 후 공격력 재계산
-    유저.유물목록 = 유물목록;
-
-    const { error: 저장에러 } = await supabaseAdmin
-        .from("users")
-        .update({
-            유물목록,
-        })
-        .eq("유저UID", 유저UID);
-
-    if (저장에러) {
-        return res.status(500).json({ 오류: "공격력 저장 실패" });
-    }
-
-    return res.json({ 유물목록 });
-});
-
-
 app.post("/receive-mail", async (req, res) => {
     const { 유저UID, 우편인덱스 } = req.body;
     if (유저UID == null || 우편인덱스 == null) {
@@ -4410,6 +4205,9 @@ function 레어악마불러오기(층, 이름) {
 }
 
 function 최종공격력계산(유저) {
+    const 스킬 = 유저.스킬 || {};
+    const 도핑 = (스킬["도핑"] ?? 0) * 30;
+
     const 레벨공격력 = 유저.레벨공격력 || 10;
     const 장비공격력 = 유저.장비공격력 || 0;
     const 전직공격력 = 유저.전직공격력 || 1;
@@ -4427,7 +4225,7 @@ function 최종공격력계산(유저) {
     const 룬검배율 = 룬검 ? (1 + 룬검.등급 * 0.05) : 1;
 
 
-    const 최종공격력 = (레벨공격력 + 장비공격력)
+    const 최종공격력 = (레벨공격력 + 장비공격력 + 도핑)
         * (전직공격력 * 0.1 + 0.9)
         * 소드
         * 스피어
