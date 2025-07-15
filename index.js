@@ -7,7 +7,7 @@ const { createClient } = require("@supabase/supabase-js"); // 🟡 Supabase Admi
 const app = express();
 app.set("trust proxy", true);
 
-const 차단된IP목록 = ["117.3.0.137", "14.42.235.78", "119.203.8.186"];
+const 차단된IP목록 = ["117.3.0.137", "14.42.235.78", "119.203.8.186", "211.36.142.233"];
 app.use((req, res, next) => {
     const clientIP = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "")
         .toString()
@@ -2658,7 +2658,7 @@ app.post("/save-chat", async (req, res) => {
 
     const { data: 유저, error: userErr } = await supabaseAdmin
         .from("users")
-        .select("유물목록, 마법의팔레트")
+        .select("유물목록, 마법의팔레트, 최종공격력")
         .eq("유저UID", 유저UID)
         .single();
 
@@ -2668,6 +2668,12 @@ app.post("/save-chat", async (req, res) => {
 
     const 유물목록 = 유저.유물목록 || {};
     const 스피커 = 유물목록["스피커"] || 0;
+
+    if (유저.최종공격력 < 10000) {
+        return res.status(404).json({ 오류: "공격력 1만을 넘겨오세요" });
+    }
+
+
 
     if (스피커 < 1) {
         return res.status(400).json({ 오류: "스피커가 없습니다" });
