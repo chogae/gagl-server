@@ -908,6 +908,8 @@
                 </div>
                 <div id="최종데미지">
                 </div>
+                <div id="누적데미지">
+                </div>
                 <div class="풀자동" id="보스풀자동"
                     style="position: absolute; top: 5px; right: 10px; cursor: pointer; font-size: 16px;">
                     풀자동
@@ -5881,6 +5883,7 @@
 보스를 자동으로 공격해주는 풀자동 버튼이 구현되었습니다<br>
 보스화면에서 풀자동 버튼을 누르면 다른 곳을 클릭하기전까지<br>
 보스를 자동으로 공격합니다<br>
+보스화면에서 보스를 공격했을 때, 총누적데미지가 함께 표시됩니다<br>
                 `,
                 `
 25.07.15<br>
@@ -6788,6 +6791,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 
                     document.querySelectorAll(".전투로그컨테이너").forEach(e => e.remove());
                     document.getElementById("최종데미지").innerText = "";
+                    document.getElementById("누적데미지").innerText = "";
 
                     모든화면숨기기();
                     document.getElementById("에너지박스").style.display = "block";
@@ -7035,6 +7039,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                 // document.getElementById("악마방어력").innerText = `방어력 0`;
                 // document.getElementById("유저체력").innerText = `체력 ${유저데이터.남은체력}/${유저데이터.최대체력}`;
                 document.getElementById("최종데미지").innerText = `총피해량 : ${결과.누적데미지.toLocaleString()}`;
+                document.getElementById("누적데미지").innerText = `총누적피해량 : ${결과.유저데이터.보스누적데미지.toLocaleString()}`;
 
                 const 스태미너표시 = document.getElementById("스태미너표시");
                 const 에너지바 = document.querySelector(".에너지바");
