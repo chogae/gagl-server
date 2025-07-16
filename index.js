@@ -550,12 +550,15 @@ app.post("/attack-boss", async (req, res) => {
     유저.보스누적데미지 += 전투결과.누적데미지;
     유저.남은체력 = 유저.최대체력;
 
-    await supabaseAdmin.from("users").update({
-        현재스태미너,
-        남은체력: 유저.최대체력,
-        스태미너소모총량: 유저.스태미너소모총량,
-        보스누적데미지: 유저.보스누적데미지
-    }).eq("유저UID", 유저UID);
+    if (유저.유저아이디 !== "테스트아이디") {
+        await supabaseAdmin.from("users").update({
+            현재스태미너,
+            남은체력: 유저.최대체력,
+            스태미너소모총량: 유저.스태미너소모총량,
+            보스누적데미지: 유저.보스누적데미지
+        }).eq("유저UID", 유저UID);
+
+    }
 
     return res.json({
         결과: "완료",
@@ -3343,7 +3346,6 @@ app.post("/challenge-mawang", async (req, res) => {
             return res.status(400).json({ 오류: '도전장이 부족합니다' });
         }
 
-
         let 결과;
         try {
             결과 = 마왕전전투시뮬레이션(도전자, 마왕);
@@ -3373,6 +3375,7 @@ app.post("/challenge-mawang", async (req, res) => {
 
         const 갱신유물 = { ...도전자.유물목록 };
         갱신유물["데빌마스크"] = Math.max((갱신유물["데빌마스크"] || 0) - 1, 0);
+        갱신유물["소드"] = (갱신유물["소드"] || 0) + 1;
 
         await supabaseAdmin
             .from("users")
@@ -3400,7 +3403,8 @@ app.post("/challenge-mawang", async (req, res) => {
             도전자HP: 결과.도전자HP,
             마왕HP: 결과.마왕HP,
             유물목록: 갱신유물,
-            전투로그: 결과.전투로그
+            전투로그: 결과.전투로그,
+            마왕전랭킹: 결과.승리자 === "도전자" ? 1 : 0
         });
 
 
