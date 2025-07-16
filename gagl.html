@@ -748,8 +748,8 @@
                         <!-- <div class="버튼" id="장비">장비</div>
                         <div class="버튼" id="유물">유물</div> -->
                         <div class="버튼" id="성장">성장</div>
-                        <!-- <div class="버튼" id="월드">월드</div> -->
-                        <div class="버튼" id="보스">보스</div>
+                        <div class="버튼" id="월드">월드</div>
+                        <!-- <div class="버튼" id="보스">보스</div> -->
                         <div class="버튼" id="전당">전당</div>
                         <div class="버튼" id="정보">정보</div>
                     </div>
@@ -3670,55 +3670,54 @@
 
 
 
-        //         const 월드버튼 = document.getElementById("월드");
+        const 월드버튼 = document.getElementById("월드");
 
-        //         const 월드툴팁 = document.createElement("div");
-        //         월드툴팁.id = "월드툴팁";
-        //         월드툴팁.style.position = "absolute";
-        //         월드툴팁.style.zIndex = "99999";
-        //         월드툴팁.style.display = "flex";
-        //         월드툴팁.style.flexDirection = "column";
-        //         월드툴팁.style.gap = "4px";
-        //         월드툴팁.style.background = "black";
-        //         월드툴팁.style.width = "fit-content";
-        //         월드툴팁.style.border = "0.2px solid #4b4b4b";
-        //         월드툴팁.style.borderRadius = "10px";
-        //         월드툴팁.style.boxSizing = "border-box";
-        //         월드툴팁.style.padding = "5px";
+        const 월드툴팁 = document.createElement("div");
+        월드툴팁.id = "월드툴팁";
+        월드툴팁.style.position = "absolute";
+        월드툴팁.style.zIndex = "99999";
+        월드툴팁.style.display = "flex";
+        월드툴팁.style.flexDirection = "column";
+        월드툴팁.style.gap = "4px";
+        월드툴팁.style.background = "black";
+        월드툴팁.style.width = "fit-content";
+        월드툴팁.style.border = "0.2px solid #4b4b4b";
+        월드툴팁.style.borderRadius = "10px";
+        월드툴팁.style.boxSizing = "border-box";
+        월드툴팁.style.padding = "5px";
 
-        //         월드툴팁.innerHTML = `
-        //   <div style="display: flex; flex-direction: column; gap: 10px;">    
-        //     <div class="버튼" id="보스">보 스</div>
-        //   </div>
-        // `;
-
-        // <div class="버튼" id="지하던전">지하던전</div>
-        // <div class="버튼" id="마왕전">마 왕</div>
-
-        // 월드툴팁.style.display = "none";
-        // document.body.appendChild(월드툴팁);
-
-        // 월드버튼.addEventListener("mouseenter", () => {
-        //     const rect = 월드버튼.getBoundingClientRect();
-
-        //     // 먼저 보여줘야 offsetWidth를 읽을 수 있음
-        //     월드툴팁.style.display = "block";
-
-        //     const 툴팁너비 = 월드툴팁.offsetWidth;
-        //     월드툴팁.style.left = (rect.right - 툴팁너비) + "px";
-        //     월드툴팁.style.top = rect.bottom + "px";
-        // });
+        월드툴팁.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 10px;">    
+            <div class="버튼" id="보스">보 스</div>
+            <div class="버튼" id="마왕전">마 왕</div>
+      </div>
+        `;
 
 
-        // // 마우스가 월드버튼 월드툴팁 외부로 나가면 닫기
-        // document.addEventListener("mouseover", (e) => {
-        //     if (
-        //         !월드툴팁.contains(e.target) &&
-        //         !월드버튼.contains(e.target)
-        //     ) {
-        //         월드툴팁.style.display = "none";
-        //     }
-        // });
+        월드툴팁.style.display = "none";
+        document.body.appendChild(월드툴팁);
+
+        월드버튼.addEventListener("mouseenter", () => {
+            const rect = 월드버튼.getBoundingClientRect();
+
+            // 먼저 보여줘야 offsetWidth를 읽을 수 있음
+            월드툴팁.style.display = "block";
+
+            const 툴팁너비 = 월드툴팁.offsetWidth;
+            월드툴팁.style.left = (rect.right - 툴팁너비) + "px";
+            월드툴팁.style.top = rect.bottom + "px";
+        });
+
+
+        // 마우스가 월드버튼 월드툴팁 외부로 나가면 닫기
+        document.addEventListener("mouseover", (e) => {
+            if (
+                !월드툴팁.contains(e.target) &&
+                !월드버튼.contains(e.target)
+            ) {
+                월드툴팁.style.display = "none";
+            }
+        });
 
 
 
@@ -5218,122 +5217,124 @@
         // });
 
 
-        // //마왕전화면보여주기
-        // document.getElementById("마왕전").addEventListener("click", async () => {
-        //     if (!유저데이터) return;
-        //     화면잠금();
+        //마왕전화면보여주기
+        document.getElementById("마왕전").addEventListener("click", async () => {
+            if (!유저데이터) return;
+            화면잠금();
 
-        //     // document.getElementById("화면설명").innerHTML = "마왕전에서는 공격력이 *0.01, 체력이 *1000(으)로 적용됩니다<br>직업효과 보정정보는 가글사전 '마왕전'을 참고하세요";
-        //     document.getElementById("화면설명").innerHTML = "구 현 중 입 니 다 람 쥐";
-        //     모든화면숨기기();
-        //     document.getElementById("마왕전화면").style.display = "block";
+            // document.getElementById("화면설명").innerHTML = "마왕전에서는 공격력이 *0.001, 체력이 *1000(으)로 적용됩니다<br>직업효과 보정정보는 가글사전 '마왕전'을 참고하세요";
+            document.getElementById("화면설명").innerHTML = "구 현 중 입 니 다 람 쥐";
+            모든화면숨기기();
+            document.getElementById("마왕전화면").style.display = "block";
 
-        //     const 컨테이너 = document.getElementById("마왕전컨테이너");
-        //     컨테이너.innerHTML = "";
+            const 컨테이너 = document.getElementById("마왕전컨테이너");
+            컨테이너.innerHTML = "";
+            document.querySelectorAll(".마왕전투로그").forEach(e => e.remove());
 
 
-        //     // 서버에서 마왕 정보 요청
-        //     try {
-        //         const 응답 = await fetch("/get-mawang", {
-        //             method: "POST",
-        //             headers: { "Content-Type": "application/json" }
-        //         });
-        //         const 결과 = await 응답.json();
+            // 서버에서 마왕 정보 요청
+            try {
+                const 응답 = await fetch("/get-mawang", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" }
+                });
+                const 결과 = await 응답.json();
 
-        //         if (결과.존재함) {
+                if (결과.존재함) {
 
-        //             const 줄리스트 = [];
+                    const 줄리스트 = [];
 
-        //             const 총줄수 = 15;
+                    const 총줄수 = 15;
 
-        //             const 가운데만줄 = [1, 2, 3, 4, 5, 9];
-        //             const 양옆만줄 = [];
-        //             const 전체줄 = Array.from({ length: 총줄수 }, (_, i) => i + 1).filter(i => !가운데만줄.includes(i) && !양옆만줄.includes(i));
+                    const 가운데만줄 = [1, 2, 3, 4, 5, 9];
+                    const 양옆만줄 = [];
+                    const 전체줄 = Array.from({ length: 총줄수 }, (_, i) => i + 1).filter(i => !가운데만줄.includes(i) && !양옆만줄.includes(i));
 
-        //             for (let i = 1; i <= 총줄수; i++) {
+                    for (let i = 1; i <= 총줄수; i++) {
 
-        //                 let 위치목록;
+                        let 위치목록;
 
-        //                 if (가운데만줄.includes(i)) {
-        //                     위치목록 = ["가운데"];
-        //                 } else if (양옆만줄.includes(i)) {
-        //                     위치목록 = ["왼쪽", "오른쪽"];
-        //                 } else {
-        //                     위치목록 = ["왼쪽", "가운데", "오른쪽"];
-        //                 }
+                        if (가운데만줄.includes(i)) {
+                            위치목록 = ["가운데"];
+                        } else if (양옆만줄.includes(i)) {
+                            위치목록 = ["왼쪽", "오른쪽"];
+                        } else {
+                            위치목록 = ["왼쪽", "가운데", "오른쪽"];
+                        }
 
-        //                 const 줄이름 = 위치목록.map(위치 => `${i}${위치}`);
-        //                 const 클래스 = [9, 10,].includes(i) ? "기본테두리" : "";
-        //                 const 줄 = 한줄에세칸(줄이름, 클래스);
-        //                 줄리스트.push(줄);
-        //             }
+                        const 줄이름 = 위치목록.map(위치 => `${i}${위치}`);
+                        const 클래스 = [9, 10,].includes(i) ? "기본테두리" : "";
+                        const 줄 = 한줄에세칸(줄이름, 클래스);
+                        줄리스트.push(줄);
+                    }
 
-        //             줄리스트.forEach(줄 => 컨테이너.appendChild(줄));
+                    줄리스트.forEach(줄 => 컨테이너.appendChild(줄));
 
-        //             document.getElementById("1가운데").innerHTML = `마 왕`;
+                    document.getElementById("1가운데").innerHTML = `마 왕`;
 
-        //             document.getElementById("2가운데").innerHTML = `${마왕전아이콘} ${결과.마왕정보.유저아이디} ${마왕전아이콘}`;
-        //             document.getElementById("2가운데").className = "마법의팔레트마왕전";
-        //             document.getElementById("2가운데").style.fontSize = "32px";
+                    document.getElementById("2가운데").innerHTML = `${마왕전아이콘} ${결과.마왕정보.유저아이디} ${마왕전아이콘}`;
+                    document.getElementById("2가운데").className = "마법의팔레트마왕전";
+                    document.getElementById("2가운데").style.fontSize = "32px";
 
-        //             document.getElementById("3가운데").innerHTML = `마왕 공격력(*0.01) : ${Math.floor(결과.마왕정보.최종공격력 * 0.01)}`;
-        //             document.getElementById("4가운데").innerHTML = `마왕 체력(*1000) : ${결과.마왕정보.최대체력 * 1000}`;
+                    document.getElementById("3가운데").innerHTML = `마왕 공격력(*0.001) : ${Math.floor(결과.마왕정보.최종공격력 * 0.001)}`;
+                    document.getElementById("4가운데").innerHTML = `마왕 체력(*1000) : ${결과.마왕정보.최대체력 * 1000}`;
 
 
 
 
 
 
-        //             // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
-        //             const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
-        //             const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
-        //             const 신술 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
-        //             const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
+                    // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
+                    const 검술 = ["나이트", "글라디에이터", "엠퍼러", "로열가드", "그랑스워드", "카이저"];
+                    const 마술 = ["매지션", "워록", "아크메이지", "소서러", "그랑에이지", "자베러"];
+                    const 신술 = ["클레릭", "프리스트", "비숍", "프린세스", "그랑세이지", "퀸"];
+                    const 궁술 = ["스나이퍼", "레인저", "헌터", "하이랜더", "그랑아처", "제너럴"];
 
-        //             const 결정객체 = 결과.마왕정보.직업결정;  // 예: { "신술": 6 }
-        //             if (결정객체) {
-        //                 // 첫 번째(유일한) 키만 꺼냅니다. → "신술"
-        //                 const 계열키 = Object.keys(결정객체)[0];
-        //                 // 해당 키의 값(단계)을 꺼냅니다. → 6
-        //                 const 단계 = 결정객체[계열키];
+                    const 결정객체 = 결과.마왕정보.직업결정;  // 예: { "신술": 6 }
+                    if (결정객체) {
+                        // 첫 번째(유일한) 키만 꺼냅니다. → "신술"
+                        const 계열키 = Object.keys(결정객체)[0];
+                        // 해당 키의 값(단계)을 꺼냅니다. → 6
+                        const 단계 = 결정객체[계열키];
 
-        //                 let 직업이름;
-        //                 if (계열키 === "검술") {
-        //                     직업이름 = 검술[단계 - 1];   // 예: 단계=1 → 검술[0] = "나이트"
-        //                 } else if (계열키 === "마술") {
-        //                     직업이름 = 마술[단계 - 1];
-        //                 } else if (계열키 === "신술") {
-        //                     직업이름 = 신술[단계 - 1];   // 단계=6 → 신술[5] = "퀸"
-        //                 } else if (계열키 === "궁술") {
-        //                     직업이름 = 궁술[단계 - 1];
-        //                 } else {
-        //                     직업이름 = "-";
-        //                 }
+                        let 직업이름;
+                        if (계열키 === "검술") {
+                            직업이름 = 검술[단계 - 1];   // 예: 단계=1 → 검술[0] = "나이트"
+                        } else if (계열키 === "마술") {
+                            직업이름 = 마술[단계 - 1];
+                        } else if (계열키 === "신술") {
+                            직업이름 = 신술[단계 - 1];   // 단계=6 → 신술[5] = "퀸"
+                        } else if (계열키 === "궁술") {
+                            직업이름 = 궁술[단계 - 1];
+                        } else {
+                            직업이름 = "-";
+                        }
 
-        //                 document.getElementById("5가운데").innerHTML = `마왕 직업 : [${계열키}${단계}차] ${직업이름}`;
-        //             } else {
-        //                 document.getElementById("5가운데").innerHTML = "마왕 직업 : -";
-        //             }
+                        document.getElementById("5가운데").innerHTML = `마왕 직업 : [${계열키}${단계}차] ${직업이름}`;
+                    } else {
+                        document.getElementById("5가운데").innerHTML = "마왕 직업 : -";
+                    }
 
 
-        //             document.getElementById("6가운데").innerHTML = 결과.마왕정보.마왕전방어 ? `마왕전방어 : ${결과.마왕정보.마왕전방어}회` : `마왕전방어 : 0회`;
-        //             try {
-        //                 const 스킬원본 = 결과.마왕정보.스킬;
-        //                 const 스킬 = typeof 스킬원본 === "string" ? JSON.parse(스킬원본) : 스킬원본;
+                    document.getElementById("6가운데").innerHTML = 결과.마왕정보.마왕전방어 ? `마왕전방어 : ${결과.마왕정보.마왕전방어}회` : `마왕전방어 : 0회`;
+                    // try {
+                    //     const 스킬원본 = 결과.마왕정보.스킬;
+                    //     const 스킬 = typeof 스킬원본 === "string" ? JSON.parse(스킬원본) : 스킬원본;
 
-        //                 const 크리 = 스킬["크리티컬"] ?? 0;
-        //                 const 버닝 = 스킬["버닝"] ?? 0;
-        //                 const 버서커 = 스킬["버서커"] ?? 0;
+                    //     const 크리 = 스킬["크리티컬"] ?? 0;
+                    //     const 버닝 = 스킬["버닝"] ?? 0;
+                    //     const 버서커 = 스킬["버서커"] ?? 0;
 
-        //                 document.getElementById("7왼쪽").innerHTML = `크리티컬 : ${크리}단계`;
-        //                 document.getElementById("7가운데").innerHTML = `버닝 : ${버닝}단계`;
-        //                 document.getElementById("7오른쪽").innerHTML = `버서커 : ${버서커}단계`;
-        //             } catch (e) {
-        //                 document.getElementById("7왼쪽").innerHTML = "크리티컬 : -";
-        //                 document.getElementById("7가운데").innerHTML = "버닝 : -";
-        //                 document.getElementById("7오른쪽").innerHTML = "버서커 : -";
-        //             }
-
+                    //     document.getElementById("7왼쪽").innerHTML = `크리티컬 : ${크리}단계`;
+                    //     document.getElementById("7가운데").innerHTML = `버닝 : ${버닝}단계`;
+                    //     document.getElementById("7오른쪽").innerHTML = `버서커 : ${버서커}단계`;
+                    // } catch (e) {
+                    //     document.getElementById("7왼쪽").innerHTML = "크리티컬 : -";
+                    //     document.getElementById("7가운데").innerHTML = "버닝 : -";
+                    //     document.getElementById("7오른쪽").innerHTML = "버서커 : -";
+                    // }
+
+
 
 
 
@@ -5347,276 +5348,263 @@
 
 
 
+                    const 목록 = 결과.마왕정보.장비목록;
+                    let bestWeapon = null;
+                    if (Array.isArray(목록) && 목록.length) {
+                        bestWeapon = 목록.reduce((prev, cur) =>
+                            Number(cur.공격력) > Number(prev.공격력) ? cur : prev
+                        );
+                    }
 
-        //             const 목록 = 결과.마왕정보.장비목록;
-        //             let bestWeapon = null;
-        //             if (Array.isArray(목록) && 목록.length) {
-        //                 bestWeapon = 목록.reduce((prev, cur) =>
-        //                     Number(cur.공격력) > Number(prev.공격력) ? cur : prev
-        //                 );
-        //             }
+                    const 장비박스1 = document.getElementById("9가운데");
 
-        //             const 장비박스1 = document.getElementById("9가운데");
+                    if (bestWeapon) {
+                        // 강화 수치 표시 문자열 생성
+                        const 강화표시 = bestWeapon.강화 ? ` +${bestWeapon.강화}` : "";
+                        // 예: "루시퍼의 심장 +3" (강화가 0이면 이름만)
+                        장비박스1.innerText = `${bestWeapon.이름}${강화표시}`;
+                        장비박스1.style.color = 색상맵[bestWeapon.등급] || "#fff";
+                        장비박스1.style.fontWeight = "bold";
+                    } else {
+                        장비박스1.innerText = "장비가 없습니다";
+                        장비박스1.style.color = "#fff";
+                    }
 
-        //             if (bestWeapon) {
-        //                 // 강화 수치 표시 문자열 생성
-        //                 const 강화표시 = bestWeapon.강화 ? ` +${bestWeapon.강화}` : "";
-        //                 // 예: "루시퍼의 심장 +3" (강화가 0이면 이름만)
-        //                 장비박스1.innerText = `${bestWeapon.이름}${강화표시}`;
-        //                 장비박스1.style.color = 색상맵[bestWeapon.등급] || "#fff";
-        //                 장비박스1.style.fontWeight = "bold";
-        //             } else {
-        //                 장비박스1.innerText = "장비가 없습니다";
-        //                 장비박스1.style.color = "#fff";
-        //             }
+                    const 장비박스왼쪽 = document.getElementById("10왼쪽");
+                    const 장비박스가운데 = document.getElementById("10가운데");
+                    const 장비박스오른쪽 = document.getElementById("10오른쪽");
+                    const 장비박스들 = [장비박스왼쪽, 장비박스가운데, 장비박스오른쪽];
+
+                    장비박스들.forEach(박스 => {
+                        박스.innerHTML = "-";
+                        박스.style.width = "54px";
+                        박스.style.height = "54px";
+                        박스.style.display = "flex";
+                        박스.style.alignItems = "center";
+                        박스.style.justifyContent = "center";
+                    });
 
-        //             const 장비박스왼쪽 = document.getElementById("10왼쪽");
-        //             const 장비박스가운데 = document.getElementById("10가운데");
-        //             const 장비박스오른쪽 = document.getElementById("10오른쪽");
-        //             const 장비박스들 = [장비박스왼쪽, 장비박스가운데, 장비박스오른쪽];
+                    const 장착된악세 = (결과.마왕정보.악세사리목록 || []).filter(a => a.장착 === 1);
+                    const 원본악세 = [
+                        { 이름: "룬검", 아이콘: 룬검 },
+                        { 이름: "캡틴", 아이콘: 캡틴 },
+                        { 이름: "음양", 아이콘: 음양 },
+                        { 이름: "아스클레피오스의 막대", 아이콘: 아스클레피오스의막대 },
+                        { 이름: "드림캐처", 아이콘: 드림캐처 },
+                        { 이름: "카드세우스", 아이콘: 카드세우스 },
+                        { 이름: "이스터에그", 아이콘: 이스터에그 }
+                    ];
 
-        //             장비박스들.forEach(박스 => {
-        //                 박스.innerHTML = "-";
-        //                 박스.style.width = "54px";
-        //                 박스.style.height = "54px";
-        //                 박스.style.display = "flex";
-        //                 박스.style.alignItems = "center";
-        //                 박스.style.justifyContent = "center";
-        //             });
+                    const 등급이름맵 = {
+                        1: "일반",
+                        2: "레어",
+                        3: "신화",
+                        4: "고대",
+                        5: "태초",
+                        6: "타락"
+                    };
 
-        //             const 장착된악세 = (결과.마왕정보.악세사리목록 || []).filter(a => a.장착 === 1);
-        //             const 원본악세 = [
-        //                 { 이름: "룬검", 아이콘: 룬검 },
-        //                 { 이름: "캡틴", 아이콘: 캡틴 },
-        //                 { 이름: "음양", 아이콘: 음양 },
-        //                 { 이름: "아스클레피오스의 막대", 아이콘: 아스클레피오스의막대 },
-        //                 { 이름: "드림캐처", 아이콘: 드림캐처 },
-        //                 { 이름: "카드세우스", 아이콘: 카드세우스 },
-        //                 { 이름: "이스터에그", 아이콘: 이스터에그 }
-        //             ];
+                    for (let i = 0; i < 3; i++) {
+                        const 악세 = 장착된악세[i];
+                        const 박스 = 장비박스들[i];
 
-        //             const 등급이름맵 = {
-        //                 1: "일반",
-        //                 2: "레어",
-        //                 3: "신화",
-        //                 4: "고대",
-        //                 5: "태초",
-        //                 6: "타락"
-        //             };
+                        if (악세) {
+                            const 아이콘 = 원본악세.find(o => o.이름 === 악세.이름)?.아이콘 || "-";
+                            박스.innerHTML = 아이콘;
 
-        //             for (let i = 0; i < 3; i++) {
-        //                 const 악세 = 장착된악세[i];
-        //                 const 박스 = 장비박스들[i];
+                            const svg = 박스.querySelector("svg");
+                            if (svg) {
+                                svg.style.width = "150%";
+                                svg.style.height = "150%";
 
-        //                 if (악세) {
-        //                     const 아이콘 = 원본악세.find(o => o.이름 === 악세.이름)?.아이콘 || "-";
-        //                     박스.innerHTML = 아이콘;
+                                // ✅ 등급 색상 적용
+                                const 등급이름 = 등급이름맵[악세.등급];
+                                const 색상 = 색상맵[등급이름];
+                                if (색상) {
+                                    svg.querySelectorAll("path").forEach(p => {
+                                        const 원래색 = p.getAttribute("fill");
+                                        if (원래색 !== "#000" && 원래색 !== "#000000") {
+                                            p.removeAttribute("fill");
+                                            p.style.fill = 색상;
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
 
-        //                     const svg = 박스.querySelector("svg");
-        //                     if (svg) {
-        //                         svg.style.width = "150%";
-        //                         svg.style.height = "150%";
 
-        //                         // ✅ 등급 색상 적용
-        //                         const 등급이름 = 등급이름맵[악세.등급];
-        //                         const 색상 = 색상맵[등급이름];
-        //                         if (색상) {
-        //                             svg.querySelectorAll("path").forEach(p => {
-        //                                 const 원래색 = p.getAttribute("fill");
-        //                                 if (원래색 !== "#000" && 원래색 !== "#000000") {
-        //                                     p.removeAttribute("fill");
-        //                                     p.style.fill = 색상;
-        //                                 }
-        //                             });
-        //                         }
-        //                     }
-        //                 }
-        //             }
 
+                    document.getElementById("15가운데").innerHTML = `도 전`;
+                    document.getElementById("15가운데").className = "버튼";
 
 
-        //             document.getElementById("15가운데").innerHTML = `도 전`;
-        //             document.getElementById("15가운데").className = "버튼";
 
+                    document.getElementById("15가운데").addEventListener("click", async () => {
+                        if (!유저데이터) return;
 
+                        if (유저데이터.최종공격력 < 10000) {
+                            메시지표시(메시지표시박스, "", "공격력 1만 이상부터 도전할 수 있습니다", "");
+                            return;
+                        }
 
-        //             document.getElementById("15가운데").addEventListener("click", async () => {
-        //                 if (!유저데이터) return;
+                        if (유저데이터.마왕전랭킹 === 1) {
+                            메시지표시(메시지표시박스, "", "마왕이시여, 도전자를 기다리세요", "");
+                            return;
+                        }
 
-        //                 if (유저데이터.최종공격력 < 10000) {
-        //                     메시지표시(메시지표시박스, "", "공격력 1만 이상부터 도전할 수 있습니다", "");
-        //                     return;
-        //                 }
+                        const 도전장 = 유저데이터.유물목록?.["데빌마스크"] || 0;
+                        if (도전장 < 1) {
+                            메시지표시(메시지표시박스, "", "도전장이 부족합니다", "");
+                            return;
+                        }
 
-        //                 if (유저데이터.마왕전랭킹 === 1) {
-        //                     메시지표시(메시지표시박스, "", "마왕이시여, 도전자를 기다리세요", "");
-        //                     return;
-        //                 }
+                        화면잠금();
+                        try {
+                            const 응답 = await fetch("/challenge-mawang", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                            });
 
-        //                 const 도전장 = 유저데이터.유물목록?.["데빌마스크"] || 0;
-        //                 if (도전장 < 1) {
-        //                     메시지표시(메시지표시박스, "", "도전장이 부족합니다", "");
-        //                     return;
-        //                 }
+                            const 결과 = await 응답.json();
 
-        //                 화면잠금();
-        //                 try {
-        //                     const 응답 = await fetch("/challenge-mawang", {
-        //                         method: "POST",
-        //                         headers: { "Content-Type": "application/json" },
-        //                         body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-        //                     });
+                            if (!응답.ok || 결과.오류) {
+                                메시지표시(메시지표시박스, "", 결과.오류 || "전투 실패", "");
+                                화면해제();
+                                return;
+                            }
 
-        //                     const 결과 = await 응답.json();
 
-        //                     if (!응답.ok || 결과.오류) {
-        //                         메시지표시(메시지표시박스, "", 결과.오류 || "전투 실패", "");
-        //                         화면해제();
-        //                         return;
-        //                     }
+                            유저데이터.유물목록 = 결과.유물목록;
 
+                            메시지표시(메시지표시박스, "", 결과.결과메시지 || "전투 완료", "");
+                            document.getElementById("마왕전").click();
 
-        //                     유저데이터.유물목록 = 결과.유물목록;
+                            if (결과.전투로그) {
+                                마왕전전투로그표시(결과.전투로그);
+                            }
 
-        //                     메시지표시(메시지표시박스, "", 결과.결과메시지 || "전투 완료", "");
-        //                     document.getElementById("마왕전").click();
+                        } catch (e) {
+                            console.error("도전 실패:", e);
+                            메시지표시(메시지표시박스, "", "서버 오류", "");
+                        }
 
-        //                     if (결과.전투로그) {
-        //                         // 마왕전전투로그표시(결과.전투로그);
-        //                     }
+                        화면해제();
+                    });
 
-        //                 } catch (e) {
-        //                     console.error("도전 실패:", e);
-        //                     메시지표시(메시지표시박스, "", "서버 오류", "");
-        //                 }
 
-        //                 화면해제();
-        //             });
 
 
+                }
 
 
-        //         }
 
 
 
 
 
 
+            } catch (e) {
+                console.error("마왕 정보 요청 실패:", e);
+            }
 
 
-        //     } catch (e) {
-        //         console.error("마왕 정보 요청 실패:", e);
-        //     }
 
+            화면해제();
+        });
 
 
-        //     화면해제();
-        // });
+        //마왕전전투로그
+        function 마왕전전투로그표시(전투로그) {
+            const 기존 = document.querySelectorAll(".마왕전투로그");
+            기존.forEach(e => e.remove());
 
+            const 타겟 = document.getElementById("마왕전컨테이너");
+            if (!타겟 || !타겟.parentNode) return;
 
+            전투로그.slice().reverse().forEach(턴로그 => {
+                const 컨테이너 = document.createElement("div");
+                컨테이너.className = "마왕전투로그";
+                컨테이너.style.marginTop = "12px";
+                컨테이너.style.border = "0.2px solid #4b4b4b";
+                컨테이너.style.borderRadius = "10px";
+                컨테이너.style.padding = "10px";
 
-        // function 마왕전전투로그표시(전투로그) {
-        //     // 기존 로그 제거
-        //     const 기존 = document.querySelectorAll(".마왕전투로그");
-        //     기존.forEach(e => e.remove());
+                // ───── 🌀 턴 헤더 ─────
+                const 헤더 = document.createElement("div");
+                헤더.style.textAlign = "center";
+                헤더.style.background = "#4b4b4b";
+                헤더.style.borderTopLeftRadius = "10px";
+                헤더.style.borderTopRightRadius = "10px";
+                헤더.style.margin = "-10px -10px 10px -10px";
+                헤더.style.padding = "6px";
+                헤더.innerHTML = `<strong>Turn ${턴로그.턴}</strong>`;
+                컨테이너.appendChild(헤더);
 
-        //     const 타겟 = document.getElementById("마왕전컨테이너");
-        //     if (!타겟 || !타겟.parentNode) return;
+                // ───── 👤 도전자 줄 (왼쪽) ─────
+                const 도전자줄 = document.createElement("div");
+                도전자줄.className = "가로정렬";
+                도전자줄.style.justifyContent = "flex-start";
+                도전자줄.style.alignItems = "center";
+                도전자줄.style.gap = "6px";
 
-        //     전투로그.slice().reverse().forEach(턴로그 => {
-        //         const 컨테이너 = document.createElement("div");
-        //         컨테이너.className = "마왕전투로그";
-        //         컨테이너.style.marginTop = "12px";
-        //         컨테이너.style.border = "0.2px solid #4b4b4b";
-        //         컨테이너.style.borderRadius = "10px";
-        //         컨테이너.style.padding = "10px";
+                (턴로그.도전자.스킬들 || []).forEach(스킬 => {
+                    const span = document.createElement("span");
+                    const 아이콘 = 아이콘맵[스킬 + "아이콘"] || "";
+                    span.innerHTML = 아이콘;
+                    도전자줄.appendChild(span); // 반드시 매 루프마다 appendChild
+                });
 
-        //         // 턴 헤더
-        //         const 헤더 = document.createElement("div");
-        //         헤더.style.textAlign = "center";
-        //         헤더.style.background = "#4b4b4b";
-        //         헤더.style.borderTopLeftRadius = "10px";
-        //         헤더.style.borderTopRightRadius = "10px";
-        //         헤더.style.margin = "-10px -10px 10px -10px";
-        //         헤더.style.padding = "6px";
-        //         헤더.innerHTML = `<strong>Turn ${턴로그.턴}</strong>`;
-        //         컨테이너.appendChild(헤더);
+                const 도전자데미지 = document.createElement("span");
+                도전자데미지.innerText = `${턴로그.도전자.데미지}`;
+                // 도전자데미지.style.color = "#f87171"; // 붉은색
+                도전자줄.appendChild(도전자데미지);
 
-        //         // 도전자 줄 (왼쪽 정렬)
-        //         const 도전자줄 = document.createElement("div");
-        //         도전자줄.className = "가로정렬";
-        //         도전자줄.style.justifyContent = "flex-start";
-        //         도전자줄.style.alignItems = "center";
-        //         도전자줄.style.gap = "6px";
+                컨테이너.appendChild(도전자줄);
 
-        //         (턴로그.도전자행동 || []).forEach(log => {
-        //             const 키 = Object.keys(log)[0];
-        //             const 값 = log[키];
-        //             const 아이콘 = 아이콘맵[값 + "아이콘"] || "";
+                // ───── 👑 마왕 줄 (오른쪽) ─────
+                const 마왕줄 = document.createElement("div");
+                마왕줄.className = "가로정렬";
+                마왕줄.style.justifyContent = "flex-end";
+                마왕줄.style.alignItems = "center";
+                마왕줄.style.gap = "6px";
 
-        //             const span = document.createElement("span");
-        //             span.innerHTML = 아이콘;
-        //             도전자줄.appendChild(span);
+                (턴로그.마왕.스킬들 || []).forEach(스킬 => {
+                    const span = document.createElement("span");
+                    span.innerHTML = 아이콘맵[스킬 + "아이콘"] || "";
+                    마왕줄.appendChild(span);
+                });
 
-        //             if (키 === "데미지" || 키 === "효과") {
-        //                 const 텍스트 = document.createElement("span");
-        //                 텍스트.innerText = typeof 값 === "string" ? 값 : JSON.stringify(값);
-        //                 // 텍스트.style.color = "#f87171"; // 붉은색
-        //                 도전자줄.appendChild(텍스트);
-        //             }
-        //         });
-        //         컨테이너.appendChild(도전자줄);
+                const 마왕데미지 = document.createElement("span");
+                마왕데미지.innerText = `${턴로그.마왕.데미지}`;
+                // 마왕데미지.style.color = "#3b82f6"; // 파란색
+                마왕줄.appendChild(마왕데미지);
 
-        //         // 마왕 줄 (오른쪽 정렬)
-        //         const 마왕줄 = document.createElement("div");
-        //         마왕줄.className = "가로정렬";
-        //         마왕줄.style.justifyContent = "flex-end";
-        //         마왕줄.style.alignItems = "center";
-        //         마왕줄.style.gap = "6px";
+                컨테이너.appendChild(마왕줄);
 
-        //         (턴로그.마왕행동 || []).forEach(log => {
-        //             const 키 = Object.keys(log)[0];
-        //             const 값 = log[키];
-        //             const 아이콘 = 아이콘맵[값 + "아이콘"] || "";
+                // ───── 🩸 체력 줄 (도전자 왼쪽, 마왕 오른쪽) ─────
+                const 체력줄 = document.createElement("div");
+                체력줄.className = "가로정렬";
+                체력줄.style.marginTop = "6px";
+                체력줄.style.justifyContent = "space-between";
 
-        //             const span = document.createElement("span");
-        //             span.innerHTML = 아이콘;
-        //             마왕줄.appendChild(span);
+                const 도전자체력 = document.createElement("span");
+                도전자체력.style.color = "#3b82f6";
+                도전자체력.innerText = `도전자 체력: ${턴로그.도전자체력 || "0"}`;
 
-        //             if (키 === "데미지" || 키 === "효과") {
-        //                 const 텍스트 = document.createElement("span");
-        //                 텍스트.innerText = typeof 값 === "string" ? 값 : JSON.stringify(값);
-        //                 텍스트.style.color = "#f87171"; // 붉은색
-        //                 마왕줄.appendChild(텍스트);
-        //             }
-        //         });
-        //         컨테이너.appendChild(마왕줄);
+                const 마왕체력 = document.createElement("span");
+                마왕체력.style.color = "#ef4444";
+                마왕체력.innerText = `마왕 체력: ${턴로그.마왕체력 || "0"}`;
 
-        //         // 체력 줄 (도전자 왼쪽, 마왕 오른쪽)
-        //         const 체력줄 = document.createElement("div");
-        //         체력줄.className = "가로정렬";
-        //         체력줄.style.marginTop = "6px";
-        //         체력줄.style.justifyContent = "space-between";
+                체력줄.appendChild(도전자체력);
+                체력줄.appendChild(마왕체력);
+                컨테이너.appendChild(체력줄);
 
-        //         const 도전자체력 = document.createElement("span");
-        //         도전자체력.style.color = "#3b82f6";
-        //         도전자체력.innerText = `체력 ${턴로그.체력.도전자}`;
-
-        //         const 마왕체력 = document.createElement("span");
-        //         마왕체력.style.color = "#ef4444";
-        //         마왕체력.innerText = `체력 ${턴로그.체력.마왕}`;
-
-        //         체력줄.appendChild(도전자체력);
-        //         체력줄.appendChild(마왕체력);
-        //         컨테이너.appendChild(체력줄);
-
-        //         // 바깥에 붙이기
-        //         타겟.parentNode.insertBefore(컨테이너, 타겟.nextSibling);
-        //     });
-        // }
-
-
+                // 📌 전투 컨테이너 뒤에 삽입
+                타겟.parentNode.insertBefore(컨테이너, 타겟.nextSibling);
+            });
+        }
 
 
 
@@ -5854,6 +5842,13 @@
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                 `,
                 `${여름아이콘}`,
+                `
+25.07.16<br>
+마왕전이 다시 오픈되었습니다<br>
+밸런스 작업중이라 마왕이 되어도 효과는 없습니다<br>
+마왕에게 도전할 수 있는 데빌마스크가 하루에 3개씩 충전되니<br>
+많이들 도전해보시고 의견 남겨주시면 감사하겠습니다<br>
+                `,
                 `
 25.07.15<br>
 신규스킬. 도핑(깡공격력증가)이 구현되었습니다<br>
