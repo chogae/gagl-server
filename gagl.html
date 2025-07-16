@@ -3558,6 +3558,7 @@
                         const 이름 = document.getElementById("우편이름입력").value.trim();
                         const 수량 = parseInt(document.getElementById("우편수량입력").value.trim(), 10);
                         const 메모 = document.getElementById("우편메모입력").value.trim();
+                        const 보낸사람 = 유저데이터.유저UID;
 
                         if (!유저아이디 || !이름 || isNaN(수량) || 수량 <= 0) {
                             메시지표시(메시지표시박스, "", "입력값이 올바르지 않습니다", "");
@@ -3569,7 +3570,7 @@
                         const 응답 = await fetch("/send-mail-to-user", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ 유저아이디, 이름, 수량, 메모 })
+                            body: JSON.stringify({ 보낸사람, 유저아이디, 이름, 수량, 메모 })
                         });
 
                         const 결과 = await 응답.json();
@@ -3587,6 +3588,7 @@
                         const 이름 = document.getElementById("우편이름입력").value.trim();
                         const 수량 = parseInt(document.getElementById("우편수량입력").value.trim(), 10);
                         const 메모 = document.getElementById("우편메모입력").value.trim();
+                        const 보낸사람 = 유저데이터.유저UID;
 
                         if (!이름 || isNaN(수량) || 수량 <= 0) {
                             메시지표시(메시지표시박스, "", "입력값이 올바르지 않습니다", "");
@@ -3601,7 +3603,7 @@
                             const 응답 = await fetch("/send-mail-to-all-users", {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ 이름, 수량, 메모 })
+                                body: JSON.stringify({ 보낸사람, 이름, 수량, 메모 })
                             });
 
                             const 결과 = await 응답.json();
@@ -5822,7 +5824,7 @@
 
             //팝업
             //일반유물상위유물추가
-            //보스보상우편확인
+            //마왕전
 
             //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 

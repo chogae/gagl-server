@@ -2132,12 +2132,12 @@ app.post("/gamble-Equipment", async (req, res) => {
 });
 
 const 진화체인맵 = {
-    "소드": ["소드", "스피어", "투핸드소드", "사이", "라이트세이버즈", "추방자의검"],
-    "쉴드밴": ["쉴드밴", "쉴드배앤",],
-    "고스트": ["고스트", "고오스", "고오스트",],
-    "클로버": ["클로버", "월계수",],
-    "하트플러스": ["하트플러스", "하트비트", "소망", "물약", "하트윙", "테크놀로지아",],
-    "하트마이너스": ["하트마이너스", "브로큰하트", "산산조각하트",],
+    "소드": ["소드", "스피어", "투핸드소드", "사이", "라이트세이버즈", "추방자의검"], //공증퍼센트
+    "쉴드밴": ["쉴드밴", "쉴드배앤",], //방깍
+    "고스트": ["고스트", "고오스", "고오스트",], //히든등장률
+    "클로버": ["클로버", "월계수",], //장뽑확률
+    "하트플러스": ["하트플러스", "하트비트", "소망", "물약", "하트윙", "테크놀로지아",], //체력증가
+    "하트마이너스": ["하트마이너스", "브로큰하트", "산산조각하트",], //체력깍
 };
 
 app.post("/gamble-Relic", async (req, res) => {
@@ -3185,9 +3185,13 @@ app.post("/refresh-mailbox", async (req, res) => {
 
 
 app.post("/send-mail-to-user", async (req, res) => {
-    const { 유저아이디, 이름, 수량 } = req.body;
+    const { 보낸사람, 유저아이디, 이름, 수량 } = req.body;
     if (!유저아이디 || !이름 || !수량 || 수량 <= 0) {
         return res.status(400).json({ 오류: "입력값 누락 또는 잘못됨" });
+    }
+
+    if (보낸사람 !== "2e1b297f-7cd0-4503-9ba7-6e6a5d2ff0d6") {
+        return res.status(403).json({ 오류: "주인장 전용 기능입니다" });
     }
 
 
@@ -3200,6 +3204,8 @@ app.post("/send-mail-to-user", async (req, res) => {
     if (error || !유저) {
         return res.status(404).json({ 오류: "해당 유저를 찾을 수 없습니다" });
     }
+
+
 
     const 기존우편함 = 유저.우편함 || [];
 
@@ -3227,10 +3233,15 @@ app.post("/send-mail-to-user", async (req, res) => {
 
 
 app.post("/send-mail-to-all-users", async (req, res) => {
-    const { 이름, 수량 } = req.body;
+    const { 보낸사람, 이름, 수량 } = req.body;
     if (!이름 || !수량 || 수량 <= 0) {
         return res.status(400).json({ 오류: "입력값 누락 또는 잘못됨" });
     }
+
+    if (보낸사람 !== "2e1b297f-7cd0-4503-9ba7-6e6a5d2ff0d6") {
+        return res.status(403).json({ 오류: "주인장 전용 기능입니다" });
+    }
+
 
     const { data: 유저들, error } = await supabaseAdmin
         .from("users")
