@@ -2635,7 +2635,7 @@ app.post("/get-chat", async (req, res) => {
     try {
         const { data: 채팅, error } = await supabaseAdmin
             .from("광장")
-            .select("유저아이디, 내용, 시각, 마법의팔레트, 마왕전랭킹")
+            .select("유저아이디, 내용, 시각, 마법의팔레트")
             .order("시각", { ascending: false })
             .limit(50);
 
