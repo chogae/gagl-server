@@ -481,7 +481,7 @@ app.post("/boss-ranking", async (req, res) => {
         // ✅ 상위 10명 조회
         const { data: 유저들, error: 유저에러 } = await supabaseAdmin
             .from("users")
-            .select("유저아이디, 보스누적데미지, 유저UID, 마법의팔레트")
+            .select("유저아이디, 보스누적데미지, 유저UID, 마법의팔레트, 마왕전랭킹")
             .gt("보스누적데미지", 0)
             .order("보스누적데미지", { ascending: false })
 
@@ -499,7 +499,7 @@ app.post("/boss-ranking", async (req, res) => {
             return res.status(500).json({ 오류: "서버오류" });
         }
 
-        res.json({ 순위: 유저들, 누적데미지총합, 내정보 });
+        res.json({ 순위: 유저들, 누적데미지총합, 내정보, 마왕전랭킹 });
 
     } catch (e) {
         return res.status(500).json({ 오류: "서버오류" });
@@ -2634,7 +2634,7 @@ app.post("/get-chat", async (req, res) => {
     try {
         const { data: 채팅, error } = await supabaseAdmin
             .from("광장")
-            .select("유저아이디, 내용, 시각, 마법의팔레트")
+            .select("유저아이디, 내용, 시각, 마법의팔레트, 마왕전랭킹")
             .order("시각", { ascending: false })
             .limit(50);
 
