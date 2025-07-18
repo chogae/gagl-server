@@ -4812,7 +4812,6 @@
           `;
 
 
-            //패치중
 
             try {
                 const res = await fetch("/get-chat", {
@@ -5134,7 +5133,6 @@
                 "숙고블린": "체력계수 1.4, 방어계수 1.2, 타입: 계시",
             },
 
-            //패치중
             "마왕전": {
                 "마왕전공격력": "최종공격력 * 0.001",
                 "마왕전체력": "최종체력 * 1000",
@@ -5599,7 +5597,6 @@
         });
 
 
-        //마왕전전투로그
         function 마왕전전투로그표시(전투로그) {
             const 기존 = document.querySelectorAll(".마왕전투로그");
             기존.forEach(e => e.remove());
@@ -5615,7 +5612,7 @@
                 컨테이너.style.borderRadius = "10px";
                 컨테이너.style.padding = "10px";
 
-                // ───── 🌀 턴 헤더 ─────
+                // 🌀 턴 헤더
                 const 헤더 = document.createElement("div");
                 헤더.style.textAlign = "center";
                 헤더.style.background = "#4b4b4b";
@@ -5626,48 +5623,73 @@
                 헤더.innerHTML = `<strong>Turn ${턴로그.턴}</strong>`;
                 컨테이너.appendChild(헤더);
 
-                // ───── 👤 도전자 줄 (왼쪽) ─────
-                const 도전자줄 = document.createElement("div");
-                도전자줄.className = "가로정렬";
-                도전자줄.style.justifyContent = "flex-start";
-                도전자줄.style.alignItems = "center";
-                도전자줄.style.gap = "6px";
+                // 👤 도전자 줄
+                턴로그.도전자행동.forEach(행동 => {
+                    const 줄 = document.createElement("div");
+                    줄.className = "가로정렬";
+                    줄.style.justifyContent = "flex-start";
+                    줄.style.alignItems = "center";
+                    줄.style.gap = "6px";
 
-                (턴로그.도전자.스킬들 || []).forEach(스킬 => {
-                    const span = document.createElement("span");
-                    const 아이콘 = 아이콘맵[스킬 + "아이콘"] || "";
-                    span.innerHTML = 아이콘;
-                    도전자줄.appendChild(span); // 반드시 매 루프마다 appendChild
+                    if (행동.타입 === "신술") {
+                        const span = document.createElement("span");
+                        span.innerText = `신술 +${행동.회복량}`;
+                        span.style.color = "lime";
+                        줄.appendChild(span);
+                    } else if (행동.타입 === "공격") {
+                        (행동.스킬들 || []).forEach(스킬 => {
+                            const span = document.createElement("span");
+                            span.innerHTML = 아이콘맵[스킬 + "아이콘"] || "";
+                            줄.appendChild(span);
+                        });
+                        const 데미지 = document.createElement("span");
+                        데미지.innerText = `${행동.데미지}`;
+                        줄.appendChild(데미지);
+                    } else if (행동.타입 === "추가공격") {
+                        const 데미지 = document.createElement("span");
+                        데미지.innerText = `추가공격 ${행동.데미지}`;
+                        줄.appendChild(데미지);
+                    }
+
+                    컨테이너.appendChild(줄);
                 });
 
-                const 도전자데미지 = document.createElement("span");
-                도전자데미지.innerText = `${턴로그.도전자.데미지}`;
-                // 도전자데미지.style.color = "#f87171"; // 붉은색
-                도전자줄.appendChild(도전자데미지);
+                // 👑 마왕 줄
+                턴로그.마왕행동.forEach(행동 => {
+                    const 줄 = document.createElement("div");
+                    줄.className = "가로정렬";
+                    줄.style.justifyContent = "flex-end";
+                    줄.style.alignItems = "center";
+                    줄.style.gap = "6px";
 
-                컨테이너.appendChild(도전자줄);
+                    if (행동.타입 === "신술") {
+                        const span = document.createElement("span");
+                        span.innerText = `+${행동.회복량} 신술`;
+                        span.style.color = "lime";
+                        줄.appendChild(span);
+                    } else if (행동.타입 === "공격") {
+                        const 데미지 = document.createElement("span");
+                        데미지.innerText = `${행동.데미지}`;
 
-                // ───── 👑 마왕 줄 (오른쪽) ─────
-                const 마왕줄 = document.createElement("div");
-                마왕줄.className = "가로정렬";
-                마왕줄.style.justifyContent = "flex-end";
-                마왕줄.style.alignItems = "center";
-                마왕줄.style.gap = "6px";
+                        // ① 스킬 아이콘 먼저 append
+                        (행동.스킬들 || []).forEach(스킬 => {
+                            const span = document.createElement("span");
+                            span.innerHTML = 아이콘맵[스킬 + "아이콘"] || "";
+                            줄.appendChild(span);
+                        });
 
-                (턴로그.마왕.스킬들 || []).forEach(스킬 => {
-                    const span = document.createElement("span");
-                    span.innerHTML = 아이콘맵[스킬 + "아이콘"] || "";
-                    마왕줄.appendChild(span);
+                        // ② 마지막에 데미지 append
+                        줄.appendChild(데미지);
+                    } else if (행동.타입 === "추가공격") {
+                        const 데미지 = document.createElement("span");
+                        데미지.innerText = `추가공격 ${행동.데미지}`;
+                        줄.appendChild(데미지);
+                    }
+
+                    컨테이너.appendChild(줄);
                 });
 
-                const 마왕데미지 = document.createElement("span");
-                마왕데미지.innerText = `${턴로그.마왕.데미지}`;
-                // 마왕데미지.style.color = "#3b82f6"; // 파란색
-                마왕줄.appendChild(마왕데미지);
-
-                컨테이너.appendChild(마왕줄);
-
-                // ───── 🩸 체력 줄 (도전자 왼쪽, 마왕 오른쪽) ─────
+                // 🩸 체력 줄
                 const 체력줄 = document.createElement("div");
                 체력줄.className = "가로정렬";
                 체력줄.style.marginTop = "6px";
@@ -5675,17 +5697,17 @@
 
                 const 도전자체력 = document.createElement("span");
                 도전자체력.style.color = "#3b82f6";
-                도전자체력.innerText = `도전자 체력: ${턴로그.도전자체력 || "0"}`;
+                도전자체력.innerText = `도전자 체력: ${턴로그.남은체력?.도전자 || "0"}`;
 
                 const 마왕체력 = document.createElement("span");
                 마왕체력.style.color = "#ef4444";
-                마왕체력.innerText = `마왕 체력: ${턴로그.마왕체력 || "0"}`;
+                마왕체력.innerText = `마왕 체력: ${턴로그.남은체력?.마왕 || "0"}`;
 
                 체력줄.appendChild(도전자체력);
                 체력줄.appendChild(마왕체력);
                 컨테이너.appendChild(체력줄);
 
-                // 📌 전투 컨테이너 뒤에 삽입
+                // 삽입
                 타겟.parentNode.insertBefore(컨테이너, 타겟.nextSibling);
             });
         }
@@ -5896,7 +5918,7 @@
 
             //팝업
             //일반유물상위유물추가
-            //마왕전
+            //홀리워터밸런스
 
             //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
@@ -5926,6 +5948,13 @@
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                 `,
                 `${여름아이콘}`,
+                `
+25.07.18<br>
+마왕전의 전투로그가 좀 더 상세히 표시됩니다<br>
+스킬. 홀리워터의 만렙이 3렙으로 너프되었습니다<br>
+홀리워터 스킬의 너프 기념으로 모든 유저의 우편함으로<br>
+스킬초기화에 소모되는 플라워 한송이를 배송했습니다<br>
+                `,
                 `
 25.07.17<br>
 모든 전투의 전투로그를 Turn 100까지만 표시하겠습니다<br>
