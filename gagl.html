@@ -1144,7 +1144,49 @@
     box-sizing: border-box;
     pointer-events: none;
 "></div>
-    <!-- background: rgba(23, 221, 33, 0.897); -->
+
+    <div id="팝업" style="
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    display: none;
+    background: #2b2b2b;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    min-width: 320px;
+    max-width: 90vw;
+    font-family: sans-serif;
+    color: #f1f1f1;
+    text-align: left;
+">
+        <div id="팝업메시지" style="font-size: 15px; margin-bottom: 20px;">
+            메시지
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <div id="팝업확인" style="
+            padding: 6px 16px;
+            background-color: #3a3a3a;
+            color: white;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 0 2px black;
+        ">확인</div>
+            <div id="팝업취소" style="
+            padding: 6px 16px;
+            background-color: #1a1a1a;
+            color: white;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 0 2px black;
+        ">취소</div>
+        </div>
+    </div>
+    <!-- align-items: flex-start; -->
 
     <div id="뽑기창" class="기본테두리 세로정렬" style="
   display: none;
@@ -1197,6 +1239,39 @@
         });
 
         let 주인장인가 = false;
+
+        function 사용자확인(메시지) {
+            return new Promise((resolve) => {
+                const 팝업 = document.getElementById("팝업");
+                const 메시지박스 = document.getElementById("팝업메시지");
+                const 확인버튼 = document.getElementById("팝업확인");
+                const 취소버튼 = document.getElementById("팝업취소");
+
+                메시지박스.innerText = 메시지;
+                팝업.style.display = "block";
+
+                const 닫기 = (결과) => {
+                    팝업.style.display = "none";
+                    확인버튼.onclick = null;
+                    취소버튼.onclick = null;
+                    document.removeEventListener("click", 외부클릭감지, true);
+                    resolve(결과);
+                };
+
+                확인버튼.onclick = () => 닫기(true);
+                취소버튼.onclick = () => 닫기(false);
+
+                // 팝업 외부 클릭 시 닫기
+                const 외부클릭감지 = (e) => {
+                    if (!팝업.contains(e.target)) {
+                        닫기(false);
+                    }
+                };
+                // 캡처 단계에서 먼저 잡기
+                document.addEventListener("click", 외부클릭감지, true);
+            });
+        }
+
 
         const 색상맵 = {
             "일반": "#c8c8c8",
@@ -1671,8 +1746,12 @@
         }
 
         async function 회원탈퇴() {
-            const 확인 = confirm("돌이킬 수 없는 실수를 하시겠습니까?");
+
+            const 확인 = await 사용자확인(
+                "돌이킬 수 없는 실수를 하시겠습니까?"
+            );
             if (!확인) return;
+
 
             화면잠금();
 
@@ -1717,6 +1796,7 @@
             if (!유저데이터) return;
             전투화면보여주기(유저데이터);
         });
+
 
         function 팔레트적용(닉네임, 팔레트) {
             const 팔레트클래스 = {
@@ -2723,7 +2803,6 @@
                 }
             }
 
-            // confirm 메시지 확장
             const 메시지 =
                 종류 === "일반"
                     ? `일반장비뽑기을 ${비용.toLocaleString()} 골드로 진행하시겠습니까?`
@@ -2734,7 +2813,8 @@
                             : 종류 === "연속고급"
                                 ? `연속고급장비뽑기 10회를 티켓 10장으로 진행하시겠습니까?`
                                 : "";
-            const 확인 = confirm(메시지);
+
+            const 확인 = await 사용자확인(메시지);
             뽑기창.style.display = "none";
             if (!확인) return;
 
@@ -2862,7 +2942,9 @@
                     : 종류 === "연속일반"
                         ? `유물뽑기 10회를 총 ${(10 * 비용).toLocaleString()} 골드로 진행하시겠습니까?`
                         : "";
-            const 확인 = confirm(메시지);
+
+
+            const 확인 = await 사용자확인(메시지);
             뽑기창.style.display = "none";
             if (!확인) return;
 
@@ -3640,7 +3722,9 @@
                             return;
                         }
 
-                        const 확인 = confirm("정말 전체 유저에게 발송하시겠습니까?");
+                        const 확인 = await 사용자확인(
+                            "정말 전체 유저에게 발송하시겠습니까?"
+                        );
                         if (!확인) return;
 
                         화면잠금();
@@ -4079,9 +4163,11 @@
                             return;
                         }
 
-                        const 확인 = confirm(`${악세.이름}의 등급을 올리시겠습니까?\n\n[비용] ${등급업비용.toLocaleString()} 골드`);
-
+                        const 확인 = await 사용자확인(
+                            `${악세.이름}의 등급을 올리시겠습니까?\n\n[비용] ${등급업비용.toLocaleString()} 골드`
+                        );
                         if (!확인) return;
+
 
                         화면잠금();
                         try {
@@ -4129,8 +4215,9 @@
                             return;
                         }
 
-
-                        const 확인 = confirm(`100만 골드를 소모해서 ${악세.이름}을(를) 획득하시겠습니까?`);
+                        const 확인 = await 사용자확인(
+                            `100만 골드를 소모해서 ${악세.이름}을(를) 획득하시겠습니까?`
+                        );
                         if (!확인) return;
 
 
@@ -4171,8 +4258,10 @@
                                 }
 
 
-                                const 확인 = confirm(
-                                    "두 번째 장비칸을 구매하시겠습니까?\n\n[비용] 천만 골드"
+
+
+                                const 확인 = await 사용자확인(
+                                    `두 번째 장비칸을 구매하시겠습니까?\n\n[비용] 천만 골드`
                                 );
                                 if (!확인) return;
 
@@ -4208,9 +4297,8 @@
                                 }
 
 
-
-                                const 확인 = confirm(
-                                    "세 번째 장비칸을 구매하시겠습니까?\n\n[비용] 이천만 골드"
+                                const 확인 = await 사용자확인(
+                                    `세 번째 장비칸을 구매하시겠습니까?\n\n[비용] 이천만 골드`
                                 );
                                 if (!확인) return;
 
@@ -4250,7 +4338,9 @@
                             return;
                         }
 
-                        const 확인 = confirm(`안경을 소모해서 ${악세.이름}을(를) 장착하겠습니까?`);
+                        const 확인 = await 사용자확인(
+                            `안경을 소모해서 ${악세.이름}을(를) 장착하겠습니까?`
+                        );
                         if (!확인) return;
 
                         화면잠금();
@@ -4282,7 +4372,10 @@
 
                     }
                     else if (버튼상태 === "장착해제") {
-                        const 확인 = confirm(`${악세.이름}을(를) 장착 해제하시겠습니까?`);
+
+                        const 확인 = await 사용자확인(
+                            `${악세.이름}을(를) 장착 해제하시겠습니까?`
+                        );
                         if (!확인) return;
 
                         화면잠금();
@@ -5916,9 +6009,7 @@
 
             //서버월정액7달러
 
-            //팝업
             //일반유물상위유물추가
-            //홀리워터밸런스
 
             //git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
@@ -5948,6 +6039,11 @@
 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                 `,
                 `${여름아이콘}`,
+                `
+25.07.19<br>
+인게임 내 브라우저 팝업창 사용을 삭제하고<br>
+가글 자체 팝업창을 구현했습니다<br>
+                `,
                 `
 25.07.18<br>
 마왕전의 전투로그가 좀 더 상세히 표시됩니다<br>
@@ -7390,7 +7486,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                         const 증가량 = 기준공격력 * (nextLevel / 10); // 누적 증가량을 += 하므로 이게 맞음
                         const 증가량정수 = Math.round(증가량);
 
-                        const 확인 = confirm(
+                        const 확인 = await 사용자확인(
                             current === 10
                                 ? `루시퍼의 심장 1개를 소모해서 베히모스의 허물로 진화시키겠습니까?\n` +
                                 `성공 확률: ${successRate}%  /  베히모스의 허물 - 공격력: 10000`
@@ -7476,8 +7572,12 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                 return;
             }
 
-            const 확인 = confirm(`하위장비 3개를 상위장비 1개로 합성하시겠습니까?`);
+
+            const 확인 = await 사용자확인(
+                `하위장비 3개를 상위장비 1개로 합성하시겠습니까?`
+            );
             if (!확인) return;
+
 
             const 합성버튼 = document.getElementById("장비자동합성");
 
@@ -8275,7 +8375,9 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 return;
             }
 
-            const 확인 = window.confirm("스킬 초기화에는 플라워 유물 1개가 소모됩니다.\n진행하시겠습니까?");
+            const 확인 = await 사용자확인(
+                "스킬 초기화에는 플라워 유물 1개가 소모됩니다.\n진행하시겠습니까?"
+            );
             if (!확인) return;
 
             화면잠금();
@@ -8323,7 +8425,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             }
 
 
-            const 확인 = window.confirm(
+            const 확인 = await 사용자확인(
                 "직업 초기화에는 뼈다구 유물 1개가 소모됩니다.\n진행하시겠습니까?"
             );
             if (!확인) return;
@@ -8521,7 +8623,9 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                             return;
                         }
 
-                        const 확인 = confirm("샐러드를 먹고 스태미너 60을 회복하시겠습니까?");
+                        const 확인 = await 사용자확인(
+                            "샐러드를 먹고 스태미너 60을 회복하시겠습니까?"
+                        );
                         if (!확인) return;
 
                         화면잠금();
@@ -8554,7 +8658,10 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                             return;
                         }
 
-                        const 확인 = confirm("햄버거를 먹고 스태미너 300을 회복하시겠습니까?");
+
+                        const 확인 = await 사용자확인(
+                            "햄버거를 먹고 스태미너 300을 회복하시겠습니까?"
+                        );
                         if (!확인) return;
 
                         화면잠금();
@@ -8669,8 +8776,11 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                         }
 
 
-                        const 확인 = confirm("마법의팔레트를 사용하여 아이디를 염색하시겠습니까?");
+                        const 확인 = await 사용자확인(
+                            "마법의팔레트를 사용하여 아이디를 염색하시겠습니까?"
+                        );
                         if (!확인) return;
+
 
                         화면잠금();
                         try {
