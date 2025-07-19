@@ -81,109 +81,110 @@ app.post("/get-user", async (req, res) => {
         .single();
 
     if (!대표에러 && 대표유저 && 대표유저.보스정산요일 !== 오늘요일) {
-        const { data: 전체합, error: 합계에러 } = await supabaseAdmin
+        // ✅ 1. 보스데미지 > 0 유저 전체 조회
+        const { data: 유저들, error: 유저에러 } = await supabaseAdmin
             .from("users")
-            .select("보스누적데미지");
+            .select("유저UID, 보스누적데미지, 펫단계");
 
-        if (!합계에러 && 전체합) {
-            const 누적데미지총합 = 전체합
-                .filter(u => u.보스누적데미지 > 0)
-                .reduce((합, u) => 합 + Number(u.보스누적데미지), 0);
+        if (!유저에러 && 유저들.length > 0) {
+            for (const 유저 of 유저들) {
+                const 누적 = Number(유저.보스누적데미지 || 0);
+                let 펫단계 = 0;
+                if (누적 >= 99_999_999) 펫단계 = 3;
+                else if (누적 >= 9_999_999) 펫단계 = 2;
+                else if (누적 >= 999_999) 펫단계 = 1;
+                // 그 외 0 유지
 
-            if (누적데미지총합 !== 0) {
-                const { data: 상위유저들, error: 순위에러 } = await supabaseAdmin
-                    .from("users")
-                    .select("유저UID")
-                    .gt("보스누적데미지", 0)
-                    .order("보스누적데미지", { ascending: false })
-                    .limit(9);
-
-                const 보상목록 = [
-                    { 이름: "루시퍼의 심장", 수량: 2 },
-                    { 이름: "루시퍼의 심장", 수량: 1 },
-                    { 이름: "사탄의 날개", 수량: 2 },
-                    { 이름: "사탄의 날개", 수량: 1 },
-                    { 이름: "벨제부브의 꼬리", 수량: 2 },
-                    { 이름: "벨제부브의 꼬리", 수량: 1 },
-                    { 이름: "레비아탄의 비늘", 수량: 2 },
-                    { 이름: "레비아탄의 비늘", 수량: 1 },
-                    { 이름: "디아블로의 뿔", 수량: 2 }
-                ];
-
-
-                for (let i = 0; i < 상위유저들.length; i++) {
-                    const user = 상위유저들[i];
-                    const 보상 = 보상목록[i];
-
-                    const { data: 현재유저, error: fetchErr } = await supabaseAdmin
-                        .from("users")
-                        .select("우편함, 유저아이디")
-                        .eq("유저UID", user.유저UID)
-                        .single();
-
-                    if (fetchErr || !현재유저) continue;
-
-                    const 새우편 = {
-                        이름: 보상.이름,
-                        수량: 보상.수량,
-                        날짜,
-                        메모: `보스 랭킹 ${i + 1}위 보상`
-                    };
-
-                    await 로그기록(현재유저.유저아이디, `보스 랭킹 ${i + 1}위 보상 ${보상.이름}(${보상.수량})`);
-
-
-                    const newMail = [...(현재유저.우편함 || []), 새우편];
-
+                if (펫단계 !== 유저.펫단계) {
                     await supabaseAdmin
                         .from("users")
-                        .update({ 우편함: newMail })
-                        .eq("유저UID", user.유저UID);
+                        .update({ 펫단계 })
+                        .eq("유저UID", 유저.유저UID);
                 }
-
-                // 2. 펫단계 계산
-                let 펫단계 = 0;
-                if (누적데미지총합 >= 99_999_999) 펫단계 = 3;
-                else if (누적데미지총합 >= 9_999_999) 펫단계 = 2;
-                else if (누적데미지총합 >= 999_999) 펫단계 = 1;
-
-                await supabaseAdmin
-                    .from("users")
-                    .update({ 펫단계 })
-                    .neq("펫단계", 펫단계);
-
-                // 3. 보스누적데미지 초기화
-                await supabaseAdmin
-                    .from("users")
-                    .update({ 보스누적데미지: 0 })
-                    .neq("보스누적데미지", 0);
-
-                // 4. 보스넘버 증가
-                const { data: 대표보스유저 } = await supabaseAdmin
-                    .from("users")
-                    .select("보스넘버")
-                    .eq("유저아이디", "나주인장아니다")
-                    .single();
-
-                const 현재보스번호 = 대표보스유저?.보스넘버 ?? 0;
-                const 다음보스번호 = (현재보스번호 + 1) % 10;
-
-                await supabaseAdmin
-                    .from("users")
-                    .update({ 보스넘버: 다음보스번호 })
-                    .neq("보스넘버", 다음보스번호);
-
             }
 
+            // ✅ 3. 다시 상위 9명 걸러서 우편 보상
+            const { data: 상위유저들 } = await supabaseAdmin
+                .from("users")
+                .select("유저UID")
+                .gt("보스누적데미지", 0)
+                .order("보스누적데미지", { ascending: false })
+                .limit(9);
 
+            const 보상목록 = [
+                { 이름: "보스의알", 수량: 4 },
+                { 이름: "보스의알", 수량: 3 },
+                { 이름: "보스의알", 수량: 2 },
+                { 이름: "보스의알", 수량: 1 },
+                { 이름: "보스의알", 수량: 1 },
+                { 이름: "보스의알", 수량: 1 },
+                { 이름: "보스의알", 수량: 1 },
+                { 이름: "보스의알", 수량: 1 },
+                { 이름: "보스의알", 수량: 1 },
+            ];
+
+            for (let i = 0; i < 상위유저들.length; i++) {
+                const user = 상위유저들[i];
+                const 보상 = 보상목록[i];
+
+                const { data: 현재유저, error: fetchErr } = await supabaseAdmin
+                    .from("users")
+                    .select("우편함, 유저아이디")
+                    .eq("유저UID", user.유저UID)
+                    .single();
+
+                if (fetchErr || !현재유저) continue;
+
+                const 새우편 = {
+                    이름: 보상.이름,
+                    수량: 보상.수량,
+                    날짜,
+                    메모: `보스 랭킹 ${i + 1}위 보상`
+                };
+
+                await 로그기록(
+                    현재유저.유저아이디,
+                    `보스 랭킹 ${i + 1}위 보상 ${보상.이름}(${보상.수량})`
+                );
+
+                const newMail = [...(현재유저.우편함 || []), 새우편];
+
+                await supabaseAdmin
+                    .from("users")
+                    .update({ 우편함: newMail })
+                    .eq("유저UID", user.유저UID);
+            }
+
+            // ✅ 4. 보스누적데미지 초기화
+            await supabaseAdmin
+                .from("users")
+                .update({ 보스누적데미지: 0 })
+                .neq("보스누적데미지", 0);
+
+            // ✅ 5. 보스넘버 증가
+            const { data: 대표보스유저 } = await supabaseAdmin
+                .from("users")
+                .select("보스넘버")
+                .eq("유저아이디", "나주인장아니다")
+                .single();
+
+            const 현재보스번호 = 대표보스유저?.보스넘버 ?? 0;
+            const 다음보스번호 = (현재보스번호 + 1) % 10;
+
+            await supabaseAdmin
+                .from("users")
+                .update({ 보스넘버: 다음보스번호 })
+                .neq("보스넘버", 다음보스번호);
+
+            await supabaseAdmin
+                .from("users")
+                .update({ 보스정산요일: 오늘요일 })
+                .or(`보스정산요일.is.null,보스정산요일.neq.${오늘요일}`);
 
         }
-        await supabaseAdmin
-            .from("users")
-            .update({ 보스정산요일: 오늘요일 })
-            .or(`보스정산요일.is.null,보스정산요일.neq.${오늘요일}`);
 
     }
+
 
 
 
@@ -465,20 +466,6 @@ app.post("/boss-ranking", async (req, res) => {
     try {
         const { 유저UID } = req.body;
 
-        // ✅ 모든 유저의 누적 데미지 합산
-        const { data: 전체합, error: 합계에러 } = await supabaseAdmin
-            .from("users")
-            .select("보스누적데미지");
-
-        if (합계에러 || !전체합) {
-            return res.status(500).json({ 오류: "총합 계산 실패" });
-        }
-
-        const 누적데미지총합 = 전체합
-            .filter(u => u.보스누적데미지 > 0)
-            .reduce((합, u) => 합 + Number(u.보스누적데미지), 0);
-
-        // ✅ 상위 10명 조회
         const { data: 유저들, error: 유저에러 } = await supabaseAdmin
             .from("users")
             .select("유저아이디, 보스누적데미지, 유저UID, 마법의팔레트, 마왕전랭킹")
@@ -500,7 +487,7 @@ app.post("/boss-ranking", async (req, res) => {
             return res.status(500).json({ 오류: "서버오류" });
         }
 
-        res.json({ 순위: 유저들, 누적데미지총합, 내정보 });
+        res.json({ 순위: 유저들, 내정보 });
 
     } catch (e) {
         return res.status(500).json({ 오류: "서버오류" });
@@ -4348,6 +4335,7 @@ const 신화유물데이터 = {
     "고오스트": { 설명: "히든몬스터 등장률이 더 더 증가합니다(*1%)" },
     "월계수": { 설명: "장비 뽑기확률이 더 증가합니다(*0.1%)" },
     "데빌마스크": { 설명: "마왕에게 도전할 수 있습니다" },
+    "보스의알": { 설명: "미정" },
 };
 
 const 장비맵 = {
