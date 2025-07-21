@@ -169,44 +169,44 @@ app.post("/get-user", async (req, res) => {
         새로운유물목록["스피커"] = 9;
         새로운유물목록["데빌마스크"] = 3;
 
-        let 새우편함 = 유저.우편함 || [];
+        // let 새우편함 = 유저.우편함 || [];
 
-        const { data: 유저들, error: 순위에러 } = await supabaseAdmin
-            .from("users")
-            .select("유저UID, 유저아이디, 최종공격력")
-            .not("최종공격력", "is", null)
-            .order("최종공격력", { ascending: false });
+        // const { data: 유저들, error: 순위에러 } = await supabaseAdmin
+        //     .from("users")
+        //     .select("유저UID, 유저아이디, 최종공격력")
+        //     .not("최종공격력", "is", null)
+        //     .order("최종공격력", { ascending: false });
 
-        if (!순위에러 && 유저들) {
-            const 나UID = 유저.유저UID;
-            const 내순위 = 유저들.findIndex(u => u.유저UID === 나UID);
-            const 주인장순위 = 유저들.findIndex(u => u.유저아이디 === "나주인장아니다");
+        // if (!순위에러 && 유저들) {
+        //     const 나UID = 유저.유저UID;
+        //     const 내순위 = 유저들.findIndex(u => u.유저UID === 나UID);
+        //     const 주인장순위 = 유저들.findIndex(u => u.유저아이디 === "나주인장아니다");
 
-            if (내순위 !== -1 && 주인장순위 !== -1) {
-                const 우편 = {
-                    이름: "티켓",
-                    수량: 내순위 < 주인장순위 ? 1 : 3,
-                    날짜,
-                    메모: 내순위 < 주인장순위 ? "주인장기준 전당 상위보상" : "주인장기준 전당 하위보상",
-                };
-                새우편함.push(우편);
-                await 로그기록(유저.유저아이디, `전당보상 ${우편.이름}(${우편.수량})`);
-            }
-        }
+        //     if (내순위 !== -1 && 주인장순위 !== -1) {
+        //         const 우편 = {
+        //             이름: "티켓",
+        //             수량: 내순위 < 주인장순위 ? 1 : 3,
+        //             날짜,
+        //             메모: 내순위 < 주인장순위 ? "주인장기준 전당 상위보상" : "주인장기준 전당 하위보상",
+        //         };
+        //         새우편함.push(우편);
+        //         await 로그기록(유저.유저아이디, `전당보상 ${우편.이름}(${우편.수량})`);
+        //     }
+        // }
 
         const { error: 하루업데이트에러 } = await supabaseAdmin
             .from("users")
             .update({
                 유물목록: 새로운유물목록,
                 하루한번: kstNow.toISOString(),
-                우편함: 새우편함
+                // 우편함: 새우편함
             })
             .eq("유저UID", 유저UID);
 
         if (!하루업데이트에러) {
             유저.유물목록 = 새로운유물목록;
             유저.하루한번 = kstNow.toISOString();
-            유저.우편함 = 새우편함;
+            // 유저.우편함 = 새우편함;
         }
     }
 
