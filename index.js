@@ -211,25 +211,20 @@ app.post("/get-user", async (req, res) => {
     }
 
     if (유저.유저아이디 === "나주인장아니다") {
-        console.log("🧪 주인장 접속: 보스보상 우편 발송 블록 진입");
 
         const 전체조회 = supabaseAdmin
             .from("users")
             .select("유저UID, 유저아이디, 어제보스순위, 우편함")
 
-        console.log("🔍 Supabase 전체조회 쿼리 직전");
 
         const { data: 전체유저들, error: 전체조회에러 } = await 전체조회;
 
-        console.log("🧪 보스보상 지급 대상 수:", 전체유저들?.length);
-        console.log("🧪 조회 에러 여부:", 전체조회에러);
 
         if (!전체조회에러 && 전체유저들) {
             const kstNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
             const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " ");
 
             for (const 유저 of 전체유저들) {
-                console.log("🧪 지급 대상 유저:", 유저.유저아이디, "순위:", 유저.어제보스순위);
 
                 const { 유저UID, 유저아이디, 어제보스순위, 우편함 } = 유저;
 
@@ -258,8 +253,6 @@ app.post("/get-user", async (req, res) => {
                 await 로그기록(유저아이디, `보스의알 ${수량}개 발송 (순위 ${어제보스순위 ? `${어제보스순위}위` : "참여"})`);
             }
 
-            // 🔄 어제보스순위 초기화 로그
-            console.log("🧪 보스보상 지급 완료. 어제보스순위 초기화 시작");
 
             await supabaseAdmin
                 .from("users")
@@ -1773,7 +1766,7 @@ app.post("/set-job-result", async (req, res) => {
             return res.status(500).json({ 오류: "DB 업데이트 실패" });
         }
 
-        return res.json({ 성공: true, 새로운경험치, 레벨: 유저.레벨, 최종공격력: 유저.최종공격력 });
+        return res.json({ 성공: true, 새로운경험치, 레벨: 유저.레벨, 최종공격력: 유저.최종공격력, 직업결정: 새로운직업결정 });
     } catch (e) {
         return res.status(500).json({ 오류: "서버 예외 발생" });
     }
@@ -1866,6 +1859,7 @@ function calc직업환급(jobDecision) {
 }
 
 
+//패치중
 app.post('/reset-job', async (req, res) => {
     const { 유저UID } = req.body;
     if (!유저UID) {
@@ -1884,62 +1878,60 @@ app.post('/reset-job', async (req, res) => {
             return res.status(404).json({ 오류: '유저 정보 없음' });
         }
 
-        // 2) "뼈다구" 유물이 최소 1개 있는지 확인
         const 유물목록 = user.유물목록 || {};
         const 현재뼈다구개수 = (유물목록['뼈다구'] ?? 0);
         if (현재뼈다구개수 < 1) {
             return res.status(400).json({ 오류: '뼈다구 유물이 부족합니다.' });
         }
 
-        // 3) 기존 전직정보에서 환급 경험치 계산
-        //    calc전직환급() 함수는, 값이 1인 키의 개수만큼 (50,000 × 레벨번호)를 누적하여 반환합니다.
+        const 직업결정 = user.직업결정;
+        if (!직업결정 || Object.keys(직업결정).length === 0) {
+            return res.status(400).json({ 오류: '초기화할 직업이 없습니다.' });
+        }
+
+
         const 전직정보 = user.전직정보 || {};
-        const 전직환급 = calc전직환급(전직정보);  // :contentReference[oaicite:0]{index=0}
+        // const 전직환급 = calc전직환급(전직정보); 
 
-        // 4) 기존 직업결정에서 환급 경험치 계산
-        //    calc직업환급() 함수는, 저장된 레벨에 따라 (150,000 × 레벨번호)를 누적하여 반환합니다.
-        const 직업환급 = calc직업환급(user.직업결정);  // :contentReference[oaicite:1]{index=1}
+        const 직업환급 = calc직업환급(user.직업결정);
 
-        // 5) 최종 환급 경험치 = 전직환급 + 직업환급
-        const total환급 = 전직환급 + 직업환급;
+        // const total환급 = 전직환급 + 직업환급;
+        const total환급 = 직업환급;
 
-        // 6) 기존 경험치 + 환급된 경험치
         const 기존경험치 = user.경험치 ?? 0;
         const 환급후경험치 = 기존경험치 + total환급;
 
-        // 7) 유물목록에서 "뼈다구" 1개 차감
         const updated유물목록 = {
             ...유물목록,
             '뼈다구': 현재뼈다구개수 - 1
         };
 
-        // 8) 전직정보 초기화: 모든 키를 0으로 변경
-        const 초기전직정보 = {};
-        for (const key of Object.keys(전직정보)) {
-            초기전직정보[key] = 0;
-        }
+        // const 초기전직정보 = {};
+        // for (const key of Object.keys(전직정보)) {
+        //     초기전직정보[key] = 0;
+        // }
 
-        const 새전직공격력 = 1;
+        // const 새전직공격력 = 1;
 
         const 새레벨 = Math.floor(환급후경험치 / 1000) + 1;
 
 
         user.경험치 = 환급후경험치;
-        user.전직정보 = 초기전직정보;
-        user.전직공격력 = 새전직공격력;
+        // user.전직정보 = 초기전직정보;
+        // user.전직공격력 = 새전직공격력;
         user.레벨 = 새레벨;
         user.유물목록 = updated유물목록;
 
-        const 새최종공격력 = 최종공격력계산(user);  // :contentReference[oaicite:2]{index=2}
+        const 새최종공격력 = 최종공격력계산(user);
 
         const { error: updateError } = await supabaseAdmin
             .from('users')
             .update({
-                전직정보: 초기전직정보,
+                // 전직정보: 초기전직정보,
                 직업결정: null,
                 경험치: 환급후경험치,
                 유물목록: updated유물목록,
-                전직공격력: 새전직공격력,
+                // 전직공격력: 새전직공격력,
                 레벨: 새레벨,
                 최종공격력: 새최종공격력
             })
@@ -1953,9 +1945,10 @@ app.post('/reset-job', async (req, res) => {
         return res.json({
             경험치: 환급후경험치,
             레벨: 새레벨,
-            전직공격력: 새전직공격력,
+            // 전직공격력: 새전직공격력,
             최종공격력: 새최종공격력,
-            유물목록: updated유물목록
+            유물목록: updated유물목록,
+            직업결정: null
         });
     } catch (e) {
         return res.status(500).json({ 오류: '서버 오류: ' + e.message });
