@@ -582,6 +582,8 @@ app.post("/attack-boss", async (req, res) => {
     });
 });
 
+
+
 app.post("/attack-normal", async (req, res) => {
     const { 유저데이터 } = req.body;
     const { 유저UID, 현재층: 클라이언트층 } = 유저데이터;
@@ -674,7 +676,7 @@ app.post("/attack-normal", async (req, res) => {
 
     if (드레인 > 0) {
         전투로그.push({
-            턴: "종료", // 마지막 전투 턴 그대로 사용
+            턴: 현재턴, 
             타입: "회복",
             유저아이디: 유저.유저아이디,
             유저공격력: 유저.공격력,
@@ -790,6 +792,8 @@ app.post("/attack-normal", async (req, res) => {
         점검하자
     });
 });
+
+
 
 app.post("/attack-rare", async (req, res) => {
     const { 유저데이터, 레어몬스터이름 } = req.body;
@@ -1055,6 +1059,8 @@ app.post("/attack-rare", async (req, res) => {
         모래시계발동
     });
 });
+
+
 
 app.post("/use-salad", async (req, res) => {
     const { 유저UID } = req.body;
@@ -3390,7 +3396,7 @@ app.post("/send-mail-to-all-users", async (req, res) => {
         return res.status(400).json({ 오류: "입력값 누락 또는 잘못됨" });
     }
 
-    if (보낸사람 !== "2e1b297f-7cd0-4503-9ba7-6e6a5d2ff0d6") {
+    if (보낸사람 !== "9534b0a8-c04b-459d-ab10-a8447ea8da9f") {
         return res.status(403).json({ 오류: "주인장 전용 기능입니다" });
     }
 
