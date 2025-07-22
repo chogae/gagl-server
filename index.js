@@ -2501,7 +2501,6 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
     }
     const current = 대상.강화 || 0;
 
-    // ❌ 11강 이상 차단
     if (current > 10) {
         return res.status(400).json({ 오류: "더 이상 강화할 수 없습니다" });
     }
@@ -2509,19 +2508,12 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
     let successRate;
 
     if (current === 10) {
-        // 10강일 때는 무조건 1%
         successRate = 1;
 
         const 펜타그램보정 = Math.min(0.99, 0.01 * (유저.유물목록?.["펜타그램"] || 0));
 
         successRate += 펜타그램보정;
-
-        // if (유저.마왕전랭킹 === 1) {
-        //     successRate += 0.5;
-        // }
-
     } else {
-        // 일반 강화는 보정 포함
         successRate = 100 - current * 10;
 
         const 망치보정 = Math.min(9.9, 0.1 * (유저.유물목록?.["망치"] || 0));
@@ -2556,6 +2548,38 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
         }
 
 
+        if (실패카운트 % 60 === 0) {
+            const 천장시스템 = 장비목록.find(e => e.이름 === "베히모스의 허물" && e.등급 === "진화");
+            if (천장시스템) {
+                천장시스템.수량 = (천장시스템.수량 || 0) + 1;
+            } else {
+                장비목록.push({
+                    이름: "베히모스의 허물",
+                    등급: "진화",
+                    강화: 0,
+                    공격력: 10000,
+                    수량: 0
+                });
+            }
+
+
+            // 장비목록 업데이트 추가
+            await supabaseAdmin
+                .from("users")
+                .update({ 장비목록 })
+                .eq("유저UID", 유저UID);
+
+            // 이벤트 문구 기록
+            await 이벤트기록추가({
+                유저UID: 유저.유저UID,
+                유저아이디: 유저.유저아이디,
+                문구: `진화 천장 도달! 베히모스의 허물 획득`
+            });
+        }
+
+
+
+
         const 문구 = (current === 10)
             ? `루시퍼의 심장 진화 실패..`
             : `루시퍼의 심장 +${대상.강화 + 1}강 실패..`;
@@ -2588,18 +2612,51 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
             });
         }
 
-        // ✅ 루시퍼 초기화
         대상.강화 = 0;
         대상.공격력 = 1200;
     }
     else {
-        // 일반 강화 성공
         대상.강화 = current + 1;
 
         const 기준공격력 = 1200;
         const 증가비율 = 대상.강화 / 10;
         대상.공격력 += 기준공격력 * 증가비율;
     }
+
+
+
+    // ✅ 진화 아이템 → 멸망 아이템 합성
+    const 허물 = 장비목록.find(e => e.이름 === "베히모스의 허물" && e.등급 === "진화");
+    if (허물 && 허물.수량 >= 3) {
+        허물.수량 -= 3;
+
+        const 나팔 = 장비목록.find(e => e.이름 === "아바돈의 나팔" && e.등급 === "멸망");
+        if (나팔) {
+            나팔.수량 = (나팔.수량 || 0) + 1;
+        } else {
+            장비목록.push({
+                이름: "아바돈의 나팔",
+                등급: "멸망",
+                강화: 0,
+                공격력: 20000,
+                수량: 0
+            });
+        }
+
+        await supabaseAdmin
+            .from("users")
+            .update({ 장비목록 })
+            .eq("유저UID", 유저UID);
+
+        await 이벤트기록추가({
+            유저UID: 유저.유저UID,
+            유저아이디: 유저.유저아이디,
+            문구: `아바돈의 나팔을 합성했다!`
+        });
+    }
+
+
+
 
     const maxAtk = Math.max(...장비목록.map(e => e.공격력));
     유저.장비공격력 = maxAtk;
@@ -3278,7 +3335,7 @@ app.post("/send-mail-to-user", async (req, res) => {
         return res.status(400).json({ 오류: "입력값 누락 또는 잘못됨" });
     }
 
-    if (보낸사람 !== "2e1b297f-7cd0-4503-9ba7-6e6a5d2ff0d6") {
+    if (보낸사람 !== "9534b0a8-c04b-459d-ab10-a8447ea8da9f") {
         return res.status(403).json({ 오류: "주인장 전용 기능입니다" });
     }
 
