@@ -169,30 +169,6 @@ app.post("/get-user", async (req, res) => {
         새로운유물목록["스피커"] = 9;
         새로운유물목록["데빌마스크"] = 3;
 
-        // let 새우편함 = 유저.우편함 || [];
-
-        // const { data: 유저들, error: 순위에러 } = await supabaseAdmin
-        //     .from("users")
-        //     .select("유저UID, 유저아이디, 최종공격력")
-        //     .not("최종공격력", "is", null)
-        //     .order("최종공격력", { ascending: false });
-
-        // if (!순위에러 && 유저들) {
-        //     const 나UID = 유저.유저UID;
-        //     const 내순위 = 유저들.findIndex(u => u.유저UID === 나UID);
-        //     const 주인장순위 = 유저들.findIndex(u => u.유저아이디 === "나주인장아니다");
-
-        //     if (내순위 !== -1 && 주인장순위 !== -1) {
-        //         const 우편 = {
-        //             이름: "티켓",
-        //             수량: 내순위 < 주인장순위 ? 1 : 3,
-        //             날짜,
-        //             메모: 내순위 < 주인장순위 ? "주인장기준 전당 상위보상" : "주인장기준 전당 하위보상",
-        //         };
-        //         새우편함.push(우편);
-        //         await 로그기록(유저.유저아이디, `전당보상 ${우편.이름}(${우편.수량})`);
-        //     }
-        // }
 
         const { error: 하루업데이트에러 } = await supabaseAdmin
             .from("users")
@@ -207,57 +183,6 @@ app.post("/get-user", async (req, res) => {
             유저.유물목록 = 새로운유물목록;
             유저.하루한번 = kstNow.toISOString();
             // 유저.우편함 = 새우편함;
-        }
-    }
-
-    if (유저.유저아이디 === "나주인장아니다") {
-
-        const 전체조회 = supabaseAdmin
-            .from("users")
-            .select("유저UID, 유저아이디, 어제보스순위, 우편함")
-
-
-        const { data: 전체유저들, error: 전체조회에러 } = await 전체조회;
-
-
-        if (!전체조회에러 && 전체유저들) {
-            const kstNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
-            const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " ");
-
-            for (const 유저 of 전체유저들) {
-
-                const { 유저UID, 유저아이디, 어제보스순위, 우편함 } = 유저;
-
-                if (!어제보스순위 || 어제보스순위 === 0) continue;
-
-                let 수량 = 1;
-                if (어제보스순위 === 1) 수량 = 5;
-                else if (어제보스순위 === 2) 수량 = 4;
-                else if (어제보스순위 === 3) 수량 = 3;
-                else if (어제보스순위 >= 4 && 어제보스순위 <= 9) 수량 = 2;
-
-                const 우편 = {
-                    이름: "보스의알",
-                    수량,
-                    날짜,
-                    메모: `보스전 ${어제보스순위 ? `${어제보스순위}위` : "참여"} 보상`
-                };
-
-                const 새우편함 = [...(우편함 ?? []), 우편];
-
-                await supabaseAdmin
-                    .from("users")
-                    .update({ 우편함: 새우편함 })
-                    .eq("유저UID", 유저UID);
-
-                await 로그기록(유저아이디, `보스의알 ${수량}개 발송 (순위 ${어제보스순위 ? `${어제보스순위}위` : "참여"})`);
-            }
-
-
-            await supabaseAdmin
-                .from("users")
-                .update({ 어제보스순위: 0 })
-                .not("어제보스순위", "is", null);
         }
     }
 
@@ -480,7 +405,69 @@ app.post("/get-user", async (req, res) => {
 
 
 
+app.post("/get-oner", async (req, res) => {
+    try {
+        const { 유저UID } = req.body;
 
+        if (!유저UID) {
+            return res.status(400).json({ 오류: "유저UID 누락" });
+        }
+
+        const { data: 전체유저들, error: 전체조회에러 } = await supabaseAdmin
+            .from("users")
+            .select("유저UID, 유저아이디, 어제보스순위, 우편함");
+
+
+
+        if (!전체조회에러 && 전체유저들) {
+            const kstNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+            const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " ");
+
+            for (const 유저 of 전체유저들) {
+
+                const { 유저UID, 유저아이디, 어제보스순위, 우편함 } = 유저;
+
+                if (!어제보스순위 || 어제보스순위 === 0) continue;
+
+                let 수량 = 1;
+                if (어제보스순위 === 1) 수량 = 5;
+                else if (어제보스순위 === 2) 수량 = 4;
+                else if (어제보스순위 === 3) 수량 = 3;
+                else if (어제보스순위 >= 4 && 어제보스순위 <= 9) 수량 = 2;
+
+                const 우편 = {
+                    이름: "보스의알",
+                    수량,
+                    날짜,
+                    메모: `보스전 ${어제보스순위 ? `${어제보스순위}위` : "참여"} 보상`
+                };
+
+                const 새우편함 = [...(우편함 ?? []), 우편];
+
+                await supabaseAdmin
+                    .from("users")
+                    .update({ 우편함: 새우편함 })
+                    .eq("유저UID", 유저UID);
+
+                await 로그기록(유저아이디, `보스의알 ${수량}개 발송 (순위 ${어제보스순위 ? `${어제보스순위}위` : "참여"})`);
+            }
+
+
+            await supabaseAdmin
+                .from("users")
+                .update({ 어제보스순위: 0 })
+                .not("어제보스순위", "is", null);
+
+
+        }
+
+        return res.json({ 성공: true });
+
+    } catch (error) {
+        return res.status(500).json({ 오류: "서버오류" });
+
+    }
+});
 
 
 app.post("/boss-ranking", async (req, res) => {
@@ -676,7 +663,7 @@ app.post("/attack-normal", async (req, res) => {
 
     if (드레인 > 0) {
         전투로그.push({
-            턴: 현재턴, 
+            턴: 현재턴,
             타입: "회복",
             유저아이디: 유저.유저아이디,
             유저공격력: 유저.공격력,
@@ -722,12 +709,8 @@ app.post("/attack-normal", async (req, res) => {
 
     let 레어몬스터이름 = 레어몬스터등장판정(유저);
 
-    if (레어몬스터이름) {
 
-        await supabaseAdmin
-            .from("users")
-            .update({ 히든몬스터이름: 레어몬스터이름 })
-            .eq("유저UID", 유저UID);
+    if (레어몬스터이름) {
 
         if (현재스태미너 === 0) {
             현재스태미너++;
@@ -763,7 +746,8 @@ app.post("/attack-normal", async (req, res) => {
         현재스태미너,
         스태미너소모총량: 유저.스태미너소모총량,
         새로고침: 유저.새로고침,
-        점검: 유저.점검
+        점검: 유저.점검,
+        히든몬스터이름: 레어몬스터이름 || null
 
     }).eq("유저UID", 새유저.유저UID);
 
@@ -3427,7 +3411,7 @@ app.post("/send-mail-to-all-users", async (req, res) => {
                 .eq("유저UID", 유저.유저UID)
         );
 
-        await 로그기록(유저.유저아이디, `에게 ${이름} x${수량} 전체발송중`);
+        // await 로그기록(유저.유저아이디, `에게 ${이름} x${수량} 전체발송중`);
     }
 
     // 병렬 처리
