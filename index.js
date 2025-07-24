@@ -1247,6 +1247,11 @@ app.post("/use-bossegg", async (req, res) => {
     const 보유 = 유저.유물목록?.["보스의알"] || 0;
     if (보유 < 1) return res.status(400).json({ 오류: "보스의알이 없습니다" });
 
+    const now = new Date();
+    const kstNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+    const today = kstNow.toISOString().slice(0, 10);
+    const 날짜 = kstNow.toISOString().slice(0, 16).replace("T", " "); // YYYY-MM-DD HH:mm
+
     // ✅ 가중치 룰렛 보상 테이블 정의
     const 보상테이블 = [
         { 이름: "30만골드", 수량: 30, 확률: 0.001 },
@@ -1282,8 +1287,18 @@ app.post("/use-bossegg", async (req, res) => {
         이름: 선택보상.이름,
         수량: 선택보상.수량,
         메모: "보스의알 알까기 상품",
-        날짜: new Date().toISOString(),
+        날짜,
     });
+
+    //패치중
+    if (선택보상.이름 === "30만골드" && (선택보상.수량 === 30 || 선택보상.수량 === 5)) {
+        await 이벤트기록추가({
+            유저UID: 유저.유저UID,
+            유저아이디: 유저.유저아이디,
+            문구: `알까기 대박 당첨! ${선택보상.이름} x${선택보상.수량}`
+        });
+    }
+    await 로그기록(유저.유저아이디, `알까기 상품 ${선택보상.이름} ${선택보상.수량} 당첨`);
 
     // ✅ DB 업데이트
     await supabaseAdmin
