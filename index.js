@@ -3268,6 +3268,9 @@ app.post("/receive-mail", async (req, res) => {
     else if (우편.이름 === "30만골드") {
         유저.골드 = (유저.골드 ?? 0) + 300000 * 수량;
     }
+    else if (우편.이름 === "100만골드") {
+        유저.골드 = (유저.골드 ?? 0) + 1000000 * 수량;
+    }
     else if (우편.이름 === "햄버거정기배송") {
         유저.햄버거현질 = (유저.햄버거현질 ?? 0) + 수량;
     }
@@ -3842,6 +3845,8 @@ function 마왕전전투시뮬레이션(도전자, 마왕) {
 
 // 로그 기록 함수
 async function 로그기록(유저아이디, 내용) {
+    if (유저아이디 === "테스트아이디") return;
+
     const now = new Date().toLocaleString("ko-KR", {
         timeZone: "Asia/Seoul",
         year: "numeric",
@@ -3864,6 +3869,7 @@ async function 로그기록(유저아이디, 내용) {
 
 
 async function 이벤트기록추가({ 유저UID, 유저아이디, 문구 }) {
+    if (유저아이디 === "테스트아이디") return;
     const 실제문구 = `${유저아이디} (이)가 ${문구}`;
     const { error } = await supabaseAdmin.from("이벤트기록").insert([
         { 유저UID, 유저아이디, 일어난일: 실제문구 }
