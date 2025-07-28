@@ -1536,6 +1536,14 @@ app.post("/register-user", async (req, res) => {
 
     await 로그기록(유저아이디, `신규 IP: ${clientIP}`);
 
+    const formatter = new Intl.DateTimeFormat("ko-KR", {
+        weekday: "short",
+        timeZone: "Asia/Seoul"
+    });
+    const parts = formatter.formatToParts(now);
+    const 오늘요일 = parts.find(p => p.type === "weekday")?.value;
+
+
     //신규유저
     const 삽입값 = {
         유저UID,
@@ -1595,7 +1603,8 @@ app.post("/register-user", async (req, res) => {
             { 이름: "티켓", 수량: 1, 날짜, 메모: "25년 5월 30일 연속고급장비뽑기 기능 구현 보상" },
             { 이름: "햄버거", 수량: 1, 날짜, 메모: "25년 5월 29일 주인장 첫 루시퍼 조우 기념 보상" },
             { 이름: "샐러드", 수량: 5, 날짜, 메모: "25년 5월 26일 가글(gagl) 오픈 기념 보상" },
-        ]
+        ],
+        보스정산요일: 오늘요일,
     };
 
     await 이벤트기록추가({
@@ -3358,7 +3367,7 @@ app.post("/send-mail-to-user", async (req, res) => {
         return res.status(400).json({ 오류: "입력값 누락 또는 잘못됨" });
     }
 
-    if (보낸사람 !== "9534b0a8-c04b-459d-ab10-a8447ea8da9f") {
+    if (보낸사람 !== "2e6f24b5-ffbf-4252-af92-fa1018b03268") {
         return res.status(403).json({ 오류: "주인장 전용 기능입니다" });
     }
 
@@ -3406,7 +3415,7 @@ app.post("/send-mail-to-all-users", async (req, res) => {
         return res.status(400).json({ 오류: "입력값 누락 또는 잘못됨" });
     }
 
-    if (보낸사람 !== "9534b0a8-c04b-459d-ab10-a8447ea8da9f") {
+    if (보낸사람 !== "2e6f24b5-ffbf-4252-af92-fa1018b03268") {
         return res.status(403).json({ 오류: "주인장 전용 기능입니다" });
     }
 
@@ -3512,7 +3521,7 @@ app.post("/challenge-mawang", async (req, res) => {
                 return res.status(400).json({ 오류: '도전장이 부족합니다' });
             }
         }
-        
+
         let 결과;
         try {
             결과 = 마왕전전투시뮬레이션(도전자, 마왕);
