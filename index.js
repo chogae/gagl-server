@@ -478,7 +478,7 @@ app.post("/boss-ranking", async (req, res) => {
 
         const { data: 유저들, error: 유저에러 } = await supabaseAdmin
             .from("users")
-            .select("유저아이디, 보스누적데미지, 유저UID, 마법의팔레트, 마왕전랭킹")
+            .select("유저아이디, 보스누적데미지, 유저UID, 마법의팔레트, 마왕전랭킹, 마왕전방어")
             .gt("보스누적데미지", 0)
             .order("보스누적데미지", { ascending: false })
 
@@ -490,6 +490,7 @@ app.post("/boss-ranking", async (req, res) => {
             보스누적데미지: 유저들[내순위].보스누적데미지,
             마법의팔레트: 유저들[내순위].마법의팔레트,
             마왕전랭킹: 유저들[내순위].마왕전랭킹,
+            마왕전방어: 유저들[내순위].마왕전방어,
         } : null;
 
 
@@ -744,6 +745,7 @@ app.post("/attack-normal", async (req, res) => {
         남은체력: 새유저.남은체력,
         숙련도: 새유저.숙련도,
         현재층: 새유저.현재층,
+        최고층: 새유저.현재층,
         스킬: 새유저.스킬,
         유물목록: 새유저.유물목록,
         현재스태미너,
@@ -1605,6 +1607,9 @@ app.post("/register-user", async (req, res) => {
             { 이름: "샐러드", 수량: 5, 날짜, 메모: "25년 5월 26일 가글(gagl) 오픈 기념 보상" },
         ],
         보스정산요일: 오늘요일,
+        최고층: 1,
+        마왕전랭킹: 0,
+        햄버거현질: 0,
     };
 
     await 이벤트기록추가({
@@ -2247,6 +2252,7 @@ const 진화체인맵 = {
 app.post("/gamble-Relic", async (req, res) => {
     const { 유저UID, 종류 = "일반" } = req.body;
     const 비용 = 100000;
+
     const maxCounts = {
         "플라워": 9,
         "뼈다구": 9,
@@ -2269,6 +2275,8 @@ app.post("/gamble-Relic", async (req, res) => {
             return res.status(400).json({ 오류: "유저 정보 없음" });
         }
 
+        const 가능횟수 = Math.floor(유저.골드 / 비용);
+
         const 후보 = Object.keys(레어유물데이터).filter(이름 => {
             const 보유 = 유저.유물목록?.[이름] || 0;
             const max = maxCounts[이름] ?? 99;
@@ -2290,7 +2298,12 @@ app.post("/gamble-Relic", async (req, res) => {
             return res.status(400).json({ 오류: "패시브 유물 수량이 최대입니다. 유물화면에서 합성 후 시도하세요" });
         }
 
-        const 횟수 = 종류 === "연속일반" ? 10 : 1;
+        let 횟수 = 1;
+        if (종류 === "연속일반") {
+            횟수 = 10;
+        } else if (종류 === "최대") {
+            횟수 = 가능횟수;
+        }
         const results = [];
 
         if (종류 === "일반") {
@@ -2299,6 +2312,10 @@ app.post("/gamble-Relic", async (req, res) => {
             }
         } else if (종류 === "연속일반") {
             if (유저.골드 < 10 * 비용) {
+                return res.status(400).json({ 오류: "골드가 부족합니다" });
+            }
+        } else if (종류 === "최대") {
+            if (가능횟수 <= 0) {
                 return res.status(400).json({ 오류: "골드가 부족합니다" });
             }
         }
@@ -2343,14 +2360,23 @@ app.post("/gamble-Relic", async (req, res) => {
             }
 
 
-
-
-            // 5) 결과 배열에 저장
-            results.push({
-                유물이름,
+            const 결과객체 = {
                 퍼즐발동,
                 남은골드: 유저.골드,
-            });
+            };
+
+            if (종류 !== "최대") {
+                결과객체.유물이름 = 유물이름;
+            }
+
+            results.push(결과객체);
+
+
+            // results.push({
+            //     유물이름,
+            //     퍼즐발동,
+            //     남은골드: 유저.골드,
+            // });
 
             const max = maxCounts[유물이름] ?? 99;
             if (유물목록복사[유물이름] >= max) {
@@ -2367,15 +2393,6 @@ app.post("/gamble-Relic", async (req, res) => {
             if (후보.length === 0) break;
         }
 
-        // 9) DB에 유저 정보(골드, 유물목록) 업데이트
-        await supabaseAdmin
-            .from("users")
-            .update({
-                골드: 유저.골드,
-                유물목록: 유저.유물목록,
-            })
-            .eq("유저UID", 유저UID);
-
         // 10) 응답으로 최신 유저데이터와 결과 배열 전달
         const 유저데이터 = {
             ...유저,
@@ -2384,10 +2401,27 @@ app.post("/gamble-Relic", async (req, res) => {
         };
 
 
+        const 최대체력 = 최대체력계산(유저데이터);
+        const 최종공격력 = 최종공격력계산(유저데이터);
+
+        // 9) DB에 유저 정보(골드, 유물목록) 업데이트
+        await supabaseAdmin
+            .from("users")
+            .update({
+                골드: 유저.골드,
+                유물목록: 유저.유물목록,
+                최대체력: 최대체력,
+                최종공격력: 최종공격력,
+            })
+            .eq("유저UID", 유저UID);
+
+
         return res.json({
             결과: "성공",
             유저데이터,
             results,
+            최대체력: 유저.최대체력,
+            최종공격력: 유저.최종공격력,
         });
     } catch (e) {
         console.error(e);
@@ -3479,6 +3513,48 @@ app.post("/get-mawang", async (req, res) => {
     }
 });
 
+app.post("/get-upper-mawang", async (req, res) => {
+    try {
+        const { 내랭킹 } = req.body;
+
+        let query랭킹 = 1; // 기본값
+        if (typeof 내랭킹 === "number" && 내랭킹 > 1) {
+            query랭킹 = 내랭킹 - 1;
+        }
+
+        let { data, error } = await supabaseAdmin
+            .from("users")
+            .select("*")
+            .eq("마왕전랭킹", query랭킹)
+            .limit(1)
+            .single();
+
+        // 만약 랭킹이 0이거나 위 유저가 없다면, 마왕전랭킹 1인 유저로 fallback
+        if ((!data || error) && 내랭킹 === 0) {
+            const fallback = await supabaseAdmin
+                .from("users")
+                .select("*")
+                .eq("마왕전랭킹", 1)
+                .limit(1)
+                .single();
+            data = fallback.data;
+            error = fallback.error;
+        }
+
+        if (error || !data) {
+            return res.json({ 존재함: false });
+        }
+
+        return res.json({
+            존재함: true,
+            마왕정보: data,
+        });
+    } catch (e) {
+        console.error("마왕정보 조회 실패:", e);
+        return res.status(500).json({ 오류: "서버 오류" });
+    }
+});
+
 
 app.post("/challenge-mawang", async (req, res) => {
     const { 유저UID } = req.body;
@@ -3564,11 +3640,19 @@ app.post("/challenge-mawang", async (req, res) => {
             : `체력차${결과.마왕HP}로 마왕에게 패배..`;
 
 
-        await 이벤트기록추가({
-            유저UID: 도전자.유저UID,
-            유저아이디: 도전자.유저아이디,
-            문구
-        });
+        if (결과.승리자 === "도전자") {
+            await 이벤트기록추가({
+                유저UID: 도전자.유저UID,
+                유저아이디: 도전자.유저아이디,
+                문구
+            });
+        }
+
+        // await 이벤트기록추가({
+        //     유저UID: 도전자.유저UID,
+        //     유저아이디: 도전자.유저아이디,
+        //     문구
+        // });
 
 
         return res.json({
