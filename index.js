@@ -2434,7 +2434,7 @@ app.post("/gamble-Relic", async (req, res) => {
 
 
 
-
+//패치중
 app.post('/synthesize-item', async (req, res) => {
     const { 유저UID } = req.body;
     if (!유저UID) {
@@ -2506,6 +2506,31 @@ app.post('/synthesize-item', async (req, res) => {
         }
     }
 
+    const 허물 = equipmentList.find(e => e.이름 === "베히모스의 허물" && e.등급 === "진화");
+    if (허물 && 허물.수량 >= 3) {
+        허물.수량 -= 3;
+
+        const 나팔 = equipmentList.find(e => e.이름 === "아바돈의 나팔" && e.등급 === "멸망");
+        if (나팔) {
+            나팔.수량 = (나팔.수량 || 0) + 1;
+        } else {
+            equipmentList.push({
+                이름: "아바돈의 나팔",
+                등급: "멸망",
+                강화: 0,
+                공격력: 33000,
+                수량: 0
+            });
+        }
+
+        await 이벤트기록추가({
+            유저UID,
+            유저아이디: user.유저아이디,
+            문구: "아바돈의 나팔을 합성했다!"
+        });
+    }
+
+
 
 
     const 장비공격력 = Math.max(...equipmentList.map(e => e.공격력 || 0));
@@ -2570,6 +2595,10 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
         const 펜타그램보정 = Math.min(0.99, 0.01 * (유저.유물목록?.["펜타그램"] || 0));
 
         successRate += 펜타그램보정;
+
+        const 실패보정 = Math.floor((유저.실패카운트 || 0) / 100) * 0.1;
+        successRate += 실패보정;
+
     } else {
         successRate = 100 - current * 10;
 
@@ -2605,6 +2634,16 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
         }
 
 
+        const 문구 = (current === 10)
+            ? `루시퍼의 심장 진화 실패..`
+            : `루시퍼의 심장 +${대상.강화 + 1}강 실패..`;
+
+        await 이벤트기록추가({
+            유저UID: 유저.유저UID,
+            유저아이디: 유저.유저아이디,
+            문구
+        });
+
         if (실패카운트 % 60 === 0) {
             const 천장시스템 = 장비목록.find(e => e.이름 === "베히모스의 허물" && e.등급 === "진화");
             if (천장시스템) {
@@ -2632,20 +2671,39 @@ app.post("/upgrade-corrupted-item", async (req, res) => {
                 유저아이디: 유저.유저아이디,
                 문구: `진화 천장 도달! 베히모스의 허물 획득`
             });
+
+        }
+
+        const 허물 = 장비목록.find(e => e.이름 === "베히모스의 허물" && e.등급 === "진화");
+        if (허물 && 허물.수량 >= 3) {
+            허물.수량 -= 3;
+
+            const 나팔 = 장비목록.find(e => e.이름 === "아바돈의 나팔" && e.등급 === "멸망");
+            if (나팔) {
+                나팔.수량 = (나팔.수량 || 0) + 1;
+            } else {
+                장비목록.push({
+                    이름: "아바돈의 나팔",
+                    등급: "멸망",
+                    강화: 0,
+                    공격력: 33000,
+                    수량: 0
+                });
+            }
+
+            await supabaseAdmin
+                .from("users")
+                .update({ 장비목록 })
+                .eq("유저UID", 유저UID);
+
+            await 이벤트기록추가({
+                유저UID: 유저.유저UID,
+                유저아이디: 유저.유저아이디,
+                문구: `아바돈의 나팔을 합성했다!`
+            });
         }
 
 
-
-
-        const 문구 = (current === 10)
-            ? `루시퍼의 심장 진화 실패..`
-            : `루시퍼의 심장 +${대상.강화 + 1}강 실패..`;
-
-        await 이벤트기록추가({
-            유저UID: 유저.유저UID,
-            유저아이디: 유저.유저아이디,
-            문구
-        });
         return res.status(400).json({
             오류: `강화 실패. 재료가 증발했습니다`,
             수량: 대상.수량,
@@ -4218,7 +4276,6 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴, 보�
         if (방어무시율 > 0) 발동아이콘.push("브로큰아이콘");
 
 
-        //패치중
         const 스킬 = 유저.스킬 || {};
         const 처형레벨 = 스킬["처형"] || 0;
 
