@@ -232,22 +232,12 @@ app.post("/get-user", async (req, res) => {
 
 
     if ((유저.햄버거현질 ?? 0) >= 1) {
-
         if (유저.햄버거현질기한체크 !== 오늘날짜) {
             let new햄버거현질기한 = (유저.햄버거현질기한 ?? 0) + 1;
             const updates = { 햄버거현질기한체크: 오늘날짜 };
-
-            await 로그기록(유저.유저아이디, `햄버거현질기한 +1됨`);
-
             const oldMails = 유저.우편함 ?? [];
 
-            const 햄버거우편 = {
-                이름: "햄버거",
-                수량: 1,
-                날짜,
-                메모: `햄버거 정기배송 ${new햄버거현질기한}일째`
-            };
-
+            await 로그기록(유저.유저아이디, `햄버거현질기한 +1됨`);
 
             if (new햄버거현질기한 >= 31) {
                 const new햄버거현질 = (유저.햄버거현질 ?? 1) - 1;
@@ -263,17 +253,29 @@ app.post("/get-user", async (req, res) => {
                 유저.햄버거현질기한체크 = next체크;
 
                 if (new햄버거현질 >= 1) {
+                    const 햄버거우편 = {
+                        이름: "햄버거",
+                        수량: 1,
+                        날짜,
+                        메모: `햄버거 정기배송 ${next기한}일째` // ✅ 1일째로 표시
+                    };
                     const newMails = [...oldMails, 햄버거우편];
                     updates.우편함 = newMails;
                     유저.우편함 = newMails;
 
-                    await 로그기록(유저.유저아이디, ` ${new햄버거현질기한}일차 햄버거지급완료`);
+                    await 로그기록(유저.유저아이디, ` ${next기한}일차 햄버거지급완료`);
                 }
 
             } else {
                 updates.햄버거현질기한 = new햄버거현질기한;
                 유저.햄버거현질기한 = new햄버거현질기한;
 
+                const 햄버거우편 = {
+                    이름: "햄버거",
+                    수량: 1,
+                    날짜,
+                    메모: `햄버거 정기배송 ${new햄버거현질기한}일째`
+                };
                 const newMails = [...oldMails, 햄버거우편];
                 updates.우편함 = newMails;
                 유저.우편함 = newMails;
@@ -2335,7 +2337,6 @@ app.post("/gamble-Relic", async (req, res) => {
             유물목록복사[유물이름] = (유물목록복사[유물이름] || 0) + 1;
 
 
-            //패치중
             for (const 체인 of Object.values(진화체인맵)) {
                 for (let j = 0; j < 체인.length - 1; j++) {
                     const 현재 = 체인[j];
@@ -2432,9 +2433,6 @@ app.post("/gamble-Relic", async (req, res) => {
 
 
 
-
-
-//패치중
 app.post('/synthesize-item', async (req, res) => {
     const { 유저UID } = req.body;
     if (!유저UID) {
@@ -4226,7 +4224,7 @@ function 전투시뮬레이션(유저, 몬스터, 전투로그, 시작턴, 보�
 
     const 검술확률 = [0.10, 0.20, 0.30, 0.40, 0.50, 0.80];
 
-    const 궁술무시확률 = [0.8, 0.16, 0.24, 0.32, 0.40, 0.64];
+    const 궁술무시확률 = [0.08, 0.16, 0.24, 0.32, 0.40, 0.64];
 
     while (유저HP > 0 && (보스전 || 몬스터HP > 0)) {
         몬스터HP = Math.max(0, 몬스터HP);

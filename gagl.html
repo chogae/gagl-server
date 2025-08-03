@@ -728,6 +728,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
+            /* gap: 8px; */
             justify-content: center;
             /* ✅ 중앙정렬 */
         }
@@ -6290,8 +6291,8 @@
                 `${여름아이콘}`,
                 `
 25.08.03<br>
-하트마이너스 계열 유물 자동합성 오류가 해결되었습니다<br>
-궁술계열 1차직업 스나이퍼의 확률 오류가 해결되었습니다<br>
+하트마이너스 계열 유물 자동합성 오류가 수정되었습니다<br>
+궁술 1차직업 스나이퍼의 확률 오류가 수정되었습니다<br>
                `,
                 `
 25.08.02<br>
@@ -9059,7 +9060,6 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
 
 
-        //패치중
         //유물화면보여주기
         document.getElementById("유물").addEventListener("click", () => {
             if (!유저데이터) return;
@@ -9202,6 +9202,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     div.appendChild(설명div);
                 });
 
+                // ✅ 마우스 아웃 시 설명 div 삭제
                 div.addEventListener("mouseout", () => {
                     const 기존설명 = div.querySelector(".유물설명");
                     if (기존설명) 기존설명.remove();
@@ -9278,7 +9279,86 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                         }
                         화면해제();
                     }
+                    // else if (유물이름 === "소드") {
+                    //     const 소드 = 유저데이터.유물목록?.["소드"] || 0;
+                    //     const 현재스피어 = 유저데이터.유물목록?.["스피어"] || 0;
 
+                    //     if (현재스피어 >= 99) {
+                    //         메시지표시(메시지표시박스, "", "스피어는 99개 이상 보유할 수 없습니다", "");
+                    //         return;
+                    //     }
+
+                    //     if (소드 < 3) {
+                    //         메시지표시(메시지표시박스, "", "소드 3개를 구해오세요", "");
+                    //         return;
+                    //     }
+
+                    //     const 확인 = confirm("소드 3개를 합성하여 스피어를 만들겠습니까?");
+                    //     if (!확인) return;
+
+                    //     화면잠금();
+                    //     try {
+                    //         const 응답 = await fetch("/use-Sword", {
+                    //             method: "POST",
+                    //             headers: { "Content-Type": "application/json" },
+                    //             body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                    //         });
+                    //         const 결과 = await 응답.json();
+
+                    //         if (결과.오류) {
+                    //             메시지표시(메시지표시박스, "", 결과.오류, "");
+                    //         } else {
+                    //             유저데이터.유물목록 = 결과.유물목록;
+                    //             유저데이터.최종공격력 = 결과.최종공격력;
+                    //             메시지표시(메시지표시박스, "", "스피어 1개를 획득했습니다!", "");
+                    //             document.getElementById("유물").click();
+                    //         }
+                    //     } catch (e) {
+                    //         메시지표시(메시지표시박스, "", "서버 오류 발생", "");
+                    //     }
+                    //     화면해제();
+                    // }
+                    // else if (유물이름 === "쉴드밴") {
+                    //     const 쉴드밴 = 유저데이터.유물목록?.["쉴드밴"] || 0;
+
+                    //     const 현재쉴드배앤 = 유저데이터.유물목록?.["쉴드배앤"] || 0;
+
+                    //     if (현재쉴드배앤 >= 99) {
+                    //         메시지표시(메시지표시박스, "", "쉴드배앤은 99개 이상 보유할 수 없습니다", "");
+                    //         return;
+                    //     }
+
+                    //     if (쉴드밴 < 3) {
+                    //         메시지표시(메시지표시박스, "", "쉴드밴 3개를 구해오세요", "");
+                    //         return;
+                    //     }
+
+                    //     const 확인 = confirm("쉴드밴 3개를 합성하여 쉴드배앤을 만들겠습니까?");
+                    //     if (!확인) return;
+
+                    //     화면잠금();
+                    //     try {
+                    //         const 응답 = await fetch("/use-shieldban", {
+                    //             method: "POST",
+                    //             headers: { "Content-Type": "application/json" },
+                    //             body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                    //         });
+                    //         const 결과 = await 응답.json();
+
+                    //         if (결과.오류) {
+                    //             메시지표시(메시지표시박스, "", 결과.오류, "");
+                    //         } else {
+                    //             유저데이터.유물목록 = 결과.유물목록;
+                    //             메시지표시(메시지표시박스, "", "쉴드배앤 1개를 획득했습니다!", "");
+                    //             document.getElementById("유물").click();
+                    //         }
+                    //     } catch (e) {
+                    //         메시지표시(메시지표시박스, "", "서버 오류 발생", "");
+                    //     }
+                    //     화면해제();
+                    // }
+                    // else if (유물이름 === "고스트") {
+                    //     const 고스트 = 유저데이터.유물목록?.["고스트"] || 0;
 
                     else if (유물이름 === "마법의팔레트") {
 
@@ -9362,6 +9442,34 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                     }
 
 
+                    // else if (유물이름 === "뼈다구") {
+                    //     const 확인 = confirm("뼈다구를 100,000Gold에 파시겠습니까?");
+                    //     if (!확인) return;
+
+                    //     화면잠금();
+                    //     try {
+                    //         const 응답 = await fetch("/use-bone", {
+                    //             method: "POST",
+                    //             headers: { "Content-Type": "application/json" },
+                    //             body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                    //         });
+                    //         const 결과 = await 응답.json();
+
+                    //         if (결과.오류) {
+                    //             메시지표시(메시지표시박스, "", 결과.오류, "");
+                    //         } else {
+                    //             // 서버가 반환한 업데이트된 유물목록으로 갱신
+                    //             유저데이터.골드 = 결과.골드;
+                    //             유저데이터.유물목록 = 결과.유물목록;
+                    //             메시지표시(메시지표시박스, "", "돈생겼다 뽑기하러 가즈ㅏㅏ", "");
+                    //             // 화면 다시 렌더링
+                    //             document.getElementById("유물").click();
+                    //         }
+                    //     } catch (e) {
+                    //         메시지표시(메시지표시박스, "", "서버 오류 발생", "");
+                    //     }
+                    //     화면해제();
+                    // }
 
                 });
 
@@ -9370,115 +9478,8 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             화면해제();
         });
 
-        // else if (유물이름 === "뼈다구") {
-        //     const 확인 = confirm("뼈다구를 100,000Gold에 파시겠습니까?");
-        //     if (!확인) return;
 
-        //     화면잠금();
-        //     try {
-        //         const 응답 = await fetch("/use-bone", {
-        //             method: "POST",
-        //             headers: { "Content-Type": "application/json" },
-        //             body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-        //         });
-        //         const 결과 = await 응답.json();
 
-        //         if (결과.오류) {
-        //             메시지표시(메시지표시박스, "", 결과.오류, "");
-        //         } else {
-        //             // 서버가 반환한 업데이트된 유물목록으로 갱신
-        //             유저데이터.골드 = 결과.골드;
-        //             유저데이터.유물목록 = 결과.유물목록;
-        //             메시지표시(메시지표시박스, "", "돈생겼다 뽑기하러 가즈ㅏㅏ", "");
-        //             // 화면 다시 렌더링
-        //             document.getElementById("유물").click();
-        //         }
-        //     } catch (e) {
-        //         메시지표시(메시지표시박스, "", "서버 오류 발생", "");
-        //     }
-        //     화면해제();
-        // }
-
-        // else if (유물이름 === "소드") {
-        //     const 소드 = 유저데이터.유물목록?.["소드"] || 0;
-        //     const 현재스피어 = 유저데이터.유물목록?.["스피어"] || 0;
-
-        //     if (현재스피어 >= 99) {
-        //         메시지표시(메시지표시박스, "", "스피어는 99개 이상 보유할 수 없습니다", "");
-        //         return;
-        //     }
-
-        //     if (소드 < 3) {
-        //         메시지표시(메시지표시박스, "", "소드 3개를 구해오세요", "");
-        //         return;
-        //     }
-
-        //     const 확인 = confirm("소드 3개를 합성하여 스피어를 만들겠습니까?");
-        //     if (!확인) return;
-
-        //     화면잠금();
-        //     try {
-        //         const 응답 = await fetch("/use-Sword", {
-        //             method: "POST",
-        //             headers: { "Content-Type": "application/json" },
-        //             body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-        //         });
-        //         const 결과 = await 응답.json();
-
-        //         if (결과.오류) {
-        //             메시지표시(메시지표시박스, "", 결과.오류, "");
-        //         } else {
-        //             유저데이터.유물목록 = 결과.유물목록;
-        //             유저데이터.최종공격력 = 결과.최종공격력;
-        //             메시지표시(메시지표시박스, "", "스피어 1개를 획득했습니다!", "");
-        //             document.getElementById("유물").click();
-        //         }
-        //     } catch (e) {
-        //         메시지표시(메시지표시박스, "", "서버 오류 발생", "");
-        //     }
-        //     화면해제();
-        // }
-        // else if (유물이름 === "쉴드밴") {
-        //     const 쉴드밴 = 유저데이터.유물목록?.["쉴드밴"] || 0;
-
-        //     const 현재쉴드배앤 = 유저데이터.유물목록?.["쉴드배앤"] || 0;
-
-        //     if (현재쉴드배앤 >= 99) {
-        //         메시지표시(메시지표시박스, "", "쉴드배앤은 99개 이상 보유할 수 없습니다", "");
-        //         return;
-        //     }
-
-        //     if (쉴드밴 < 3) {
-        //         메시지표시(메시지표시박스, "", "쉴드밴 3개를 구해오세요", "");
-        //         return;
-        //     }
-
-        //     const 확인 = confirm("쉴드밴 3개를 합성하여 쉴드배앤을 만들겠습니까?");
-        //     if (!확인) return;
-
-        //     화면잠금();
-        //     try {
-        //         const 응답 = await fetch("/use-shieldban", {
-        //             method: "POST",
-        //             headers: { "Content-Type": "application/json" },
-        //             body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-        //         });
-        //         const 결과 = await 응답.json();
-
-        //         if (결과.오류) {
-        //             메시지표시(메시지표시박스, "", 결과.오류, "");
-        //         } else {
-        //             유저데이터.유물목록 = 결과.유물목록;
-        //             메시지표시(메시지표시박스, "", "쉴드배앤 1개를 획득했습니다!", "");
-        //             document.getElementById("유물").click();
-        //         }
-        //     } catch (e) {
-        //         메시지표시(메시지표시박스, "", "서버 오류 발생", "");
-        //     }
-        //     화면해제();
-        // }
-        // else if (유물이름 === "고스트") {
-        //     const 고스트 = 유저데이터.유물목록?.["고스트"] || 0;
 
     </script>
 
