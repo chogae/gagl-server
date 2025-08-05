@@ -2078,6 +2078,32 @@
         document.getElementById("공격버튼").addEventListener("click", async () => {
             if (!유저데이터) return;
 
+            const 숙련도 = 유저데이터.숙련도 ?? 0;
+            const 총투자 = Object.values(유저데이터.스킬 || {}).reduce((a, b) => a + b, 0);
+            const 필요한숙련도 = (총투자 + 1) * 500;
+            if (숙련도 >= 필요한숙련도) {
+                반자동실행 = false;
+                풀자동실행 = false;
+
+                document.getElementById("스킬").click();
+
+                return;
+            }
+
+            const 전직정보 = 유저데이터.전직정보 ?? {};
+            const 완료전직갯수 = Object.values(전직정보).filter(v => v === 1).length;
+            const 비용 = (완료전직갯수 + 1) * 50000;
+            const 현재경험치 = 유저데이터.경험치 ?? 0;
+
+            if (현재경험치 >= 비용) {
+                반자동실행 = false;
+                풀자동실행 = false;
+
+                document.getElementById("전직").click();
+
+                return;
+            }
+
             if (유저데이터.현재스태미너 < 1) {
                 메시지표시(메시지표시박스, "", "스태미너가 없습니다", "");
                 반자동실행 = false;
@@ -6322,6 +6348,11 @@
                 `,
                 `${여름아이콘}`,
                 `
+25.08.05<br>
+이제 사냥도중 전직이 가능하거나 스킬을 배울 수 있을 때<br>
+자동으로 전직화면이나 스킬화면으로 이동됩니다<br>
+               `,
+                `
 25.08.04<br>
 정조준 스킬의 계산식을 수정했습니다<br>
 데미지 * (1 + 0.0014 * 정조준레벨 * 현재턴)<br>
@@ -9513,6 +9544,14 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                             return;
                         }
 
+                        const 회복량 = 300;
+                        const 현재스태미너 = 유저데이터.현재스태미너 ?? 0;
+                        const 최대스태미너 = 유저데이터.최대스태미너 ?? 2000;
+
+                        if (현재스태미너 + 회복량 > 최대스태미너) {
+                            메시지표시(메시지표시박스, "", "배불러서 못먹겠어요", "");
+                            return;
+                        }
 
                         const 확인 = await 사용자확인(
                             "햄버거를 먹고 스태미너 300을 회복하시겠습니까?"
@@ -9740,8 +9779,13 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             화면해제();
         });
 
-
-
+        document.addEventListener("keydown", function (e) {
+            const 팝업 = document.getElementById("팝업");
+            if (팝업.style.display !== "none" && (e.key === "Enter" || e.key === " " || e.code === "Space")) {
+                e.preventDefault(); // 스크롤 등 기본 동작 방지
+                document.getElementById("팝업확인").click();
+            }
+        });
 
     </script>
 
