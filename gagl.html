@@ -742,6 +742,46 @@
             position: relative;
         }
 
+        #전직자동토글 {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid #555;
+            top: 4px;
+            left: 4px;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        .회색불 {
+            background-color: gray;
+        }
+
+        .빨간불 {
+            background-color: red;
+        }
+
+        #경험치테두리안표시 {
+            position: relative;
+        }
+
+        #스킬자동토글 {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid #555;
+            top: 4px;
+            left: 4px;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        #숙련도테두리안표시 {
+            position: relative;
+        }
+
 
         /* css추가 */
     </style>
@@ -993,7 +1033,10 @@
             <div class="사백픽셀테두리 세로정렬">
                 <div class="가로정렬">
                     <div class="경험치골드숙련도 세로정렬" id="경험치테두리안표시">
+                        <div id="전직자동토글" class="전직토글 회색불"></div>
+
                         <div class="레벨" id="레벨">
+
                         </div>
                         <div class="총경험치 커서호버" id="총경험치">
                         </div>
@@ -1011,6 +1054,7 @@
 
                     </div>
                     <div class="경험치골드숙련도 세로정렬" id="숙련도테두리안표시">
+                        <div id="스킬자동토글" class="전직토글 회색불"></div>
                         <div class="숙련도" id="숙련도">
                             숙련도
                         </div>
@@ -2081,7 +2125,7 @@
             const 숙련도 = 유저데이터.숙련도 ?? 0;
             const 총투자 = Object.values(유저데이터.스킬 || {}).reduce((a, b) => a + b, 0);
             const 필요한숙련도 = (총투자 + 1) * 500;
-            if (숙련도 >= 필요한숙련도) {
+            if (스킬자동온 && 숙련도 >= 필요한숙련도) {
                 반자동실행 = false;
                 풀자동실행 = false;
 
@@ -2090,19 +2134,19 @@
                 return;
             }
 
-            // const 전직정보 = 유저데이터.전직정보 ?? {};
-            // const 완료전직갯수 = Object.values(전직정보).filter(v => v === 1).length;
-            // const 비용 = (완료전직갯수 + 1) * 50000;
-            // const 현재경험치 = 유저데이터.경험치 ?? 0;
+            const 전직정보 = 유저데이터.전직정보 ?? {};
+            const 완료전직갯수 = Object.values(전직정보).filter(v => v === 1).length;
+            const 비용 = (완료전직갯수 + 1) * 50000;
+            const 현재경험치 = 유저데이터.경험치 ?? 0;
 
-            // if (완료전직갯수 <= 25 && 현재경험치 >= 비용) {
-            //     반자동실행 = false;
-            //     풀자동실행 = false;
+            if (전직자동온 && 완료전직갯수 <= 25 && 현재경험치 >= 비용) {
+                반자동실행 = false;
+                풀자동실행 = false;
+                // 전직자동온 = !전직자동온;
+                document.getElementById("전직").click();
 
-            //     document.getElementById("전직").click();
-
-            //     return;
-            // }
+                return;
+            }
 
 
             if (유저데이터.현재스태미너 < 1) {
@@ -6361,6 +6405,12 @@
 PC 편의기능이 업데이트되었습니다<br>
 팝업창의 확인버튼을 ENTER 또는 SPACE BAR로 클릭가능합니다<br>
 자동전직화면전환 기능을 삭제했습니다ㅜㅜ<br>
+전직화면 자동전환과 스킬화면 자동전환 기능이<br>
+전투화면 경험치박스와 숙련도박스의 회색동그라미 토글사용으로<br>
+개선되었습니다<br>
+회색점을 클릭하시면 빨간점으로 바뀌면서 자동전환기능이<br>
+ON 상태가 됩니다<br>
+사용해보고 말씀주십셔~<br>
                `,
                 `
 25.08.04<br>
@@ -9797,11 +9847,46 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             }
         });
 
+
+        let 전직자동온 = false;
+
+        document.getElementById("전직자동토글").addEventListener("click", () => {
+            전직자동온 = !전직자동온;
+            const 토글 = document.getElementById("전직자동토글");
+
+            if (전직자동온) {
+                토글.classList.remove("회색불");
+                토글.classList.add("빨간불");
+            } else {
+                토글.classList.remove("빨간불");
+                토글.classList.add("회색불");
+            }
+        });
+
+
+        let 스킬자동온 = false;
+
+        document.getElementById("스킬자동토글").addEventListener("click", () => {
+            스킬자동온 = !스킬자동온;
+            const 토글 = document.getElementById("스킬자동토글");
+
+            if (스킬자동온) {
+                토글.classList.remove("회색불");
+                토글.classList.add("빨간불");
+            } else {
+                토글.classList.remove("빨간불");
+                토글.classList.add("회색불");
+            }
+        });
+
+
+
+
+
+
+
+
     </script>
-
-
-
-
 </body>
 
 </html>
