@@ -782,6 +782,22 @@
             position: relative;
         }
 
+        #뽑기자동토글 {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid #555;
+            top: 4px;
+            left: 4px;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        #골드테두리안표시 {
+            position: relative;
+        }
+
 
         /* css추가 */
     </style>
@@ -1044,6 +1060,8 @@
                         </div>
                     </div>
                     <div class="경험치골드숙련도 세로정렬" id="골드테두리안표시">
+                        <div id="뽑기자동토글" class="전직토글 회색불"></div>
+
                         <div class="골드" id="골드">
                             골드
                         </div>
@@ -2122,18 +2140,6 @@
         document.getElementById("공격버튼").addEventListener("click", async () => {
             if (!유저데이터) return;
 
-            const 숙련도 = 유저데이터.숙련도 ?? 0;
-            const 총투자 = Object.values(유저데이터.스킬 || {}).reduce((a, b) => a + b, 0);
-            const 필요한숙련도 = (총투자 + 1) * 500;
-            if (스킬자동온 && 숙련도 >= 필요한숙련도) {
-                반자동실행 = false;
-                풀자동실행 = false;
-
-                document.getElementById("스킬").click();
-
-                return;
-            }
-
             const 전직정보 = 유저데이터.전직정보 ?? {};
             const 완료전직갯수 = Object.values(전직정보).filter(v => v === 1).length;
             const 비용 = (완료전직갯수 + 1) * 50000;
@@ -2148,6 +2154,19 @@
                 return;
             }
 
+
+
+            const 숙련도 = 유저데이터.숙련도 ?? 0;
+            const 총투자 = Object.values(유저데이터.스킬 || {}).reduce((a, b) => a + b, 0);
+            const 필요한숙련도 = (총투자 + 1) * 500;
+            if (스킬자동온 && 숙련도 >= 필요한숙련도) {
+                반자동실행 = false;
+                풀자동실행 = false;
+
+                document.getElementById("스킬").click();
+
+                return;
+            }
 
             if (유저데이터.현재스태미너 < 1) {
                 메시지표시(메시지표시박스, "", "스태미너가 없습니다", "");
@@ -2401,8 +2420,6 @@
                     document.getElementById("등급외테두리").style.border = "0.2px solid #4b4b4b";
                 }
 
-
-                // ✅ 유저데이터 변경 이후, 승리/패배 관계 없이 실행
                 const 스태미너표시 = document.getElementById("스태미너표시");
                 const 에너지바 = document.querySelector(".에너지바");
                 if (스태미너표시 && 에너지바) {
@@ -2414,6 +2431,61 @@
                 if (결과.모래시계발동) {
                     메시지표시(에너지바, 모래시계아이콘, "", "");
                 }
+
+
+                if (뽑기자동온 && 유저데이터.골드 >= 100000) {
+                    try {
+                        const 응답 = await fetch("/gamble-Relic", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                유저UID: 유저데이터.유저UID,
+                                종류: "일반",
+                            }),
+                        });
+                        const 결과 = await 응답.json();
+
+                        if (응답.ok && !결과.오류) {
+                            유저데이터 = 결과.유저데이터;
+                            document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
+                            const 유물이름 = 결과.results?.[0]?.유물이름;
+
+                            if (유물이름) {
+                                const 유물드랍박스 = document.getElementById("유물드랍박스");
+                                const 유저테두리안표시 = document.getElementById("유저테두리안표시");
+
+                                if (유물드랍박스) {
+                                    유물드랍박스.style.display = "none";
+                                    if (window.유물드랍타이머) clearTimeout(window.유물드랍타이머);
+
+                                    유물드랍박스.innerText = `자동뽑기중! 유물 [${유물이름}]을(를) 획득`;
+                                    유물드랍박스.style.display = "block";
+
+                                    if (유저테두리안표시) {
+                                        유저테두리안표시.style.position = "relative";
+                                        유저테두리안표시.appendChild(유물드랍박스);
+
+                                        Object.assign(유물드랍박스.style, {
+                                            position: "absolute",
+                                            top: "50%",
+                                            left: "50%",
+                                            transform: "translate(-50%, -50%)",
+                                            zIndex: "100",
+                                        });
+                                    }
+
+                                    window.유물드랍타이머 = setTimeout(() => {
+                                        유물드랍박스.style.display = "none";
+                                    }, 3000);
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.error("자동 유물뽑기 오류:", e);
+                    }
+                }
+
+
             } catch (e) {
                 메시지표시(메시지표시박스, "", "전투 중 오류: " + e.message, "");
                 반자동실행 = false;
@@ -3142,52 +3214,6 @@
                 const items = Array.isArray(결과.results) ? 결과.results : [결과];
 
                 const 표시가능아이템들 = items.filter(item => item.유물이름);
-
-                // if (종류 !== "최대") {
-                //     표시가능아이템들.forEach((item, i) => {
-                //         setTimeout(() => {
-                //             // 5-1) 퍼즐 발동 시 별도 표시 (원하는 아이콘 넣어주세요)
-                //             if (item.퍼즐발동) {
-                //                 메시지표시(메시지표시박스, 퍼즐아이콘, "", "");
-                //             }
-
-                //             // 5-2) 유물 획득 알림
-                //             if (유물드랍박스) {
-                //                 // 기존에 떠 있던 박스를 숨김
-                //                 유물드랍박스.style.display = "none";
-                //                 if (window.유물드랍타이머) clearTimeout(window.유물드랍타이머);
-
-                //                 // 텍스트 설정
-                //                 if (item.유물이름) {
-                //                     유물드랍박스.innerText = `유물 [${item.유물이름}]을(를) 획득했다!`;
-                //                 } else {
-                //                     // 유물드랍박스.innerText = "뽑기에 실패했습니다!";
-                //                 }
-
-                //                 // 화면에 표시
-                //                 유물드랍박스.style.display = "block";
-
-                //                 // 위치 조정
-                //                 if (유저테두리안표시) {
-                //                     유저테두리안표시.style.position = "relative";
-                //                     유저테두리안표시.appendChild(유물드랍박스);
-                //                     Object.assign(유물드랍박스.style, {
-                //                         position: "absolute",
-                //                         top: "50%",
-                //                         left: "50%",
-                //                         transform: "translate(-50%, -50%)",
-                //                         zIndex: "100",
-                //                     });
-                //                 }
-
-                //                 // 3초 후 숨김
-                //                 window.유물드랍타이머 = setTimeout(() => {
-                //                     유물드랍박스.style.display = "none";
-                //                 }, 3000);
-                //             }
-                //         }, i * 500); // 회차마다 0.5초 간격으로 표시
-                //     });
-                // }
 
                 화면해제();
 
@@ -6366,6 +6392,14 @@
 
             const 문장들 = [
                 `${여름아이콘}`,
+                `
+25.08.06<br>
+레벨박스와 숙련도박스에 회색점이 보이는데,<br>
+골드박스에만 없는것이 신경쓰여 골드박스에도 만들었습니다<br>
+기능은 자동뽑기로, 사냥중 10만골드 이상 보유 시<br>
+자동으로 '유물'뽑기가 실행됩니다<br>
+유물 만세<br>
+        `,
                 `
 25.08.05<br>
 전투화면의 레벨박스 좌상단 토글버튼과<br>
@@ -9877,6 +9911,22 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
             const 토글 = document.getElementById("스킬자동토글");
 
             if (스킬자동온) {
+                토글.classList.remove("회색불");
+                토글.classList.add("빨간불");
+            } else {
+                토글.classList.remove("빨간불");
+                토글.classList.add("회색불");
+            }
+        });
+
+
+        let 뽑기자동온 = false;
+
+        document.getElementById("뽑기자동토글").addEventListener("click", () => {
+            뽑기자동온 = !뽑기자동온;
+            const 토글 = document.getElementById("뽑기자동토글");
+
+            if (뽑기자동온) {
                 토글.classList.remove("회색불");
                 토글.classList.add("빨간불");
             } else {
