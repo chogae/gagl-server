@@ -24,6 +24,12 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 
+
+// 루트 경로로 접속 시 gagl.html로 리디렉션
+app.get("/", (req, res) => {
+    res.redirect("/gagl.html");
+});
+
 // 🟡 gagl.html 요청 시 해당 파일 반환
 app.get("/gagl.html", (req, res) => {
     res.sendFile(path.join(__dirname, "gagl.html"));
