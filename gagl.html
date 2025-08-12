@@ -1189,7 +1189,9 @@
         </div>
     </div>
 
+    <div id="캐시샵" style="display: none;">
 
+    </div>
 
     <div id="스킬화면" style="display: none;">
         <div class="밑줄" id="보유숙련도">
@@ -3892,7 +3894,6 @@
   <div style="display: flex; flex-direction: column; gap: 10px;">    
     <div class="버튼" id="내정보">내 정 보</div>
     <div class="버튼" id="우편함">우 편 함</div>
-           <div class="버튼" id="캐시샵">캐 시 샵</div>
  <div class="버튼" id="메뉴얼">메 뉴 얼</div>
     <div class="버튼" id="일어난일">일어난일</div>
     <div class="버튼" id="가글사전">가글사전</div>
@@ -3900,7 +3901,7 @@
 </div>
 `;
         // <div class="버튼" id="로그아웃">로그아웃</div>
-
+        //    <div class="버튼" id="캐시샵">캐 시 샵</div>
 
         정보툴팁.style.display = "none";
         document.body.appendChild(정보툴팁);
@@ -6186,6 +6187,8 @@
             보스의알이스터에그연계
             신규유물효과
             신규직업 카운터? 반사?
+            스킬프리셋
+            레어몬스터오류
 
             git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
@@ -6193,11 +6196,15 @@
 
             */
 
+            //                 `
+            // 25.08.12<br>
+            // 캐시샵이 삭제되었습니다<br>
+            //                 `,
 
             const 문장들 = [
                 `${여름아이콘}`,
                 `
-25.08.06<br>
+25.08.09<br>
 수다 편하게 떠시라고 하루 스피커 충전량 29개로 세팅되었습니다<br>
 악세사리화면에 간단한 설명을 추가했습니다<br>
 공허등급 무기. 바론의 촉수의 강화시스템이 구현되었습니다<br>
@@ -7751,7 +7758,11 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
         document.getElementById("매직서바이벌").addEventListener("click", async () => {
             if (!유저데이터) return;
 
-            if (유저데이터.유저아이디 !== "나주인장아니다") return 메시지표시(메시지표시박스, "", "구현중입니다", "");
+            const 허용아이디목록 = ["나주인장아니다",];
+
+            if (!허용아이디목록.includes(유저데이터.유저아이디)) {
+                return 메시지표시(메시지표시박스, "", "구현중입니다", "");
+            }
 
             모든화면숨기기();
 
@@ -7771,66 +7782,392 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 
             }
 
-
             const 컨테이너 = document.getElementById("매직서바이벌화면");
             컨테이너.innerHTML = "";
             컨테이너.style.display = "flex";
-            컨테이너.style.flexDirection = "column"; // 세로 방향
+            컨테이너.style.flexDirection = "column";
             컨테이너.style.width = "400px";
             컨테이너.style.marginTop = "15px";
             컨테이너.style.border = "0.2px solid #4b4b4b";
             컨테이너.style.borderRadius = "10px";
             컨테이너.style.padding = "15px";
 
-            // ✅ 여기 중간 래퍼 생성
-            const 내부래퍼 = document.createElement("div");
-            내부래퍼.style.display = "flex";
-            내부래퍼.style.flexDirection = "row";
-            내부래퍼.style.justifyContent = "space-between";
-            내부래퍼.style.width = "100%"; // 컨테이너 400px 기준
-            내부래퍼.style.boxSizing = "border-box";
+            // ===== 첫 번째 객체 =====
+            const 첫객체 = document.createElement("div");
+            첫객체.style.display = "flex";
+            첫객체.style.justifyContent = "space-between";
+            첫객체.style.width = "100%";
 
-            // 왼쪽 영역
-            const 왼쪽영역 = document.createElement("div");
-            왼쪽영역.style.width = "60%";
-            왼쪽영역.style.display = "flex";
-            왼쪽영역.style.flexDirection = "column";
-            왼쪽영역.style.alignItems = "center";
-            왼쪽영역.innerHTML = "왼쪽영역";
-            왼쪽영역.style.border = "0.2px solid #4b4b4b";
-            왼쪽영역.style.borderRadius = "10px";
+            // 왼쪽 (6 비율)
+            const 첫왼쪽 = document.createElement("div");
+            첫왼쪽.style.width = "60%";
+            첫왼쪽.style.border = "0.2px solid #4b4b4b";
+            첫왼쪽.innerHTML = "왼쪽 6";
 
-            // 오른쪽 영역
-            const 오른쪽영역 = document.createElement("div");
-            오른쪽영역.style.width = "40%";
-            오른쪽영역.style.display = "flex";
-            오른쪽영역.style.flexDirection = "column";
-            오른쪽영역.style.alignItems = "center";
-            오른쪽영역.innerHTML = "오른쪽영역";
-            오른쪽영역.style.border = "0.2px solid #4b4b4b";
-            오른쪽영역.style.borderRadius = "10px";
+            // 오른쪽 (4 비율, 세로정렬)
+            const 첫오른쪽 = document.createElement("div");
+            첫오른쪽.style.width = "40%";
+            첫오른쪽.style.display = "flex";
+            첫오른쪽.style.flexDirection = "column";
+            첫오른쪽.style.border = "0.2px solid #4b4b4b";
 
-            // 스텟상자
-            const 스텟상자 = document.createElement("div");
-            스텟상자.style.width = "100%";
-            스텟상자.style.border = "0.2px solid #4b4b4b";
-            스텟상자.style.borderRadius = "10px";
-            스텟상자.style.padding = "10px";
-            스텟상자.style.marginTop = "10px";
-            스텟상자.style.display = "flex";
-            스텟상자.style.flexDirection = "column";
-            스텟상자.style.alignItems = "center";
-            스텟상자.style.boxSizing = "border-box";
-            스텟상자.innerHTML = "스텟상자";
+            // 오른쪽의 첫번째 세로 객체
+            const 오른쪽첫 = document.createElement("div");
+            오른쪽첫.style.border = "0.2px solid #4b4b4b";
+            오른쪽첫.style.display = "flex";
+            오른쪽첫.style.flexDirection = "column";
+            오른쪽첫.style.alignItems = "center";
+            오른쪽첫.innerHTML = "순위";
 
-            // 계층 구성
-            // 왼쪽영역.appendChild(스텟상자);
-            내부래퍼.appendChild(왼쪽영역);
-            내부래퍼.appendChild(오른쪽영역);
-            컨테이너.appendChild(내부래퍼);
-            내부래퍼.after(스텟상자);
+            // 오른쪽의 두번째 세로 객체 (양쪽정렬)
+            const 오른쪽둘 = document.createElement("div");
+            오른쪽둘.style.display = "flex";
+            오른쪽둘.style.justifyContent = "space-between";
+            오른쪽둘.style.border = "0.2px solid #4b4b4b";
+
+            // 오른쪽둘 내부 왼쪽
+            const 둘왼쪽 = document.createElement("div");
+            둘왼쪽.style.border = "0.2px solid #4b4b4b";
+            둘왼쪽.innerHTML = "좌측";
+
+            // 오른쪽둘 내부 오른쪽
+            const 둘오른쪽 = document.createElement("div");
+            둘오른쪽.style.border = "0.2px solid #4b4b4b";
+            둘오른쪽.innerHTML = "우측";
+
+            // 조립
+            오른쪽둘.appendChild(둘왼쪽);
+            오른쪽둘.appendChild(둘오른쪽);
+            첫오른쪽.appendChild(오른쪽첫);
+            첫오른쪽.appendChild(오른쪽둘);
+            첫객체.appendChild(첫왼쪽);
+            첫객체.appendChild(첫오른쪽);
+            컨테이너.appendChild(첫객체);
+
+
+            // ===== 두번째 객체 =====
+            const 두번째객체 = document.createElement("div");
+            두번째객체.style.border = "0.2px solid #4b4b4b";
+            두번째객체.innerHTML = "2번째 객체";
+            컨테이너.appendChild(두번째객체);
+
+
+            // ===== 세번째 객체 =====
+            const 세번째객체 = document.createElement("div");
+            세번째객체.style.border = "0.2px solid #4b4b4b";
+            세번째객체.innerHTML = "3번째 객체";
+            컨테이너.appendChild(세번째객체);
+
+
+            // ===== 네번째 객체 =====
+            const 네번째객체 = document.createElement("div");
+            네번째객체.style.border = "0.2px solid #4b4b4b";
+            네번째객체.innerHTML = "4번째 객체";
+            컨테이너.appendChild(네번째객체);
+
+
+            // ===== 다섯번째 객체 =====
+            const 다섯번째객체 = document.createElement("div");
+            다섯번째객체.style.border = "0.2px solid #4b4b4b";
+            다섯번째객체.innerHTML = "5번째 객체";
+            컨테이너.appendChild(다섯번째객체);
+
+
+            // ====== 헬퍼: 라벨–값 한 줄 ======
+            function createStat(labelText) {
+                const wrap = document.createElement("div");
+                wrap.style.display = "flex";
+                wrap.style.justifyContent = "space-between";
+                wrap.style.alignItems = "center";
+                wrap.style.borderBottom = "0.2px solid #2b2b2b";
+                wrap.style.padding = "4px 0";
+
+                const label = document.createElement("div");
+                label.style.color = "#b0b0b0";
+                label.style.fontSize = "12px";
+                label.style.fontWeight = "bold";
+                label.textContent = labelText;
+
+                const value = document.createElement("div");
+                value.style.color = "#ffffff";
+                value.style.fontWeight = "bold";
+                value.style.fontSize = "13px";
+
+                wrap.appendChild(label);
+                wrap.appendChild(value);
+                return { wrap, valueEl: value };
+            }
+
+            function pct(num, den) {
+                if (!den || den <= 0) return 0;
+                return Math.max(0, Math.min(100, (num / den) * 100));
+            }
+            function fmt(v, suffix = "") {
+                if (v === undefined || v === null) return "-";
+                if (typeof v === "number") {
+                    if (suffix === "%") return `${(v).toFixed(1)}%`;
+                    return v.toLocaleString();
+                }
+                return String(v);
+            }
+
+            // ====== 2번째 객체: 유저 정보 ======
+            두번째객체.innerHTML = "";
+            두번째객체.style.border = "0.2px solid #4b4b4b";
+            두번째객체.style.borderRadius = "10px";
+            두번째객체.style.padding = "12px";
+            두번째객체.style.display = "flex";
+            두번째객체.style.flexDirection = "column";
+            두번째객체.style.gap = "8px";
+
+            const 유저제목 = document.createElement("div");
+            유저제목.textContent = 유저데이터.유저아이디;
+            유저제목.style.fontWeight = "bold";
+            유저제목.style.fontSize = "16px";
+            유저제목.style.color = "#3b82f6";
+            두번째객체.appendChild(유저제목);
+
+            // HP 바
+            const hpBox = document.createElement("div");
+            hpBox.style.border = "0.2px solid #4b4b4b";
+            hpBox.style.borderRadius = "8px";
+            hpBox.style.padding = "10px";
+
+            const hpTop = document.createElement("div");
+            hpTop.style.display = "flex";
+            hpTop.style.justifyContent = "space-between";
+            hpTop.style.marginBottom = "6px";
+
+            const hpLabel = document.createElement("div");
+            hpLabel.textContent = "체력";
+            hpLabel.style.color = "#b0b0b0";
+
+            const hpValue = document.createElement("div");
+            hpValue.style.color = "#fff";
+            hpValue.style.fontWeight = "bold";
+
+            const hpBarWrap = document.createElement("div");
+            hpBarWrap.style.height = "6px";
+            hpBarWrap.style.background = "#1a1a1a";
+            hpBarWrap.style.borderRadius = "6px";
+            hpBarWrap.style.overflow = "hidden";
+
+            const hpBar = document.createElement("div");
+            hpBar.style.height = "100%";
+            hpBar.style.width = "100%";
+            hpBar.style.background = "#eab308";
+
+            hpBarWrap.appendChild(hpBar);
+            hpTop.appendChild(hpLabel);
+            hpTop.appendChild(hpValue);
+            hpBox.appendChild(hpTop);
+            hpBox.appendChild(hpBarWrap);
+            두번째객체.appendChild(hpBox);
+
+            // 스탯 2열 그리드
+            const 유저스탯그리드 = document.createElement("div");
+            유저스탯그리드.style.display = "grid";
+            유저스탯그리드.style.gridTemplateColumns = "1fr 1fr";
+            유저스탯그리드.style.columnGap = "10px";
+            유저스탯그리드.style.rowGap = "6px";
+
+            // 유저 스탯
+            const { wrap: 공격력Row, valueEl: 공격력Val } = createStat("공격력");
+            const { wrap: 공격력증폭Row, valueEl: 공격력증폭Val } = createStat("공격력 증폭");
+            const { wrap: 회복률Row, valueEl: 회복률Val } = createStat("회복률");
+            const { wrap: 회복량Row, valueEl: 회복량Val } = createStat("회복량");
+            const { wrap: 모든마법피해량Row, valueEl: 모든마법피해량Val } = createStat("모든 마법 피해량");
+            const { wrap: 받는피해량Row, valueEl: 받는피해량Val } = createStat("받는 피해량");
+            const { wrap: 회피율Row, valueEl: 회피율Val } = createStat("회피율");
+            const { wrap: 치명타율Row, valueEl: 치명타율Val } = createStat("치명타율");
+            const { wrap: 치명타배율Row, valueEl: 치명타배율Val } = createStat("치명타 배율");
+            const { wrap: 적최대체력Row, valueEl: 적최대체력Val } = createStat("적 최대 체력");
+
+            유저스탯그리드.append(
+                공격력Row, 공격력증폭Row,
+                회복률Row, 회복량Row,
+                모든마법피해량Row, 받는피해량Row,
+                회피율Row, 치명타율Row,
+                치명타배율Row, 적최대체력Row
+            );
+            두번째객체.appendChild(유저스탯그리드);
+
+            // ====== 3번째 객체: 몬스터 정보 ======
+            세번째객체.innerHTML = "";
+            세번째객체.style.border = "0.2px solid #4b4b4b";
+            세번째객체.style.borderRadius = "10px";
+            세번째객체.style.padding = "12px";
+            세번째객체.style.display = "flex";
+            세번째객체.style.flexDirection = "column";
+            세번째객체.style.gap = "8px";
+
+            const 몬제목 = document.createElement("div");
+            몬제목.textContent = "몬스터 정보";
+            몬제목.style.fontWeight = "bold";
+            몬제목.style.fontSize = "16px";
+            몬제목.style.color = "#f63b3b";
+            세번째객체.appendChild(몬제목);
+
+            // 몬스터 HP 바
+            const mhpBox = document.createElement("div");
+            mhpBox.style.border = "0.2px solid #4b4b4b";
+            mhpBox.style.borderRadius = "8px";
+            mhpBox.style.padding = "10px";
+
+            const mhpTop = document.createElement("div");
+            mhpTop.style.display = "flex";
+            mhpTop.style.justifyContent = "space-between";
+            mhpTop.style.marginBottom = "6px";
+
+            const mhpLabel = document.createElement("div");
+            mhpLabel.textContent = "체력";
+            mhpLabel.style.color = "#b0b0b0";
+
+            const mhpValue = document.createElement("div");
+            mhpValue.style.color = "#fff";
+            mhpValue.style.fontWeight = "bold";
+
+            const mhpBarWrap = document.createElement("div");
+            mhpBarWrap.style.height = "6px";
+            mhpBarWrap.style.background = "#1a1a1a";
+            mhpBarWrap.style.borderRadius = "6px";
+            mhpBarWrap.style.overflow = "hidden";
+
+            const mhpBar = document.createElement("div");
+            mhpBar.style.height = "100%";
+            mhpBar.style.width = "100%";
+            mhpBar.style.background = "#f53b3b";
+
+            mhpBarWrap.appendChild(mhpBar);
+            mhpTop.appendChild(mhpLabel);
+            mhpTop.appendChild(mhpValue);
+            mhpBox.appendChild(mhpTop);
+            mhpBox.appendChild(mhpBarWrap);
+            세번째객체.appendChild(mhpBox);
+
+            // 몬스터 스탯 2열
+            const 몬스탯그리드 = document.createElement("div");
+            몬스탯그리드.style.display = "grid";
+            몬스탯그리드.style.gridTemplateColumns = "1fr 1fr";
+            몬스탯그리드.style.columnGap = "10px";
+            몬스탯그리드.style.rowGap = "6px";
+
+            const { wrap: 몬이름Row, valueEl: 몬이름Val } = createStat("이름");
+            const { wrap: 방어력Row, valueEl: 방어력Val } = createStat("방어력");
+            const { wrap: 속성Row, valueEl: 속성Val } = createStat("속성");
+            const { wrap: 상태Row, valueEl: 상태Val } = createStat("상태이상");
+
+            몬스탯그리드.append(몬이름Row, 방어력Row, 속성Row, 상태Row);
+            세번째객체.appendChild(몬스탯그리드);
+
+            // ====== 값 업데이트 ======
+            function updateUserInfo(u) {
+                const hpNow = u?.체력?.현재 ?? 0;
+                const hpMax = u?.체력?.최대 ?? 1;
+                hpValue.textContent = `${fmt(hpNow)} / ${fmt(hpMax)}`;
+                hpBar.style.width = `${pct(hpNow, hpMax)}%`;
+
+                공격력Val.textContent = fmt(u?.공격력);
+                공격력증폭Val.textContent = fmt(u?.공격력증폭, "%");
+                회복률Val.textContent = fmt(u?.회복률, "%");
+                회복량Val.textContent = fmt(u?.회복량);
+                모든마법피해량Val.textContent = fmt(u?.모든마법피해량, "%");
+                받는피해량Val.textContent = fmt(u?.받는피해량, "%");
+                회피율Val.textContent = fmt(u?.회피율, "%");
+                치명타율Val.textContent = fmt(u?.치명타율, "%");
+                치명타배율Val.textContent = fmt(u?.치명타배율, "%");
+                적최대체력Val.textContent = fmt(u?.적최대체력);
+            }
+
+            function updateMonsterInfo(m) {
+                const hpNow = m?.체력?.현재 ?? 0;
+                const hpMax = m?.체력?.최대 ?? 1;
+                mhpValue.textContent = `${fmt(hpNow)} / ${fmt(hpMax)}`;
+                mhpBar.style.width = `${pct(hpNow, hpMax)}%`;
+
+                몬이름Val.textContent = fmt(m?.이름);
+                방어력Val.textContent = fmt(m?.방어력);
+                속성Val.textContent = fmt(m?.속성);
+                상태Val.textContent = Array.isArray(m?.상태이상) && m.상태이상.length
+                    ? m.상태이상.join(", ")
+                    : "-";
+            }
+
+
+            // ====== 사용 예시 ======
+            updateUserInfo({
+                체력: { 현재: 1789, 최대: 2000 },
+                공격력: 52340,
+                공격력증폭: 35.2,
+                회복률: 4.5,
+                회복량: 120,
+                모든마법피해량: 18.0,
+                받는피해량: -6.0,   // 감소면 음수로
+                회피율: 12.0,
+                치명타율: 37.5,
+                치명타배율: 210.0,
+                적최대체력: 999999
+            });
+
+            updateMonsterInfo({
+                체력: { 현재: 640000, 최대: 1200000 },
+                이름: "지하성 보스",
+                방어력: 38000,
+                속성: "암흑",
+                상태이상: ["출혈", "방깎"]
+            });
 
         });
+
+        //         // ✅ 여기 중간 래퍼 생성
+        // const 내부래퍼 = document.createElement("div");
+        // 내부래퍼.style.display = "flex";
+        // 내부래퍼.style.flexDirection = "row";
+        // 내부래퍼.style.justifyContent = "space-between";
+        // 내부래퍼.style.width = "100%"; // 컨테이너 400px 기준
+        // 내부래퍼.style.boxSizing = "border-box";
+
+        // // 왼쪽 영역
+        // const 왼쪽영역 = document.createElement("div");
+        // 왼쪽영역.style.width = "60%";
+        // 왼쪽영역.style.display = "flex";
+        // 왼쪽영역.style.flexDirection = "column";
+        // 왼쪽영역.style.alignItems = "center";
+        // 왼쪽영역.innerHTML = "왼쪽영역";
+        // 왼쪽영역.style.border = "0.2px solid #4b4b4b";
+        // 왼쪽영역.style.borderRadius = "10px";
+        // 왼쪽영역.style.padding = "10px";
+
+        // // 오른쪽 영역
+        // const 오른쪽영역 = document.createElement("div");
+        // 오른쪽영역.style.width = "40%";
+        // 오른쪽영역.style.display = "flex";
+        // 오른쪽영역.style.flexDirection = "column";
+        // 오른쪽영역.style.alignItems = "center";
+        // 오른쪽영역.innerHTML = "오른쪽영역";
+        // 오른쪽영역.style.border = "0.2px solid #4b4b4b";
+        // 오른쪽영역.style.borderRadius = "10px";
+        // 오른쪽영역.style.padding = "10px";
+
+        // // 스텟상자
+        // const 스텟상자 = document.createElement("div");
+        // 스텟상자.style.width = "100%";
+        // 스텟상자.style.border = "0.2px solid #4b4b4b";
+        // 스텟상자.style.borderRadius = "10px";
+        // 스텟상자.style.padding = "10px";
+        // // 스텟상자.style.marginTop = "10px";
+        // 스텟상자.style.display = "flex";
+        // 스텟상자.style.flexDirection = "column";
+        // 스텟상자.style.alignItems = "center";
+        // 스텟상자.style.boxSizing = "border-box";
+        // 스텟상자.innerHTML = "스텟상자";
+
+        // // 계층 구성
+        // // 왼쪽영역.appendChild(스텟상자);
+        // 내부래퍼.appendChild(왼쪽영역);
+        // 내부래퍼.appendChild(오른쪽영역);
+        // 컨테이너.appendChild(내부래퍼);
+        // 내부래퍼.after(스텟상자);
 
 
         // const 스텟상자 = document.createElement("div");
@@ -8092,7 +8429,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
                 { 왼쪽: `${뼈다구아이콘}(뼈다구)`, 오른쪽: "직업을 초기화합니다(1,100원)" },
                 { 왼쪽: `${안경아이콘}(안경)`, 오른쪽: "악세사리를 교체합니다(1,100원)" },
                 { 왼쪽: `${햄버거아이콘}(햄버거)`, 오른쪽: "햄버거(스태미너+300) 1개 배송(2,100원)" },
-                { 왼쪽: `${햄버거아이콘}(햄버거정기배송)`, 오른쪽: "30일간 매일 햄버거(스태미너+300) 배송(4,900원)" },
+                { 왼쪽: `${햄버거아이콘}(햄버거정기배송)(장기구매가능)`, 오른쪽: "30일간 매일 햄버거(스태미너+300) 배송(4,900원)" },
                 { 왼쪽: `${현질아이콘}(100만골드)`, 오른쪽: "100만골드 지급(4,900원)" },
                 { 왼쪽: `${티켓아이콘}x3(티켓3장)`, 오른쪽: "고급장비뽑기에 사용됩니다(4,900원)" },
                 // { 왼쪽: `${현질아이콘}(현질)`, 오른쪽: "1억골드(1,000,000원)" },
