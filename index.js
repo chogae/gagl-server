@@ -73,97 +73,97 @@ app.post("/get-user", async (req, res) => {
 
 
 
-    const formatter = new Intl.DateTimeFormat("ko-KR", {
-        weekday: "short",
-        timeZone: "Asia/Seoul"
-    });
-    const parts = formatter.formatToParts(now);
-    const 오늘요일 = parts.find(p => p.type === "weekday")?.value;
+    // const formatter = new Intl.DateTimeFormat("ko-KR", {
+    //     weekday: "short",
+    //     timeZone: "Asia/Seoul"
+    // });
+    // const parts = formatter.formatToParts(now);
+    // const 오늘요일 = parts.find(p => p.type === "weekday")?.value;
 
-    const { data: 대표유저, error: 대표에러 } = await supabaseAdmin
-        .from("users")
-        .select("보스정산요일")
-        .eq("유저아이디", "나주인장아니다")
-        .single();
+    // const { data: 대표유저, error: 대표에러 } = await supabaseAdmin
+    //     .from("users")
+    //     .select("보스정산요일")
+    //     .eq("유저아이디", "나주인장아니다")
+    //     .single();
 
-    if (!대표에러 && 대표유저 && 대표유저.보스정산요일 !== 오늘요일) {
-        // ✅ 1. 보스데미지 > 0 유저 전체 조회
-        const { data: 유저들, error: 유저에러 } = await supabaseAdmin
-            .from("users")
-            .select("유저UID, 보스누적데미지, 펫단계");
+    // if (!대표에러 && 대표유저 && 대표유저.보스정산요일 !== 오늘요일) {
+    //     // ✅ 1. 보스데미지 > 0 유저 전체 조회
+    //     const { data: 유저들, error: 유저에러 } = await supabaseAdmin
+    //         .from("users")
+    //         .select("유저UID, 보스누적데미지, 펫단계");
 
-        if (!유저에러 && 유저들.length > 0) {
-            for (const 유저 of 유저들) {
-                const 누적 = Number(유저.보스누적데미지 || 0);
-                let 펫단계 = 0;
-                if (누적 >= 99_999_999) 펫단계 = 3;
-                else if (누적 >= 9_999_999) 펫단계 = 2;
-                else if (누적 >= 999_999) 펫단계 = 1;
-                // 그 외 0 유지
+    //     if (!유저에러 && 유저들.length > 0) {
+    //         // for (const 유저 of 유저들) {
+    //         //     const 누적 = Number(유저.보스누적데미지 || 0);
+    //         //     let 펫단계 = 0;
+    //         //     if (누적 >= 99_999_999) 펫단계 = 3;
+    //         //     else if (누적 >= 9_999_999) 펫단계 = 2;
+    //         //     else if (누적 >= 999_999) 펫단계 = 1;
+    //         //     // 그 외 0 유지
 
-                if (펫단계 !== 유저.펫단계) {
-                    await supabaseAdmin
-                        .from("users")
-                        .update({ 펫단계 })
-                        .eq("유저UID", 유저.유저UID);
-                }
-            }
+    //         //     if (펫단계 !== 유저.펫단계) {
+    //         //         await supabaseAdmin
+    //         //             .from("users")
+    //         //             .update({ 펫단계 })
+    //         //             .eq("유저UID", 유저.유저UID);
+    //         //     }
+    //         // }
 
-            const { data: 순위유저들 } = await supabaseAdmin
-                .from("users")
-                .select("유저UID, 유저아이디")
-                .gt("보스누적데미지", 0)
-                .order("보스누적데미지", { ascending: false }); // ✅ limit 제거
+    //         const { data: 순위유저들 } = await supabaseAdmin
+    //             .from("users")
+    //             .select("유저UID, 유저아이디")
+    //             .gt("보스누적데미지", 0)
+    //             .order("보스누적데미지", { ascending: false }); // ✅ limit 제거
 
-            if (순위유저들 && 순위유저들.length > 0) {
-                for (let i = 0; i < 순위유저들.length; i++) {
-                    const 대상UID = 순위유저들[i].유저UID;
-                    const 순위 = i + 1;
+    //         if (순위유저들 && 순위유저들.length > 0) {
+    //             for (let i = 0; i < 순위유저들.length; i++) {
+    //                 const 대상UID = 순위유저들[i].유저UID;
+    //                 const 순위 = i + 1;
 
-                    await 로그기록(
-                        순위유저들[i].유저아이디,
-                        `보스 순위 ${순위}위`
-                    );
+    //                 await 로그기록(
+    //                     순위유저들[i].유저아이디,
+    //                     `보스 순위 ${순위}위`
+    //                 );
 
-                    await supabaseAdmin
-                        .from("users")
-                        .update({ 어제보스순위: 순위 })
-                        .eq("유저UID", 대상UID);
-                }
-            }
-
-
-            // ✅ 4. 보스누적데미지 초기화
-            await supabaseAdmin
-                .from("users")
-                .update({ 보스누적데미지: 0 })
-                .neq("보스누적데미지", 0);
-
-            // ✅ 5. 보스넘버 증가
-            const { data: 대표보스유저 } = await supabaseAdmin
-                .from("users")
-                .select("보스넘버")
-                .eq("유저아이디", "나주인장아니다")
-                .single();
-
-            const 현재보스번호 = 대표보스유저?.보스넘버 ?? 0;
-            const 다음보스번호 = (현재보스번호 + 1) % 10;
-
-            await supabaseAdmin
-                .from("users")
-                .update({ 보스넘버: 다음보스번호 })
-                .neq("보스넘버", 다음보스번호);
-
-            await supabaseAdmin
-                .from("users")
-                .update({ 보스정산요일: 오늘요일 })
-                .or(`보스정산요일.is.null,보스정산요일.neq.${오늘요일}`);
-
-        }
-
-    }
+    //                 await supabaseAdmin
+    //                     .from("users")
+    //                     .update({ 어제보스순위: 순위 })
+    //                     .eq("유저UID", 대상UID);
+    //             }
+    //         }
 
 
+    //         // ✅ 4. 보스누적데미지 초기화
+    //         await supabaseAdmin
+    //             .from("users")
+    //             .update({ 보스누적데미지: 0 })
+    //             .neq("보스누적데미지", 0);
+
+    //         // ✅ 5. 보스넘버 증가
+    //         const { data: 대표보스유저 } = await supabaseAdmin
+    //             .from("users")
+    //             .select("보스넘버")
+    //             .eq("유저아이디", "나주인장아니다")
+    //             .single();
+
+    //         const 현재보스번호 = 대표보스유저?.보스넘버 ?? 0;
+    //         const 다음보스번호 = (현재보스번호 + 1) % 10;
+
+    //         await supabaseAdmin
+    //             .from("users")
+    //             .update({ 보스넘버: 다음보스번호 })
+    //             .neq("보스넘버", 다음보스번호);
+
+    //         await supabaseAdmin
+    //             .from("users")
+    //             .update({ 보스정산요일: 오늘요일 })
+    //             .or(`보스정산요일.is.null,보스정산요일.neq.${오늘요일}`);
+
+    //     }
+
+    // }
+
+    //패치중
     const 마지막지급날짜 = 유저.하루한번
         ? new Date(new Date(유저.하루한번).toLocaleString("en-US", { timeZone: "Asia/Seoul" }))
             .toISOString()
@@ -175,20 +175,55 @@ app.post("/get-user", async (req, res) => {
         새로운유물목록["스피커"] = 29;
         새로운유물목록["데빌마스크"] = 3;
 
+        유저.펫단계 = 0;
+
+        let 보스알개수 = 0;
+        const 누적 = Number(유저.보스누적데미지 || 0);
+
+        if (누적 > 0) {
+            if (누적 >= 99_999_999) 보스알개수 = 4;
+            else if (누적 >= 9_999_999) 보스알개수 = 3;
+            else if (누적 >= 999_999) 보스알개수 = 2;
+            else 보스알개수 = 1;
+
+            const 우편 = {
+                이름: "보스의알",
+                수량: 보스알개수,
+                날짜,
+                메모: `보스 데미지미션 ${보스알개수 - 1 === 0 ? "참여" : `${보스알개수 - 1}단계`} 보상`
+            };
+
+            const 새우편함 = [...(유저.우편함 ?? []), 우편];
+
+            const { error: 우편에러 } = await supabaseAdmin
+                .from("users")
+                .update({ 우편함: 새우편함 })
+                .eq("유저UID", 유저UID);
+
+            if (!우편에러) {
+                유저.우편함 = 새우편함;
+            }
+
+            await 로그기록(
+                유저.유저아이디,
+                `보스 데미지미션 ${보스알개수 - 1 === 0 ? "참여" : `${보스알개수 - 1}단계`} 보상`
+            );
+        }
 
         const { error: 하루업데이트에러 } = await supabaseAdmin
             .from("users")
             .update({
                 유물목록: 새로운유물목록,
                 하루한번: kstNow.toISOString(),
-                // 우편함: 새우편함
+                펫단계: 0,
+                보스누적데미지: 0,
+                보스넘버: (유저.보스넘버 + 1) % 10,
             })
             .eq("유저UID", 유저UID);
 
         if (!하루업데이트에러) {
             유저.유물목록 = 새로운유물목록;
             유저.하루한번 = kstNow.toISOString();
-            // 유저.우편함 = 새우편함;
         }
     }
 
@@ -382,6 +417,7 @@ app.post("/get-user", async (req, res) => {
 
     const 장비목록 = 유저.장비목록 || [];
     유저.장비공격력 = Math.max(0, ...장비목록.map(e => e.공격력 || 0));
+
     유저.최종공격력 = 최종공격력계산(유저);
 
     유저.최대체력 = 최대체력계산(유저);
@@ -414,7 +450,7 @@ app.post("/get-user", async (req, res) => {
 });
 
 
-
+//패치중
 app.post("/get-oner", async (req, res) => {
     try {
         const { 유저UID } = req.body;
@@ -553,15 +589,29 @@ app.post("/attack-boss", async (req, res) => {
 
     const 전투결과 = 전투시뮬레이션(유저, 보스, 전투로그, 현재턴, true); // 보스전: true
 
-    유저.보스누적데미지 += 전투결과.누적데미지;
+    유저.보스누적데미지 = (유저.보스누적데미지 || 0) + 전투결과.누적데미지;
     유저.남은체력 = 유저.최대체력;
 
+    const 누적 = Number(유저.보스누적데미지 || 0);
+    let 펫단계체크 = 0;
+    if (누적 >= 99_999_999) 펫단계체크 = 3;
+    else if (누적 >= 9_999_999) 펫단계체크 = 2;
+    else if (누적 >= 999_999) 펫단계체크 = 1;
+
+    유저.펫단계 = 펫단계체크;
+
+    유저.최종공격력 = 최종공격력계산(유저);
+
+    //패치중
     if (유저.유저아이디 !== "나주인장아니다") {
         await supabaseAdmin.from("users").update({
             현재스태미너,
             남은체력: 유저.최대체력,
             스태미너소모총량: 유저.스태미너소모총량,
-            보스누적데미지: 유저.보스누적데미지
+            보스누적데미지: 유저.보스누적데미지,
+            펫단계: 펫단계체크,
+            최종공격력: 유저.최종공격력,
+
         }).eq("유저UID", 유저UID);
 
     }
@@ -575,7 +625,8 @@ app.post("/attack-boss", async (req, res) => {
             남은체력: 유저.최대체력,
             보스누적데미지: 유저.보스누적데미지
         },
-        전투로그
+        전투로그,
+
     });
 });
 
@@ -601,8 +652,11 @@ app.post("/attack-normal", async (req, res) => {
     const 확률 = Math.min(0.099, 0.001 * (유저.유물목록?.["모래시계"] || 0));
     const 모래시계발동 = Math.random() <= 확률;
 
-    if (!모래시계발동) {
-        현재스태미너--;
+    if (유저.유저아이디 !== "염소") {
+        if (!모래시계발동) {
+            현재스태미너--;
+        }
+
     }
 
     유저.스태미너소모총량++;
@@ -1619,6 +1673,7 @@ app.post("/register-user", async (req, res) => {
         최고층: 1,
         마왕전랭킹: 0,
         햄버거현질: 0,
+        보스넘버: 0,
     };
 
     await 이벤트기록추가({
