@@ -163,7 +163,6 @@ app.post("/get-user", async (req, res) => {
 
     // }
 
-    //패치중
     const 마지막지급날짜 = 유저.하루한번
         ? new Date(new Date(유저.하루한번).toLocaleString("en-US", { timeZone: "Asia/Seoul" }))
             .toISOString()
@@ -181,7 +180,8 @@ app.post("/get-user", async (req, res) => {
         const 누적 = Number(유저.보스누적데미지 || 0);
 
         if (누적 > 0) {
-            if (누적 >= 99_999_999) 보스알개수 = 4;
+            if (누적 >= 999_999_999) 보스알개수 = 5;
+            else if (누적 >= 99_999_999) 보스알개수 = 4;
             else if (누적 >= 9_999_999) 보스알개수 = 3;
             else if (누적 >= 999_999) 보스알개수 = 2;
             else 보스알개수 = 1;
@@ -450,7 +450,6 @@ app.post("/get-user", async (req, res) => {
 });
 
 
-//패치중
 app.post("/get-oner", async (req, res) => {
     try {
         const { 유저UID } = req.body;
@@ -602,7 +601,6 @@ app.post("/attack-boss", async (req, res) => {
 
     유저.최종공격력 = 최종공격력계산(유저);
 
-    //패치중
     if (유저.유저아이디 !== "나주인장아니다") {
         await supabaseAdmin.from("users").update({
             현재스태미너,
@@ -1569,6 +1567,33 @@ app.post("/update-skill", async (req, res) => {
 
     return res.json({ 성공: true, 스킬, 숙련도, 스킬상태, 최대체력, 최종공격력 });
 });
+
+
+//패치중
+app.post("/toggle-skill-preset", async (req, res) => {
+    const { 유저UID } = req.body;
+    if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
+
+    try {
+        const { data: 유저, error: userErr } = await supabaseAdmin
+            .from("users")
+            .select("*")
+            .eq("유저UID", 유저UID)
+            .single();
+
+        if (userErr || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
+
+        const 현재스킬 = 유저.스킬 || {};
+        const 현재숙련도 = 유저.숙련도 ?? 0;
+        const 프리셋 = 유저.스킬프리셋 || null;
+        const 유물목록 = { ...(유저.유물목록 || {}) };
+
+
+    } catch (e) {
+        return res.status(500).json({ 오류: "서버 오류: " + e.message });
+    }
+});
+
 
 
 

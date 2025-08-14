@@ -980,11 +980,11 @@
 
 
     <div id="보스화면" style="display: none;">
-        <div id="보스컨테이너" style="justify-content: flex-start;">
+        <div id="보스컨테이너">
             <div id="보스아이콘">
 
             </div>
-            <div id="누적데미지순위">
+            <div id="데미지미션">
 
             </div>
         </div>
@@ -1194,15 +1194,10 @@
     </div>
 
     <div id="스킬화면" style="display: none;">
-        <div class="밑줄" id="보유숙련도">
-
-        </div>
-        <div style="font-size: 12px; color: #888" id="필요숙련도">
-
-        </div>
-
-        <div class="사백픽셀테두리" id="스킬컨테이너">
-        </div>
+        <div class="밑줄" id="보유숙련도"></div>
+        <div id="필요숙련도"></div>
+        <div class="사백픽셀테두리" id="프리셋일번"></div>
+        <div class="사백픽셀테두리" id="프리셋이번"></div>
     </div>
 
     <div id="캐시샵화면" style="display: none;">
@@ -1972,9 +1967,14 @@
 
             if (유저.펫단계 >= 1) {
                 let 색상코드;
-                if (유저.펫단계 === 1) 색상코드 = "#cd7f32";
-                else if (유저.펫단계 === 2) 색상코드 = "#c0c0c0";
-                else 색상코드 = "#ffd700";
+                // if (유저.펫단계 === 1) 색상코드 = "#cd7f32";
+                // else if (유저.펫단계 === 2) 색상코드 = "#c0c0c0";
+                // else 색상코드 = "#ffd700";
+
+                if (유저.펫단계 === 1) 색상코드 = 색상맵["일반"];
+                else if (유저.펫단계 === 2) 색상코드 = 색상맵["레어"];
+                else 색상코드 = 색상맵["신화"];
+
 
                 const 보스넘버 = 유저.보스넘버 ?? 0;
                 const 전투보스번호 = (보스넘버 + 보스데이터목록.length) % 보스데이터목록.length;
@@ -5020,27 +5020,29 @@
                 console.error("전당순위 조회 실패:", err);
             }
 
-            // ─── (3) 서버에서 “보스” 순위만 가져오기 ───
-            try {
-                const 보스응답 = await fetch("/boss-ranking", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-                });
-                const 보스결과 = await 보스응답.json();
+            // // ─── (3) 서버에서 “보스” 순위만 가져오기 ───
+            // try {
+            //     const 보스응답 = await fetch("/boss-ranking", {
+            //         method: "POST",
+            //         headers: { "Content-Type": "application/json" },
+            //         body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+            //     });
+            //     const 보스결과 = await 보스응답.json();
 
-                // /boss-ranking 응답 예시: { 순위: [...], 누적데미지총합: n, 내정보: { 순위, 유저아이디, 보스누적데미지 } }
-                // 내 순위 정보는 보스결과.내정보.순위 필드에 들어 있다.
-                const 내보스순위 =
-                    보스결과.내정보 && typeof 보스결과.내정보.순위 === "number"
-                        ? 보스결과.내정보.순위
-                        : "-";
+            //     // /boss-ranking 응답 예시: { 순위: [...], 누적데미지총합: n, 내정보: { 순위, 유저아이디, 보스누적데미지 } }
+            //     // 내 순위 정보는 보스결과.내정보.순위 필드에 들어 있다.
+            //     const 내보스순위 =
+            //         보스결과.내정보 && typeof 보스결과.내정보.순위 === "number"
+            //             ? 보스결과.내정보.순위
+            //             : "-";
 
-                document.getElementById("다섯째줄왼쪽").innerHTML = `보스 : ${내보스순위}위`;
-            } catch (err) {
-                document.getElementById("다섯째줄왼쪽").innerHTML = `보스 : 조회실패`;
-                console.error("보스순위 조회 실패:", err);
-            }
+            //     document.getElementById("다섯째줄왼쪽").innerHTML = `보스펫 : ${유저데이터.펫단계}단계`;
+            // } catch (err) {
+            //     document.getElementById("다섯째줄왼쪽").innerHTML = `보스펫 : -`;
+            //     console.error("보스순위 조회 실패:", err);
+            // }
+
+            document.getElementById("다섯째줄왼쪽").innerHTML = 유저데이터.펫단계 && 유저데이터.펫단계 > 0 ? `보스펫 : ${유저데이터.펫단계}단계` : "보스펫 : -";
 
             const 닉네임표시 = 팔레트적용(
                 유저데이터.유저아이디,
@@ -6193,7 +6195,6 @@
             신규직업 카운터? 반사?
             스킬프리셋
             레어몬스터오류
-            보스로직변경
 
             git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
@@ -6208,6 +6209,15 @@
 
             const 문장들 = [
                 `${여름아이콘}`,
+                `
+25.08.15<br>
+보스전 4단계미션이 추가되었습니다<br>
+이제 모든 미션목록이 보스화면에 표시됩니다<br>
+기존에 표시되던 누적데미지순위가 삭제되었습니다<br>
+전당과 내정보 보스순위가 보스펫 단계 표시로 변경되었습니다<br>
+히든몬스터 등장 시점에 스태미너가 0이라면, 보너스 스태미너 1이<br>
+회복되던 로직이 삭제되었습니다<br>
+                `,
                 `
 25.08.14<br>
 보스 누적데미지 보상(펫) 로직을 변경했습니다<br>
@@ -7020,7 +7030,7 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
             const 결과 = await 응답.json();
             const 유저들 = 결과.유저들 || [];
             // const 내순위 = 결과.내순위;
-            const 보스랭킹 = 결과.보스랭킹 || [];
+            // const 보스랭킹 = 결과.보스랭킹 || [];
 
             유저들.forEach((유저, index) => {
                 const 줄 = document.createElement("div");
@@ -7224,16 +7234,18 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 
                     // 창.querySelector("#넷째줄오른쪽").innerHTML = 유저.생성일 ? `생성일 : ${유저.생성일}` : `생성일 : -`;
 
-                    const bossIndex = 보스랭킹.findIndex(u => u.유저UID === 유저.유저UID);
+                    // const bossIndex = 보스랭킹.findIndex(u => u.유저UID === 유저.유저UID);
 
-                    if (bossIndex >= 0) {
-                        // 순위가 있으면 “XX위” 형식으로 표시
-                        const bossRank = bossIndex + 1;
-                        창.querySelector("#다섯째줄왼쪽").innerText = `보스 : ${bossRank}위`;
-                    } else {
-                        // 순위가 없으면 “-”만 표시
-                        창.querySelector("#다섯째줄왼쪽").innerText = `보스 : -`;
-                    }
+                    // if (bossIndex >= 0) {
+                    //     // 순위가 있으면 “XX위” 형식으로 표시
+                    //     const bossRank = bossIndex + 1;
+                    //     창.querySelector("#다섯째줄왼쪽").innerText = `보스펫 : ${유저.펫단계}단계`;
+                    // } else {
+                    //     // 순위가 없으면 “-”만 표시
+                    //     창.querySelector("#다섯째줄왼쪽").innerText = `보스펫 : -`;
+                    // }
+
+                    창.querySelector("#다섯째줄왼쪽").innerText = 유저.펫단계 && 유저.펫단계 > 0 ? `보스펫 : ${유저.펫단계}단계` : "보스펫 : -";
                     창.querySelector("#다섯째줄오른쪽").innerHTML = (유저.스태미너소모총량 !== undefined && 유저.스태미너소모총량 !== 0) ? `총스태미너 : ${유저.스태미너소모총량}` : `총스태미너 : -`;
 
                     // 1) 각 계열별 직업 배열을 미리 정의해 둡니다.
@@ -7245,11 +7257,9 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 
                     // … (유저.직업결정은 { "신술": 6 } 같은 객체 형태로 들어있다고 가정)
 
-
                     const 직위 = 최고전직명(유저.전직정보);
 
                     창.querySelector("#여섯째줄오른쪽").innerHTML = `전직 : ${직위 ? `${직위} ` : '-'}`;
-
 
                     창.querySelector("#여섯째줄왼쪽").innerHTML = 유저.마왕전방어 ? `마왕전방어 : ${유저.마왕전방어}회` : `마왕전방어 : -`;
 
@@ -7462,180 +7472,99 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 
             화면잠금();
             document.getElementById("화면설명").innerHTML =
-                "좌측 누적데미지 미션달성 보상은 보스'펫'입니다<br>보스전에는 스태미너 10이 소모됩니다";
+                "보스전에는 스태미너 10이 소모됩니다<br>누적데미지 미션 단계마다 최종데미지가 단계x10% 증가합니다";
 
             const 보스버튼 = document.getElementById("보스");
-            fetch("/boss-ranking", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-            })
-                .then(res => res.json())
-                .then(결과 => {
-                    if (결과.오류) {
-                        return 메시지표시(보스, "", 결과.오류, "");
-                    }
+            document.querySelectorAll(".전투로그컨테이너").forEach(e => e.remove());
+            document.querySelectorAll(".단계박스").forEach(e => e.remove());
+            document.getElementById("최종데미지").innerText = "";
+            document.getElementById("누적데미지").innerText = "";
 
-                    document.querySelectorAll(".전투로그컨테이너").forEach(e => e.remove());
-                    document.getElementById("최종데미지").innerText = "";
-                    document.getElementById("누적데미지").innerText = "";
+            모든화면숨기기();
+            document.getElementById("에너지박스").style.display = "block";
+            document.getElementById("보스화면").style.display = "block";
 
-                    모든화면숨기기();
-                    document.getElementById("에너지박스").style.display = "block";
-                    document.getElementById("보스화면").style.display = "block";
+            const 보스컨테이너 = document.getElementById("보스컨테이너");
+            보스컨테이너.style.marginTop = "15px";
+            보스컨테이너.style.width = "400px";
+            보스컨테이너.style.border = "0.2px solid #4b4b4b";
+            보스컨테이너.style.borderRadius = "10px";
+            보스컨테이너.style.padding = "15px";
+            보스컨테이너.style.display = "flex";
+            보스컨테이너.style.alignItems = "center";
+            보스컨테이너.style.justifyContent = "flex-start";
+            // 보스컨테이너.style.justifyContent = "center";
+            보스컨테이너.style.gap = "10px";
 
-                    const 보스컨테이너 = document.getElementById("보스컨테이너");
-                    보스컨테이너.style.marginTop = "15px";
-                    보스컨테이너.style.width = "400px";
-                    보스컨테이너.style.border = "0.2px solid #4b4b4b";
-                    보스컨테이너.style.borderRadius = "10px";
-                    보스컨테이너.style.padding = "15px";
-                    보스컨테이너.style.display = "flex";
-                    보스컨테이너.style.alignItems = "center";
-                    보스컨테이너.style.justifyContent = "flex-start";
-                    보스컨테이너.style.gap = "10px";
-
-                    const 보스아이콘 = document.getElementById("보스아이콘");
-                    보스아이콘.innerHTML = `
+            const 보스아이콘 = document.getElementById("보스아이콘");
+            보스아이콘.innerHTML = `
     <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
         <div style="width: 200px; height: 200px;">
             ${아이콘맵[현재보스이름 + "아이콘"]
-                            .replace(/height:\s*\d+px/, 'height: 200px')
-                            .replace(/width:\s*\d+px/, 'width: 200px')}
+                    .replace(/height:\s*\d+px/, 'height: 200px')
+                    .replace(/width:\s*\d+px/, 'width: 200px')}
         </div>
     </div>
 `;
 
-                    const 목표1 = 999999;
-                    const 목표2 = 9999999;
-                    const 목표3 = 99999999;
-                    const 누적 = 결과.내정보?.보스누적데미지 || 0;
+            const 목표1 = 999999;
+            const 목표2 = 9999999;
+            const 목표3 = 99999999;
+            const 목표4 = 999999999;
+            const 누적 = 유저데이터.보스누적데미지 || 0;
 
-                    function 만들기단계라인(id, 현재값, 목표값) {
-                        const div = document.createElement("div");
-                        div.id = id;
-                        div.style.border = "0.2px solid #4b4b4b";
-                        div.style.display = "flex";
-                        div.style.alignItems = "center";
-                        div.style.justifyContent = "space-between";
-                        div.style.borderRadius = "6px";
-                        div.style.padding = "8px";
+            function 만들기단계라인(id, 현재값, 목표값) {
+                const div = document.createElement("div");
+                div.id = id;
+                div.style.border = "0.2px solid #4b4b4b";
+                div.style.display = "flex";
+                div.style.alignItems = "center";
+                div.style.width = "100%";
+                div.style.justifyContent = "space-between";
+                div.style.borderRadius = "6px";
+                div.style.padding = "8px";
 
-                        // ✅ 달성한 경우, 현재값을 목표값으로 강제 표기
-                        const 표시값 = 현재값 >= 목표값 ? 목표값 : 현재값;
+                // ✅ 달성한 경우, 현재값을 목표값으로 강제 표기
+                const 표시값 = 현재값 >= 목표값 ? 목표값 : 현재값;
 
-                        const 숫자표시 = `${표시값.toLocaleString()}/${목표값.toLocaleString()}`;
-                        const 아이콘HTML = 현재값 >= 목표값 ? 아이콘맵["서클체크아이콘"] : "";
+                const 숫자표시 = `${표시값.toLocaleString()}/${목표값.toLocaleString()}`;
+                const 아이콘HTML = 현재값 >= 목표값 ? 아이콘맵["서클체크아이콘"] : "";
 
-                        div.innerHTML = `
+                div.innerHTML = `
         <span>${숫자표시}</span>
         <span>${아이콘HTML}</span>
     `;
-                        return div;
-                    }
+                return div;
+            }
 
-                    // 단계별 줄 생성
-                    const 단계1 = 만들기단계라인("단계1", 누적, 목표1);
-                    const 단계2 = 만들기단계라인("단계2", 누적, 목표2);
-                    const 단계3 = 만들기단계라인("단계3", 누적, 목표3);
+            // 단계별 줄 생성
+            const 단계1 = 만들기단계라인("단계1", 누적, 목표1);
+            const 단계2 = 만들기단계라인("단계2", 누적, 목표2);
+            const 단계3 = 만들기단계라인("단계3", 누적, 목표3);
+            const 단계4 = 만들기단계라인("단계4", 누적, 목표4);
 
-                    // 화면에 추가할 박스 준비
-                    const 총합박스 = document.createElement("div");
-                    총합박스.id = "단계박스";
-                    총합박스.style.display = "flex";
-                    총합박스.style.flexDirection = "column";
-                    총합박스.style.gap = "10px";
-                    총합박스.style.marginTop = "10px";
+            // 화면에 추가할 박스 준비
+            const 총합박스 = document.createElement("div");
+            총합박스.id = "단계박스";
+            총합박스.className = "단계박스";
+            총합박스.style.display = "flex";
+            총합박스.style.flexDirection = "column";
+            총합박스.style.gap = "10px";
+            총합박스.style.marginTop = "10px";
 
-                    // 조건에 따라 단계별로 추가
-                    총합박스.appendChild(단계1);
+            // 조건에 따라 단계별로 추가
+            총합박스.appendChild(단계1);
+            총합박스.appendChild(단계2);
+            총합박스.appendChild(단계3);
+            총합박스.appendChild(단계4);
 
-                    if (누적 >= 목표1) {
-                        총합박스.appendChild(단계2);
-                    }
-                    if (누적 >= 목표2) {
-                        총합박스.appendChild(단계3);
-                    }
+            데미지미션.appendChild(총합박스);
 
-                    보스아이콘.appendChild(총합박스);
+            const 보스몬스터 = document.getElementById("보스몬스터");
+            보스몬스터.innerText = 현재보스이름;
 
-                    const 보스몬스터 = document.getElementById("보스몬스터");
-                    보스몬스터.innerText = 현재보스이름;
+            화면해제();
 
-                    const 누적데미지순위 = document.getElementById("누적데미지순위");
-                    누적데미지순위.innerHTML = "";
-                    누적데미지순위.style.display = "flex";
-                    누적데미지순위.style.flexDirection = "column";
-                    누적데미지순위.style.alignItems = "flex-start";
-                    누적데미지순위.style.justifyContent = "flex-start";
-                    누적데미지순위.style.gap = "10px";
-                    누적데미지순위.style.textAlign = "left";
-
-                    const 제목 = document.createElement("div");
-                    제목.innerText = "누적데미지 순위";
-                    누적데미지순위.appendChild(제목);
-
-                    const 유저들 = 결과.순위 || [];
-                    유저들.forEach((유저, index) => {
-                        if (index >= 9) return;
-                        const div = document.createElement("div");
-
-                        // const 닉네임표시 = 팔레트적용(유저.유저아이디, 유저.마법의팔레트);
-
-                        let 닉네임표시 = 팔레트적용(
-                            유저.유저아이디,
-                            유저.마왕전랭킹 === 1 ? "마왕" : (유저.마법의팔레트 || "")
-                        );
-
-                        let 아이콘 = "";
-                        if (유저.마왕전방어 >= 3000) {
-                            아이콘 = 금마왕아이콘;
-                            닉네임표시 = 아이콘 + 닉네임표시 + 아이콘;
-                        } else if (유저.마왕전방어 >= 2000) {
-                            아이콘 = 은마왕아이콘;
-                            닉네임표시 = 아이콘 + 닉네임표시 + 아이콘;
-                        } else if (유저.마왕전방어 >= 1000) {
-                            아이콘 = 동마왕아이콘;
-                            닉네임표시 = 아이콘 + 닉네임표시 + 아이콘;
-                        }
-
-
-                        div.innerHTML = `${index + 1}. ${유저.보스누적데미지.toLocaleString()} [${닉네임표시}]`;
-                        누적데미지순위.appendChild(div);
-                    });
-
-                    if (결과.내정보) {
-                        const div = document.createElement("div");
-                        // const 닉네임표시 = 팔레트적용(결과.내정보.유저아이디, 결과.내정보.마법의팔레트);
-                        let 닉네임표시 = 팔레트적용(
-                            결과.내정보.유저아이디,
-                            결과.내정보.마왕전랭킹 === 1 ? "마왕" : (결과.내정보.마법의팔레트 || "")
-                        );
-
-                        let 아이콘 = "";
-                        if (결과.내정보.마왕전방어 >= 3000) {
-                            아이콘 = 금마왕아이콘;
-                            닉네임표시 = 아이콘 + 닉네임표시 + 아이콘;
-                        } else if (결과.내정보.마왕전방어 >= 2000) {
-                            아이콘 = 은마왕아이콘;
-                            닉네임표시 = 아이콘 + 닉네임표시 + 아이콘;
-                        } else if (결과.내정보.마왕전방어 >= 1000) {
-                            아이콘 = 동마왕아이콘;
-                            닉네임표시 = 아이콘 + 닉네임표시 + 아이콘;
-                        }
-
-                        div.innerHTML = `${결과.내정보.순위}. ${결과.내정보.보스누적데미지.toLocaleString()} [${닉네임표시}]`;
-                        div.style.marginTop = "8px";
-                        div.style.backgroundColor = "#505050";
-                        누적데미지순위.appendChild(div);
-                    }
-                    화면해제();
-
-                })
-                .catch(err => {
-                    console.error("보스 순위 조회 실패", err);
-                    화면해제();
-                });
         });
 
         document.getElementById("보스몬스터").addEventListener("click", async () => {
@@ -8793,10 +8722,10 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 
 
 
-        document.getElementById("총숙련도").addEventListener("click", () => {
-            if (!유저데이터) return;
-            스킬화면보여주기();
-        });
+        // document.getElementById("총숙련도").addEventListener("click", () => {
+        //     if (!유저데이터) return;
+        //     스킬화면보여주기();
+        // });
 
         document.getElementById("스킬").addEventListener("click", () => {
             if (!유저데이터) return;
@@ -9405,15 +9334,83 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
             document.getElementById("획득로그").innerText = "";
             document.getElementById("추가획득로그").innerText = "";
             document.getElementById("레벨업표시").innerText = "";
-            document.getElementById("보유숙련도").innerText = "보유 숙련도 " + 유저데이터.숙련도;
+            document.getElementById("보유숙련도").innerText = "보유숙련도 " + 유저데이터.숙련도;
 
-            const 컨테이너 = document.getElementById("스킬컨테이너");
+            const 컨테이너 = document.getElementById("프리셋일번");
             컨테이너.innerHTML = "";
 
             const 총투자 = Object.values(유저데이터.스킬 || {}).reduce((a, b) => a + b, 0);
             const 다음필요숙련도 = (총투자 + 1) * 500;
             document.getElementById("필요숙련도").innerText = "필요숙련도 " + 다음필요숙련도;
-            document.getElementById("필요숙련도").style.fontWeight = "bold";
+            // document.getElementById("필요숙련도").style.fontWeight = "bold";
+
+            const 필요컨테이너 = document.getElementById("필요숙련도");
+            필요컨테이너.innerHTML = ""; // 초기화
+            필요컨테이너.style.display = "flex";
+            필요컨테이너.style.justifyContent = "space-between";
+            필요컨테이너.style.alignItems = "center";
+            필요컨테이너.style.fontSize = "12px";
+            // 필요컨테이너.style.color = "#888";
+
+            const 필요왼쪽 = document.createElement("div");
+            필요왼쪽.id = "필요숙련도텍스트";
+            필요왼쪽.innerText = "필요숙련도 " + 다음필요숙련도;
+            필요왼쪽.style.color = "#888";
+            필요왼쪽.style.fontWeight = "bold";
+
+            const 필요오른쪽 = document.createElement("div");
+            필요오른쪽.style.display = "flex";
+            필요오른쪽.style.gap = "4px";
+
+            // const preset1Btn = document.createElement("div");
+            // preset1Btn.innerText = "프리셋";
+            // preset1Btn.className = "버튼";
+
+            // const preset2Btn = document.createElement("div");
+            // preset2Btn.innerText = "프리셋2";
+            // preset2Btn.className = "버튼";
+
+            // 필요오른쪽.append(preset1Btn,);
+            필요컨테이너.append(필요왼쪽, 필요오른쪽);
+
+            // preset1Btn.addEventListener("click", async () => {
+            //     화면잠금();
+            //     try {
+            //         const 응답 = await fetch("/toggle-skill-preset", {
+            //             method: "POST",
+            //             headers: { "Content-Type": "application/json" },
+            //             body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+            //         });
+
+            //         const 결과 = await 응답.json();
+
+            //         if (!응답.ok || 결과.오류) {
+            //             메시지표시(메시지표시박스, "", 결과.오류 || "프리셋 처리 실패", "");
+            //             return;
+            //         }
+
+            //         유저데이터.스킬 = 결과.스킬;
+            //         유저데이터.숙련도 = 결과.숙련도;
+            //         유저데이터.유물목록 = 결과.유물목록;
+            //         유저데이터.최대체력 = 결과.최대체력;
+            //         유저데이터.최종공격력 = 결과.최종공격력;
+
+            //         // UI 메시지
+            //         if (결과.모드 === "저장후초기화") {
+            //             메시지표시(메시지표시박스, "", "프리셋 저장 + 초기화 완료 (플라워 -1)", "#facc15");
+            //         } else {
+            //             메시지표시(메시지표시박스, "", "프리셋과 현재 스킬을 교환했습니다", "#60a5fa");
+            //         }
+
+            //         // 스킬 화면 갱신(초기화된 화면 혹은 스왑된 화면)
+            //         스킬화면보여주기();
+            //     } catch (e) {
+            //         메시지표시(메시지표시박스, "", "서버 오류: " + e.message, "");
+            //     } finally {
+            //         화면해제();
+            //     }
+            // });
+
 
             const 스킬정보 = 스킬정보불러오기();
 
@@ -9454,28 +9451,7 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
      <div class="버튼">최대</div>
   </div>
 `;
-                // <div class="버튼">회수</div>
 
-                // 별 개수 표시
-                // if (배운레벨 > 0) {
-                //     const 아이콘박스 = document.createElement("div");
-                //     아이콘박스.style.position = "absolute";
-                //     아이콘박스.style.top = "-10px";
-                //     아이콘박스.style.left = "6px";
-                //     아이콘박스.style.zIndex = "10";
-                //     아이콘박스.style.display = "flex";
-
-                //     for (let i = 0; i < 배운레벨; i++) {
-                //         const 아이콘별 = document.createElement("div");
-                //         아이콘별.innerHTML = 루시드아이콘SVG;
-                //         아이콘별.style.color = 배운레벨 === 단계.length ? "#facc15" : "#ffffff";
-                //         아이콘박스.appendChild(아이콘별);
-                //     }
-
-                //     줄.appendChild(아이콘박스);
-                // }
-
-                // 별 개수 표시
                 if (단계.length > 0) {
                     const 아이콘박스 = document.createElement("div");
                     아이콘박스.style.position = "absolute";
