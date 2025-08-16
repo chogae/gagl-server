@@ -1197,7 +1197,7 @@
         <div class="밑줄" id="보유숙련도"></div>
         <div id="필요숙련도"></div>
         <div class="사백픽셀테두리" id="프리셋일번"></div>
-        <div class="사백픽셀테두리" id="프리셋이번"></div>
+        <!-- <div class="사백픽셀테두리" id="프리셋이번"></div> -->
     </div>
 
     <div id="캐시샵화면" style="display: none;">
@@ -5642,7 +5642,32 @@
                 },
             },
 
+            "보스의알": {
+                "첫번째 효과": "공격력 +0.1%",
+                "두번째 효과": "획득골드 +0.1%",
+                "세번째 효과": "획득경험치 +0.1%",
+                "네번째 효과": "악마체력 감소 +0.1%",
+                "다섯번째 효과": "유물드랍 확률 x1.001%",
+            },
 
+            "단축키": {
+                "F ": "전투",
+                "I ": "무기",
+                "C ": "유물",
+                "A ": "악세",
+                "Z ": "전직",
+                "S ": "스킬",
+                "G ": "뽑기",
+                "B ": "보스",
+                "M ": "마왕",
+                "K ": "전당",
+                "O ": "우편함",
+                "Q ": "전투화면에서 자동전직",
+                "W ": "전투화면에서 자동뽑기",
+                "E ": "전투화면에서 자동스킬",
+                "R ": "풀자동",
+                "SPACE BAR ": "모든 팝업창 확인",
+            }
         };
 
         function 가글사전렌더링(데이터, 컨테이너ID) {
@@ -6194,7 +6219,8 @@
             신규유물효과
             신규직업 카운터? 반사?
             스킬프리셋
-            레어몬스터오류
+            쿠폰
+            마왕유물랜덤
 
             git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
 
@@ -6209,6 +6235,30 @@
 
             const 문장들 = [
                 `${여름아이콘}`,
+                `
+25.08.17<br>
+가글사전에 보스의알 보유효과가 추가되었습니다<br>
+드디어 성공했씁니다. 스킬화면에 프리셋 버튼이 추가되었습니다<br>
+스킬 프리셋 변경에는 플라워 1개가 소모됩니다<br>
+단축키가 추가되었습니다<br>
+F : 전투화면<br>
+I : 무기화면<br>
+C : 유물화면<br>
+A : 악세화면<br>
+Z : 전직화면<br>
+S : 스킬화면<br>
+G : 뽑기화면<br>
+B : 보스화면<br>
+M : 마왕화면<br>
+K : 전당화면<br>
+O : 우편함화면<br>
+Q : 전투화면에서 자동전직<br>
+W : 전투화면에서 자동뽑기<br>
+E : 전투화면에서 자동스킬<br>
+R : 풀자동<br>
+SPACE BAR : 모든 팝업창 확인<br>
+Q W E R 단축키는 전투화면에서만 클릭됩니다<br>
+                `,
                 `
 25.08.15<br>
 보스전 4단계미션이 추가되었습니다<br>
@@ -8722,10 +8772,10 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
 
 
 
-        // document.getElementById("총숙련도").addEventListener("click", () => {
-        //     if (!유저데이터) return;
-        //     스킬화면보여주기();
-        // });
+        document.getElementById("총숙련도").addEventListener("click", () => {
+            if (!유저데이터) return;
+            스킬화면보여주기();
+        });
 
         document.getElementById("스킬").addEventListener("click", () => {
             if (!유저데이터) return;
@@ -9362,54 +9412,68 @@ cbt 마지막날 보너스골드와 숙련도가 지급되었습니다<br>
             필요오른쪽.style.display = "flex";
             필요오른쪽.style.gap = "4px";
 
-            // const preset1Btn = document.createElement("div");
-            // preset1Btn.innerText = "프리셋";
-            // preset1Btn.className = "버튼";
+            const preset1Btn = document.createElement("div");
+            preset1Btn.innerText = "프리셋";
+            preset1Btn.className = "버튼";
 
             // const preset2Btn = document.createElement("div");
             // preset2Btn.innerText = "프리셋2";
             // preset2Btn.className = "버튼";
 
-            // 필요오른쪽.append(preset1Btn,);
+            필요오른쪽.append(preset1Btn,);
             필요컨테이너.append(필요왼쪽, 필요오른쪽);
 
-            // preset1Btn.addEventListener("click", async () => {
-            //     화면잠금();
-            //     try {
-            //         const 응답 = await fetch("/toggle-skill-preset", {
-            //             method: "POST",
-            //             headers: { "Content-Type": "application/json" },
-            //             body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
-            //         });
+            preset1Btn.addEventListener("click", async () => {
 
-            //         const 결과 = await 응답.json();
+                //패치중
+                const 플라워 = 유저데이터.유물목록?.["플라워"] || 0;
+                if (플라워 < 1) {
+                    메시지표시(메시지표시박스, "", "유물. 플라워가 부족합니다!", "");
+                    return;
+                }
 
-            //         if (!응답.ok || 결과.오류) {
-            //             메시지표시(메시지표시박스, "", 결과.오류 || "프리셋 처리 실패", "");
-            //             return;
-            //         }
+                const 확인 = await 사용자확인(
+                    "프리셋 변경에는 플라워 1송이가 소모됩니다\n진행하시겠습니까?"
+                );
+                if (!확인) return;
 
-            //         유저데이터.스킬 = 결과.스킬;
-            //         유저데이터.숙련도 = 결과.숙련도;
-            //         유저데이터.유물목록 = 결과.유물목록;
-            //         유저데이터.최대체력 = 결과.최대체력;
-            //         유저데이터.최종공격력 = 결과.최종공격력;
 
-            //         // UI 메시지
-            //         if (결과.모드 === "저장후초기화") {
-            //             메시지표시(메시지표시박스, "", "프리셋 저장 + 초기화 완료 (플라워 -1)", "#facc15");
-            //         } else {
-            //             메시지표시(메시지표시박스, "", "프리셋과 현재 스킬을 교환했습니다", "#60a5fa");
-            //         }
+                화면잠금();
+                try {
+                    const 응답 = await fetch("/toggle-skill-preset", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                    });
 
-            //         // 스킬 화면 갱신(초기화된 화면 혹은 스왑된 화면)
-            //         스킬화면보여주기();
-            //     } catch (e) {
-            //         메시지표시(메시지표시박스, "", "서버 오류: " + e.message, "");
-            //     } finally {
-            //         화면해제();
-            //     }
-            // });
+                    const 결과 = await 응답.json();
+
+                    if (!응답.ok || 결과.오류) {
+                        메시지표시(메시지표시박스, "", 결과.오류 || "프리셋 처리 실패", "");
+                        return;
+                    }
+
+                    유저데이터.스킬 = 결과.스킬;
+                    유저데이터.숙련도 = 결과.숙련도;
+                    유저데이터.유물목록 = 결과.유물목록;
+                    유저데이터.최대체력 = 결과.최대체력;
+                    유저데이터.최종공격력 = 결과.최종공격력;
+
+                    // UI 메시지
+                    if (결과.모드 === "저장후초기화") {
+                        메시지표시(메시지표시박스, "", "프리셋 저장 + 초기화 완료", "#facc15");
+                    } else {
+                        메시지표시(메시지표시박스, "", "프리셋과 현재 스킬 교환 성공", "#60a5fa");
+                    }
+
+                    // 스킬 화면 갱신(초기화된 화면 혹은 스왑된 화면)
+                    스킬화면보여주기();
+                } catch (e) {
+                    메시지표시(메시지표시박스, "", "서버 오류: " + e.message, "");
+                } finally {
+                    화면해제();
+                }
+            });
 
 
             const 스킬정보 = 스킬정보불러오기();
@@ -10029,21 +10093,56 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
 
             if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return; // 입력창 제외
 
+            const 전투화면열림 = document.getElementById("전투화면")?.style.display === "block";
+
+            //단축키
             switch (e.key) {
-                case "1":
+                case "f":
                     document.getElementById("전투")?.click();
                     break;
-                case "2":
-                    document.getElementById("전직자동토글")?.click();
+
+                case "q":
+                    if (전투화면열림) document.getElementById("전직자동토글")?.click();
                     break;
-                case "3":
-                    document.getElementById("뽑기자동토글")?.click();
+                case "w":
+                    if (전투화면열림) document.getElementById("뽑기자동토글")?.click();
                     break;
-                case "4":
-                    document.getElementById("스킬자동토글")?.click();
+                case "e":
+                    if (전투화면열림) document.getElementById("스킬자동토글")?.click();
                     break;
-                case "5":
-                    document.getElementById("풀자동")?.click();
+                case "r":
+                    if (전투화면열림) document.getElementById("풀자동")?.click();
+                    break;
+
+                case "i":
+                    document.getElementById("장비")?.click();
+                    break;
+                case "c":
+                    document.getElementById("유물")?.click();
+                    break;
+                case "a":
+                    document.getElementById("악세")?.click();
+                    break;
+                case "z":
+                    document.getElementById("전직")?.click();
+                    break;
+                case "s":
+                    document.getElementById("스킬")?.click();
+                    break;
+                case "g":
+                    document.getElementById("뽑기")?.click();
+                    break;
+                case "b":
+                    document.getElementById("보스")?.click();
+                    break;
+                case "m":
+                    document.getElementById("마왕전")?.click();
+                    break;
+                case "o":
+                    document.getElementById("우편함")?.click();
+                    break;
+                case "k":
+                    document.getElementById("전당")?.click();
                     break;
             }
         });

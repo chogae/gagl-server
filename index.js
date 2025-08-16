@@ -1570,9 +1570,16 @@ app.post("/update-skill", async (req, res) => {
 
 
 //패치중
+// ===== (여기) app.post("/update-skill", ...) 라우트 '아래'에 붙여 넣으세요 =====
 app.post("/toggle-skill-preset", async (req, res) => {
     const { 유저UID } = req.body;
     if (!유저UID) return res.status(400).json({ 오류: "유저UID 누락" });
+
+    // 투자비용(누적 합계) 계산: 500 * (1+2+...+N) = 500 * N*(N+1)/2
+    function 투자비용계산(스킬객체) {
+        const N = Object.values(스킬객체 || {}).reduce((a, b) => a + b, 0);
+        return 500 * N * (N + 1) / 2;
+    }
 
     try {
         const { data: 유저, error: userErr } = await supabaseAdmin
@@ -1583,12 +1590,80 @@ app.post("/toggle-skill-preset", async (req, res) => {
 
         if (userErr || !유저) return res.status(404).json({ 오류: "유저 정보 없음" });
 
+        const 기존유물 = { ...(유저.유물목록 || {}) };
+        const 보유플라워 = 기존유물["플라워"] || 0;
+        if (보유플라워 < 1) {
+            return res.status(400).json({ 오류: "유물. 플라워가 부족합니다!" });
+        }
+        const 새유물목록 = { ...기존유물, 플라워: 보유플라워 - 1 };
+
         const 현재스킬 = 유저.스킬 || {};
         const 현재숙련도 = 유저.숙련도 ?? 0;
-        const 프리셋 = 유저.스킬프리셋 || null;
-        const 유물목록 = { ...(유저.유물목록 || {}) };
 
+        // 프리셋 컬럼은 "스킬만" 저장합니다. (jsonb)
+        // 비어있으면 null 또는 {}로 취급
+        const 프리셋스킬 = (유저.스킬프리셋 && typeof 유저.스킬프리셋 === "object")
+            ? 유저.스킬프리셋
+            : null;
 
+        // 총보유숙련도 보존값
+        const 현재스킬비용 = 투자비용계산(현재스킬);
+        const 총보유숙련도 = 현재숙련도 + 현재스킬비용;
+
+        let 새현재스킬 = {};
+        let 새프리셋스킬 = {};
+        let 새숙련도 = 0;
+        let 모드 = "";
+
+        if (!프리셋스킬 || Object.keys(프리셋스킬).length === 0) {
+            // [최초 클릭] 프리셋이 비어있다 → 현재 스킬을 프리셋에 저장 + 현재는 '빈셋'으로 초기화
+            새현재스킬 = {};                 // 빈 셋
+            새프리셋스킬 = { ...현재스킬 };  // 저장
+            새숙련도 = 총보유숙련도;         // cost({}) = 0 → S' = S + cost(A)
+            모드 = "저장후초기화";
+        } else {
+            // [이후 클릭] 프리셋 ↔ 현재 스킬 '스왑'
+            새현재스킬 = { ...프리셋스킬 };
+            새프리셋스킬 = { ...현재스킬 };
+
+            const 목표비용 = 투자비용계산(새현재스킬);
+            새숙련도 = 총보유숙련도 - 목표비용; // S' = (S + cost(A)) - cost(B)
+            모드 = "스왑";
+        }
+
+        // 안전장치: 음수 방지 (데이터 불일치 보호)
+        if (새숙련도 < 0) {
+            return res.status(400).json({ 오류: "숙련도 계산 불일치" });
+        }
+
+        // 파생스탯 재계산 (기존 공식 사용)
+        const 최대체력 = 최대체력계산({ ...유저, 스킬: 새현재스킬 });
+        const 최종공격력 = 최종공격력계산({ ...유저, 스킬: 새현재스킬 });
+
+        // DB 업데이트: 프리셋은 스킬 객체만 저장합니다.
+        const { error: upErr } = await supabaseAdmin
+            .from("users")
+            .update({
+                스킬: 새현재스킬,
+                숙련도: 새숙련도,
+                스킬프리셋: 새프리셋스킬,
+                유물목록: 새유물목록,
+                최대체력,
+                최종공격력
+            })
+            .eq("유저UID", 유저UID);
+
+        if (upErr) return res.status(500).json({ 오류: "업데이트 실패" });
+
+        return res.json({
+            성공: true,
+            모드,
+            스킬: 새현재스킬,
+            숙련도: 새숙련도,
+            유물목록: 새유물목록,
+            최대체력,
+            최종공격력
+        });
     } catch (e) {
         return res.status(500).json({ 오류: "서버 오류: " + e.message });
     }
