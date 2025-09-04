@@ -1813,20 +1813,29 @@ app.post("/ranking", async (req, res) => {
         const kstToday = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
         const todayDateOnly = new Date(kstToday.getFullYear(), kstToday.getMonth(), kstToday.getDate());
 
-        // ✅ 하루한번 컬럼 기준으로 25일~27일 접속자만 필터링
-        const 최근접속유저들 = 유저들.filter(유저 => {
-            const 접속시각 = new Date(유저.하루한번);
-            const 접속KST = new Date(접속시각.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
-            const 접속DateOnly = new Date(접속KST.getFullYear(), 접속KST.getMonth(), 접속KST.getDate());
+        // // ✅ 하루한번 컬럼 기준으로 25일~27일 접속자만 필터링
+        // const 최근접속유저들 = 유저들.filter(유저 => {
+        //     const 접속시각 = new Date(유저.하루한번);
+        //     const 접속KST = new Date(접속시각.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+        //     const 접속DateOnly = new Date(접속KST.getFullYear(), 접속KST.getMonth(), 접속KST.getDate());
 
-            const diff일수 = (todayDateOnly - 접속DateOnly) / (1000 * 60 * 60 * 24); // 밀리초 차이를 일수로
-            return diff일수 <= 2; // 오늘, 어제, 그제
-        });
+        //     const diff일수 = (todayDateOnly - 접속DateOnly) / (1000 * 60 * 60 * 24); // 밀리초 차이를 일수로
+        //     return diff일수 <= 2; // 오늘, 어제, 그제
+        // });
+
+        // // 직위 처리
+        // for (const 유저 of 최근접속유저들) {
+        //     유저.직위 = 최고전직명(유저.전직정보) || "";
+        // }
+
+        // 날짜 필터링 없이 모든 유저 사용
+        const 최근접속유저들 = 유저들;
 
         // 직위 처리
         for (const 유저 of 최근접속유저들) {
             유저.직위 = 최고전직명(유저.전직정보) || "";
         }
+
 
         const { data: 보스랭킹, error: 유저에러 } = await supabaseAdmin
             .from("users")
