@@ -5237,6 +5237,11 @@
         //광장화면보여주기
         document.getElementById("광장").addEventListener("click", async () => {
             if (!유저데이터) return;
+
+            메시지표시(메시지표시박스, "", "점검중입니다", "");
+            return;
+
+
             화면잠금();
             document.getElementById("화면설명").innerHTML = "수다를 떨어주세요<br>최신 50개만 표시됩니다";
 
@@ -6186,11 +6191,11 @@
             const 메뉴얼보임 = window.getComputedStyle(메뉴얼화면).display === "block";
             const 캐시샵보임 = window.getComputedStyle(캐시샵화면).display === "block";
 
-            if (메뉴얼보임) {
-                window.open("https://open.kakao.com/o/gbnmdWvh", "_blank");
-            } else if (캐시샵보임) {
-                window.open("https://open.kakao.com/o/snVxUjrh", "_blank");
-            }
+            // if (메뉴얼보임) {
+            //     window.open("https://open.kakao.com/o/gbnmdWvh", "_blank");
+            // } else if (캐시샵보임) {
+            //     window.open("https://open.kakao.com/o/snVxUjrh", "_blank");
+            // }
         };
 
 
@@ -6198,13 +6203,13 @@
         document.getElementById("메뉴얼").addEventListener("click", () => {
             if (!유저데이터) return;
 
-            document.getElementById("화면설명").innerHTML = "여기를 클릭하시면 주인장이 운영중인<br>단톡으로 연결됩니다";
+            document.getElementById("화면설명").innerHTML = "메뉴얼화면입니다";
 
             모든화면숨기기();
             document.getElementById("메뉴얼화면").style.display = "block";
 
-            const 설명 = document.getElementById("화면설명");
-            설명.classList.add("마법의팔레트가글");
+            // const 설명 = document.getElementById("화면설명");
+            // 설명.classList.add("마법의팔레트가글");
 
 
             const 컨테이너 = document.getElementById("메뉴얼컨테이너");
@@ -6222,7 +6227,7 @@
             쿠폰
             마왕유물랜덤
 
-            git add . && git commit -m "fix: gagl.html serving enabled" && git push origin main
+            git add . && git commit -m "배포" && git push origin main
 
             nodemon index.js
 
