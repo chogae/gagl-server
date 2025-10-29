@@ -808,6 +808,19 @@
             cursor: pointer;
         }
 
+        #무뽑자동토글 {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid #555;
+            top: 4px;
+            right: 4px;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+
         #골드테두리안표시 {
             position: relative;
         }
@@ -1083,6 +1096,7 @@
                         </div>
                         <div class="획득골드" id="획득골드">
                         </div>
+                        <div id="무뽑자동토글" class="전직토글 회색불"></div>
 
                     </div>
                     <div class="경험치골드숙련도 세로정렬" id="숙련도테두리안표시">
@@ -2503,6 +2517,67 @@
                 }
 
 
+                if (무뽑자동온 && 유저데이터.골드 >= 100000) {
+                    try {
+
+                        const 응답 = await fetch("/gamble-Equipment", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ 유저UID: 유저데이터.유저UID, 종류: "일반" })
+                        });
+                        const 결과 = await 응답.json();
+                        if (!응답.ok || 결과.오류) {
+                            메시지표시(등급외테두리, "", 결과.오류 || "", "");
+                            return;
+                        }
+                        유저데이터 = 결과.유저데이터;
+                        document.getElementById("총골드").innerText = 유저데이터.골드.toLocaleString();
+
+                        const items = Array.isArray(결과.results) ? 결과.results : [결과];
+                        items.forEach((item, i) => {
+                            setTimeout(() => {
+                                const 네온박스 = document.getElementById("네온박스");
+
+                                if (!item.장비) {
+                                    메시지표시(등급외테두리, item.퍼즐발동 ? 퍼즐아이콘 : "", "뽑기에 실패했습니다!", "");
+                                    return;
+                                }
+                                if (item.퍼즐발동) {
+                                    메시지표시(등급외테두리, 퍼즐아이콘, "", "");
+                                }
+
+
+                                if (네온박스) {
+                                    네온박스.style.display = "none";
+
+                                    if (window.네온타이머) clearTimeout(window.네온타이머);
+                                    네온박스.innerText = `자동뽑기중! ${item.장비.이름}을(를) 획득했다!`;
+                                    네온박스.style.display = "block";
+
+                                    if (등급외테두리) {
+                                        등급외테두리.style.position = "relative";
+                                        등급외테두리.appendChild(네온박스);
+                                        Object.assign(네온박스.style, {
+                                            position: "absolute",
+                                            top: "50%",
+                                            left: "50%",
+                                            transform: "translate(-50%, -50%)",
+                                            zIndex: "100"
+                                        });
+                                    }
+                                }
+                                window.네온타이머 = setTimeout(() => {
+                                    네온박스.style.display = "none";
+                                }, 3000);
+
+                            }, i * 500);
+                        });
+
+                    } catch (e) {
+                        console.error("자동 무기뽑기 오류:", e);
+                    }
+                }
+
             } catch (e) {
                 메시지표시(메시지표시박스, "", "전투 중 오류: " + e.message, "");
                 반자동실행 = false;
@@ -3865,6 +3940,7 @@
                 "광장화면",
                 "우편함화면",
                 "주인장화면",
+                "동료화면",
             ];
             화면ID들.forEach(id => {
                 const el = document.getElementById(id);
@@ -3897,10 +3973,11 @@
  <div class="버튼" id="메뉴얼">메 뉴 얼</div>
     <div class="버튼" id="일어난일">일어난일</div>
     <div class="버튼" id="가글사전">가글사전</div>
-          <div class="버튼" id="광장">광 장</div>
+        <div class="버튼" id="로그아웃">로그아웃</div>
 </div>
 `;
-        // <div class="버튼" id="로그아웃">로그아웃</div>
+        //           <div class="버튼" id="광장">광 장</div>
+
         //    <div class="버튼" id="캐시샵">캐 시 샵</div>
 
         정보툴팁.style.display = "none";
@@ -4194,6 +4271,7 @@
     <div class="버튼" id="전직">전 직</div>
     <div class="버튼" id="스킬">스 킬</div>
     <div class="버튼" id="뽑기">뽑 기</div>
+    <div class="버튼" id="동료">동 료</div>
   </div>
 `;
 
@@ -4232,6 +4310,163 @@
         });
 
 
+        const 동료화면 = document.createElement("div");
+        동료화면.id = "동료화면";
+        동료화면.style.position = "absolute";
+        동료화면.className = "화면숨기기";
+        동료화면.style.boxSizing = "border-box";
+        동료화면.style.top = "128px";
+        동료화면.style.width = "400px";
+        동료화면.style.display = "none";
+        동료화면.style.flexDirection = "column";
+        동료화면.style.gap = "8px";
+        document.body.append(동료화면);
+
+        // const 동료화면설명 = document.createElement("div");
+        //         동료화면설명.style.boxSizing = "border-box";
+        //         동료화면설명.style.borderBottom = "0.2px solid #dadada";
+        //         동료화면설명.style.flex = "1";
+        //         동료화면설명.style.display = "flex";
+        //         동료화면설명.style.flexDirection = "column";
+        //         동료화면설명.innerHTML =
+        //             `
+        // 보스의알을 사용하여 동료를 합류시킬 수 있습니다<br>
+
+        //             `;
+        //         동료화면설명.style.textAlign = "center";
+        //         동료화면설명.style.paddingBottom = "8px";
+        //         동료화면.append(동료화면설명);
+
+        const 동료화면컨테이너 = document.createElement("div");
+        동료화면컨테이너.id = "동료화면컨테이너";
+        동료화면컨테이너.style.boxSizing = "border-box";
+        동료화면컨테이너.style.border = "0.2px solid #4b4b4b";
+        동료화면컨테이너.style.borderRadius = "8px";
+        동료화면컨테이너.style.flex = "1";
+        동료화면컨테이너.style.display = "flex";
+        동료화면컨테이너.style.flexDirection = "column";
+        동료화면컨테이너.style.padding = "8px";
+        동료화면컨테이너.style.gap = "8px";
+        동료화면.append(동료화면컨테이너);
+
+        //동료화면보여주기함수
+        async function 동료화면보여주기() {
+            try {
+                모든화면숨기기();
+                동료화면.style.display = "flex";
+                동료화면컨테이너.innerHTML = "";
+
+                document.getElementById("화면설명").innerHTML = `동료를 성장시키고 전투에 합류시키세요<br>`;
+
+                화면잠금();
+                const 응답 = await fetch("/Digimon", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 유저UID: 유저데이터.유저UID })
+                });
+                const 결과 = await 응답.json();
+
+                if (!응답.ok) {
+                    메시지표시(메시지표시박스, "", 결과.오류 || "동료화면실패", "");
+                    화면해제();
+                    return;
+                }
+
+                유저데이터 = 결과;
+
+                행렬만들기(동료화면컨테이너, "오행", 4);
+                오행.style.marginTop = "8px";
+                오행1열.innerHTML = `둥몬`;
+                오행2열.innerHTML = `공격력+10%`;
+                오행3열.innerHTML = `먹이주기`;
+                오행3열.style.boxSizing = "border-box";
+                오행3열.style.padding = "3px 8px";
+                오행3열.style.border = "0.2px solid #dadada";
+                오행3열.style.borderRadius = "8px";
+                오행3열.style.cursor = "pointer";
+                오행4열.innerHTML = `동행`;
+                오행4열.style.boxSizing = "border-box";
+                오행4열.style.padding = "3px 8px";
+                오행4열.style.border = "0.2px solid #dadada";
+                오행4열.style.borderRadius = "8px";
+                오행4열.style.cursor = "pointer";
+
+                오행1열.style.flex = "3";
+                오행2열.style.flex = "1";
+                오행3열.style.flex = "1";
+                오행4열.style.flex = "1";
+
+                // 오행3열.addEventListener("click", async (e) => {
+                //     e.stopPropagation();
+                //     try {
+
+                //         화면잠금();
+                //         const 응답 = await fetch("/qnghk", {
+                //             method: "POST",
+                //             headers: { "Content-Type": "application/json" },
+                //             body: JSON.stringify({
+                //                 id: 유저데이터.id
+                //             })
+                //         });
+
+                //         const 결과 = await 응답.json();
+
+                //         if (!응답.ok) {
+                //             메시지표시(결과.오류);
+                //             return;
+                //         }
+
+                //         유저데이터 = 결과;
+
+                //         동료화면보여주기();
+                //     } catch (e) {
+                //         console.error(e);
+                //     } finally {
+                //         화면해제();
+                //     }
+                // });
+
+                //둥몬, 둥실몬, 샤코몬, 연체몬, 마린데블몬, 리바이어몬
+                //키몬, 야몬, 임프몬, 펑크몬, 라우드몬, 베르제브몬
+                //포포몬, 프리몬, 레오르몬, 레베몬, 스컬사탄몬, 마왕몬
+                //푸티몬, 큐피몬, 루체몬, 루체몬 폴다운모드, 루체몬 사탄모드, 루체몬 라르바
+                //파몬, 파코몬, 파스코몬, 포큐파몬, 아스타몬, 벨페몬
+
+            } catch (e) {
+                console.error(e);
+            } finally {
+                화면해제();
+            }
+        }
+
+        function 행렬만들기(부모, 행아이디, 열개수) {
+            const 행 = document.createElement("div");
+            행.id = 행아이디;
+            행.style.boxSizing = "border-box";
+            행.style.display = "flex";
+            행.style.width = "100%";
+            행.style.gap = "8px";
+            행.style.paddingBottom = "8px";
+            부모.append(행);
+
+            for (let i = 1; i <= 열개수; i++) {
+                const 열 = document.createElement("div");
+                열.id = `${행아이디}${i}열`;
+                열.style.boxSizing = "border-box";
+                열.style.display = "flex";
+                열.style.flex = "1";
+                열.style.alignItems = "center";
+                열.style.flexDirection = "column";
+                열.style.justifyContent = "center";
+                열.style.gap = "8px";
+                행.append(열);
+            }
+        }
+
+        document.getElementById("동료").addEventListener("click", () => {
+            if (!유저데이터) return;
+            동료화면보여주기();
+        });
 
         //악세화면보여주기
         document.getElementById("악세").addEventListener("click", () => {
@@ -4748,20 +4983,20 @@
         });
 
 
-        // document.getElementById("로그아웃").addEventListener("click", async () => {
-        //     if (!유저데이터) return;
+        document.getElementById("로그아웃").addEventListener("click", async () => {
+            if (!유저데이터) return;
 
-        //     화면잠금();
+            화면잠금();
 
-        //     try {
-        //         await supabase.auth.signOut();
-        //         localStorage.removeItem("기기ID");
-        //     } catch (e) {
-        //         console.error("로그아웃 오류:", e);
-        //     }
+            try {
+                await supabase.auth.signOut();
+                localStorage.removeItem("기기ID");
+            } catch (e) {
+                console.error("로그아웃 오류:", e);
+            }
 
-        //     location.reload(); // ← 처음 접속한 상태로 완전히 초기화
-        // });
+            location.reload(); // ← 처음 접속한 상태로 완전히 초기화
+        });
 
 
 
@@ -5233,129 +5468,6 @@
 
 
 
-
-        //광장화면보여주기
-        document.getElementById("광장").addEventListener("click", async () => {
-            if (!유저데이터) return;
-
-            메시지표시(메시지표시박스, "", "점검중입니다", "");
-            return;
-
-
-            화면잠금();
-            document.getElementById("화면설명").innerHTML = "수다를 떨어주세요<br>최신 50개만 표시됩니다";
-
-            모든화면숨기기();
-            document.getElementById("광장화면").style.display = "block";
-
-
-
-            const container = document.getElementById("광장컨테이너");
-            container.innerHTML = `
-            <!-- 입력창 -->
-            <input id="chat-input" 
-                   type="text" 
-                   maxlength="50" 
-                    autocomplete="off"
-                   placeholder="글자 50자 제한 / 메시지를 입력하고 Enter"
-                   style="width: 100%; margin-top: 8px; padding: 6px; box-sizing: border-box;" />
-            <!-- 메시지 리스트 -->
-            <div id="chat-list" class="세로정렬"  style=" align-self: flex-start;  width: 100%;  display: flex;  align-items: flex-start;"></div>
-          `;
-
-
-
-            try {
-                const res = await fetch("/get-chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" }
-                });
-                const { 채팅 } = await res.json();
-                const list = Array.isArray(채팅) ? 채팅 : [];
-                const chatList = document.getElementById("chat-list");
-                chatList.innerHTML = list
-                    .map(row => {
-                        const dt = new Date(row.시각);  // 메시지시각 → 시각
-                        const pad = v => String(v).padStart(2, "0");
-                        const yy = dt.getFullYear().toString().slice(2);
-                        const MM = pad(dt.getMonth() + 1);
-                        const dd = pad(dt.getDate());
-                        const hh = pad(dt.getHours());
-                        const mm = pad(dt.getMinutes());
-                        const ts = `${yy}-${MM}-${dd} ${hh}:${mm}`;
-
-                        const 닉네임표시 = 팔레트적용(row.유저아이디, row.마법의팔레트 || "");
-                        // const 닉네임표시 = 팔레트적용(
-                        //     row.유저아이디,
-                        //     row.마왕전랭킹 === 1 ? "마왕" : (row.마법의팔레트 || "")
-                        // );
-
-
-                        return `<div>${ts} ${닉네임표시} : ${row.내용}</div>`;  // 메시지 → 내용
-                    })
-                    .join("");
-            } catch (e) {
-                console.error("채팅 로드 실패:", e);
-            }
-
-
-            document.getElementById("chat-input").addEventListener("keydown", async e => {
-                if (e.key !== "Enter") return;
-
-                if (유저데이터.유저아이디 !== "나주인장아니다") {
-                    if (유저데이터.최종공격력 < 10000) {
-                        메시지표시(메시지표시박스, "", "공격력 1만 이상 유저부터 채팅이 가능합니다", "");
-                        return;
-                    }
-
-                }
-
-                const 스피커 = 유저데이터.유물목록?.["스피커"] || 0;
-                if (스피커 < 1) {
-                    메시지표시(메시지표시박스, "", "스피커가 없습니다", "");
-                    return;
-                }
-
-                const text = e.target.value.trim();
-                if (!text) return;
-
-                // ① 응답을 res에 저장
-                const res = await fetch("/save-chat", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        유저UID: 유저데이터.유저UID,
-                        유저아이디: 유저데이터.유저아이디,
-                        메시지: text
-                    })
-
-                });
-                // ② JSON으로 파싱
-                const data = await res.json();
-
-                // ③ 오류 검사
-                if (!res.ok || data.오류) {
-                    // 메시지표시박스는 미리 DOM에서 꺼내놓은 <div>나
-                    // 적절한 요소 ID로 바꿔주세요
-                    메시지표시(메시지표시박스, "", data.오류 || "메시지 저장 실패", "");
-                    화면해제();
-                    return;
-                }
-
-                // ④ 성공 시
-                if (data.유물목록) {
-                    유저데이터.유물목록 = data.유물목록;
-                }
-                메시지표시(메시지표시박스, "", `스피커 1개를 소모합니다`, "");
-                e.target.value = "";
-                document.getElementById("광장").click();
-
-            });
-
-            화면해제();
-        });
-
-
         document.getElementById("일어난일").addEventListener("click", async () => {
             if (!유저데이터) return;
             화면잠금();
@@ -5384,9 +5496,35 @@
                 const 기록들 = 결과.기록 || [];
 
                 기록들.forEach(item => {
+                    const 시간줄 = document.createElement("div");
+
+                    // ISO 문자열을 Date 객체로 변환
+                    const date = new Date(item.일어난일시각);
+
+                    // 한국시간 기준으로 표시 (옵션으로 포맷 지정)
+                    const formattedTime = date.toLocaleString("ko-KR", {
+                        timeZone: "Asia/Seoul",
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "numeric",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: true // 오전/오후 표시
+                    });
+
+                    시간줄.innerText = formattedTime;
+                    container.appendChild(시간줄);
+
                     const 줄 = document.createElement("div");
-                    줄.innerText = item.일어난일; // or `${item.유저아이디}님이 ${item.일어난일}`
+                    줄.innerText = item.일어난일;
                     container.appendChild(줄);
+
+                    const 구분선 = document.createElement("div");
+                    구분선.style.width = "100%";
+                    구분선.style.borderBottom = "0.2px solid #4b4b4b";
+                    container.appendChild(구분선);
+
                 });
 
             } catch (e) {
@@ -6222,8 +6360,6 @@
             공략집
             보스의알이스터에그연계
             신규유물효과
-            신규직업 카운터? 반사?
-            스킬프리셋
             쿠폰
             마왕유물랜덤
 
@@ -6237,9 +6373,16 @@
             // 25.08.12<br>
             // 캐시샵이 삭제되었습니다<br>
             //                 `,
+            //패치노트작성
 
             const 문장들 = [
                 `${여름아이콘}`,
+                `
+25.10.22<br>
+정보탭에 로그아웃버튼이 재구현되었습니다<br>
+전투화면 골드박스우측상단에 무기자동뽑기버튼이 추가되었습니다<br>
+일어난일에 시간이 함께 표시됩니다<br>
+                `,
                 `
 25.08.17<br>
 가글사전에 보스의알 보유효과가 추가되었습니다<br>
@@ -10201,6 +10344,22 @@ stroke-linejoin="round" class="lucide lucide-star-icon lucide-star">
                 토글.classList.add("회색불");
             }
         });
+
+        let 무뽑자동온 = false;
+
+        document.getElementById("무뽑자동토글").addEventListener("click", () => {
+            무뽑자동온 = !무뽑자동온;
+            const 토글 = document.getElementById("무뽑자동토글");
+
+            if (무뽑자동온) {
+                토글.classList.remove("회색불");
+                토글.classList.add("빨간불");
+            } else {
+                토글.classList.remove("빨간불");
+                토글.classList.add("회색불");
+            }
+        });
+
 
 
 
