@@ -3714,9 +3714,14 @@ app.post("/send-mail-to-all-users", async (req, res) => {
     return res.json({ 메시지: "전체 유저에게 발송 완료" });
 });
 
-
+//수정중
 app.post("/get-mawang", async (req, res) => {
     try {
+        const { 유저UID } = req.body;
+        if (!유저UID) {
+            return res.status(400).json({ 오류: "유저UID 필요" });
+        }
+
         const { data, error } = await supabaseAdmin
             .from("users")
             .select("*")
