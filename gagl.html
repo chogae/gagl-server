@@ -23,7 +23,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
-    <script type="module">
+    <!-- <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
         window.supabase = createClient(
@@ -31,6 +31,14 @@
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpYWZlc2Z5d3R2cGFjaGJmb3hyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3ODQwMTgsImV4cCI6MjA2MDM2MDAxOH0.1aDNwRZXac48nD9HDicXvDYk4wfcY1MC487_qf3hF5c"
         );
 
+    </script> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+        window.supabase = supabase.createClient(
+            "https://piafesfywtvpachbfoxr.supabase.co",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpYWZlc2Z5d3R2cGFjaGJmb3hyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3ODQwMTgsImV4cCI6MjA2MDM2MDAxOH0.1aDNwRZXac48nD9HDicXvDYk4wfcY1MC487_qf3hF5c"
+        );
     </script>
 
     <style>
